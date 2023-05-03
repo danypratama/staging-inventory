@@ -80,10 +80,9 @@ include "akses.php";
                             <div class="border p-3">
                                 <?php
                                 include "koneksi.php";
-                                $sql = "SELECT ibi.*, ibi.created_date AS created, sp.*, uc.nama_user as user_created, uu.nama_user as user_updated
+                                $sql = "SELECT ibi.*, ibi.created_date AS created, sp.*, uc.nama_user as user_created
                                     FROM inv_br_import AS ibi
                                     LEFT JOIN user uc ON (ibi.id_user = uc.id_user)
-                                    LEFT JOIN user uu ON (ibi.user_updated = uu.id_user)
                                     LEFT JOIN tb_supplier sp ON (ibi.id_supplier = sp.id_sp)
                                     WHERE id_inv_br_import = '$id' LIMIT 1 ";
                                 $query = mysqli_query($connect, $sql);
