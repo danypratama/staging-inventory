@@ -1,10 +1,11 @@
 <?php
-    $page = 'br-masuk';
-    $page2 = 'br-masuk-reg';
-    include "akses.php";
+$page = 'br-masuk';
+$page2 = 'br-masuk-reg';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -19,48 +20,52 @@
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 
     <style>
-        #table2{
+        #table2 {
             cursor: pointer;
         }
-        #table3{
+
+        #table3 {
             cursor: pointer;
         }
 
         input[type="text"]:read-only {
-        background: #e9ecef;
+            background: #e9ecef;
         }
 
         textarea[type="text"]:read-only {
-        background: #e9ecef;
+            background: #e9ecef;
         }
     </style>
 </head>
 
 <body>
-  <!-- nav header -->
-  <?php include "page/nav-header.php" ?>
-  <!-- end nav header -->
-  
-  <!-- sidebar  -->
-  <?php include "page/sidebar.php"; ?>
-  <!-- end sidebar -->
-  
+    <!-- nav header -->
+    <?php include "page/nav-header.php" ?>
+    <!-- end nav header -->
 
-  <main id="main" class="main">
-    <!-- Loading -->
-    <div class="loader loader">
-      <div class="loading">
-        <img src="img/loading.gif" width="200px" height="auto">
-      </div>
-    </div>
-    <!-- ENd Loading -->
-    <section>
-        <!-- SWEET ALERT -->
-        <div class="info-data" data-infodata="<?php if(isset($_SESSION['info'])){ echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
-        <!-- END SWEET ALERT -->
-        <div class="container-fluid">
-            <div class="card">
-                <div class="card-body mt-3">
+    <!-- sidebar  -->
+    <?php include "page/sidebar.php"; ?>
+    <!-- end sidebar -->
+
+
+    <main id="main" class="main">
+        <!-- Loading -->
+        <!-- <div class="loader loader">
+            <div class="loading">
+                <img src="img/loading.gif" width="200px" height="auto">
+            </div>
+        </div> -->
+        <!-- ENd Loading -->
+        <section>
+            <!-- SWEET ALERT -->
+            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                                        echo $_SESSION['info'];
+                                                    }
+                                                    unset($_SESSION['info']); ?>"></div>
+            <!-- END SWEET ALERT -->
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body mt-3">
                         <div class="text-start">
                             <?php $id_inv = $_GET['id_inv']; ?>
                             <a href="tampil-br-import.php?id=<?php echo $id_inv ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Kembali</a>
@@ -77,30 +82,30 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php  
-                                        include "koneksi.php";
-                                        $id = $_GET['id'];
-                                        $no = 1;
-                                        $sql = "SELECT act.*, iibi.*, pr.*, mr.*
+                                    <?php
+                                    include "koneksi.php";
+                                    $id = $_GET['id'];
+                                    $no = 1;
+                                    $sql = "SELECT act.*, SUM(act.qty_act) AS total_qty_act, iibi.*, pr.*, mr.*
                                                 FROM act_br_import AS act
                                                 LEFT JOIN isi_inv_br_import iibi ON (act.id_isi_inv_br_import = iibi.id_isi_inv_br_import)
                                                 LEFT JOIN tb_produk_reguler pr ON (act.id_produk_reg = pr.id_produk_reg)
                                                 LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                                                WHERE act.id_isi_inv_br_import ='$id'";
-                                        $query = mysqli_query($connect, $sql);
-                                        while($data = mysqli_fetch_array($query)){
+                                                WHERE act.id_isi_inv_br_import ='$id' GROUP BY act.id_produk_reg";
+                                    $query = mysqli_query($connect, $sql);
+                                    while ($data = mysqli_fetch_array($query)) {
                                     ?>
-                                    <tr>
-                                        <td class="text-center"><?php echo $no; ?></td>
-                                        <td><?php echo $data['nama_produk'];?></td>
-                                        <td><?php echo $data['nama_merk'];?></td>
-                                        <td class="text-end"><?php echo number_format($data['qty_act'],0,'.','.'); ?></td>
-                                        <td class="text-center">
-                                            <a href="edit-act-br-import.php?edit-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import'];?> && id_inv=<?php echo $id_inv ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
-                                            <a href="proses/proses-br-in-import.php?hapus-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import'];?> && id_inv=<?php echo $id_inv ?>" class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
-                                        </td>
-                                    </tr>
-                                    <?php $no++ ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo $no; ?></td>
+                                            <td><?php echo $data['nama_produk']; ?></td>
+                                            <td><?php echo $data['nama_merk']; ?></td>
+                                            <td class="text-end"><?php echo number_format($data['qty_act'], 0, '.', '.'); ?></td>
+                                            <td class="text-center">
+                                                <a href="edit-act-br-import.php?edit-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import']; ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="proses/proses-br-in-import.php?hapus-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import']; ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php $no++ ?>
                                     <?php } ?>
                                 </tbody>
                             </table>
@@ -108,14 +113,15 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-  </main><!-- End #main -->
-  <!-- Footer -->
-  <?php include "page/footer.php" ?>
-  <!-- End Footer -->
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+            </div>
+        </section>
+    </main><!-- End #main -->
+    <!-- Footer -->
+    <?php include "page/footer.php" ?>
+    <!-- End Footer -->
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <?php include "page/script.php" ?>
+    <?php include "page/script.php" ?>
 </body>
+
 </html>
