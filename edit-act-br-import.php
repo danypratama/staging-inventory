@@ -81,6 +81,8 @@ include "akses.php";
           <form method="post" action="proses/proses-br-in-import.php" class="form">
             <div class="row">
               <input type="hidden" class="form-control" name="id_act_br_import" value="<?php echo $data['id_act_br_import'] ?>">
+              <input type="hidden" class="form-control" name="id_isi_inv_br_import" value="<?php echo $data['id_isi_inv_br_import'] ?>">
+              <input type="hidden" class="form-control" name="id_inv_br_import" value="<?php echo $data['id_inv_br_import'] ?>">
               <div class="col-sm-5 mb-3">
                 <label for="nama_produk">Nama Produk</label>
                 <input type="hidden" class="form-control" name="id_produk" id="idProduk" value="<?php echo $data['id_produk_reg'] ?>">
@@ -98,11 +100,9 @@ include "akses.php";
                 <label>Qty Actual</label>
                 <input type="text" class="form-control" name="qty_act" id="qtyInput" value="<?php echo number_format($data['qty_act'], 0, '.', '.'); ?>">
               </div>
-              <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
-              <input type="hidden" class="form-control" name="created" id="datetime-input">
             </div>
             <div class="text-end">
-              <button type="submit" name="simpan-act-br-import" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
+              <button type="submit" name="edit-act-br-import" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
               <a href="list-act-br-import.php?id=<?php echo $id ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
             </div>
           </form>
@@ -193,65 +193,42 @@ function generate_uuid()
 <!-- End Modal Barang -->
 
 <script>
-  // Fngsi Untuk membuat form input Qty menjadi enabled
-  function enableQtyActual() {
-    $('#qtyInput').prop('disabled', false);
+  // Deklarasi fungsi
+  function enableSubmitButton() {
+    $('#submitButton').prop('disabled', false);
   }
 
-  // select Produk Reguler
-  $(document).on('click', '#table2 tbody tr', function(e) {
-    $('#idProduk').val($(this).data('idprod'));
-    $('#namaProduk').val($(this).data('namaprod'));
-    $('#merkProduk').val($(this).data('merkprod'));
-    $('#modalBarang').modal('hide');
-
-    // Aktifkan input qtyActual
-    enableQtyActual();
-  });
-</script>
-
-<!-- Clock js -->
-<script>
-  function inputDateTime() {
-    // Get current date and time
-    let currentDate = new Date();
-
-    // Format date and time as yyyy-mm-ddThh:mm:ss
-    let year = currentDate.getFullYear();
-    let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    let day = currentDate.getDate().toString().padStart(2, '0');
-    let hours = currentDate.getHours();
-    let minutes = currentDate.getMinutes().toString().padStart(2, '0');
-    let seconds = currentDate.getSeconds().toString().padStart(2, '0');
-    let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
-
-    // Set value of input field to current date and time
-    document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
-
+  function disableSubmitButton() {
+    $('#submitButton').prop('disabled', true);
   }
-  // Call updateDateTime function every second
-  setInterval(inputDateTime, 1000);
-</script>
 
-<!-- Number Format -->
-<script>
-  $(document).on('input', '#qtyInput', function(e) {
+  $(document).on('click input', '#table2 tbody tr, #qtyInput', function(e) {
+    if (e.target.id !== 'qtyInput') {
+      $('#idProduk').val($(this).data('idprod'));
+      $('#namaProduk').val($(this).data('namaprod'));
+      $('#merkProduk').val($(this).data('merkprod'));
+      $('#modalBarang').modal('hide');
+    }
+
+    var cekQty = document.getElementById('qtyInput').value;
+    var qtyAct = $('#qtyInput').val().replace(/\D/g, '');
     var qtyInput = $(this).val().replace(/\D/g, '');
     var qtyAwal = qtyInput ? parseInt(qtyInput) : 0;
     $(this).val(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
 
     console.log(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+    console.log(cekQty);
+    console.log(qtyAct);
+    console.log($('#idProduk').val());
 
-    // mendapatkan tombol dengan id "submitButton"
-    var submitButton = document.getElementById("submitButton");
-
-    // memeriksa apakah nilai qty sudah diisi atau tidak
-    if ($(this).val() != qtyAwal) {
-      // jika qty sudah diisi dan > 0, maka aktifkan tombol submit
-      submitButton.disabled = false;
-    } else {
-      // jika qty belum diisi atau = 0, maka nonaktifkan tombol submit
-      submitButton.disabled = true;
+    if ($('#table2').val() !== '' || $('#qtyInput').val() !== '') {
+      if ($('#idProduk').val() != idProduk || qtyAwal.toLocaleString('id-ID').replace(',', '.') != qtyAct) {
+        // Aktifkan button submit
+        enableSubmitButton();
+      } else {
+        // Non AKtifkan button submit
+        disableSubmitButton();
+      }
     }
   });
 </script>

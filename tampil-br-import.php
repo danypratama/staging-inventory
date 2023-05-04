@@ -81,10 +81,10 @@ include "akses.php";
                                 <?php
                                 include "koneksi.php";
                                 $sql = "SELECT ibi.*, ibi.created_date AS created, sp.*, uc.nama_user as user_created
-                                    FROM inv_br_import AS ibi
-                                    LEFT JOIN user uc ON (ibi.id_user = uc.id_user)
-                                    LEFT JOIN tb_supplier sp ON (ibi.id_supplier = sp.id_sp)
-                                    WHERE id_inv_br_import = '$id' LIMIT 1 ";
+                                        FROM inv_br_import AS ibi
+                                        LEFT JOIN user uc ON (ibi.id_user = uc.id_user)
+                                        LEFT JOIN tb_supplier sp ON (ibi.id_supplier = sp.id_sp)
+                                        WHERE id_inv_br_import = '$id' LIMIT 1 ";
                                 $query = mysqli_query($connect, $sql);
                                 while ($data = mysqli_fetch_array($query)) {
                                 ?>
