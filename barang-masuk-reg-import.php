@@ -77,7 +77,9 @@ include "akses.php";
                                             <td class="text-center"><?php echo $data['shipping_by']; ?></td>
                                             <td><?php echo $data['tgl_est']; ?></td>
                                             <td class="text-center">
-                                                <a href="" class="btn btn-info btn-sm rounded"><i class="bi bi-info" style="font-size: 14px;"></i></a>
+                                                <a href="#" class="btn btn-info btn-sm rounded btn-detail" data-no-inv="<?php echo $data['no_inv'] ?>" data-tgl-inv="<?php echo $data['tgl_inv']; ?>" data-no-order="<?php echo $data['no_order']; ?>" data-tgl-order="<?php echo $data['tgl_order'] ?>" data-ship="<?php echo $data['shipping_by'] ?>" data-awb="<?php echo $data['no_awb'] ?>" data-tgl-kirim="<?php echo $data['tgl_kirim'] ?>" data-tgl-est="<?php echo $data['tgl_est'] ?>" data-tgl-create="<?php echo $data['created'] ?>">
+                                                    <i class="bi bi-info" style="font-size: 14px;"></i>
+                                                </a>
                                                 <a href="tampil-br-import.php?id=<?php echo $data['id_inv_br_import'] ?>" class="btn btn-primary btn-sm rounded"><i class="bi bi-eye" style="font-size: 14px;"></i></a>
                                                 <a href="" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
                                             </td>
@@ -92,6 +94,68 @@ include "akses.php";
             </div>
         </section>
     </main><!-- End #main -->
+    <!-- Modal Detail -->
+    <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h4><strong>Detail Produk Import</strong></h4>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <td class="col-3">No. Invoice </td>
+                                            <td id="noInv"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Tgl. Invoice</td>
+                                            <td id="tglInv"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">No. Order</td>
+                                            <td id="noOrder"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Tgl. Order</td>
+                                            <td id="tglOrder"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Shipping By</td>
+                                            <td id="ship"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">No. Awb</td>
+                                            <td id="awb"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Tgl. Kirim</td>
+                                            <td id="tglKirim"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Tgl. Estimasi</td>
+                                            <td id="tglEst"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Dibuat Tanggal</td>
+                                            <td id="tglCreate"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <?php include "page/footer.php" ?>
     <!-- End Footer -->
@@ -101,3 +165,34 @@ include "akses.php";
 </body>
 
 </html>
+
+<script>
+    $(document).ready(function() {
+        $('.btn-detail').click(function() {
+            var noInv = $(this).data('no-inv');
+            var tglInv = $(this).data('tgl-inv');
+            var noOrder = $(this).data('no-order');
+            var tglOrder = $(this).data('tgl-order');
+            var ship = $(this).data('ship');
+            var awb = $(this).data('awb');
+            var tglKirim = $(this).data('tgl-kirim');
+            var tglEst = $(this).data('tgl-est');
+            var tglCreate = $(this).data('tgl-create');
+
+            console.log(noInv);
+            console.log(awb);
+
+
+            $('#noInv').html(noInv);
+            $('#tglInv').html(tglInv);
+            $('#noOrder').html(noOrder);
+            $('#tglOrder').html(tglOrder);
+            $('#ship').html(ship);
+            $('#awb').html(awb);
+            $('#tglKirim').html(tglKirim);
+            $('#tglEst').html(tglEst);
+            $('#tglCreate').html(tglCreate);
+            $('#modalDetail').modal('show');
+        });
+    });
+</script>
