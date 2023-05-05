@@ -190,9 +190,9 @@ include "akses.php";
                                             if ($actual == 0) {
                                                 echo "<td class='text-end'></td>";
                                             } else if ($actual < $order) {
-                                                echo "<td class='text-end bg-danger text-white'>Kurang : $total_min item</td>";
+                                                echo "<td class='text-end bg-danger text-white'> $total_min item</td>";
                                             } else if ($actual > $order) {
-                                                echo "<td class='text-end bg-warning'>Lebih : $total_min item</td>";
+                                                echo "<td class='text-end bg-warning'>+$total_min item</td>";
                                             } else {
                                                 echo "<td class='text-end bg-success text-white'>Oke</td>";
                                             }

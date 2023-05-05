@@ -60,10 +60,10 @@ include "akses.php";
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="text-center">Form Input Invoice Barang Masuk Import</h5>
+                        <h5 class="text-center">Form Input Invoice Barang Masuk Lokal</h5>
                     </div>
                     <div class="card-body p-3">
-                        <form action="proses/proses-br-in-import.php" method="post">
+                        <form action="proses/proses-br-in-lokal.php" method="post">
                             <div class="mb-3">
                                 <?php
                                 $UUID = generate_uuid();
@@ -71,7 +71,7 @@ include "akses.php";
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
                                         <label>No. Invoice</label>
-                                        <input type="hidden" class="form-control" name="id_inv_br_import" value="INV-IMPORT<?php echo $UUID; ?>">
+                                        <input type="hidden" class="form-control" name="id_inv_br_in_lokal" value="INV-LOKAL<?php echo $UUID; ?>">
                                         <input type="text" class="form-control" id="no_inv" name="no_inv" required>
                                     </div>
                                     <div class="col-sm-6 mb-3">
@@ -93,52 +93,12 @@ include "akses.php";
                                         <textarea type="text" class="form-control" id="alamat" name="alamat" readonly></textarea>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-4 mb-3">
-                                        <label>No. Order</label>
-                                        <input type="text" class="form-control" name="no_order" required>
-                                    </div>
-                                    <div class="col-sm-4 mb-3">
-                                        <label>Tgl. Order</label>
-                                        <div class="input-group">
-                                            <input type="date" class="form-control bg-white" id="date" name="tgl_order" required>
-                                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4 mb-3">
-                                        <label>No. AWB</label>
-                                        <input type="text" class="form-control" name="no_awb" required>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4 mb-3">
-                                        <label>Tgl. Kirim</label>
-                                        <div class="input-group">
-                                            <input type="date" class="form-control bg-white" id="tgl_kirim" name="tgl_kirim" required>
-                                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4 mb-3">
-                                        <label>Shipping</label>
-                                        <select disabled class="form-control form-select" id="limit" name="ship" readonly required>
-                                            <option value="" selected="selected">Pilih...</option>
-                                            <option value="10">Udara</option>
-                                            <option value="30">Laut</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-4 mb-3">
-                                        <label>Tgl. Estimasi</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-white" id="est" name="tgl_est" readonly>
-                                            <span class="input-group-text" onclick="flatpickr('#est')"><i class="bi bi-calendar"></i></span>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
-                                    <input type="hidden" class="form-control" name="created" id="datetime-input">
-                                </div>
+                                <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
+                                <input type="hidden" class="form-control" name="created" id="datetime-input">
+
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn btn-primary btn-md m-2" name="simpan-br-in-import"><i class="bx bx-save"></i> Simpan Data</button>
-                                    <a href="barang-masuk-reg-import.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Tutup</a>
+                                    <button type="submit" class="btn btn-primary btn-md m-2" name="simpan-br-in-lokal"><i class="bx bx-save"></i> Simpan Data</button>
+                                    <a href="barang-masuk-lokal.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Tutup</a>
                                 </div>
                             </div>
                         </form>
@@ -234,69 +194,6 @@ function generate_uuid()
     });
 </script>
 <!-- end date picker -->
-
-<!-- Tanggal Estimasi Barang Sampai -->
-<script type="text/javascript">
-    // Menampilkan kalender JIka User ingin merubah tanggal Est
-    flatpickr("#est", {
-        enableTime: false,
-        dateFormat: "d/m/Y",
-        onClose: function(selectedDates, dateStr, instance) {
-            // Update input value when a date is selected
-            document.getElementById("est").value = dateStr;
-        }
-    });
-    $(document).ready(function() {
-        var lb = $('#ExpDate');
-        var shipSelect = $('#limit');
-        var tglKirimInput = $('#tgl_kirim');
-        var tglEstInput = $('#est');
-
-        // Set selected option as default value
-        var selectedOption = shipSelect.find('option:selected');
-        var defaultValue = selectedOption.val();
-        var defaultText = selectedOption.text();
-        shipSelect.val(defaultValue);
-        lb.html(defaultText);
-
-        tglKirimInput.on('change', function() {
-            if (tglKirimInput.val()) {
-                // Enable select element
-                shipSelect.prop('disabled', false);
-
-                if (shipSelect.val()) {
-                    var limit = shipSelect.val();
-                    var currentDate = moment(tglKirimInput.val(), "DD/MM/YYYY");
-                    var adding = currentDate.add(Number(limit), 'days');
-                    tglEstInput.val(adding.format("DD/MM/YYYY"));
-                }
-            } else {
-                // Disable select element and set to default value
-                shipSelect.prop('disabled', true);
-                shipSelect.val(defaultValue);
-                lb.html(defaultText);
-
-                tglEstInput.val('');
-            }
-        });
-
-        shipSelect.on('change', function() {
-            if (tglKirimInput.val()) {
-                var limit = $(this).val();
-                lb.html(limit);
-                var currentDate = moment(tglKirimInput.val(), "DD/MM/YYYY");
-                var adding = currentDate.add(Number(limit), 'days');
-                tglEstInput.val(adding.format("DD/MM/YYYY"));
-            }
-        });
-
-        tglEstInput.on('change', function() {
-            var estDate = $(this).val();
-            // Lakukan hal yang Anda inginkan dengan tanggal estimasi yang baru, misalnya menyimpannya ke database atau menampilkan ke pengguna.
-        });
-    });
-</script>
-<!-- End Tanggal Estimasi Barang Sampai -->
 
 <!-- Clock js -->
 <script>

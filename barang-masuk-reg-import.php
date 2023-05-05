@@ -28,11 +28,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <!-- <div class="loader loader">
-      <div class="loading">
-        <img src="img/loading.gif" width="200px" height="auto">
-      </div>
-    </div> -->
+        <div class="loader loader">
+            <div class="loading">
+                <img src="img/loading.gif" width="200px" height="auto">
+            </div>
+        </div>
         <!-- ENd Loading -->
         <section>
             <!-- SWEET ALERT -->
@@ -46,6 +46,7 @@ include "akses.php";
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Masuk Import</h5>
                         <a href="input-inv-br-in-import.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah Data</a>
+                        <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
                         <div class="table-responsive pt-3">
                             <table class="table table-striped table-bordered" id="table1">
                                 <thead>
@@ -81,7 +82,7 @@ include "akses.php";
                                                     <i class="bi bi-info" style="font-size: 14px;"></i>
                                                 </a>
                                                 <a href="tampil-br-import.php?id=<?php echo $data['id_inv_br_import'] ?>" class="btn btn-primary btn-sm rounded"><i class="bi bi-eye" style="font-size: 14px;"></i></a>
-                                                <a href="" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="edit-inv-br-in-import.php?id=<?php echo $data['id_inv_br_import'] ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>

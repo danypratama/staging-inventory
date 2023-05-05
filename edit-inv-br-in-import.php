@@ -50,34 +50,40 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <section>
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="text-center">Form Input Invoice Barang Masuk Import</h5>
+                        <h5 class="text-center">Form Edit Invoice Barang Masuk Import</h5>
                     </div>
                     <div class="card-body p-3">
                         <form action="proses/proses-br-in-import.php" method="post">
                             <div class="mb-3">
                                 <?php
-                                $UUID = generate_uuid();
+                                $ide = $_GET['id'];
+                                $sql = "SELECT ibi.*, sp.*
+                                        FROM inv_br_import AS ibi 
+                                        LEFT JOIN  tb_supplier sp ON (ibi.id_supplier = sp.id_sp)
+                                        WHERE ibi.id_inv_br_import = '$ide'";
+                                $query = mysqli_query($connect, $sql);
+                                $data = mysqli_fetch_array($query);
                                 ?>
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
                                         <label>No. Invoice</label>
-                                        <input type="hidden" class="form-control" name="id_inv_br_import" value="INV-IMPORT<?php echo $UUID; ?>">
-                                        <input type="text" class="form-control" id="no_inv" name="no_inv" required>
+                                        <input type="hidden" class="form-control" name="id_inv_br_import" value="<?php echo $data['id_inv_br_import'] ?>">
+                                        <input type="text" class="form-control" id="no_inv" name="no_inv" value="<?php echo $data['no_inv'] ?>" required>
                                     </div>
-                                    <div class="col-sm-6 mb-3">
+                                    <div class=" col-sm-6 mb-3">
                                         <label>Tgl. Invoice</label>
                                         <div class="input-group">
-                                            <input type="date" class="form-control bg-white" id="date" name="tgl_inv" required>
+                                            <input type="text" class="form-control bg-white" id="date" name="tgl_inv" value="<?php echo $data['tgl_inv'] ?>" required>
                                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                                         </div>
                                     </div>
@@ -85,43 +91,43 @@ include "akses.php";
                                 <div class="row">
                                     <div class="col-sm-4 mb-3">
                                         <label>Supplier</label>
-                                        <input type="hidden" class="form-control" id="id" name="id_sp">
-                                        <input type="text" class="form-control" id="sp" name="sp" data-bs-toggle="modal" data-bs-target="#modalSp" readonly>
+                                        <input type="hidden" class="form-control" id="id" name="id_sp" value="<?php echo $data['id_sp'] ?>">
+                                        <input type="text" class="form-control" id="sp" name="sp" data-bs-toggle="modal" data-bs-target="#modalSp" value="<?php echo $data['nama_sp'] ?>" readonly>
                                     </div>
                                     <div class="col-sm-8 mb-3">
                                         <label>Alamat</label>
-                                        <textarea type="text" class="form-control" id="alamat" name="alamat" readonly></textarea>
+                                        <textarea type="text" class="form-control" id="alamat" name="alamat" readonly><?php echo $data['alamat'] ?></textarea>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4 mb-3">
                                         <label>No. Order</label>
-                                        <input type="text" class="form-control" name="no_order" required>
+                                        <input type="text" class="form-control" name="no_order" value="<?php echo $data['no_order'] ?>" required>
                                     </div>
                                     <div class="col-sm-4 mb-3">
                                         <label>Tgl. Order</label>
                                         <div class="input-group">
-                                            <input type="date" class="form-control bg-white" id="date" name="tgl_order" required>
+                                            <input type="text" class="form-control bg-white" id="date" name="tgl_order" value="<?php echo $data['tgl_order'] ?>" required>
                                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                                         </div>
                                     </div>
                                     <div class="col-sm-4 mb-3">
                                         <label>No. AWB</label>
-                                        <input type="text" class="form-control" name="no_awb" required>
+                                        <input type="text" class="form-control" name="no_awb" value="<?php echo $data['no_awb'] ?>" required>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4 mb-3">
                                         <label>Tgl. Kirim</label>
                                         <div class="input-group">
-                                            <input type="date" class="form-control bg-white" id="tgl_kirim" name="tgl_kirim" required>
+                                            <input type="text" class="form-control bg-white" id="tgl_kirim" name="tgl_kirim" value="<?php echo $data['tgl_kirim'] ?>" required>
                                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                                         </div>
                                     </div>
                                     <div class="col-sm-4 mb-3">
                                         <label>Shipping</label>
-                                        <select disabled class="form-control form-select" id="limit" name="ship" readonly required>
-                                            <option value="" selected="selected">Pilih...</option>
+                                        <select class="form-control form-select" id="limit" name="ship" required>
+                                            <option value="<?php echo $data['shipping_by'] ?>"><?php echo $data['shipping_by'] ?></option>
                                             <option value="10">Udara</option>
                                             <option value="30">Laut</option>
                                         </select>
@@ -129,15 +135,13 @@ include "akses.php";
                                     <div class="col-sm-4 mb-3">
                                         <label>Tgl. Estimasi</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control bg-white" id="est" name="tgl_est" readonly>
+                                            <input type="text" class="form-control bg-white" id="est" name="tgl_est" value="<?php echo date($data['tgl_est']) ?>" readonly>
                                             <span class="input-group-text" onclick="flatpickr('#est')"><i class="bi bi-calendar"></i></span>
                                         </div>
                                     </div>
-                                    <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
-                                    <input type="hidden" class="form-control" name="created" id="datetime-input">
                                 </div>
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn btn-primary btn-md m-2" name="simpan-br-in-import"><i class="bx bx-save"></i> Simpan Data</button>
+                                    <button type="submit" class="btn btn-primary btn-md m-2" name="edit-inv-br-in-import"><i class="bx bx-save"></i> Ubah Data</button>
                                     <a href="barang-masuk-reg-import.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Tutup</a>
                                 </div>
                             </div>
@@ -297,26 +301,3 @@ function generate_uuid()
     });
 </script>
 <!-- End Tanggal Estimasi Barang Sampai -->
-
-<!-- Clock js -->
-<script>
-    function inputDateTime() {
-        // Get current date and time
-        let currentDate = new Date();
-
-        // Format date and time as yyyy-mm-ddThh:mm:ss
-        let year = currentDate.getFullYear();
-        let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        let day = currentDate.getDate().toString().padStart(2, '0');
-        let hours = currentDate.getHours();
-        let minutes = currentDate.getMinutes().toString().padStart(2, '0');
-        let seconds = currentDate.getSeconds().toString().padStart(2, '0');
-        let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
-
-        // Set value of input field to current date and time
-        document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
-
-    }
-    // Call updateDateTime function every second
-    setInterval(inputDateTime, 1000);
-</script>

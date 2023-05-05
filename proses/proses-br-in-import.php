@@ -83,6 +83,53 @@ if (isset($_POST['simpan-br-in-import'])) {
         $_SESSION['info'] = 'Data Gagal Disimpan';
         header("Location:../tampil-br-import.php?id=$id_inv_import");
     }
+} else if (isset($_POST['edit-inv-br-in-import'])) {
+    $id_inv_br_import = $_POST['id_inv_br_import'];
+    $no_inv = $_POST['no_inv'];
+    $tgl_inv = $_POST['tgl_inv'];
+    $id_sp = $_POST['id_sp'];
+    $no_order = $_POST['no_order'];
+    $tgl_order = $_POST['tgl_order'];
+    $no_awb = $_POST['no_awb'];
+    $tgl_kirim = $_POST['tgl_kirim'];
+    $ship = $_POST['ship'];
+    $tgl_est = $_POST['tgl_est'];
+    $laut = 'laut';
+    $udara = 'udara';
+
+    echo $ship;
+
+    $cek_data = "SELECT * FROM inv_br_import WHERE id_inv_br_import = '$id_inv_br_import'";
+    $query_cek = mysqli_query($connect, $cek_data);
+    $data_sebelumnya = mysqli_fetch_assoc($query_cek);
+
+    if ($data_sebelumnya['id_supplier'] == $id_sp && $data_sebelumnya['no_inv'] == $no_inv && $data_sebelumnya['tgl_inv'] == $tgl_inv && $data_sebelumnya['tgl_inv'] == $tgl_inv && $data_sebelumnya['no_order'] == $no_order && $data_sebelumnya['tgl_order'] == $tgl_order && $data_sebelumnya['shipping_by'] == $ship && $data_sebelumnya['no_awb'] == $no_awb && $data_sebelumnya['tgl_kirim'] == $tgl_kirim && $data_sebelumnya['tgl_est'] == $tgl_est) {
+        $_SESSION['info'] = 'Tidak Ada Perubahan Data';
+        header("Location:../barang-masuk-reg-import.php");
+        exit;
+    } else {
+        $edit_data = "UPDATE inv_br_import
+                            SET 
+                            id_supplier = '$id_sp',
+                            no_inv = '$no_inv',
+                            tgl_inv = '$tgl_inv',
+                            no_order = '$no_order',
+                            tgl_order = '$tgl_order',
+                            shipping_by = '$ship',
+                            no_awb = '$no_awb',
+                            tgl_kirim = '$tgl_kirim',
+                            tgl_est = '$tgl_est'
+                            WHERE  id_inv_br_import = '$id_inv_br_import'";
+        $query = mysqli_query($connect, $edit_data);
+
+        if ($query) {
+            $_SESSION['info'] = 'Diupdate';
+            header("Location:../barang-masuk-reg-import.php");
+        } else {
+            $_SESSION['info'] = 'Data Gagal Diupdate';
+            header("Location:../barang-masuk-reg-import.php");
+        }
+    }
 } else if (isset($_POST['edit-isi-br-import'])) {
     $id_isi_inv_br_import = $_POST['id_isi_inv_br_import'];
     $id_inv_import = $_POST['id_inv_import'];

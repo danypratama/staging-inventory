@@ -50,11 +50,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <section>
             <!-- SWEET ALERT -->
@@ -67,7 +67,7 @@ include "akses.php";
                 <div class="card">
                     <div class="card-body mt-3">
                         <div class="text-start">
-                            <?php $id_inv = $_GET['id_inv']; ?>
+                            <?php $id_inv = $_GET['id']; ?>
                             <a href="tampil-br-import.php?id=<?php echo $id_inv ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Kembali</a>
                         </div>
                         <div class="table-responsive mt-3">
@@ -86,12 +86,12 @@ include "akses.php";
                                     include "koneksi.php";
                                     $id = $_GET['id'];
                                     $no = 1;
-                                    $sql = "SELECT act.*, SUM(act.qty_act) AS total_qty_act, iibi.*, pr.*, mr.*
-                                                FROM act_br_import AS act
-                                                LEFT JOIN isi_inv_br_import iibi ON (act.id_isi_inv_br_import = iibi.id_isi_inv_br_import)
-                                                LEFT JOIN tb_produk_reguler pr ON (act.id_produk_reg = pr.id_produk_reg)
+                                    $sql = "SELECT ibil.*, iibil.*, pr.*, mr.*
+                                                FROM inv_br_in_lokal AS ibil
+                                                LEFT JOIN isi_inv_br_in_lokal iibil ON (ibil.id_inv_br_in_lokal = iibil.id_inv_br_in_lokal)
+                                                LEFT JOIN tb_produk_reguler pr ON (iibil.id_produk_reg = pr.id_produk_reg)
                                                 LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                                                WHERE act.id_isi_inv_br_import ='$id' GROUP BY act.id_produk_reg";
+                                                WHERE ibil.id_inv_br_in_lokal ='$id'";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
@@ -99,10 +99,10 @@ include "akses.php";
                                             <td class="text-center"><?php echo $no; ?></td>
                                             <td><?php echo $data['nama_produk']; ?></td>
                                             <td><?php echo $data['nama_merk']; ?></td>
-                                            <td class="text-end"><?php echo number_format($data['total_qty_act'], 0, '.', '.'); ?></td>
+                                            <td class="text-end"><?php echo number_format($data['qty'], 0, '.', '.'); ?></td>
                                             <td class="text-center">
-                                                <a href="edit-act-br-import.php?edit-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import']; ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
-                                                <a href="proses/proses-br-in-import.php?hapus-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import']; ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
+                                                <a href="#" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="#" class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>
