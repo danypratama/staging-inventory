@@ -68,7 +68,8 @@ include "akses.php";
                     <div class="card-body mt-3">
                         <div class="text-start">
                             <?php $id_inv = $_GET['id']; ?>
-                            <a href="tampil-br-import.php?id=<?php echo $id_inv ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Kembali</a>
+                            <a href="input-isi-inv-br-in-lokal.php?id=<?php echo $id_inv ?>" class="btn btn-primary"><i class="bi bi-plus-circle" style="color: white; font-size: 18px;"></i> Tambah Data</a>
+                            <a href="barang-masuk-lokal.php" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Kembali</a>
                         </div>
                         <div class="table-responsive mt-3">
                             <table class="table table-bordered table-striped" id="table1">
