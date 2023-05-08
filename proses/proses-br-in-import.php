@@ -45,18 +45,27 @@ if (isset($_POST['simpan-br-in-import'])) {
 
     $qty = intval(preg_replace("/[^0-9]/", "", $qty));
 
-    $sql = "INSERT INTO isi_inv_br_import
+    $cek_data = mysqli_query($connect, "SELECT id_produk_reg, id_inv_br_import FROM isi_inv_br_import WHERE id_produk_reg ='$id_produk'");
+    $data = mysqli_fetch_array($cek_data);
+
+    if ($data['id_produk_reg'] == $id_produk && $data['id_inv_br_import'] == $id_inv_import) {
+        $_SESSION['info'] = 'Data sudah ada';
+        header("Location:../tampil-br-import.php?id=$id_inv_import");
+        exit;
+    } else {
+        $sql = "INSERT INTO isi_inv_br_import
                 (id_isi_inv_br_import, id_inv_br_import, id_produk_reg, qty, id_user, created_date)
                 VALUES
                 ('$id_isi_inv_br_import', '$id_inv_import', '$id_produk', '$qty', '$id_user', '$created')";
-    $query = mysqli_query($connect, $sql);
+        $query = mysqli_query($connect, $sql);
 
-    if ($query) {
-        $_SESSION['info'] = 'Disimpan';
-        header("Location:../input-isi-inv-br-import.php?id=$id_inv_import");
-    } else {
-        $_SESSION['info'] = 'Data Gagal Disimpan';
-        header("Location:../input-isi-inv-br-import.php?id=$id_inv_import");
+        if ($query) {
+            $_SESSION['info'] = 'Disimpan';
+            header("Location:../input-isi-inv-br-import.php?id=$id_inv_import");
+        } else {
+            $_SESSION['info'] = 'Data Gagal Disimpan';
+            header("Location:../input-isi-inv-br-import.php?id=$id_inv_import");
+        }
     }
 } else if (isset($_POST['simpan-act-br-import'])) {
     $id_act_br_import = $_POST['id_act_br_import'];
