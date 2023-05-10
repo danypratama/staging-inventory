@@ -108,6 +108,10 @@ include "akses.php";
                                                 <td class="p-2" style="width: 130px">No. AWB</td>
                                                 <td class="p-2" style="width: 350px">: <?php echo $data['no_awb'] ?></td>
                                             </tr>
+                                            <tr>
+                                                <td class="p-2" style="width: 130px">Dikirim Via</td>
+                                                <td class="p-2" style="width: 350px">: <?php echo $data['shipping_by'] ?></td>
+                                            </tr>
                                         </table>
                                     </pre>
                                         </div>
@@ -123,12 +127,16 @@ include "akses.php";
                                                 <td class="p-2" style="width: 350px">: <?php echo $data['alamat'] ?></td>
                                             </tr>
                                             <tr>
-                                                <td class="p-2" style="width: 130px">Dikirim Via</td>
-                                                <td class="p-2" style="width: 350px">: <?php echo $data['shipping_by'] ?></td>
-                                            </tr>
-                                            <tr>
                                                 <td class="p-2" style="width: 130px">Tgl. Estimasi</td>
                                                 <td class="p-2" style="width: 350px">: <?php echo $data['tgl_est'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2" style="width: 130px">Status</td>
+                                                <td class="p-2" style="width: 350px">: <?php echo $data['status_pengiriman'] ?> <?php echo $data['tgl_terima'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2" style="width: 130px">Keterangan</td>
+                                                <td class="p-2" style="width: 350px">: <?php echo $data['keterangan'] ?></td>
                                             </tr>
                                         </table>
                                     </pre>

@@ -79,7 +79,7 @@ include "akses.php";
                                             <td class="text-center"><?php echo $no ?></td>
                                             <td><?php echo $data['no_inv']; ?></td>
                                             <td><?php echo $data['nama_sp']; ?></td>
-                                            <td class="text-center"><?php echo $data['shipping_by']; ?></td>
+                                            <td class="text-center"><?php echo ($data['shipping_by']); ?></td>
                                             <td class="text-center"><?php echo $data['tgl_est']; ?></td>
                                             <td><?php echo $data['status_pengiriman']; ?> <?php echo $data['tgl_terima']; ?></td>
                                             <td><?php echo $data['keterangan']; ?></td>
@@ -95,7 +95,7 @@ include "akses.php";
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item btn-detail" href="#" data-no-inv="<?php echo $data['no_inv'] ?>" data-tgl-inv="<?php echo $data['tgl_inv']; ?>" data-no-order="<?php echo $data['no_order']; ?>" data-tgl-order="<?php echo $data['tgl_order'] ?>" data-ship="<?php echo $data['shipping_by'] ?>" data-awb="<?php echo $data['no_awb'] ?>" data-tgl-kirim="<?php echo $data['tgl_kirim'] ?>" data-tgl-est="<?php echo $data['tgl_est'] ?>" data-status="<?php echo $data['status_pengiriman']; ?>" data-tgl-terima="<?php echo $data['tgl_terima']; ?>" data-tgl-create="<?php echo $data['created'] ?>" data-user-create="<?php echo $data['user_created'] ?>">
+                                                            <a class=" dropdown-item btn-detail" href="#" data-no-inv="<?php echo $data['no_inv'] ?>" data-tgl-inv="<?php echo $data['tgl_inv']; ?>" data-no-order="<?php echo $data['no_order']; ?>" data-tgl-order="<?php echo $data['tgl_order'] ?>" data-ship="<?php echo $data['shipping_by'] ?>" data-awb="<?php echo $data['no_awb'] ?>" data-tgl-kirim="<?php echo $data['tgl_kirim'] ?>" data-tgl-est="<?php echo $data['tgl_est'] ?>" data-status="<?php echo $data['status_pengiriman']; ?>" data-tgl-terima="<?php echo $data['tgl_terima']; ?>" data-tgl-create="<?php echo $data['created'] ?>" data-user-create="<?php echo $data['user_created'] ?>" data-keterangan="<?php echo $data['keterangan']; ?>">
                                                                 Detail
                                                             </a>
                                                         </li>
@@ -224,7 +224,7 @@ include "akses.php";
                                         </tr>
                                         <tr>
                                             <td class="col-3">Keterangan</td>
-                                            <td id=""></td>
+                                            <td id="ketVal"></td>
                                         </tr>
                                         <tr>
                                             <td class="col-3">Dibuat Oleh</td>
@@ -270,6 +270,7 @@ include "akses.php";
             var tglEst = $(this).data('tgl-est');
             var statusKirim = $(this).data('status');
             var tglTerima = $(this).data('tgl-terima');
+            var ketVal = $(this).data('keterangan')
             var tglCreate = $(this).data('tgl-create');
             var userCreate = $(this).data('user-create');
 
@@ -283,6 +284,7 @@ include "akses.php";
             $('#tglEst').html(tglEst);
             $('#statusKirim').html(statusKirim);
             $('#tglTerima').html(tglTerima);
+            $('#ketVal').html(ketVal);
             $('#tglCreate').html(tglCreate);
             $('#userCreate').html(userCreate);
             $('#modalDetail').modal('show');
@@ -300,6 +302,7 @@ include "akses.php";
             // Mengambill data dengan attribute
             const id = item.getAttribute('data-id');
             const estimasiTgl = item.getAttribute('data-estimasi');
+
             // Menyimpan Data Untuk di Tampilkan
             const idInv = document.getElementById('id');
             const estTgl = document.getElementById('estimasiTgl');
@@ -307,6 +310,7 @@ include "akses.php";
             // Menampilkan Data Pada Form Input
             idInv.setAttribute('value', id);
             estTgl.setAttribute('value', estimasiTgl);
+
         });
     });
 

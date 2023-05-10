@@ -15,8 +15,8 @@ if (isset($_POST['simpan-br-in-import'])) {
     $tgl_est = $_POST['tgl_est'];
     $id_user = $_POST['id_user'];
     $created = $_POST['created'];
-    $laut = 'laut';
-    $udara = 'udara';
+    $laut = 'Laut';
+    $udara = 'Udara';
 
     if ($ship == 10) {
         $simpan_data = "INSERT INTO inv_br_import
@@ -103,8 +103,8 @@ if (isset($_POST['simpan-br-in-import'])) {
     $tgl_kirim = $_POST['tgl_kirim'];
     $ship = $_POST['ship'];
     $tgl_est = $_POST['tgl_est'];
-    $laut = 'laut';
-    $udara = 'udara';
+    $laut = 'Laut';
+    $udara = 'Udara';
 
     $cek_data = "SELECT * FROM inv_br_import WHERE id_inv_br_import = '$id_inv_br_import'";
     $query_cek = mysqli_query($connect, $cek_data);
@@ -114,7 +114,7 @@ if (isset($_POST['simpan-br-in-import'])) {
         $_SESSION['info'] = 'Tidak Ada Perubahan Data';
         header("Location:../barang-masuk-reg-import.php");
         exit;
-    } else {
+    } else if ($ship == 10) {
         $edit_data = "UPDATE inv_br_import
                             SET 
                             id_supplier = '$id_sp',
@@ -122,13 +122,34 @@ if (isset($_POST['simpan-br-in-import'])) {
                             tgl_inv = '$tgl_inv',
                             no_order = '$no_order',
                             tgl_order = '$tgl_order',
-                            shipping_by = '$ship',
+                            shipping_by = '$udara',
                             no_awb = '$no_awb',
                             tgl_kirim = '$tgl_kirim',
                             tgl_est = '$tgl_est'
                             WHERE  id_inv_br_import = '$id_inv_br_import'";
         $query = mysqli_query($connect, $edit_data);
 
+        if ($query) {
+            $_SESSION['info'] = 'Diupdate';
+            header("Location:../barang-masuk-reg-import.php");
+        } else {
+            $_SESSION['info'] = 'Data Gagal Diupdate';
+            header("Location:../barang-masuk-reg-import.php");
+        }
+    } else if ($ship == 30) {
+        $edit_data = "UPDATE inv_br_import
+                            SET 
+                            id_supplier = '$id_sp',
+                            no_inv = '$no_inv',
+                            tgl_inv = '$tgl_inv',
+                            no_order = '$no_order',
+                            tgl_order = '$tgl_order',
+                            shipping_by = '$laut',
+                            no_awb = '$no_awb',
+                            tgl_kirim = '$tgl_kirim',
+                            tgl_est = '$tgl_est'
+                            WHERE  id_inv_br_import = '$id_inv_br_import'";
+        $query = mysqli_query($connect, $edit_data);
         if ($query) {
             $_SESSION['info'] = 'Diupdate';
             header("Location:../barang-masuk-reg-import.php");
