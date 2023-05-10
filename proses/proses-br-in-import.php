@@ -106,8 +106,6 @@ if (isset($_POST['simpan-br-in-import'])) {
     $laut = 'laut';
     $udara = 'udara';
 
-    echo $ship;
-
     $cek_data = "SELECT * FROM inv_br_import WHERE id_inv_br_import = '$id_inv_br_import'";
     $query_cek = mysqli_query($connect, $cek_data);
     $data_sebelumnya = mysqli_fetch_assoc($query_cek);
@@ -241,5 +239,128 @@ if (isset($_POST['simpan-br-in-import'])) {
     } else {
         $_SESSION['info'] = 'Data Gagal Dihapus';
         header("Location:../list-act-br-import.php?id=$id && id_inv=$id_inv");
+    }
+
+    // Update Status Pengiriman
+} else if (isset($_POST['update-status'])) {
+    $id_inv_br_import = $_POST['id_inv_br_import'];
+    $tgl_est_str = $_POST['tgl_est'];
+    $status = $_POST['status'];
+
+    if ($status == 'Kendala Di Pelabuhan') {
+        $ket = $_POST['keterangan'];
+        $update = mysqli_query($connect, "UPDATE inv_br_import 
+                            SET 
+                            status_pengiriman = '$status',
+                            tgl_terima = '',
+                            keterangan = '$ket'
+                            WHERE id_inv_br_import = '$id_inv_br_import'");
+        $_SESSION['info'] = 'Disimpan';
+        header("Location:../barang-masuk-reg-import.php");
+    } else if ($status == 'Sudah Diterima') {
+        $tgl_est_str = $_POST['tgl_est'];
+        $tgl_terima_str = $_POST['tgl_terima'];
+        // Konversi tanggal
+        $tgl_est = DateTime::createFromFormat('d/m/Y', $tgl_est_str)->format('Y/m/d');
+        $tgl_terima = DateTime::createFromFormat('d/m/Y', $tgl_terima_str)->format('Y/m/d');
+
+        // Konversi tanggal ke dalam format Unix timestamp
+        $timestamp_est = strtotime($tgl_est);
+        $timestamp_terima = strtotime($tgl_terima);
+
+        // Hitung selisih hari antara kedua tanggal
+        $selisih_hari = abs($timestamp_terima - $timestamp_est) / 86400;
+        $tepat_waktu = 'Tepat Waktu';
+        $telat = 'Barang Diterima Telat ' . $selisih_hari . ' hari';
+        $lebih_awal = 'Barang Diterima Lebih Awal ' . $selisih_hari . ' hari';
+        $hub_sp = 'Mohon tunggu / silahkan hubungi supplier kembali';
+        // echo $tgl_est;
+        // echo '<br>';
+        // echo $tgl_terima;
+        if ($tgl_est == $tgl_terima) {
+            $update = mysqli_query($connect, "UPDATE inv_br_import 
+                            SET 
+                            status_pengiriman = '$status',
+                            tgl_terima = '$tgl_terima_str',
+                            keterangan = '$tepat_waktu'
+                            WHERE id_inv_br_import = '$id_inv_br_import'");
+            $_SESSION['info'] = 'Disimpan';
+            header("Location:../barang-masuk-reg-import.php");
+        } else if ($tgl_est < $tgl_terima) {
+            $update = mysqli_query($connect, "UPDATE inv_br_import 
+                            SET 
+                            status_pengiriman = '$status',
+                            tgl_terima = '$tgl_terima_str',
+                            keterangan = '$telat'
+                            WHERE id_inv_br_import = '$id_inv_br_import'");
+            $_SESSION['info'] = 'Disimpan';
+            header("Location:../barang-masuk-reg-import.php");
+        } else {
+            $update = mysqli_query($connect, "UPDATE inv_br_import 
+                            SET 
+                            status_pengiriman = '$status',
+                            tgl_terima = '$tgl_terima_str',
+                            keterangan = '$lebih_awal'
+                            WHERE id_inv_br_import = '$id_inv_br_import'");
+            $_SESSION['info'] = 'Disimpan';
+            header("Location:../barang-masuk-reg-import.php");
+        }
+    } else {
+        $hub_sp = 'Mohon tunggu / silahkan hubungi supplier kembali';
+        $update = mysqli_query($connect, "UPDATE inv_br_import 
+                            SET 
+                            status_pengiriman = '$status',
+                            tgl_terima = '$tgl_terima_str',
+                            keterangan = '$hub_sp'
+                            WHERE id_inv_br_import = '$id_inv_br_import'");
+        $_SESSION['info'] = 'Disimpan';
+        header("Location:../barang-masuk-reg-import.php");
+    }
+
+    // Hapus All Data dari Inv 
+} else if (isset($_GET['id'])) {
+    //tangkap URL dengan $_GET
+    $idh = $_GET['id'];
+
+    // Menampilkan data berelasi
+    $sql = mysqli_query($connect, "SELECT ibi.*, ibi.id_inv_br_import AS id_inv, iibi.*, iibi.id_inv_br_import AS id_inv_isi
+                                    FROM inv_br_import AS ibi
+                                    LEFT JOIN isi_inv_br_import iibi ON ibi.id_inv_br_import = iibi.id_inv_br_import
+                                    LEFT JOIN act_br_import act ON (iibi.id_isi_inv_br_import = act.id_isi_inv_br_import)
+                                    WHERE ibi.id_inv_br_import= '$idh'");
+    $data = mysqli_fetch_array($sql);
+    $id_inv = $data['id_inv'];
+    $id_inv_isi = $data['id_isi_inv_br_import'];
+    $id_inv_act = $data['id_isi_inv_br_import'];
+
+    echo $id_inv;
+    echo $id_inv_isi;
+    echo $id_inv_act;
+
+
+    if ($id_inv_act == '' && $id_inv_isi == '') {
+        // //perintah queery sql untuk hapus data
+        $sql = "DELETE FROM inv_br_import
+                WHERE id_inv_br_import = '$id_inv'";
+        $query_del = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+        $_SESSION['info'] = 'Dihapus';
+        header("Location:../barang-masuk-reg-import.php");
+    } else if ($id_inv_act == true) {
+        $sql = "DELETE ibi, iibi 
+                FROM inv_br_import ibi
+                LEFT JOIN isi_inv_br_import iibi ON (ibi.id_inv_br_import = iibi.id_inv_br_import)
+                WHERE ibi.id_inv_br_import = '$id_inv'";
+        $query_del = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+        $_SESSION['info'] = 'Dihapus';
+        header("Location:../barang-masuk-reg-import.php");
+    } else {
+        $sql = "DELETE ibi, iibi, act  
+                FROM inv_br_import ibi
+                LEFT JOIN isi_inv_br_import iibi ON (ibi.id_inv_br_import = iibi.id_inv_br_import)
+                LEFT JOIN act_br_import act ON (iibi.id_isi_inv_br_import = act.id_isi_inv_br_import)
+                WHERE ibi.id_inv_br_import = '$id_inv' AND iibi.id_inv_br_import = '$id_isi_inv' AND act.id_isi_inv_br_import = '$id_inv_act'";
+        $query_del = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+        $_SESSION['info'] = 'Dihapus';
+        header("Location:../barang-masuk-reg-import.php");
     }
 }

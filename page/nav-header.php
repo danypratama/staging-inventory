@@ -1,7 +1,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
   <div class="d-flex align-items-center justify-content-between">
     <a href="index.html" class="logo d-flex align-items-center">
-      <img src="assets/img/logo-kma.png" alt="">
+      <img src="assets/img/logo-kma.png" alt="" style="width: 80px; height: auto;">
       <span class="d-none d-lg-block" style="text-decoration: none;">PT.KMA</span>
     </a>
     <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -11,20 +11,20 @@
       <li class="nav-item dropdown pe-3">
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <img src="assets/img/user.jpg" alt="Profile" class="rounded-circle">
-          <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo ucfirst($_SESSION ['tiket_nama']);?></span>
+          <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo ucfirst($_SESSION['tiket_nama']); ?></span>
         </a><!-- End Profile Iamge Icon -->
 
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
           <li class="dropdown-header">
             <h6>Anda Login Sebagai</h6>
             <?php
-              include "koneksi.php";
-              $id_role = $_SESSION['tiket_role'];
-              $sql = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
-							$query = mysqli_query($connect,$sql) or die(mysqli_error($connect));
-							$data = mysqli_fetch_array($query);
+            include "koneksi.php";
+            $id_role = $_SESSION['tiket_role'];
+            $sql = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+            $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+            $data = mysqli_fetch_array($query);
             ?>
-            <span><?php echo $data['role'];?></span>
+            <span><?php echo $data['role']; ?></span>
           </li>
           <li>
             <hr class="dropdown-divider">

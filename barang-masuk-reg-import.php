@@ -28,11 +28,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <section>
             <!-- SWEET ALERT -->
@@ -53,9 +53,11 @@ include "akses.php";
                                     <tr class="text-white" style="background-color: navy;">
                                         <td class="text-center p-3" style="width: 30px">No</td>
                                         <td class="text-center p-3" style="width: 100px">No. Invoice</td>
-                                        <td class="text-center p-3" style="width: 200px">Supplier</td>
+                                        <td class="text-center p-3" style="width: 150px">Supplier</td>
                                         <td class="text-center p-3" style="width: 100px">Shipping by</td>
                                         <td class="text-center p-3" style="width: 100px">Est. Tiba</td>
+                                        <td class="text-center p-3" style="width: 150px">Status</td>
+                                        <td class="text-center p-3" style="width: 150px">Keterangan</td>
                                         <td class="text-center p-3" style="width: 50px">Aksi</td>
                                     </tr>
                                 </thead>
@@ -70,19 +72,50 @@ include "akses.php";
                                             ORDER BY created";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
+                                        $tanggal_est_str = $data['tgl_est'];
+                                        $tanggal_terima_str = $data['tgl_terima'];
                                     ?>
                                         <tr>
                                             <td class="text-center"><?php echo $no ?></td>
                                             <td><?php echo $data['no_inv']; ?></td>
                                             <td><?php echo $data['nama_sp']; ?></td>
                                             <td class="text-center"><?php echo $data['shipping_by']; ?></td>
-                                            <td><?php echo $data['tgl_est']; ?></td>
+                                            <td class="text-center"><?php echo $data['tgl_est']; ?></td>
+                                            <td><?php echo $data['status_pengiriman']; ?> <?php echo $data['tgl_terima']; ?></td>
+                                            <td><?php echo $data['keterangan']; ?></td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-info btn-sm rounded btn-detail" data-no-inv="<?php echo $data['no_inv'] ?>" data-tgl-inv="<?php echo $data['tgl_inv']; ?>" data-no-order="<?php echo $data['no_order']; ?>" data-tgl-order="<?php echo $data['tgl_order'] ?>" data-ship="<?php echo $data['shipping_by'] ?>" data-awb="<?php echo $data['no_awb'] ?>" data-tgl-kirim="<?php echo $data['tgl_kirim'] ?>" data-tgl-est="<?php echo $data['tgl_est'] ?>" data-tgl-create="<?php echo $data['created'] ?>">
-                                                    <i class="bi bi-info" style="font-size: 14px;"></i>
-                                                </a>
-                                                <a href="tampil-br-import.php?id=<?php echo $data['id_inv_br_import'] ?>" class="btn btn-primary btn-sm rounded"><i class="bi bi-eye" style="font-size: 14px;"></i></a>
-                                                <a href="edit-inv-br-in-import.php?id=<?php echo $data['id_inv_br_import'] ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Pilih
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item status" href="#" data-bs-toggle="modal" data-bs-target="#modalStatus" data-id="<?php echo $data['id_inv_br_import']; ?>" data-estimasi="<?php echo $data['tgl_est']; ?>" data-status="<?php echo $data['status_pengiriman']; ?>">
+                                                                Ubah Status
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item btn-detail" href="#" data-no-inv="<?php echo $data['no_inv'] ?>" data-tgl-inv="<?php echo $data['tgl_inv']; ?>" data-no-order="<?php echo $data['no_order']; ?>" data-tgl-order="<?php echo $data['tgl_order'] ?>" data-ship="<?php echo $data['shipping_by'] ?>" data-awb="<?php echo $data['no_awb'] ?>" data-tgl-kirim="<?php echo $data['tgl_kirim'] ?>" data-tgl-est="<?php echo $data['tgl_est'] ?>" data-status="<?php echo $data['status_pengiriman']; ?>" data-tgl-terima="<?php echo $data['tgl_terima']; ?>" data-tgl-create="<?php echo $data['created'] ?>" data-user-create="<?php echo $data['user_created'] ?>">
+                                                                Detail
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="tampil-br-import.php?id=<?php echo $data['id_inv_br_import'] ?>">
+                                                                Lihat Isi
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="edit-inv-br-in-import.php?id=<?php echo $data['id_inv_br_import'] ?>">
+                                                                Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item delete-data" href="proses/proses-br-in-import.php?id=<?php echo $data['id_inv_br_import'] ?>">
+                                                                Hapus
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>
@@ -95,6 +128,47 @@ include "akses.php";
             </div>
         </section>
     </main><!-- End #main -->
+
+    <!-- Modal Status -->
+    <div class="modal fade" id="modalStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Status</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="proses/proses-br-in-import.php" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" id="id" name="id_inv_br_import">
+                        <input type="hidden" id="estimasiTgl" name="tgl_est">
+                        <div class="mb-3">
+                            <label>Status Pengiriman</label>
+                            <select class="form-select" name="status" id="status">
+                                <option value="">Pilih...</option>
+                                <option value="Sudah Diterima">Sudah Diterima</option>
+                                <option value="Masih Dalam Perjalanan">Masih Dalam Perjalanan</option>
+                                <option value="Belum Dikirim">Belum Dikirim</option>
+                                <option value="Kendala Di Pelabuhan">Kendala Di Pelabuhan</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label>Diterima tanggal</label>
+                            <input type="text" class="form-control" id="tgl_terima" name="tgl_terima" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label>Keterangan</label>
+                            <input type="text" class="form-control" id="keterangan" name="keterangan" disabled>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="update-status">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Detail -->
     <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -141,6 +215,22 @@ include "akses.php";
                                             <td id="tglEst"></td>
                                         </tr>
                                         <tr>
+                                            <td class="col-3">Status Pengiriman</td>
+                                            <td id="statusKirim"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Tanggal Terima</td>
+                                            <td id="tglTerima"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Keterangan</td>
+                                            <td id=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Dibuat Oleh</td>
+                                            <td id="userCreate"></td>
+                                        </tr>
+                                        <tr>
                                             <td class="col-3">Dibuat Tanggal</td>
                                             <td id="tglCreate"></td>
                                         </tr>
@@ -166,7 +256,7 @@ include "akses.php";
 </body>
 
 </html>
-
+<!-- Modal Detail -->
 <script>
     $(document).ready(function() {
         $('.btn-detail').click(function() {
@@ -178,11 +268,10 @@ include "akses.php";
             var awb = $(this).data('awb');
             var tglKirim = $(this).data('tgl-kirim');
             var tglEst = $(this).data('tgl-est');
+            var statusKirim = $(this).data('status');
+            var tglTerima = $(this).data('tgl-terima');
             var tglCreate = $(this).data('tgl-create');
-
-            console.log(noInv);
-            console.log(awb);
-
+            var userCreate = $(this).data('user-create');
 
             $('#noInv').html(noInv);
             $('#tglInv').html(tglInv);
@@ -192,8 +281,78 @@ include "akses.php";
             $('#awb').html(awb);
             $('#tglKirim').html(tglKirim);
             $('#tglEst').html(tglEst);
+            $('#statusKirim').html(statusKirim);
+            $('#tglTerima').html(tglTerima);
             $('#tglCreate').html(tglCreate);
+            $('#userCreate').html(userCreate);
             $('#modalDetail').modal('show');
         });
+    });
+</script>
+
+<!-- Enable input tanggal ketika barang sudah diterima -->
+<script>
+    // Menampilkan id
+    const dropdownItems = document.querySelectorAll('.status');
+
+    dropdownItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+            // Mengambill data dengan attribute
+            const id = item.getAttribute('data-id');
+            const estimasiTgl = item.getAttribute('data-estimasi');
+            // Menyimpan Data Untuk di Tampilkan
+            const idInv = document.getElementById('id');
+            const estTgl = document.getElementById('estimasiTgl');
+
+            // Menampilkan Data Pada Form Input
+            idInv.setAttribute('value', id);
+            estTgl.setAttribute('value', estimasiTgl);
+        });
+    });
+
+    // Tanggal
+    flatpickr("#tgl_terima", {
+        dateFormat: "d/m/Y",
+    });
+
+    // Fungsi Enable and Disable
+    function enableInput() {
+        $('#tgl_terima').prop('disabled', false);
+        $('#keterangan').prop('disabled', false);
+    }
+
+    function disableInput() {
+        $('#tgl_terima').prop('disabled', true);
+        $('#tgl_terima').val('');
+    }
+
+    function enableInputKet() {
+        $('#keterangan').prop('disabled', false);
+    }
+
+    function disableInputKet() {
+        $('#keterangan').prop('disabled', true);
+        $('#keterangan').val('');
+    }
+
+    const tanggalTerima = document.getElementById('status');
+
+    tanggalTerima.addEventListener('change', function() {
+        const cekStatus = "Sudah Diterima";
+        const cekStatusKet = "Kendala Di Pelabuhan";
+        const selectedStatus = tanggalTerima.options[tanggalTerima.selectedIndex].value;
+
+        if (selectedStatus == cekStatus) {
+            enableInput();
+        } else {
+            disableInput();
+        }
+
+        if (selectedStatus == cekStatusKet) {
+            enableInputKet();
+        } else {
+            disableInputKet();
+        }
+
     });
 </script>
