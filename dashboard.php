@@ -1,6 +1,6 @@
 <?php
-  $page = 'dashboard';
-  include "akses.php";
+$page = 'dashboard';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +19,7 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
@@ -37,7 +37,6 @@
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
-  
     </section>
 
   </main><!-- End #main -->
