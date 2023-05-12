@@ -1,6 +1,6 @@
 <?php
-  $page = 'role-user';
-  include "akses.php";
+$page = 'role-user';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,18 +19,21 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
-  
+
   <!-- SWEET ALERT -->
-  <div class="info-data" data-infodata="<?php if(isset($_SESSION['info'])){ echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
+  <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                          echo $_SESSION['info'];
+                                        }
+                                        unset($_SESSION['info']); ?>"></div>
   <!-- END SWEET ALERT -->
 
   <main id="main" class="main">
-     <!-- Loading -->
-     <div class="loader loader">
+    <!-- Loading -->
+    <div class="loader loader">
       <div class="loading">
         <img src="img/loading.gif" width="200px" height="auto">
       </div>
@@ -49,7 +52,9 @@
       <div class="container-fluid">
         <div class="card shadow">
           <div class="container-fluid">
-            <div class="card-header bg-body mb-2 text-center"><h5>Role User</h5></div>
+            <div class="card-header bg-body mb-2 text-center">
+              <h5>Role User</h5>
+            </div>
             <div class="card-body rounded-3">
               <!-- Button trigger modal -->
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-user-role">
@@ -66,50 +71,50 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
-                      date_default_timezone_set('Asia/Jakarta');
-                      include "koneksi.php";
-                      $no = 1;
-                      $sql = "SELECT * FROM user_role ";
-                      $query = mysqli_query($connect,$sql) or die (mysqli_error($connect));;
-                      while ($data = mysqli_fetch_array($query)) {
-                      ?>
-                    <tr>
-                      <td class="text-center"><?php echo $no; ?></td>
-                      <td><?php echo $data['role']; ?></td>
-                      <td class="text-center"><?php echo date($data['created_date']) ; ?></td>
-                      <td class="text-center">
-                        <button name="edit-data" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#edit" data-id="<?php echo $data['id_user_role'] ?>" data-role="<?php echo $data['role'] ?>">
-                          <i class="bi bi-pencil"></i>
-                      </button>
-                        <a href="proses/proses-role.php?hapus-role=<?php echo $data['id_user_role'] ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                      </td>
-                      <!-- Modal Edit Role -->
-                      <div class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" id="edit">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Role</h1>
-                            </div>
+                    <?php
+                    date_default_timezone_set('Asia/Jakarta');
+                    include "koneksi.php";
+                    $no = 1;
+                    $sql = "SELECT * FROM user_role ";
+                    $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));;
+                    while ($data = mysqli_fetch_array($query)) {
+                    ?>
+                      <tr>
+                        <td class="text-center"><?php echo $no; ?></td>
+                        <td><?php echo $data['role']; ?></td>
+                        <td class="text-center"><?php echo date($data['created_date']); ?></td>
+                        <td class="text-center">
+                          <button name="edit-data" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#edit" data-id="<?php echo $data['id_user_role'] ?>" data-role="<?php echo $data['role'] ?>">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <a href="proses/proses-role.php?hapus-role=<?php echo $data['id_user_role'] ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                        </td>
+                        <!-- Modal Edit Role -->
+                        <div class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" id="edit">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Role</h1>
+                              </div>
                               <form action="proses/proses-role.php" method="POST">
                                 <div class="modal-body">
                                   <div class="mb-3">
                                     <label class="form-label">Role User</label>
                                     <input type="hidden" class="form-control" name="id_user_role" id="id_role">
                                     <input type="text" class="form-control" name="role" id="role" required>
-                                  </div>                
+                                  </div>
                                   <div class="modal-footer">
                                     <button type="submit" name="edit-role" class="btn btn-primary"><i class="bx bx-save"></i> Ubah Data</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                                   </div>
                                 </div>
                               </form>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <!-- end modal Edit Role -->
-                    </tr>
-                    <?php $no++; ?>
+                        <!-- end modal Edit Role -->
+                      </tr>
+                      <?php $no++; ?>
                     <?php } ?>
                   </tbody>
                 </table>
@@ -132,8 +137,8 @@
         <form action="proses/proses-role.php" method="POST">
           <div class="modal-body">
             <div class="mb-3">
-              <?php 
-                 $UUID = generate_uuid();
+              <?php
+              $UUID = generate_uuid();
               ?>
               <label class="form-label">Role User</label>
               <input type="hidden" class="form-control" name="id_user_role" value="RL<?php echo $UUID; ?>">
@@ -158,27 +163,33 @@
 
   <?php include "page/script.php" ?>
 </body>
+
 </html>
 <?php
-  function generate_uuid() {
-  return sprintf( '%04x%04x%04x',
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0x0fff ) | 0x4000,
-    mt_rand( 0, 0x3fff ) | 0x8000,
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+function generate_uuid()
+{
+  return sprintf(
+    '%04x%04x%04x',
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0x0fff) | 0x4000,
+    mt_rand(0, 0x3fff) | 0x8000,
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff)
   );
 }
 
 ?>
 
 <script>
-  $('#edit').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-      var id = button.data('id');
-      var role = button.data('role');
-      var modal = $(this);
-      modal.find('.modal-body #id_role').val(id);
-      modal.find('.modal-body #role').val(role);
+  $('#edit').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var id = button.data('id');
+    var role = button.data('role');
+    var modal = $(this);
+    modal.find('.modal-body #id_role').val(id);
+    modal.find('.modal-body #role').val(role);
   })
 </script>

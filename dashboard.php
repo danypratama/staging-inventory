@@ -37,6 +37,31 @@ include "akses.php";
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
+      <?php
+      // Memulai session
+      session_start();
+
+      // Jika belum ada array untuk menampung session, buat array kosong
+      if (!isset($_SESSION['login_sessions'])) {
+        $_SESSION['login_sessions'] = array();
+        $id_history = $_SESSION['encoded_id'];
+        $id_history = array();
+      }
+
+      // Menambahkan session ke array jika belum ada
+      $ip = $_SERVER['REMOTE_ADDR'];
+      if (!in_array($ip, $_SESSION['login_sessions'])) {
+        $_SESSION['login_sessions'][] = $ip;
+      }
+
+      // Cek semua session yang sedang login
+      foreach ($_SESSION['login_sessions'] as $ip) {
+        // Lakukan aksi untuk session dengan IP $ip
+        // Misalnya, tampilkan pesan atau berikan opsi untuk logout
+        echo "User dengan IP $ip sedang login.<br>";
+      }
+      ?>
+
     </section>
 
   </main><!-- End #main -->

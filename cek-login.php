@@ -37,6 +37,8 @@ curl_close($ch);
 
 $location = json_decode($result);
 $locationString = json_encode($location);
+$locationString = '';
+$locationString .= $location->city . ',' . $location->country . PHP_EOL;
 
 // ============================================================================
 include "koneksi.php";
@@ -47,7 +49,9 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     // Query untuk mencari data user dari database
-    $query = "SELECT * FROM user WHERE username = '$username'";
+    $query = "SELECT * FROM user 
+            --   JOIN user_history ON (user_history.id_user = user.id_user) 
+              WHERE username = '$username'";
     $result = mysqli_query($connect, $query);
 
     // Periksa apakah username ditemukan
@@ -66,14 +70,15 @@ if (isset($_POST['login'])) {
             $_SESSION['tiket_nama'] = $row['nama_user'];
             $_SESSION['tiket_role'] = $row['id_user_role'];
             $_SESSION['tiket_jenkel'] = $row['jenkel'];
-            $_SESSION['ip'] = $row['ip_address'];
+            $_SESSION['ip'] = $ip_address;
             $_SESSION['last_login'] = $row['last_login'];
             $_SESSION['os'] = $row['perangkat'];
             $_SESSION['lokasi'] = $row['lokasi'];
-            $_SESSION['id_history'] = $row['id_history'];
+            $_SESSION['encoded_id'] = $encoded_id;
 
 
             // Update User Login Session
+            $id_history =  $_SESSION['encoded_id'];
             $id_user = $_SESSION['tiket_id'];
             $online = 'Online';
             $timezone = time() + (60 * 60 * 7);
@@ -85,7 +90,7 @@ if (isset($_POST['login'])) {
                                         VALUES 
                                         ('$UUID', '$id_user', '$today', '$ip_address', '$os', '$device', '$locationString', '$online')");
 
-            header("Location: dashboard.php?id=$encoded_id");
+            header("Location: dashboard.php");
         } else {
             // Password salah, kembali ke halaman login
             header("Location: login.php?gagal");

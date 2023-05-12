@@ -30,10 +30,7 @@
             <hr class="dropdown-divider">
           </li>
           <li>
-            <?php
-            $id_history = $_GET['id'];
-            ?>
-            <a class="dropdown-item d-flex align-items-center" href="logout.php?id=<?php echo $id_history ?>">
+            <a class="dropdown-item d-flex align-items-center" href="logout.php?logout=<?php echo $_SESSION['encoded_id'] ?>">
               <i class="bi bi-box-arrow-right"></i>
               <span>Sign Out</span>
             </a>
