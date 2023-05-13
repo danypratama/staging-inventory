@@ -1,10 +1,11 @@
 <?php
-    $page = 'data';
-    $page2 = 'data-produk-set-marwa';
-    include "akses.php";
+$page = 'data';
+$page2 = 'data-produk-set-marwa';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -13,9 +14,9 @@
   <meta content="" name="keywords">
   <?php include "page/head.php"; ?>
   <style>
-     input[type="text"]:read-only {
+    input[type="text"]:read-only {
       background: #e9ecef;
-      }
+    }
   </style>
 </head>
 
@@ -23,49 +24,49 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
-  
+
 
   <main id="main" class="main">
     <section>
       <div class="container-fluid">
         <div class="card">
           <div class="card-header text-center">
-            <h4>Tambah Data Produk Set Marwa</h4>
+            <h4>Tambah Data Stock Produk Marwa</h4>
           </div>
           <div class="card-body p-3">
             <form action="proses/proses-stock-reg.php" method="POST">
-                <?php 
-                    $UUID = generate_uuid();
-                ?>
-               
-                <input type="hidden" class="form-control" name="id_stock_reg" value="STOCKREG<?php echo $UUID; ?>">
-                <div class="row">
-                    <div class="col-sm-6 mb-3">
-                        <label>Nama Produk</label>
-                        <input type="hidden" class="form-control" name="id_produk" id="idProduk">
-                        <input type="text" class="form-control" name="nama_produk" id="namaProduk" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#modalBarang" readonly>
-                    </div>
-                    <div class="col-sm-4 mb-3">
-                        <label>Merk</label>
-                        <input type="text" class="form-control" name="merk" id="merkProduk" readonly>
-                    </div>
-                    <div class="col-sm-2 mb-3">
-                        <label>Stock</label>
-                        <input type="text" class="form-control" name="stock" id="stock" required>
-                    </div>
+              <?php
+              $UUID = generate_uuid();
+              ?>
+
+              <input type="hidden" class="form-control" name="id_stock_reg" value="STOCKREG<?php echo $UUID; ?>">
+              <div class="row">
+                <div class="col-sm-6 mb-3">
+                  <label>Nama Produk</label>
+                  <input type="hidden" class="form-control" name="id_produk" id="idProduk">
+                  <input type="text" class="form-control" name="nama_produk" id="namaProduk" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#modalBarang" readonly>
                 </div>
-                <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>" required>
-                <input type="hidden" class="form-control" name="created_date" id="datetime-input" required>
-                <div class="mb-3 pt-3 text-end">
-                    <button type="submit" name="simpan-stock-reg" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
-                    <a href="stock-produk-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
+                <div class="col-sm-4 mb-3">
+                  <label>Merk</label>
+                  <input type="text" class="form-control" name="merk" id="merkProduk" readonly>
                 </div>
+                <div class="col-sm-2 mb-3">
+                  <label>Stock</label>
+                  <input type="text" class="form-control" name="stock" id="stock" required>
+                </div>
+              </div>
+              <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>" required>
+              <input type="hidden" class="form-control" name="created_date" id="datetime-input" required>
+              <div class="mb-3 pt-3 text-end">
+                <button type="submit" name="simpan-stock-reg" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
+                <a href="stock-produk-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
+              </div>
             </form>
-        </div>  
+          </div>
     </section>
   </main><!-- End #main -->
   <!-- Footer -->
@@ -75,6 +76,7 @@
 
   <?php include "page/script.php" ?>
 </body>
+
 </html>
 
 <!-- Modal Barang -->
@@ -97,12 +99,12 @@
               </tr>
             </thead>
             <tbody>
-              <?php 
-                date_default_timezone_set('Asia/Jakarta');
-                
-                include "koneksi.php";
-                $no = 1;
-                $sql = "SELECT pr.*,
+              <?php
+              date_default_timezone_set('Asia/Jakarta');
+
+              include "koneksi.php";
+              $no = 1;
+              $sql = "SELECT pr.*,
                         pr.id_produk_reg AS 'produk_id',
                         mr.*,
                         spr.*
@@ -110,16 +112,16 @@
                         LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
                         LEFT JOIN stock_produk_reguler spr ON (pr.id_produk_reg = spr.id_produk_reg)
                         WHERE register_value = '0' ";
-                $query = mysqli_query($connect, $sql);
-                while($data = mysqli_fetch_array($query)){
+              $query = mysqli_query($connect, $sql);
+              while ($data = mysqli_fetch_array($query)) {
               ?>
-              <tr data-idprod= "<?php echo $data['produk_id'];?>" data-namaprod = "<?php echo $data['nama_produk'];?>" data-merkprod = "<?php echo $data['nama_merk'];?>" data-bs-dismiss="modal">
-                <td class="text-center"><?php echo $no; ?></td>
-                <td><?php echo $data['nama_produk']; ?></td>
-                <td class="text-center"><?php echo $data['nama_merk']; ?></td>
-                <td class="text-center"><?php echo $data['stock']; ?></td>
-              </tr>
-              <?php $no++; ?>
+                <tr data-idprod="<?php echo $data['produk_id']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                  <td class="text-center"><?php echo $no; ?></td>
+                  <td><?php echo $data['nama_produk']; ?></td>
+                  <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                  <td class="text-center"><?php echo $data['stock']; ?></td>
+                </tr>
+                <?php $no++; ?>
               <?php } ?>
             </tbody>
           </table>
@@ -135,13 +137,18 @@
 
 <!-- Generat UUID -->
 <?php
-  function generate_uuid() {
-  return sprintf( '%04x%04x%04x',
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0x0fff ) | 0x4000,
-    mt_rand( 0, 0x3fff ) | 0x8000,
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+function generate_uuid()
+{
+  return sprintf(
+    '%04x%04x%04x',
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0x0fff) | 0x4000,
+    mt_rand(0, 0x3fff) | 0x8000,
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff)
   );
 }
 ?>
@@ -173,7 +180,7 @@
 
 <script>
   // select Produk Reguler
-  $(document).on('click', '#table2 tbody tr', function (e) {
+  $(document).on('click', '#table2 tbody tr', function(e) {
     $('#idProduk').val($(this).data('idprod'));
     $('#namaProduk').val($(this).data('namaprod'));
     $('#merkProduk').val($(this).data('merkprod'));
@@ -187,4 +194,3 @@
     $(this).val(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
   });
 </script>
-

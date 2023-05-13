@@ -66,7 +66,7 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card shadow p-3">
           <?php
-          $id = $_GET['id'];
+          $id = base64_decode($_GET['id']);
           $UUID = generate_uuid();
           $month = date('m');
           $year = date('y');
@@ -89,7 +89,7 @@ include "akses.php";
             </div>
             <div class="text-end">
               <button type="submit" name="simpan-isi-br-import" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
-              <a href="tampil-br-import.php?id=<?php echo $id ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+              <a href="tampil-br-import.php?id=<?php echo base64_encode($id) ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
             </div>
           </form>
         </div>

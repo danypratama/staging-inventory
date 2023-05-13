@@ -134,7 +134,7 @@
     // Hapus 
 	}elseif($_GET['hapus-produk-reg']){
 		//tangkap URL dengan $_GET
-	    $idh = $_GET['hapus-produk-reg'];
+	    $idh = base64_decode($_GET['hapus-produk-reg']);
 
 		//mengambil nama gambar yang terkait
 		$sql = "SELECT * FROM tb_produk_reguler WHERE id_produk_reg = '$idh'";
@@ -156,4 +156,3 @@
 	        echo "<script>document.location.href='../data-produk-reg.php'</script>";
 		}
 	}
-?>

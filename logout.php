@@ -26,9 +26,23 @@ if (isset($_GET['logout'])) {
     header("Location:index.php");
 
     // Jika ada permintaan logout pengguna yang mencurigakan
-} else if (isset($_GET['id_off'])) {
-    session_destroy();
-    header("Location:index.php");
+} else if (isset($_GET['ip'])) {
+    $current_ip = $_SERVER['REMOTE_ADDR'];
+
+    echo $current_ip;
+
+    if (isset($_GET['ip']) && $_GET['ip'] != $current_ip) {
+        // Hapus seluruh variabel sesi
+        unset($_SESSION['username']);
+        unset($_SESSION['login']);
+
+        // Hentikan sesi
+        session_destroy();
+
+        // Redirect ke halaman login
+        header("Location: login.php");
+        exit;
+    }
 }
 
 

@@ -63,7 +63,7 @@
     // Hapus 
 	}elseif($_GET['hapus-lokasi-produk']){
 		//tangkap URL dengan $_GET
-	    $idh = $_GET['hapus-lokasi-produk'];
+	    $idh = base64_decode($_GET['hapus-lokasi-produk']);
 
 	    // perintah queery sql untuk hapus data
 	    $sql = "DELETE FROM tb_lokasi_produk WHERE id_lokasi ='$idh'";
@@ -77,4 +77,3 @@
 	        echo "<script>document.location.href='../lokasi-produk.php'</script>";
 	    }
 	}
-?>

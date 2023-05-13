@@ -108,6 +108,7 @@ include "akses.php";
                             ORDER BY nama_produk ASC";
                   $query = mysqli_query($connect, $sql);
                   while ($data = mysqli_fetch_array($query)) {
+                    $id_produk = base64_encode($data['produk_id']);
                     $stock = $data['stock'];
                     $min_stock = $data['min_stock'];
                     $max_stock = $data['max_stock'];
@@ -164,8 +165,8 @@ include "akses.php";
                             <li>
                               <a class="dropdown-item btn-detail" href="#" data-kode-produk="<?php echo $data['kode_produk'] ?>" data-nama-produk="<?php echo $data['nama_produk']; ?>" data-merk-produk="<?php echo $data['nama_merk']; ?>" data-harga-produk="<?php echo format_rupiah($data['harga_produk']) ?>" data-stock-produk="<?php echo $data['stock'] ?>" data-kategori-produk="<?php echo $data['kat_prod'] ?>" data-izin-edar="<?php echo $data['no_izin_edar'] ?>" data-kategori-penjualan="<?php echo $data['kat_penj'] ?>" data-grade-produk="<?php echo $data['nama_grade'] ?>" data-lokasi-produk="<?php echo $data['nama_lokasi'] ?>" data-lantai-produk="<?php echo $data['no_lantai'] ?>" data-area-produk="<?php echo $data['nama_area'] ?>" data-rak-produk="<?php echo $data['no_rak'] ?>" data-created-produk="<?php echo $data['produk_created'] ?>" data-user-created="<?php echo $data['user_created'] ?>" data-update-produk="<?php echo $data['produk_updated'] ?>" data-user-update="<?php echo $data['user_updated'] ?>" data-gambar-produk="<?php echo $data['gambar']; ?>">Detail</a>
                             </li>
-                            <li><a class="dropdown-item" href="edit-produk-reg.php?edit-data=<?php echo $data['produk_id'] ?>">Edit</a></li>
-                            <li><a class="dropdown-item delete-data" href="proses/proses-produk-reg.php?hapus-produk-reg=<?php echo $data['produk_id'] ?>">Hapus</a></li>
+                            <li><a class="dropdown-item" href="edit-produk-reg.php?edit-data=<?php echo $id_produk ?>">Edit</a></li>
+                            <li><a class="dropdown-item delete-data" href="proses/proses-produk-reg.php?hapus-produk-reg=<?php echo $id_produk ?>">Hapus</a></li>
                           </ul>
                         </div>
                       </td>

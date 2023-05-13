@@ -84,7 +84,7 @@ include "akses.php";
                                 <tbody>
                                     <?php
                                     include "koneksi.php";
-                                    $id = $_GET['id'];
+                                    $id = base64_decode($_GET['id']);
                                     $no = 1;
                                     $sql = "SELECT act.*, SUM(act.qty_act) AS total_qty_act, iibi.*, pr.*, mr.*
                                                 FROM act_br_import AS act
@@ -101,8 +101,8 @@ include "akses.php";
                                             <td><?php echo $data['nama_merk']; ?></td>
                                             <td class="text-end"><?php echo number_format($data['total_qty_act'], 0, '.', '.'); ?></td>
                                             <td class="text-center">
-                                                <a href="edit-act-br-import.php?edit-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import']; ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
-                                                <a href="proses/proses-br-in-import.php?hapus-act=<?php echo $data['id_act_br_import'] ?> && id=<?php echo $data['id_isi_inv_br_import']; ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
+                                                <a href="edit-act-br-import.php?edit-act=<?php echo base64_encode($data['id_act_br_import']) ?> && id=<?php echo base64_encode($data['id_isi_inv_br_import']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']) ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="proses/proses-br-in-import.php?hapus-act=<?php echo base64_encode($data['id_act_br_import']) ?> && id=<?php echo base64_encode($data['id_isi_inv_br_import']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']) ?>" class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>

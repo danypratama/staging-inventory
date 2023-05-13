@@ -42,6 +42,7 @@ if (isset($_POST['simpan-br-in-import'])) {
     $qty = $_POST['qty'];
     $id_user = $_POST['id_user'];
     $created = $_POST['created'];
+    $encode = base64_encode($id_inv_import);
 
     $qty = intval(preg_replace("/[^0-9]/", "", $qty));
 
@@ -50,7 +51,7 @@ if (isset($_POST['simpan-br-in-import'])) {
 
     if ($data['id_produk_reg'] == $id_produk && $data['id_inv_br_import'] == $id_inv_import) {
         $_SESSION['info'] = 'Data sudah ada';
-        header("Location:../tampil-br-import.php?id=$id_inv_import");
+        header("Location:../tampil-br-import.php?id=$encode");
         exit;
     } else {
         $sql = "INSERT INTO isi_inv_br_import
@@ -61,10 +62,10 @@ if (isset($_POST['simpan-br-in-import'])) {
 
         if ($query) {
             $_SESSION['info'] = 'Disimpan';
-            header("Location:../input-isi-inv-br-import.php?id=$id_inv_import");
+            header("Location:../input-isi-inv-br-import.php?id=$encode");
         } else {
             $_SESSION['info'] = 'Data Gagal Disimpan';
-            header("Location:../input-isi-inv-br-import.php?id=$id_inv_import");
+            header("Location:../input-isi-inv-br-import.php?id=$encode");
         }
     }
 } else if (isset($_POST['simpan-act-br-import'])) {
@@ -75,6 +76,7 @@ if (isset($_POST['simpan-br-in-import'])) {
     $qty_act = $_POST['qty_act'];
     $id_user = $_POST['id_user'];
     $created = $_POST['created'];
+    $encode = base64_encode($id_inv_import);
 
     $qty_act = intval(preg_replace("/[^0-9]/", "", $qty_act));
 
@@ -87,10 +89,10 @@ if (isset($_POST['simpan-br-in-import'])) {
 
     if ($query) {
         $_SESSION['info'] = 'Disimpan';
-        header("Location:../tampil-br-import.php?id=$id_inv_import");
+        header("Location:../tampil-br-import.php?id=$encode");
     } else {
         $_SESSION['info'] = 'Data Gagal Disimpan';
-        header("Location:../tampil-br-import.php?id=$id_inv_import");
+        header("Location:../tampil-br-import.php?id=$encode");
     }
 } else if (isset($_POST['edit-inv-br-in-import'])) {
     $id_inv_br_import = $_POST['id_inv_br_import'];
@@ -198,6 +200,8 @@ if (isset($_POST['simpan-br-in-import'])) {
     $id_inv_br_import = $_POST['id_inv_br_import'];
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty_act'];
+    $id_isi = base64_encode($id_isi_inv_br_import);
+    $id_inv = base64_encode($id_inv_br_import);
 
     $qty = intval(preg_replace("/[^0-9]/", "", $qty));
 
@@ -208,7 +212,7 @@ if (isset($_POST['simpan-br-in-import'])) {
 
     if ($data_sebelumnya['id_produk_reg'] == $id_produk && $data_sebelumnya['qty_act'] == $qty) {
         $_SESSION['info'] = 'Tidak Ada Perubahan Data';
-        header("Location:../list-act-br-import.php?id=$id_isi_inv_br_import && id_inv=$id_inv_br_import");
+        header("Location:../list-act-br-import.php?id=$id_isi && id_inv=$id_inv");
         exit;
     } else {
         $edit_data = "UPDATE act_br_import
@@ -221,10 +225,10 @@ if (isset($_POST['simpan-br-in-import'])) {
 
         if ($query) {
             $_SESSION['info'] = 'Diupdate';
-            header("Location:../list-act-br-import.php?id=$id_isi_inv_br_import && id_inv=$id_inv_br_import");
+            header("Location:../list-act-br-import.php?id=$id_isi && id_inv=$id_inv");
         } else {
             $_SESSION['info'] = 'Data Gagal Diupdate';
-            header("Location:../list-act-br-import.php?id=$id_isi_inv_br_import && id_inv=$id_inv_br_import");
+            header("Location:../list-act-br-import.php?id=$id_isi && id_inv=$id_inv");
         }
     }
 } else if (isset($_GET['hapus'])) {
@@ -247,19 +251,21 @@ if (isset($_POST['simpan-br-in-import'])) {
         header("Location:../tampil-br-import.php?id=$id_inv");
     }
 } else if (isset($_GET['hapus-act'])) {
-    $id_act = $_GET['hapus-act'];
-    $id = $_GET['id'];
-    $id_inv = $_GET['id_inv'];
+    $id_act = base64_decode($_GET['hapus-act']);
+    $id = base64_decode($_GET['id']);
+    $id_inv = base64_decode($_GET['id_inv']);
+    $encode_id = base64_encode($id);
+    $encode_inv = base64_encode($id_inv);
 
     $sql = "DELETE FROM act_br_import WHERE id_act_br_import='$id_act'";
     $query_del = mysqli_query($connect, $sql) or die(mysqli_error($connect));
 
     if ($query_del) {
         $_SESSION['info'] = 'Dihapus';
-        header("Location:../list-act-br-import.php?id=$id && id_inv=$id_inv");
+        header("Location:../list-act-br-import.php?id= $encode_id && id_inv= $encode_inv");
     } else {
         $_SESSION['info'] = 'Data Gagal Dihapus';
-        header("Location:../list-act-br-import.php?id=$id && id_inv=$id_inv");
+        header("Location:../list-act-br-import.php?id= $encode_id && id_inv= $encode_inv");
     }
 
     // Update Status Pengiriman

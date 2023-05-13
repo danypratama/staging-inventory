@@ -89,6 +89,7 @@ include "akses.php";
                               ";
                     $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
                     while ($data = mysqli_fetch_array($query)) {
+                      $id_set = base64_encode($data['id_set_marwa']);
                     ?>
                       <tr>
                         <td class="text-center"><?php echo $no; ?></td>
@@ -116,11 +117,11 @@ include "akses.php";
                         <td class="text-end"><?php echo number_format($data['stock'], 0, '.', '.'); ?></td>
                         <td class="text-center">
                           <!-- Lihat Data -->
-                          <a href="detail-set-marwa.php?detail-id=<?php echo $data['id_set_marwa'] ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
+                          <a href="detail-set-marwa.php?detail-id=<?php echo $id_set ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
                           <!-- Edit Data -->
-                          <a href="edit-data-set-marwa.php?edit-set-marwa=<?php echo $data['id_set_marwa'] ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                          <a href="edit-data-set-marwa.php?edit-set-marwa=<?php echo $id_set ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
                           <!-- Hapus Data -->
-                          <a href="proses/proses-produk-set-marwa.php?hapus-set-marwa=<?php echo $data['id_set_marwa'] ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                          <a href="proses/proses-produk-set-marwa.php?hapus-set-marwa=<?php echo $id_set ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                         </td>
                       </tr>
                       <?php $no++; ?>

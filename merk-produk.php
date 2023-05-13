@@ -1,10 +1,11 @@
 <?php
-    $page = 'data';
-    $page2 = 'data-merk';
-    include "akses.php";
+$page = 'data';
+$page2 = 'data-merk';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -19,15 +20,15 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
-  
+
 
   <main id="main" class="main">
-     <!-- Loading -->
-     <div class="loader loader">
+    <!-- Loading -->
+    <div class="loader loader">
       <div class="loading">
         <img src="img/loading.gif" width="200px" height="auto">
       </div>
@@ -45,7 +46,10 @@
 
     <section>
       <!-- SWEET ALERT -->
-      <div class="info-data" data-infodata="<?php if(isset($_SESSION['info'])){ echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
+      <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                              echo $_SESSION['info'];
+                                            }
+                                            unset($_SESSION['info']); ?>"></div>
       <!-- END SWEET ALERT -->
       <div class="container-fluid">
         <div class="card">
@@ -63,53 +67,54 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php 
-                    date_default_timezone_set('Asia/Jakarta');
-                    include "koneksi.php";
-                    $no = 1;
-                    $sql = "SELECT * FROM tb_merk LEFT JOIN user ON(tb_merk.id_user = user.id_user) ORDER BY  nama_merk";
-                    $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
-                    while($data = mysqli_fetch_array($query)){
+                  <?php
+                  date_default_timezone_set('Asia/Jakarta');
+                  include "koneksi.php";
+                  $no = 1;
+                  $sql = "SELECT * FROM tb_merk LEFT JOIN user ON(tb_merk.id_user = user.id_user) ORDER BY  nama_merk";
+                  $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
+                  while ($data = mysqli_fetch_array($query)) {
+                    $id_merk = base64_encode($data['id_merk']);
                   ?>
-                  <tr>
-                    <td class="text-center"><?php echo $no; ?></td>
-                    <td><?php echo $data['nama_merk']; ?></td>
-                    <td><?php echo $data['nama_user']; ?></td>
-                    <td><?php echo $data['created_date']; ?></td>
-                    <td class="text-center">
-                      <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_merk']; ?>" data-nama="<?php echo $data['nama_merk']; ?>">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                      <a href="proses/proses-merk.php?hapus-merk=<?php echo $data['id_merk'];?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                    </td>
-                    <!-- Modal Edit SP -->
-                    <div class="modal fade" id="modal2" tabindex="-1">
+                    <tr>
+                      <td class="text-center"><?php echo $no; ?></td>
+                      <td><?php echo $data['nama_merk']; ?></td>
+                      <td><?php echo $data['nama_user']; ?></td>
+                      <td><?php echo $data['created_date']; ?></td>
+                      <td class="text-center">
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_merk']; ?>" data-nama="<?php echo $data['nama_merk']; ?>">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <a href="proses/proses-merk.php?hapus-merk=<?php echo $id_merk; ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                      </td>
+                      <!-- Modal Edit SP -->
+                      <div class="modal fade" id="modal2" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5">Edit Data Merk</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <form action="proses/proses-merk.php" method="POST">
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <div class="mb-3">
-                                            <label class="form-label">Nama Merk</label>
-                                            <input type="hidden" class="form-control" name="id_merk" id="id_merk">
-                                            <input type="text" class="form-control" name="nama_merk" id="nama_merk" required>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" name="edit-merk" id="simpan" class="btn btn-primary btn-md" disabled><i class="bx bx-save"></i> Simpan Perubahan</button>
-                                        <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
-                                    </div>
-                                </form>
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5">Edit Data Merk</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <form action="proses/proses-merk.php" method="POST">
+                              <div class="modal-body">
+                                <div class="mb-3">
+                                  <div class="mb-3">
+                                    <label class="form-label">Nama Merk</label>
+                                    <input type="hidden" class="form-control" name="id_merk" id="id_merk">
+                                    <input type="text" class="form-control" name="nama_merk" id="nama_merk" required>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="submit" name="edit-merk" id="simpan" class="btn btn-primary btn-md" disabled><i class="bx bx-save"></i> Simpan Perubahan</button>
+                                  <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
+                                </div>
+                            </form>
+                          </div>
                         </div>
-                    </div>
-                    <!-- End Modal Edit SP -->
-                  </tr>
-                   <?php $no++ ?>
+                      </div>
+                      <!-- End Modal Edit SP -->
+                    </tr>
+                    <?php $no++ ?>
                   <?php } ?>
                 </tbody>
               </table>
@@ -130,21 +135,21 @@
         <form action="proses/proses-merk.php" method="POST">
           <div class="modal-body">
             <div class="mb-3">
-              <?php 
-                  $UUID = generate_uuid();
+              <?php
+              $UUID = generate_uuid();
               ?>
               <div class="mb-3">
-              <label class="form-label">Nama Merk</label>
-              <input type="hidden" class="form-control" name="id_merk" value="MERK<?php echo $UUID; ?>">
-              <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
-              <input type="hidden" class="form-control" name="created" value="<?php echo date('d/m/Y, G:i') ?>">
-              <input type="text" class="form-control" name="nama_merk" required>
+                <label class="form-label">Nama Merk</label>
+                <input type="hidden" class="form-control" name="id_merk" value="MERK<?php echo $UUID; ?>">
+                <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
+                <input type="hidden" class="form-control" name="created" value="<?php echo date('d/m/Y, G:i') ?>">
+                <input type="text" class="form-control" name="nama_merk" required>
+              </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" name="simpan-merk" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
-            <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
-          </div>
+            <div class="modal-footer">
+              <button type="submit" name="simpan-merk" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
+              <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
+            </div>
         </form>
       </div>
     </div>
@@ -158,17 +163,23 @@
 
   <?php include "page/script.php" ?>
 </body>
+
 </html>
 
 <!-- Generat UUID -->
 <?php
-  function generate_uuid() {
-  return sprintf( '%04x%04x%04x',
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0x0fff ) | 0x4000,
-    mt_rand( 0, 0x3fff ) | 0x8000,
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+function generate_uuid()
+{
+  return sprintf(
+    '%04x%04x%04x',
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0x0fff) | 0x4000,
+    mt_rand(0, 0x3fff) | 0x8000,
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff)
   );
 }
 ?>
@@ -176,7 +187,7 @@
 
 <script>
   // delete button
-  $("#table1").on("click", ".delete-button", function () {
+  $("#table1").on("click", ".delete-button", function() {
     $(this).closest("tr").remove();
     if ($("#table1 tbody tr").length === 0) {
       $("#table1 tbody").append("<tr><td colspan='5' align='center'>Data not found</td></tr>");
@@ -186,35 +197,35 @@
 
 <!-- Script untuk modal edit -->
 <script>
-  $('#modal2').on('show.bs.modal', function (event) {
-      // Menampilkan data
-      var button = $(event.relatedTarget);
-      var id = button.data('id');
-      var nama = button.data('nama');
-      var modal = $(this);
-      var simpanBtn = modal.find('.modal-footer #simpan');
-      var namaInput = modal.find('.modal-body #nama_merk');
-      
-      modal.find('.modal-body #id_merk').val(id);
-      namaInput.val(nama);
+  $('#modal2').on('show.bs.modal', function(event) {
+    // Menampilkan data
+    var button = $(event.relatedTarget);
+    var id = button.data('id');
+    var nama = button.data('nama');
+    var modal = $(this);
+    var simpanBtn = modal.find('.modal-footer #simpan');
+    var namaInput = modal.find('.modal-body #nama_merk');
 
-      // Pengecekan data, dan buttun disable or enable saat data di ubah
-      // dan data kembali ke nilai awal
-      var originalNama = namaInput.val();
+    modal.find('.modal-body #id_merk').val(id);
+    namaInput.val(nama);
 
-      namaInput.on('input', function () {
-          var currentNama = $(this).val();
-          
-          if (currentNama != originalNama) {
-              simpanBtn.prop('disabled', false);
-          } else {
-              simpanBtn.prop('disabled', true);
-          }
-      });
-      
-      modal.find('form').on('reset', function () {
-          simpanBtn.prop('disabled', true);
-      });
+    // Pengecekan data, dan buttun disable or enable saat data di ubah
+    // dan data kembali ke nilai awal
+    var originalNama = namaInput.val();
+
+    namaInput.on('input', function() {
+      var currentNama = $(this).val();
+
+      if (currentNama != originalNama) {
+        simpanBtn.prop('disabled', false);
+      } else {
+        simpanBtn.prop('disabled', true);
+      }
+    });
+
+    modal.find('form').on('reset', function() {
+      simpanBtn.prop('disabled', true);
+    });
   });
 </script>
 <!-- End Script modal edit -->

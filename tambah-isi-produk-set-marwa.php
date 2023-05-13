@@ -1,10 +1,11 @@
 <?php
-    $page = 'data';
-    $page2 = 'data-produk-set-marwa';
-    include "akses.php";
+$page = 'data';
+$page2 = 'data-produk-set-marwa';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -13,7 +14,7 @@
   <meta content="" name="keywords">
   <?php include "page/head.php"; ?>
   <style>
-    #table2{
+    #table2 {
       cursor: pointer;
     }
 
@@ -27,25 +28,27 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
-  
+
 
   <main id="main" class="main">
     <section>
       <div class="container-fluid">
         <div class="card">
-          <div class="card-header text-center"><h5>Tambah Isi Produk Set Marwa</h5></div>
+          <div class="card-header text-center">
+            <h5>Tambah Isi Produk Set Marwa</h5>
+          </div>
           <div class="card-body p-3">
             <form action="proses/proses-produk-set-marwa.php" method="post">
-              <?php  
-                $id_set = $_GET['id-set'];
-                $UUID = generate_uuid();
+              <?php
+              $id_set = base64_decode($_GET['id-set']);
+              $UUID = generate_uuid();
               ?>
               <input type="hidden" class="form-control" name="id_isi_set_marwa" value="BR-SET-MRW-<?php echo $UUID ?>">
-              <input type="hidden" class="form-control" name="id_produk_set" value="<?php echo $id_set ?>">
+              <input type="hidden" class="form-control" name="id_set_marwa" value="<?php echo $id_set ?>">
               <div class="mb-3">
                 <div class="row">
                   <div class="col-sm-6">
@@ -82,6 +85,7 @@
 
   <?php include "page/script.php" ?>
 </body>
+
 </html>
 
 <!-- Modal Barang -->
@@ -103,25 +107,25 @@
               </tr>
             </thead>
             <tbody>
-              <?php 
-                date_default_timezone_set('Asia/Jakarta');
-                
-                include "koneksi.php";
-                $no = 1;
-                $sql = "SELECT pr.*,  
+              <?php
+              date_default_timezone_set('Asia/Jakarta');
+
+              include "koneksi.php";
+              $no = 1;
+              $sql = "SELECT pr.*,  
                         mr.*
                         FROM tb_produk_reguler as pr
                         LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
                         ";
-                $query = mysqli_query($connect, $sql);
-                while($data = mysqli_fetch_array($query)){
+              $query = mysqli_query($connect, $sql);
+              while ($data = mysqli_fetch_array($query)) {
               ?>
-              <tr data-idprod= "<?php echo $data['id_produk_reg'];?>" data-namaprod = "<?php echo $data['nama_produk'];?>" data-merkprod = "<?php echo $data['nama_merk'];?>" data-bs-dismiss="modal">
-                <td class="text-center"><?php echo $no; ?></td>
-                <td><?php echo $data['nama_produk']; ?></td>
-                <td class="text-center"><?php echo $data['nama_merk']; ?></td>
-              </tr>
-              <?php $no++; ?>
+                <tr data-idprod="<?php echo $data['id_produk_reg']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                  <td class="text-center"><?php echo $no; ?></td>
+                  <td><?php echo $data['nama_produk']; ?></td>
+                  <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                </tr>
+                <?php $no++; ?>
               <?php } ?>
             </tbody>
           </table>
@@ -137,13 +141,18 @@
 
 <!-- Generat UUID -->
 <?php
-  function generate_uuid() {
-  return sprintf( '%04x%04x%04x',
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0x0fff ) | 0x4000,
-    mt_rand( 0, 0x3fff ) | 0x8000,
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+function generate_uuid()
+{
+  return sprintf(
+    '%04x%04x%04x',
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0x0fff) | 0x4000,
+    mt_rand(0, 0x3fff) | 0x8000,
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff)
   );
 }
 ?>
@@ -151,7 +160,7 @@
 
 <script>
   // select Produk Reguler
-  $(document).on('click', '#table2 tbody tr', function (e) {
+  $(document).on('click', '#table2 tbody tr', function(e) {
     $('#idProduk').val($(this).data('idprod'));
     $('#namaProduk').val($(this).data('namaprod'));
     $('#merkProduk').val($(this).data('merkprod'));

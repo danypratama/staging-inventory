@@ -84,7 +84,7 @@
     // Hapus 
 	}elseif($_GET['hapus-kat-penjualan']){
 		//tangkap URL dengan $_GET
-	    $idh = $_GET['hapus-kat-penjualan'];
+	    $idh = base64_decode($_GET['hapus-kat-penjualan']);
 
 	    // perintah queery sql untuk hapus data
 	    $sql = "DELETE FROM tb_kat_penjualan WHERE id_kat_penjualan='$idh'";
@@ -98,4 +98,3 @@
 	        echo "<script>document.location.href='../kategori-penjualan.php'</script>";
 	    }
 	}
-?>

@@ -48,7 +48,7 @@ if(isset($_POST['simpan-ket-in'])){
 
 // Hapus
 }else if (isset($_GET['hapus-ket-in'])){
-    $idh = $_GET['hapus-ket-in'];
+    $idh = base64_decode($_GET['hapus-ket-in']);
     $hapus_data = "DELETE FROM keterangan_in WHERE id_ket_in = '$idh'";
     $query = mysqli_query($connect, $hapus_data);
 
@@ -60,5 +60,3 @@ if(isset($_POST['simpan-ket-in'])){
         header('Location:../keterangan-in.php');
     }
 }
-
-?>

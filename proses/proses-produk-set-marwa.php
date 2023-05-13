@@ -43,7 +43,7 @@ if (isset($_POST['simpan-set-marwa'])) {
     $harga = intval(preg_replace("/[^0-9]/", "", $harga));
 
     $update = mysqli_query($connect, "UPDATE tb_produk_set_marwa
-									  SET 
+    								  SET 
                                       kode_set_marwa = '$kode_set',
                                       nama_set_marwa = '$nama_set_marwa',
                                       id_lokasi = '$id_lokasi',
@@ -61,7 +61,7 @@ if (isset($_POST['simpan-set-marwa'])) {
     }
 } elseif (isset($_GET['hapus-set-marwa'])) {
     //tangkap URL dengan $_GET
-    $idh = $_GET['hapus-set-marwa'];
+    $idh = base64_decode($_GET['hapus-set-marwa']);
 
     // perintah queery sql untuk hapus data 
     $sql = "DELETE tpsm, ipsm
@@ -78,11 +78,16 @@ if (isset($_POST['simpan-set-marwa'])) {
         $_SESSION['info'] = 'Data Gagal Dihapus';
         echo "<script>document.location.href='../data-produk-set-marwa.php'</script>";
     }
+
+    // Proses CRUD isi set marwa
 } elseif (isset($_POST['simpan-isi-set-marwa'])) {
     $id_isi_set_marwa = $_POST['id_isi_set_marwa'];
     $id_set_marwa = $_POST['id_set_marwa'];
+    $encode = base64_encode($id_set_marwa);
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
+
+    echo $id_set_marwa;
 
     $simpan_data = "INSERT INTO isi_produk_set_marwa 
                     (id_isi_set_marwa, id_set_marwa, id_produk, qty) 
@@ -93,14 +98,15 @@ if (isset($_POST['simpan-set-marwa'])) {
     // Alert
     if ($query) {
         $_SESSION['info'] = 'Disimpan';
-        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$id_set_marwa'</script>";
+        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
     } else {
         $_SESSION['info'] = 'Data Gagal Disimpan';
-        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$id_set_marwa'</script>";
+        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
     }
 } elseif (isset($_POST['edit-isi-set-marwa'])) {
     $id_isi_set_marwa = $_POST['id_isi_set_marwa'];
     $id_set_marwa = $_POST['id_set_marwa'];
+    $encode = base64_encode($id_set_marwa);
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
 
@@ -113,24 +119,25 @@ if (isset($_POST['simpan-set-marwa'])) {
     $query_update = mysqli_query($connect, $update);
     if ($query_update) {
         $_SESSION['info'] = 'Diupdate';
-        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$id_set_marwa'</script>";
+        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
     } else {
         $_SESSION['info'] = 'Data Gagal Diupdate';
-        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$id_set_marwa'</script>";
+        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
     }
 } elseif (isset($_GET['hapus-isi-set'])) {
     //tangkap URL dengan $_GET
-    $idh = $_GET['hapus-isi-set'];
-    $kode = $_GET['kode'];
+    $idh = base64_decode($_GET['hapus-isi-set']);
+    $kode = base64_decode($_GET['kode']);
+    $encode = base64_encode($kode);
     // perintah queery sql untuk hapus data
     $sql = "DELETE FROM isi_produk_set_marwa WHERE id_isi_set_marwa='$idh'";
     $query_del = mysqli_query($connect, $sql) or die(mysqli_error($connect));
 
     if ($query_del) {
         $_SESSION['info'] = 'Dihapus';
-        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$kode'</script>";
+        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
     } else {
         $_SESSION['info'] = 'Data Gagal Dihapus';
-        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$kode'</script>";
+        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
     }
 }

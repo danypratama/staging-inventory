@@ -66,9 +66,9 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card shadow p-3">
           <?php
-          $id_act = $_GET['edit-act'];
-          $id_inv = $_GET['id_inv'];
-          $id = $_GET['id'];
+          $id_act = base64_decode($_GET['edit-act']);
+          $id_inv = base64_decode($_GET['id_inv']);
+          $id = base64_decode($_GET['id']);
           $sql = "SELECT act.*, iibi.*, pr.*, mr.*
                         FROM act_br_import AS act
                         LEFT JOIN isi_inv_br_import iibi ON (act.id_isi_inv_br_import = iibi.id_isi_inv_br_import)
@@ -103,7 +103,7 @@ include "akses.php";
             </div>
             <div class="text-end">
               <button type="submit" name="edit-act-br-import" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
-              <a href="list-act-br-import.php?id=<?php echo $id ?> && id_inv=<?php echo $id_inv ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+              <a href="list-act-br-import.php?id=<?php echo base64_encode($id) ?> && id_inv=<?php echo base64_encode($id_inv) ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
             </div>
           </form>
         </div>

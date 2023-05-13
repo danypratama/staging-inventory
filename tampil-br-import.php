@@ -70,10 +70,11 @@ include "akses.php";
                 <div class="card">
                     <div class="card-body mt-3">
                         <?php
-                        $id = $_GET['id'];
+                        $id = base64_decode($_GET['id']);
+                        $add = base64_encode($id);
                         ?>
                         <div class="text-start">
-                            <a href="input-isi-inv-br-import.php?id=<?php echo $id ?>" class="btn btn-md btn-primary text-end"><i class="bi bi-plus-circle"></i> Tambah data</a>
+                            <a href="input-isi-inv-br-import.php?id=<?php echo $add ?>" class="btn btn-md btn-primary text-end"><i class="bi bi-plus-circle"></i> Tambah data</a>
                             <a href="barang-masuk-reg-import.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
                         </div>
                         <div class="mt-3">
@@ -162,7 +163,7 @@ include "akses.php";
                                 <tbody>
                                     <?php
                                     include "koneksi.php";
-                                    $id = $_GET['id'];
+                                    $id = base64_decode($_GET['id']);
                                     $no = 1;
                                     $sql = "SELECT 
                                                 iibi.*, 
@@ -211,8 +212,8 @@ include "akses.php";
                                                         Pilih Aksi
                                                     </button>
                                                     <ul class="dropdown-menu p-0" data-bs-popper="bottom-start">
-                                                        <li><a class="dropdown-item btn-sm" href="update-br-import.php?id=<?php echo $data['id_isi_inv']; ?>">Input Actual</a></li>
-                                                        <li><a class="dropdown-item btn-sm" href="list-act-br-import.php?id=<?php echo $data['id_isi_inv']; ?> && id_inv=<?php echo $data['id_inv_br_import']; ?>">Detail Actual</a></li>
+                                                        <li><a class="dropdown-item btn-sm" href="update-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?>">Input Actual</a></li>
+                                                        <li><a class="dropdown-item btn-sm" href="list-act-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?>">Detail Actual</a></li>
                                                         <li><a class="dropdown-item btn-sm" href="edit-br-import.php?id=<?php echo $data['id_isi_inv']; ?> && id_inv=<?php echo $data['id_inv_br_import']; ?> ">Edit Data Order</a></li>
                                                         <li><a class="dropdown-item btn-sm delete-data" href="proses/proses-br-in-import.php?hapus=<?php echo $data['id_isi_inv'] ?> && id_inv=<?php echo $data['id_inv_br_import']; ?> ">Hapus Data</a></li>
                                                     </ul>

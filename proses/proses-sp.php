@@ -74,9 +74,10 @@
 	}elseif($_GET['hapus-sp']){
 		//tangkap URL dengan $_GET
 	    $idh = $_GET['hapus-sp'];
+		$id_sp = base64_decode($idh);
 
 	    // perintah queery sql untuk hapus data
-	    $sql = "DELETE FROM tb_supplier WHERE id_sp='$idh'";
+	    $sql = "DELETE FROM tb_supplier WHERE id_sp='$id_sp'";
 	    $query_del = mysqli_query($connect,$sql) or die (mysqli_error($connect));
 
 	    if($query_del){
@@ -87,4 +88,3 @@
 	        echo "<script>document.location.href='../data-supplier.php'</script>";
 	    }
 	}
-?>

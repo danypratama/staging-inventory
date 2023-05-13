@@ -1,10 +1,11 @@
 <?php
-    $page = 'data';
-    $page2 = 'ket-out';
-    include "akses.php";
+$page = 'data';
+$page2 = 'ket-out';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -19,15 +20,15 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
-  
+
 
   <main id="main" class="main">
-     <!-- Loading -->
-     <div class="loader loader">
+    <!-- Loading -->
+    <div class="loader loader">
       <div class="loading">
         <img src="img/loading.gif" width="200px" height="auto">
       </div>
@@ -45,7 +46,10 @@
 
     <section>
       <!-- SWEET ALERT -->
-      <div class="info-data" data-infodata="<?php if(isset($_SESSION['info'])){ echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
+      <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                              echo $_SESSION['info'];
+                                            }
+                                            unset($_SESSION['info']); ?>"></div>
       <!-- END SWEET ALERT -->
       <div class="container-fluid">
         <div class="card">
@@ -62,51 +66,51 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php 
-                    date_default_timezone_set('Asia/Jakarta');
-                    include "koneksi.php";
-                    $no = 1;
-                    $sql = "SELECT * FROM keterangan_out ORDER BY ket_out ASC";
-                    $query = mysqli_query($connect, $sql) or die (mysqli_error($connect));
-                    while($data = mysqli_fetch_array($query)){
+                  <?php
+                  date_default_timezone_set('Asia/Jakarta');
+                  include "koneksi.php";
+                  $no = 1;
+                  $sql = "SELECT * FROM keterangan_out ORDER BY ket_out ASC";
+                  $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                  while ($data = mysqli_fetch_array($query)) {
                   ?>
-                  <tr>
-                    <td class="text-center"><?php echo $no; ?></td>
-                    <td><?php echo $data['ket_out'] ?></td>
-                    <td class="text-center"><?php echo $data['created_date'] ?></td>
-                    <td class="text-center">
-                      <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_ket_out']; ?>" data-nama="<?php echo $data['ket_out']; ?>">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                      <a href="proses/proses-ket-out.php?hapus-ket-out=<?php echo $data['id_ket_out'] ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                    </td>
-                    <!-- Modal Edit -->
-                    <div class="modal fade" id="modal2" tabindex="-1">
-                      <div class="modal-dialog modal-dialog-centered">
+                    <tr>
+                      <td class="text-center"><?php echo $no; ?></td>
+                      <td><?php echo $data['ket_out'] ?></td>
+                      <td class="text-center"><?php echo $data['created_date'] ?></td>
+                      <td class="text-center">
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_ket_out']; ?>" data-nama="<?php echo $data['ket_out']; ?>">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <a href="proses/proses-ket-out.php?hapus-ket-out=<?php echo base64_encode($data['id_ket_out']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                      </td>
+                      <!-- Modal Edit -->
+                      <div class="modal fade" id="modal2" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
                           <div class="modal-content">
-                              <div class="modal-header">
-                                  <h1 class="modal-title fs-5">Edit Data Kategori Produk</h1>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5">Edit Data Kategori Produk</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="proses/proses-ket-out.php" method="POST">
+                              <div class="modal-body">
+                                <div class="mb-3">
+                                  <label class="form-label">Nama Kategori Produk</label>
+                                  <input type="hidden" class="form-control" name="id_ket_out" id="id_ket_out">
+                                  <input type="text" class="form-control" name="nama_ket_out" id="ket_out" required>
+                                </div>
                               </div>
-                              <form action="proses/proses-ket-out.php" method="POST">
-                                  <div class="modal-body">
-                                    <div class="mb-3">
-                                      <label class="form-label">Nama Kategori Produk</label>
-                                      <input type="hidden" class="form-control" name="id_ket_out" id="id_ket_out">
-                                      <input type="text" class="form-control" name="nama_ket_out" id="ket_out" required>
-                                    </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="submit" name="edit-ket-out" id="simpan" disabled class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Perubahan</button>
-                                      <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
-                                  </div>
-                              </form>
+                              <div class="modal-footer">
+                                <button type="submit" name="edit-ket-out" id="simpan" disabled class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Perubahan</button>
+                                <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
+                              </div>
+                            </form>
                           </div>
+                        </div>
                       </div>
-                    </div>
-                    <!-- End Modal Edit -->
-                  </tr>
-                  <?php $no++; ?>
+                      <!-- End Modal Edit -->
+                    </tr>
+                    <?php $no++; ?>
                   <?php } ?>
                 </tbody>
               </table>
@@ -127,21 +131,21 @@
         <form action="proses/proses-ket-out.php" method="POST">
           <div class="modal-body">
             <div class="mb-3">
-              <?php 
-                  $UUID = generate_uuid();
+              <?php
+              $UUID = generate_uuid();
               ?>
               <div class="mb-3">
-              <label class="form-label">Nama Keterangan Barang Masuk</label>
-              <input type="hidden" class="form-control" name="id_ket_out" value="KET-OUT-<?php echo $UUID; ?>">
-              <input type="text" class="form-control" name="nama_ket_out" required>
-              <input type="hidden" class="form-control" name="created" value="<?php echo date('d/m/Y, G:i') ?>">
-              <input type="hidden" class="form-control" name="user_created" value="<?php echo $_SESSION['tiket_id'] ?>">
+                <label class="form-label">Nama Keterangan Barang Masuk</label>
+                <input type="hidden" class="form-control" name="id_ket_out" value="KET-OUT-<?php echo $UUID; ?>">
+                <input type="text" class="form-control" name="nama_ket_out" required>
+                <input type="hidden" class="form-control" name="created" value="<?php echo date('d/m/Y, G:i') ?>">
+                <input type="hidden" class="form-control" name="user_created" value="<?php echo $_SESSION['tiket_id'] ?>">
+              </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" name="simpan-ket-out" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
-            <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
-          </div>
+            <div class="modal-footer">
+              <button type="submit" name="simpan-ket-out" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
+              <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
+            </div>
         </form>
       </div>
     </div>
@@ -155,17 +159,23 @@
 
   <?php include "page/script.php" ?>
 </body>
+
 </html>
 
 <!-- Generat UUID -->
 <?php
-  function generate_uuid() {
-  return sprintf( '%04x%04x%04x',
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0xffff ),
-    mt_rand( 0, 0x0fff ) | 0x4000,
-    mt_rand( 0, 0x3fff ) | 0x8000,
-    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+function generate_uuid()
+{
+  return sprintf(
+    '%04x%04x%04x',
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0x0fff) | 0x4000,
+    mt_rand(0, 0x3fff) | 0x8000,
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff)
   );
 }
 ?>
@@ -197,35 +207,35 @@
 
 <!-- Script untuk modal edit -->
 <script>
-  $('#modal2').on('show.bs.modal', function (event) {
-      // Menampilkan data
-      var button = $(event.relatedTarget);
-      var id = button.data('id');
-      var nama = button.data('nama');
-      var modal = $(this);
-      var simpanBtn = modal.find('.modal-footer #simpan');
-      var namaInput = modal.find('.modal-body #ket_out');
-      
-      modal.find('.modal-body #id_ket_out').val(id);
-      namaInput.val(nama);
+  $('#modal2').on('show.bs.modal', function(event) {
+    // Menampilkan data
+    var button = $(event.relatedTarget);
+    var id = button.data('id');
+    var nama = button.data('nama');
+    var modal = $(this);
+    var simpanBtn = modal.find('.modal-footer #simpan');
+    var namaInput = modal.find('.modal-body #ket_out');
 
-      // Pengecekan data, dan buttun disable or enable saat data di ubah
-      // dan data kembali ke nilai awal
-      var originalNama = namaInput.val();
+    modal.find('.modal-body #id_ket_out').val(id);
+    namaInput.val(nama);
 
-      namaInput.on('input', function () {
-          var currentNama = $(this).val();
-          
-          if (currentNama != originalNama) {
-              simpanBtn.prop('disabled', false);
-          } else {
-              simpanBtn.prop('disabled', true);
-          }
-      });
-      
-      modal.find('form').on('reset', function () {
-          simpanBtn.prop('disabled', true);
-      });
+    // Pengecekan data, dan buttun disable or enable saat data di ubah
+    // dan data kembali ke nilai awal
+    var originalNama = namaInput.val();
+
+    namaInput.on('input', function() {
+      var currentNama = $(this).val();
+
+      if (currentNama != originalNama) {
+        simpanBtn.prop('disabled', false);
+      } else {
+        simpanBtn.prop('disabled', true);
+      }
+    });
+
+    modal.find('form').on('reset', function() {
+      simpanBtn.prop('disabled', true);
+    });
   });
 </script>
 <!-- End Script modal edit -->

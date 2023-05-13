@@ -100,17 +100,17 @@ include "akses.php";
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" href="tampil-br-import.php?id=<?php echo $data['id_inv_br_import'] ?>">
+                                                            <a class="dropdown-item" href="tampil-br-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>">
                                                                 Lihat Isi
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" href="edit-inv-br-in-import.php?id=<?php echo $data['id_inv_br_import'] ?>">
+                                                            <a class="dropdown-item" href="edit-inv-br-in-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>">
                                                                 Edit
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item delete-data" href="proses/proses-br-in-import.php?id=<?php echo $data['id_inv_br_import'] ?>">
+                                                            <a class="dropdown-item delete-data" href="proses/proses-br-in-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>">
                                                                 Hapus
                                                             </a>
                                                         </li>
