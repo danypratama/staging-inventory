@@ -32,8 +32,12 @@ if (isset($_GET['logout'])) {
     $_SESSION['id_history'] = base64_decode($data['id_history']); // Simpan ID history dari database
 
 
-    if (isset($_SESSION['ip_login']) && isset($_SESSION['id_history'])) {
-        if ($_SESSION['ip_login'] != $_SERVER['REMOTE_ADDR'] || $_SESSION['id_history'] != $_GET['id_off']) {
+    if (isset($_GET['ip']) && isset($_GET['id_off'])) {
+        // Setelah proses verifikasi login berhasil
+        $ip_login = $_SESSION['ip_login'];
+        $id_history = $_SESSION['id_history'];
+
+        if ($ip_login != $_GET['ip'] || $id_history != $_GET['id_off']) {
             // IP atau ID history tidak sesuai, lakukan logout
             // Hapus seluruh variabel sesi
             session_unset();
