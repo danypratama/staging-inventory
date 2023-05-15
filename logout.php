@@ -23,25 +23,29 @@ if (isset($_GET['logout'])) {
     $history = mysqli_query($connect, "UPDATE user_history SET logout_time = '$today', status_perangkat = '$offline' WHERE id_history = '$decode'");
 
     session_destroy();
-    header("Location:index.php");
+    header("Location:login.php");
 
     // Jika ada permintaan logout pengguna yang mencurigakan
 } else if (isset($_GET['ip'])) {
-    $current_ip = $_SERVER['REMOTE_ADDR'];
+    // Setelah proses verifikasi login berhasil
+    $_SESSION['ip_login'] = $_SERVER['REMOTE_ADDR']; // Simpan IP saat ini
+    $_SESSION['id_history'] = base64_decode($data['id_history']); // Simpan ID history dari database
 
-    echo $current_ip;
 
-    if (isset($_GET['ip']) && $_GET['ip'] != $current_ip) {
-        // Hapus seluruh variabel sesi
-        unset($_SESSION['username']);
-        unset($_SESSION['login']);
-
-        // Hentikan sesi
-        session_destroy();
-
-        // Redirect ke halaman login
-        header("Location: login.php");
-        exit;
+    if (isset($_SESSION['ip_login']) && isset($_SESSION['id_history'])) {
+        if ($_SESSION['ip_login'] != $_SERVER['REMOTE_ADDR'] || $_SESSION['id_history'] != $_GET['id_off']) {
+            // IP atau ID history tidak sesuai, lakukan logout
+            // Hapus seluruh variabel sesi
+            session_unset();
+            // Hentikan sesi
+            session_destroy();
+            // Redirect ke halaman login
+            header("Location: login.php");
+            exit;
+        } else {
+            // IP dan ID history sesuai, lanjutkan dengan proses logout lainnya
+            // ...
+        }
     }
 }
 
@@ -52,5 +56,5 @@ if (isset($_GET['logout'])) {
 // $decode = base64_decode($id_history);
 // $history = mysqli_query($connect, "UPDATE user_history SET logout_time = '$today', status_perangkat = '$offline' WHERE id_history = '$decode'");
 
-// session_destroy();
+// session_destroy(); 
 // header("Location:index.php");
