@@ -74,7 +74,6 @@ include "akses.php";
                                                     WHERE id_isi_inv_br_in_lokal = '$id'
                     ");
                     $data = mysqli_fetch_array($sql);
-
                     ?>
                     <form method="post" action="proses/proses-br-in-lokal.php" class="form">
                         <div class="row">
@@ -96,7 +95,7 @@ include "akses.php";
                         </div>
                         <div class="text-end">
                             <button type="submit" name="edit-isi-br-in-lokal" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
-                            <a href="barang-masuk-lokal.php?id=<?php echo $id ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+                            <a href="list-br-in-lokal.php?id=<?php echo base64_encode($data['id_inv_br_in_lokal']) ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
                         </div>
                     </form>
                 </div>

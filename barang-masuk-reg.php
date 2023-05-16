@@ -68,7 +68,7 @@ include "akses.php";
             </a>
           </div>
           <div class="col-sm-4 text-center">
-            <a href="">
+            <a href="barang-masuk-tambahan.php">
               <div class="card p-3 shadow shadow rounded-4">
                 <div class="row">
                   <div class="col-sm-4 text-center"><i class="bi bi-clipboard-data" style="color: blue; font-size: 50px;"></i></div>

@@ -165,9 +165,9 @@ function generate_uuid()
               $id = $_GET['id'];
               $no = 1;
               $sql = "SELECT pr.*,  mr.*, spr.*
-                        FROM tb_produk_reguler as pr
+                        FROM stock_produk_reguler as spr
+                        LEFT JOIN tb_produk_reguler pr ON (spr.id_produk_reg = pr.id_produk_reg)
                         LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                        LEFT JOIN stock_produk_reguler spr ON (pr.id_produk_reg = spr.id_produk_reg)
                         ORDER BY nama_produk ASC";
               $query = mysqli_query($connect, $sql);
               while ($data = mysqli_fetch_array($query)) {

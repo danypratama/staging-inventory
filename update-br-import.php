@@ -108,7 +108,7 @@ include "akses.php";
             </div>
             <div class="text-end">
               <button type="submit" name="simpan-act-br-import" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
-              <a href="tampil-br-import.php?id=<?php echo $data['id_inv'] ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+              <a href="tampil-br-import.php?id=<?php echo base64_encode($data['id_inv']) ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
             </div>
           </form>
         </div>
@@ -170,9 +170,9 @@ function generate_uuid()
               $id = $_GET['id'];
               $no = 1;
               $sql = "SELECT pr.*,  mr.*, spr.*
-                        FROM tb_produk_reguler as pr
+                        FROM stock_produk_reguler as spr
+                        LEFT JOIN tb_produk_reguler pr ON (spr.id_produk_reg = pr.id_produk_reg)
                         LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                        LEFT JOIN stock_produk_reguler spr ON (pr.id_produk_reg = spr.id_produk_reg)
                         ORDER BY nama_produk ASC";
               $query = mysqli_query($connect, $sql);
               while ($data = mysqli_fetch_array($query)) {

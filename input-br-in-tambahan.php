@@ -66,15 +66,13 @@ include "akses.php";
             <div class="container-fluid">
                 <div class="card shadow p-3">
                     <?php
-                    $id = base64_decode($_GET['id']);
                     $UUID = generate_uuid();
                     $month = date('m');
                     $year = date('y');
                     ?>
-                    <form method="post" action="proses/proses-br-in-lokal.php" class="form">
+                    <form method="post" action="proses/proses-br-in-tambahan.php" class="form">
                         <div class="row">
-                            <input type="hidden" class="form-control" name="id_isi_inv_br_in_lokal" value="BR-LOKAL-<?php echo $year ?><?php echo $UUID ?><?php echo $month ?>">
-                            <input type="hidden" class="form-control" name="id_inv_br_in_lokal" value="<?php echo $id ?>">
+                            <input type="hidden" class="form-control" name="id_br" value="BR-TAMBAHAN-<?php echo $year ?><?php echo $UUID ?><?php echo $month ?>">
                             <div class="col-sm-6 mb-3">
                                 <label for="nama_produk">Nama Produk</label>
                                 <input type="hidden" class="form-control" name="id_produk" id="idProduk">
@@ -92,8 +90,8 @@ include "akses.php";
                             <input type="hidden" class="form-control" name="created" id="datetime-input">
                         </div>
                         <div class="text-end">
-                            <button type="submit" name="simpan-isi-br-in-lokal" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
-                            <a href="list-br-in-lokal.php?id=<?php echo base64_encode($id) ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+                            <button type="submit" name="simpan" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
+                            <a href="#" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
                         </div>
                     </form>
                 </div>
@@ -104,7 +102,6 @@ include "akses.php";
     <?php include "page/footer.php" ?>
     <!-- End Footer -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
     <?php include "page/script.php" ?>
 </body>
 

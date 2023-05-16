@@ -28,11 +28,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <section>
             <!-- SWEET ALERT -->
@@ -44,17 +44,17 @@ include "akses.php";
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="text-center mt-3">Data Barang Masuk Lokal</h5>
-                        <a href="input-inv-br-in-lokal.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah Data</a>
+                        <h5 class="text-center mt-3">Data Barang Masuk Tambahan</h5>
+                        <a href="input-br-in-tambahan.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah Data</a>
                         <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
                         <div class="table-responsive pt-3">
                             <table class="table table-striped table-bordered" id="table1">
                                 <thead>
                                     <tr class="text-white" style="background-color: navy;">
                                         <td class="text-center p-3" style="width: 30px">No</td>
-                                        <td class="text-center p-3" style="width: 100px">No. Invoice</td>
-                                        <td class="text-center p-3" style="width: 200px">Tgl. Invoice</td>
-                                        <td class="text-center p-3" style="width: 100px">Supplier</td>
+                                        <td class="text-center p-3" style="width: 200px">Nama Produk</td>
+                                        <td class="text-center p-3" style="width: 100px">Merk</td>
+                                        <td class="text-center p-3" style="width: 100px">Qty</td>
                                         <td class="text-center p-3" style="width: 100px">Dibuat Oleh</td>
                                         <td class="text-center p-3" style="width: 100px">Dibuat Tanggal</td>
                                         <td class="text-center p-3" style="width: 50px">Aksi</td>
@@ -64,24 +64,24 @@ include "akses.php";
                                     <?php
                                     $no = 1;
                                     include "koneksi.php";
-                                    $sql = "SELECT ibil.*, ibil.created_date AS created, us.*, sp.*
-                                            FROM inv_br_in_lokal AS ibil
-                                            LEFT JOIN user us ON (ibil.id_user = us.id_user)
-                                            LEFT JOIN tb_supplier sp ON (ibil.id_sp = sp.id_sp)";
+                                    $sql = "SELECT ibt.*, pr.*, mr.*, us.nama_user
+                                            FROM isi_br_tambahan AS ibt
+                                            LEFT JOIN tb_produk_reguler pr ON(ibt.id_produk_reg = pr.id_produk_reg)
+                                            LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
+                                            LEFT JOIN user us ON(ibt.id_user = us.id_user)";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
                                         <tr>
                                             <td class="text-center"><?php echo $no ?></td>
-                                            <td><?php echo $data['no_inv'] ?></td>
-                                            <td><?php echo $data['tgl_inv'] ?></td>
-                                            <td class="text-center"><?php echo $data['nama_sp'] ?></td>
-                                            <td><?php echo $data['created'] ?></td>
+                                            <td><?php echo $data['nama_produk'] ?></td>
+                                            <td class="text-center"><?php echo $data['nama_merk'] ?></td>
+                                            <td><?php echo $data['qty'] ?></td>
                                             <td><?php echo $data['nama_user'] ?></td>
+                                            <td><?php echo $data['created_date'] ?></td>
                                             <td class="text-center">
-                                                <a href="list-br-in-lokal.php?id=<?php echo base64_encode($data['id_inv_br_in_lokal']) ?>" class="btn btn-primary btn-sm rounded"><i class="bi bi-eye"></i></a>
-                                                <a href="edit-br-in-lokal.php?id=<?php echo base64_encode($data['id_inv_br_in_lokal']) ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
-                                                <a href="proses/proses-br-in-lokal.php?id=<?php echo base64_encode($data['id_inv_br_in_lokal']) ?>" class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
+                                                <a href="edit-br-tambahan.php" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="#" class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>

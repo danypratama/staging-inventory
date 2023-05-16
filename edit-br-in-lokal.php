@@ -66,7 +66,7 @@ include "akses.php";
                         <form action="proses/proses-br-in-lokal.php" method="post">
                             <div class="mb-3">
                                 <?php
-                                $ide = $_GET['id'];
+                                $ide = base64_decode($_GET['id']);
                                 $sql = "SELECT ibil.*, ibil.created_date AS created, us.*, sp.*
                                             FROM inv_br_in_lokal AS ibil
                                             LEFT JOIN user us ON (ibil.id_user = us.id_user)

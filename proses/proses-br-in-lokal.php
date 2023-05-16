@@ -57,7 +57,7 @@ if (isset($_POST['simpan-br-in-lokal'])) {
         }
     }
 } else if (isset($_GET['id'])) {
-    $idh = $_GET['id'];
+    $idh = base64_decode($_GET['id']);
     //perintah queery sql untuk hapus data
     $sql = "DELETE ibil, iibil 
                 FROM inv_br_in_lokal ibil
@@ -84,6 +84,8 @@ if (isset($_POST['simpan-br-in-lokal'])) {
     $created = $_POST['created'];
     $encode = base64_encode($id_inv);
 
+    $qty = intval(preg_replace("/[^0-9]/", "", $qty));
+
     $sql = mysqli_query($connect, "SELECT * FROM isi_inv_br_in_lokal WHERE id_inv_br_in_lokal = '$id_inv'");
     $data = mysqli_fetch_array($sql);
 
@@ -106,6 +108,8 @@ if (isset($_POST['simpan-br-in-lokal'])) {
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
     $encode = base64_encode($id_inv);
+
+    $qty = intval(preg_replace("/[^0-9]/", "", $qty));
 
     $cek_data = mysqli_query($connect, "SELECT * FROM isi_inv_br_in_lokal WHERE id_isi_inv_br_in_lokal = '$id_isi'");
     $data = mysqli_fetch_array($cek_data);
