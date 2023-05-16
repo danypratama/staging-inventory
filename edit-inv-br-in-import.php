@@ -66,7 +66,7 @@ include "akses.php";
                         <form action="proses/proses-br-in-import.php" method="post">
                             <div class="mb-3">
                                 <?php
-                                $ide = $_GET['id'];
+                                $ide = base64_decode($_GET['id']);
                                 $sql = "SELECT ibi.*, sp.*
                                         FROM inv_br_import AS ibi 
                                         LEFT JOIN  tb_supplier sp ON (ibi.id_supplier = sp.id_sp)

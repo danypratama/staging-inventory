@@ -108,6 +108,7 @@ if (isset($_POST['simpan-br-in-import'])) {
     $laut = 'Laut';
     $udara = 'Udara';
 
+
     $cek_data = "SELECT * FROM inv_br_import WHERE id_inv_br_import = '$id_inv_br_import'";
     $query_cek = mysqli_query($connect, $cek_data);
     $data_sebelumnya = mysqli_fetch_assoc($query_cek);
@@ -116,7 +117,7 @@ if (isset($_POST['simpan-br-in-import'])) {
         $_SESSION['info'] = 'Tidak Ada Perubahan Data';
         header("Location:../barang-masuk-reg-import.php");
         exit;
-    } else if ($ship == 10) {
+    } else if ($ship == 10 OR $ship == $udara) {
         $edit_data = "UPDATE inv_br_import
                             SET 
                             id_supplier = '$id_sp',
@@ -138,7 +139,7 @@ if (isset($_POST['simpan-br-in-import'])) {
             $_SESSION['info'] = 'Data Gagal Diupdate';
             header("Location:../barang-masuk-reg-import.php");
         }
-    } else if ($ship == 30) {
+    } else if ($ship == 30 OR $ship == $laut) {
         $edit_data = "UPDATE inv_br_import
                             SET 
                             id_supplier = '$id_sp',
@@ -165,6 +166,7 @@ if (isset($_POST['simpan-br-in-import'])) {
     $id_inv_import = $_POST['id_inv_import'];
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
+    $encode = base64_encode($id_inv_import);
 
     $qty = intval(preg_replace("/[^0-9]/", "", $qty));
 
@@ -175,7 +177,7 @@ if (isset($_POST['simpan-br-in-import'])) {
 
     if ($data_sebelumnya['id_produk_reg'] == $id_produk && $data_sebelumnya['qty'] == $qty) {
         $_SESSION['info'] = 'Tidak Ada Perubahan Data';
-        header("Location:../tampil-br-import.php?id=$id_inv_import");
+        header("Location:../tampil-br-import.php?id=$encode");
         exit;
     } else {
         $edit_data = "UPDATE isi_inv_br_import
@@ -188,10 +190,10 @@ if (isset($_POST['simpan-br-in-import'])) {
 
         if ($query) {
             $_SESSION['info'] = 'Diupdate';
-            header("Location:../tampil-br-import.php?id=$id_inv_import");
+            header("Location:../tampil-br-import.php?id=$encode");
         } else {
             $_SESSION['info'] = 'Data Gagal Diupdate';
-            header("Location:../tampil-br-import.php?id=$id_inv_import");
+            header("Location:../tampil-br-import.php?id=$encode");
         }
     }
 } else if (isset($_POST['edit-act-br-import'])) {
@@ -233,8 +235,9 @@ if (isset($_POST['simpan-br-in-import'])) {
     }
 } else if (isset($_GET['hapus'])) {
     //tangkap URL dengan $_GET
-    $idh = $_GET['hapus'];
-    $id_inv = $_GET['id_inv'];
+    $idh = base64_decode($_GET['hapus']);
+    $id_inv = base64_decode($_GET['id_inv']);
+    $encode = base64_encode($id_inv);
 
     //perintah queery sql untuk hapus data
     $sql = "DELETE iibi, act 
@@ -245,10 +248,10 @@ if (isset($_POST['simpan-br-in-import'])) {
 
     if ($query_del) {
         $_SESSION['info'] = 'Dihapus';
-        header("Location:../tampil-br-import.php?id=$id_inv");
+        header("Location:../tampil-br-import.php?id=$encode");
     } else {
         $_SESSION['info'] = 'Data Gagal Dihapus';
-        header("Location:../tampil-br-import.php?id=$id_inv");
+        header("Location:../tampil-br-import.php?id=$encode");
     }
 } else if (isset($_GET['hapus-act'])) {
     $id_act = base64_decode($_GET['hapus-act']);
@@ -347,7 +350,7 @@ if (isset($_POST['simpan-br-in-import'])) {
     // Hapus All Data dari Inv 
 } else if (isset($_GET['id'])) {
     //tangkap URL dengan $_GET
-    $idh = $_GET['id'];
+    $idh = base64_decode($_GET['id']);
 
     // Menampilkan data berelasi
     $sql = mysqli_query($connect, "SELECT ibi.*, ibi.id_inv_br_import AS id_inv, iibi.*, iibi.id_inv_br_import AS id_inv_isi

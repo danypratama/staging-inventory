@@ -3,7 +3,6 @@
 include "koneksi.php";
 session_start();
 
-// Mengambil IP untuk logout akun mencurigakan
 $ip = $_SESSION['ip'];
 $cek_ip = $_GET['ip'];
 
@@ -26,32 +25,26 @@ if (isset($_GET['logout'])) {
     header("Location:login.php");
 
     // Jika ada permintaan logout pengguna yang mencurigakan
-} else if (isset($_GET['ip'])) {
+} else if (isset($_GET['ip']) && isset($_GET['id_off'])) {
     // Setelah proses verifikasi login berhasil
-    $_SESSION['ip_login'] = $_SERVER['REMOTE_ADDR']; // Simpan IP saat ini
-    $_SESSION['id_history'] = base64_decode($data['id_history']); // Simpan ID history dari database
+    $ip_login = $_SESSION['ip_login'];
+    $id_history = $_SESSION['id_history'];
 
-
-    if (isset($_GET['ip']) && isset($_GET['id_off'])) {
-        // Setelah proses verifikasi login berhasil
-        $ip_login = $_SESSION['ip_login'];
-        $id_history = $_SESSION['id_history'];
-
-        if ($ip_login != $_GET['ip'] || $id_history != $_GET['id_off']) {
-            // IP atau ID history tidak sesuai, lakukan logout
-            // Hapus seluruh variabel sesi
-            session_unset();
-            // Hentikan sesi
-            session_destroy();
-            // Redirect ke halaman login
-            header("Location: login.php");
-            exit;
-        } else {
-            // IP dan ID history sesuai, lanjutkan dengan proses logout lainnya
-            // ...
-        }
+    if ($ip_login != $cek_ip || $id_history != $_GET['id_off']) {
+        // IP atau ID history tidak sesuai, lakukan logout
+        // Hapus seluruh variabel sesi
+        session_unset();
+        // Hentikan sesi
+        session_destroy();
+        // Redirect ke halaman login
+        header("Location: login.php");
+        exit;
+    } else {
+        // IP dan ID history sesuai, lanjutkan dengan proses logout lainnya
+        // ...
     }
 }
+
 
 
 

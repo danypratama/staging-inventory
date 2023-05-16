@@ -72,4 +72,66 @@ if (isset($_POST['simpan-br-in-lokal'])) {
         $_SESSION['info'] = 'Data Gagal Dihapus';
         header('Location:../barang-masuk-lokal.php');
     }
+
+
+    // Proses CRUD isi barang in lokal
+} else if (isset($_POST['simpan-isi-br-in-lokal'])) {
+    $id_isi = $_POST['id_isi_inv_br_in_lokal'];
+    $id_inv = $_POST['id_inv_br_in_lokal'];
+    $id_produk = $_POST['id_produk'];
+    $qty = $_POST['qty'];
+    $id_user = $_POST['id_user'];
+    $created = $_POST['created'];
+    $encode = base64_encode($id_inv);
+
+    $sql = mysqli_query($connect, "SELECT * FROM isi_inv_br_in_lokal WHERE id_inv_br_in_lokal = '$id_inv'");
+    $data = mysqli_fetch_array($sql);
+
+    if ($data['id_produk_reg'] == $id_produk) {
+        $_SESSION['info'] = "Data sudah ada";
+        header("Location:../list-br-in-lokal.php?id=$encode");
+    } else {
+        $simpan_data = mysqli_query($connect, "INSERT INTO isi_inv_br_in_lokal
+                                                (id_isi_inv_br_in_lokal, id_inv_br_in_lokal, id_produk_reg, qty, id_user, created_date )
+                                                VALUES
+                                                ('$id_isi', '$id_inv', '$id_produk', '$qty', '$id_user', '$created')
+                                                ");
+
+        $_SESSION['info'] = "Disimpan";
+        header("Location:../list-br-in-lokal.php?id=$encode");
+    }
+} else if (isset($_POST['edit-isi-br-in-lokal'])) {
+    $id_isi = $_POST['id_isi_inv_br_in_lokal'];
+    $id_inv = $_POST['id_inv_br_in_lokal'];
+    $id_produk = $_POST['id_produk'];
+    $qty = $_POST['qty'];
+    $encode = base64_encode($id_inv);
+
+    $cek_data = mysqli_query($connect, "SELECT * FROM isi_inv_br_in_lokal WHERE id_isi_inv_br_in_lokal = '$id_isi'");
+    $data = mysqli_fetch_array($cek_data);
+
+
+    if ($data['id_produk_reg'] == $id_produk and $data['qty'] == $qty) {
+        $_SESSION['info'] = "Tidak Ada Perubahan Data";
+        header("Location:../list-br-in-lokal.php?id=$encode");
+    } else {
+        $update = mysqli_query($connect, "UPDATE isi_inv_br_in_lokal
+                                          SET 
+                                          id_produk_reg = '$id_produk',
+                                          qty = '$qty'
+                                          WHERE id_isi_inv_br_in_lokal = '$id_isi'");
+        $_SESSION['info'] = "Diupdate";
+        header("Location:../list-br-in-lokal.php?id=$encode");
+    }
+} else if (isset($_GET['hapus_isi'])) {
+    $idh = base64_decode($_GET['hapus_isi']);
+    $id_inv = base64_decode($_GET['id_inv']);
+    $encode = base64_encode($id_inv);
+
+    $hapus_data = mysqli_query($connect, "DELETE FROM isi_inv_br_in_lokal WHERE id_isi_inv_br_in_lokal = '$idh'");
+
+    if ($hapus_data) {
+        $_SESSION['info'] = 'Dihapus';
+        header("Location:../list-br-in-lokal.php?id=$encode");
+    }
 }

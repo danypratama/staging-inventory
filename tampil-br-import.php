@@ -214,8 +214,8 @@ include "akses.php";
                                                     <ul class="dropdown-menu p-0" data-bs-popper="bottom-start">
                                                         <li><a class="dropdown-item btn-sm" href="update-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?>">Input Actual</a></li>
                                                         <li><a class="dropdown-item btn-sm" href="list-act-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?>">Detail Actual</a></li>
-                                                        <li><a class="dropdown-item btn-sm" href="edit-br-import.php?id=<?php echo $data['id_isi_inv']; ?> && id_inv=<?php echo $data['id_inv_br_import']; ?> ">Edit Data Order</a></li>
-                                                        <li><a class="dropdown-item btn-sm delete-data" href="proses/proses-br-in-import.php?hapus=<?php echo $data['id_isi_inv'] ?> && id_inv=<?php echo $data['id_inv_br_import']; ?> ">Hapus Data</a></li>
+                                                        <li><a class="dropdown-item btn-sm" href="edit-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?> ">Edit Data Order</a></li>
+                                                        <li><a class="dropdown-item btn-sm delete-data" href="proses/proses-br-in-import.php?hapus=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?> ">Hapus Data</a></li>
                                                     </ul>
                                                 </div>
                                             </td>

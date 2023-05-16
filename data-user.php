@@ -145,7 +145,8 @@ include "akses.php";
                             <td><?php echo $data['jenis_perangkat']; ?></td>
                             <td><?php echo $data['lokasi']; ?></td>
                             <td class="text-center">
-                              <a href="logout.php?id_off=<?php echo $data['id_history'] ?> && ip=<?php echo $data['ip_login'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin logout dengan IP <?php echo $data['ip_login'] ?> ?')">OFF</a>
+                              <a href="logout.php?id_off=<?php echo $data['id_history'] ?>&ip=<?php echo $data['ip_login'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin logout dengan IP <?php echo $data['ip_login'] ?> ?')">OFF</a>
+
                             </td>
                           </tr>
                           <?php $no++; ?>
@@ -155,7 +156,6 @@ include "akses.php";
                   </div>
                 </div>
               </div><!-- End Pills Tabs -->
-
             </div>
           </div>
         </div>

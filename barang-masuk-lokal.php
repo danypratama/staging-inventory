@@ -79,7 +79,7 @@ include "akses.php";
                                             <td><?php echo $data['created'] ?></td>
                                             <td><?php echo $data['nama_user'] ?></td>
                                             <td class="text-center">
-                                                <a href="list-br-in-lokal.php?id=<?php echo $data['id_inv_br_in_lokal'] ?>" class="btn btn-primary btn-sm rounded"><i class="bi bi-eye"></i></a>
+                                                <a href="list-br-in-lokal.php?id=<?php echo base64_encode($data['id_inv_br_in_lokal']) ?>" class="btn btn-primary btn-sm rounded"><i class="bi bi-eye"></i></a>
                                                 <a href="edit-br-in-lokal.php?id=<?php echo $data['id_inv_br_in_lokal'] ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
                                                 <a href="proses/proses-br-in-lokal.php?id=<?php echo $data['id_inv_br_in_lokal'] ?>" class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
                                             </td>

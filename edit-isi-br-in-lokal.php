@@ -67,32 +67,35 @@ include "akses.php";
                 <div class="card shadow p-3">
                     <?php
                     $id = base64_decode($_GET['id']);
-                    $UUID = generate_uuid();
-                    $month = date('m');
-                    $year = date('y');
+                    $sql = mysqli_query($connect, "SELECT iibil.*, pr.*, mr.* 
+                                                    FROM isi_inv_br_in_lokal as iibil
+                                                    LEFT JOIN tb_produk_reguler pr ON(iibil.id_produk_reg = pr.id_produk_reg)
+                                                    LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
+                                                    WHERE id_isi_inv_br_in_lokal = '$id'
+                    ");
+                    $data = mysqli_fetch_array($sql);
+
                     ?>
                     <form method="post" action="proses/proses-br-in-lokal.php" class="form">
                         <div class="row">
-                            <input type="hidden" class="form-control" name="id_isi_inv_br_in_lokal" value="BR-lokal-<?php echo $year ?><?php echo $UUID ?><?php echo $month ?>">
-                            <input type="hidden" class="form-control" name="id_inv_br_in_lokal" value="<?php echo $id ?>">
+                            <input type="hidden" class="form-control" name="id_isi_inv_br_in_lokal" value="<?php echo $data['id_isi_inv_br_in_lokal'] ?>">
+                            <input type="hidden" class="form-control" name="id_inv_br_in_lokal" value="<?php echo $data['id_inv_br_in_lokal'] ?>">
                             <div class="col-sm-6 mb-3">
                                 <label for="nama_produk">Nama Produk</label>
-                                <input type="hidden" class="form-control" name="id_produk" id="idProduk">
-                                <input type="text" class="form-control" name="nama_produk" id="namaProduk" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#modalBarang" readonly>
+                                <input type="hidden" class="form-control" name="id_produk" id="idProduk" value="<?php echo $data['id_produk_reg'] ?>">
+                                <input type="text" class="form-control" name="nama_produk" id="namaProduk" value="<?php echo $data['nama_produk'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang" readonly>
                             </div>
                             <div class="col-sm-3 mb-3">
                                 <label>Merk</label>
-                                <input type="text" class="form-control" id="merkProduk" readonly>
+                                <input type="text" class="form-control" id="merkProduk" value="<?php echo $data['nama_merk'] ?>" readonly>
                             </div>
                             <div class="col-sm-3 mb-3">
                                 <label>Qty</label>
-                                <input type="text" class="form-control" name="qty" id="qtyInput" disabled>
+                                <input type="text" class="form-control" name="qty" id="qtyInput" value="<?php echo $data['qty'] ?>">
                             </div>
-                            <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
-                            <input type="hidden" class="form-control" name="created" id="datetime-input">
                         </div>
                         <div class="text-end">
-                            <button type="submit" name="simpan-isi-br-in-lokal" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
+                            <button type="submit" name="edit-isi-br-in-lokal" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
                             <a href="barang-masuk-lokal.php?id=<?php echo $id ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
                         </div>
                     </form>
@@ -109,25 +112,6 @@ include "akses.php";
 </body>
 
 </html>
-
-<!-- Generate UUID -->
-<?php
-function generate_uuid()
-{
-    return sprintf(
-        '%04x%04x%04x',
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0x0fff) | 0x4000,
-        mt_rand(0, 0x3fff) | 0x8000,
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff)
-    );
-}
-?>
-<!-- End Generate UUID -->
 
 <!-- Modal Barang -->
 <div class="modal fade" id="modalBarang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -238,6 +222,47 @@ function generate_uuid()
             submitButton.disabled = false;
         } else {
             submitButton.disabled = true;
+        }
+    });
+</script>
+
+<script>
+    // Deklarasi fungsi
+    function enableSubmitButton() {
+        $('#submitButton').prop('disabled', false);
+    }
+
+    function disableSubmitButton() {
+        $('#submitButton').prop('disabled', true);
+    }
+
+    $(document).on('click input', '#table2 tbody tr, #qtyInput', function(e) {
+        if (e.target.id !== 'qtyInput') {
+            $('#idProduk').val($(this).data('idprod'));
+            $('#namaProduk').val($(this).data('namaprod'));
+            $('#merkProduk').val($(this).data('merkprod'));
+            $('#modalBarang').modal('hide');
+        }
+
+        var cekQty = document.getElementById('qtyInput').value;
+        var qtyAct = $('#qtyInput').val().replace(/\D/g, '');
+        var qtyInput = $(this).val().replace(/\D/g, '');
+        var qtyAwal = qtyInput ? parseInt(qtyInput) : 0;
+        $(this).val(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+
+        console.log(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+        console.log(cekQty);
+        console.log(qtyAct);
+        console.log($('#idProduk').val());
+
+        if ($('#table2').val() !== '' || $('#qtyInput').val() !== '') {
+            if ($('#idProduk').val() != idProduk || qtyAwal.toLocaleString('id-ID').replace(',', '.') != qtyAct) {
+                // Aktifkan button submit
+                enableSubmitButton();
+            } else {
+                // Non AKtifkan button submit
+                disableSubmitButton();
+            }
         }
     });
 </script>

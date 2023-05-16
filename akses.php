@@ -48,7 +48,7 @@
             // Tampilkan pesan kepada pengguna bahwa sesi telah habis
             alert('Sesi Anda telah habis karena tidak aktif. Silakan login kembali.');
             // Redirect ke halaman login
-            window.location.href = 'index.php';
+            window.location.href = 'login.php';
         }, 900000); // Waktu timeout dalam milidetik (15 menit)
     }
 

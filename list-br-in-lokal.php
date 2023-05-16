@@ -85,7 +85,7 @@ include "akses.php";
                                 <tbody>
                                     <?php
                                     include "koneksi.php";
-                                    $id = $_GET['id'];
+                                    $id = base64_decode($_GET['id']);
                                     $no = 1;
                                     $sql = "SELECT ibil.*, iibil.*, pr.*, mr.*
                                                 FROM inv_br_in_lokal AS ibil
@@ -102,8 +102,8 @@ include "akses.php";
                                             <td><?php echo $data['nama_merk']; ?></td>
                                             <td class="text-end"><?php echo number_format($data['qty'], 0, '.', '.'); ?></td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
-                                                <a href="#" class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
+                                                <a href="edit-isi-br-in-lokal.php?id=<?php echo base64_encode($data['id_isi_inv_br_in_lokal']) ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="proses/proses-br-in-lokal.php?hapus_isi=<?php echo base64_encode($data['id_isi_inv_br_in_lokal']) ?> && id_inv=<?php echo base64_encode($data['id_inv_br_in_lokal']) ?> " class="btn btn-danger delete-data btn-sm rounded"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>
