@@ -115,7 +115,7 @@ if (isset($_POST['simpan-br-in-lokal'])) {
     $data = mysqli_fetch_array($cek_data);
 
 
-    if ($data['id_produk_reg'] == $id_produk and $data['qty'] == $qty) {
+    if ($data['id_produk_reg'] == $id_produk && $data['qty'] == $qty) {
         $_SESSION['info'] = "Tidak Ada Perubahan Data";
         header("Location:../list-br-in-lokal.php?id=$encode");
     } else {

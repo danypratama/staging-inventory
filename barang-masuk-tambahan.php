@@ -80,8 +80,8 @@ include "akses.php";
                                             <td><?php echo $data['nama_user'] ?></td>
                                             <td><?php echo $data['created_date'] ?></td>
                                             <td class="text-center">
-                                                <a href="edit-br-tambahan.php" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
-                                                <a href="#" class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
+                                                <a href="edit-br-in-tambahan.php?id=<?php echo base64_encode($data['id_isi_br_tambahan']) ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="proses/proses-br-in-tambahan.php?hapus=<?php echo base64_encode($data['id_isi_br_tambahan']) ?>" class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>

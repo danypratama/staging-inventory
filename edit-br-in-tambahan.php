@@ -67,18 +67,18 @@ include "akses.php";
                 <div class="card shadow p-3">
                     <?php
                     $id = base64_decode($_GET['id']);
-                    $sql = mysqli_query($connect, "SELECT iibil.*, pr.*, mr.* 
-                                                    FROM isi_inv_br_in_lokal as iibil
-                                                    LEFT JOIN tb_produk_reguler pr ON(iibil.id_produk_reg = pr.id_produk_reg)
-                                                    LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                                                    WHERE id_isi_inv_br_in_lokal = '$id'
-                    ");
-                    $data = mysqli_fetch_array($sql);
+                    $sql = "SELECT ibt.*, pr.*, mr.*, us.nama_user
+                            FROM isi_br_tambahan AS ibt
+                            LEFT JOIN tb_produk_reguler pr ON(ibt.id_produk_reg = pr.id_produk_reg)
+                            LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
+                            LEFT JOIN user us ON(ibt.id_user = us.id_user)
+                            WHERE id_isi_br_tambahan = '$id'";
+                    $query = mysqli_query($connect, $sql);
+                    $data = mysqli_fetch_array($query);
                     ?>
-                    <form method="post" action="proses/proses-br-in-lokal.php" class="form">
+                    <form method="post" action="proses/proses-br-in-tambahan.php" class="form">
                         <div class="row">
-                            <input type="hidden" class="form-control" name="id_isi_inv_br_in_lokal" value="<?php echo $data['id_isi_inv_br_in_lokal'] ?>">
-                            <input type="hidden" class="form-control" name="id_inv_br_in_lokal" value="<?php echo $data['id_inv_br_in_lokal'] ?>">
+                            <input type="hidden" class="form-control" name="id_br" value="<?php echo $data['id_isi_br_tambahan'] ?>">
                             <div class="col-sm-6 mb-3">
                                 <label for="nama_produk">Nama Produk</label>
                                 <input type="hidden" class="form-control" name="id_produk" id="idProduk" value="<?php echo $data['id_produk_reg'] ?>">
@@ -94,8 +94,8 @@ include "akses.php";
                             </div>
                         </div>
                         <div class="text-end">
-                            <button type="submit" name="edit-isi-br-in-lokal" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Ubah Data</button>
-                            <a href="list-br-in-lokal.php?id=<?php echo base64_encode($data['id_inv_br_in_lokal']) ?>" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+                            <button type="submit" name="edit" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Ubah Data</button>
+                            <a href="barang-masuk-tambnahan.php" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
                         </div>
                     </form>
                 </div>
