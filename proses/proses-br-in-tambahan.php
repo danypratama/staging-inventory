@@ -6,6 +6,7 @@ if (isset($_POST['simpan'])) {
     $id = $_POST['id_br'];
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
+    $ket = $_POST['keterangan'];
     $id_user = $_POST['id_user'];
     $created = $_POST['created'];
 
@@ -18,9 +19,9 @@ if (isset($_POST['simpan'])) {
         header("Location:../barang-masuk-tambahan.php");
     } else {
         $simpan = mysqli_query($connect, "INSERT INTO isi_br_tambahan
-                                            (id_isi_br_tambahan, id_user, id_produk_reg, qty, created_date)
+                                            (id_isi_br_tambahan, id_user, id_produk_reg, qty, id_ket_in, created_date)
                                             VALUES
-                                            ('$id', '$id_user', '$id_produk', '$qty', '$created')");
+                                            ('$id', '$id_user', '$id_produk', '$qty', '$ket', '$created')");
         $_SESSION['info'] = 'Disimpan';
         header("Location:../barang-masuk-tambahan.php");
     }
@@ -28,6 +29,7 @@ if (isset($_POST['simpan'])) {
     $id = $_POST['id_br'];
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
+    $ket = $_POST['keterangan'];
 
     $qty = intval(preg_replace("/[^0-9]/", "", $qty));
 
@@ -36,14 +38,15 @@ if (isset($_POST['simpan'])) {
 
     echo $data['qty'];
 
-    if ($data['id_produk_reg'] == $id_produk && $data['qty'] == $qty) {
+    if ($data['id_produk_reg'] == $id_produk && $data['qty'] == $qty && $data['id_ket_in'] == $ket) {
         $_SESSION['info'] = "Tidak Ada Perubahan Data";
         header("Location:../barang-masuk-tambahan.php");
     } else {
         $update = mysqli_query($connect, "UPDATE isi_br_tambahan
                                           SET 
                                           id_produk_reg = '$id_produk',
-                                          qty = '$qty'
+                                          qty = '$qty',
+                                          id_ket_in = '$ket'
                                           WHERE id_isi_br_tambahan  = '$id'");
         $_SESSION['info'] = "Diupdate";
         header("Location:../barang-masuk-tambahan.php");

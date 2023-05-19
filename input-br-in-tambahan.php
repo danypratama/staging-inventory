@@ -73,7 +73,7 @@ include "akses.php";
                     <form method="post" action="proses/proses-br-in-tambahan.php" class="form">
                         <div class="row">
                             <input type="hidden" class="form-control" name="id_br" value="BR-TAMBAHAN-<?php echo $year ?><?php echo $UUID ?><?php echo $month ?>">
-                            <div class="col-sm-6 mb-3">
+                            <div class="col-sm-4 mb-3">
                                 <label for="nama_produk">Nama Produk</label>
                                 <input type="hidden" class="form-control" name="id_produk" id="idProduk">
                                 <input type="text" class="form-control" name="nama_produk" id="namaProduk" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#modalBarang" readonly>
@@ -82,16 +82,28 @@ include "akses.php";
                                 <label>Merk</label>
                                 <input type="text" class="form-control" id="merkProduk" readonly>
                             </div>
-                            <div class="col-sm-3 mb-3">
+                            <div class="col-sm-2 mb-3">
                                 <label>Qty</label>
                                 <input type="text" class="form-control" name="qty" id="qtyInput" disabled>
+                            </div>
+                            <div class="col-sm-3 mb-3">
+                                <label>Keterangan</label>
+                                <select class="form-select" name="keterangan">
+                                    <option>Pilih...</option>
+                                    <?php
+                                    $sql = mysqli_query($connect, "SELECT * FROM keterangan_in");
+                                    while ($data = mysqli_fetch_array($sql)) {
+                                    ?>
+                                        <option value="<?php echo $data['id_ket_in'] ?>"> <?php echo $data['ket_in'] ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                             <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
                             <input type="hidden" class="form-control" name="created" id="datetime-input">
                         </div>
                         <div class="text-end">
                             <button type="submit" name="simpan" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Simpan Data</button>
-                            <a href="#" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+                            <a href="barang-masuk-tambahan.php" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
                         </div>
                     </form>
                 </div>

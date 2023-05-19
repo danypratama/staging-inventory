@@ -124,7 +124,7 @@
                     } ?>" href="barang-masuk-reg.php">
             <i class="bi bi-circle"></i><span>Reguler</span>
           </a>
-          <a href="#">
+          <a href="barang-masuk-set-reg.php">
             <i class="bi bi-circle"></i><span>Set Produk Reguler</span>
           </a>
         </li>

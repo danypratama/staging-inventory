@@ -28,11 +28,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <!-- <div class="loader loader">
+        <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div> -->
+        </div>
         <!-- ENd Loading -->
         <section>
             <!-- SWEET ALERT -->
@@ -53,8 +53,9 @@ include "akses.php";
                                     <tr class="text-white" style="background-color: navy;">
                                         <td class="text-center p-3" style="width: 30px">No</td>
                                         <td class="text-center p-3" style="width: 200px">Nama Produk</td>
-                                        <td class="text-center p-3" style="width: 100px">Merk</td>
-                                        <td class="text-center p-3" style="width: 100px">Qty</td>
+                                        <td class="text-center p-3" style="width: 80px">Merk</td>
+                                        <td class="text-center p-3" style="width: 80px">Qty</td>
+                                        <td class="text-center p-3" style="width: 150px">Keterangan</td>
                                         <td class="text-center p-3" style="width: 100px">Dibuat Oleh</td>
                                         <td class="text-center p-3" style="width: 100px">Dibuat Tanggal</td>
                                         <td class="text-center p-3" style="width: 50px">Aksi</td>
@@ -64,11 +65,12 @@ include "akses.php";
                                     <?php
                                     $no = 1;
                                     include "koneksi.php";
-                                    $sql = "SELECT ibt.*, pr.*, mr.*, us.nama_user
+                                    $sql = "SELECT ibt.*, ibt.created_date AS created, pr.*, mr.*, us.nama_user, ket_in.*
                                             FROM isi_br_tambahan AS ibt
                                             LEFT JOIN tb_produk_reguler pr ON(ibt.id_produk_reg = pr.id_produk_reg)
                                             LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
-                                            LEFT JOIN user us ON(ibt.id_user = us.id_user)";
+                                            LEFT JOIN user us ON(ibt.id_user = us.id_user)
+                                            LEFT JOIN keterangan_in ket_in ON(ibt.id_ket_in = ket_in.id_ket_in)";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
@@ -76,9 +78,10 @@ include "akses.php";
                                             <td class="text-center"><?php echo $no ?></td>
                                             <td><?php echo $data['nama_produk'] ?></td>
                                             <td class="text-center"><?php echo $data['nama_merk'] ?></td>
-                                            <td><?php echo $data['qty'] ?></td>
+                                            <td class="text-end"><?php echo number_format($data['qty']) ?></td>
+                                            <td><?php echo $data['ket_in'] ?></td>
                                             <td><?php echo $data['nama_user'] ?></td>
-                                            <td><?php echo $data['created_date'] ?></td>
+                                            <td><?php echo $data['created'] ?></td>
                                             <td class="text-center">
                                                 <a href="edit-br-in-tambahan.php?id=<?php echo base64_encode($data['id_isi_br_tambahan']) ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
                                                 <a href="proses/proses-br-in-tambahan.php?hapus=<?php echo base64_encode($data['id_isi_br_tambahan']) ?>" class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash" style="font-size: 14px;"></i></a>

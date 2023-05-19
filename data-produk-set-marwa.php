@@ -53,28 +53,27 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <form>
-              <a href="tambah-data-produk-set-marwa.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk set</a>
-              <div class="table-responsive mt-3">
-                <table class="table table-striped table-bordered" id="table1">
-                  <thead>
-                    <tr class="text-white" style="background-color: #051683;">
-                      <td class="text-center p-3" style="width: 50px">No</td>
-                      <td class="text-center p-3" style="width: 120px">Kode Produk Set</td>
-                      <td class="text-center p-3" style="width: 250px">Nama Set Produk </td>
-                      <td class="text-center p-3" style="width: 100px">Merk</td>
-                      <td class="text-center p-3" style="width: 100px">Harga Modal</td>
-                      <td class="text-center p-3" style="width: 100px">Harga Jual</td>
-                      <td class="text-center p-3" style="width: 50px">Stok</td>
-                      <td class="text-center p-3" style="width: 100px">Aksi</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    include "koneksi.php";
+            <a href="tambah-data-produk-set-marwa.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk set</a>
+            <div class="table-responsive mt-3">
+              <table class="table table-striped table-bordered" id="table1">
+                <thead>
+                  <tr class="text-white" style="background-color: #051683;">
+                    <td class="text-center p-3" style="width: 50px">No</td>
+                    <td class="text-center p-3" style="width: 120px">Kode Produk Set</td>
+                    <td class="text-center p-3" style="width: 250px">Nama Set Produk </td>
+                    <td class="text-center p-3" style="width: 100px">Merk</td>
+                    <td class="text-center p-3" style="width: 100px">Harga Modal</td>
+                    <td class="text-center p-3" style="width: 100px">Harga Jual</td>
+                    <td class="text-center p-3" style="width: 50px">Stok</td>
+                    <td class="text-center p-3" style="width: 100px">Aksi</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  include "koneksi.php";
 
-                    $no = 1;
-                    $sql = "SELECT prs.*,
+                  $no = 1;
+                  $sql = "SELECT prs.*,
                               prs.created_date as 'produk_created',
                               prs.created_date as 'produk_updated',    
                               uc.nama_user as user_created, 
@@ -87,49 +86,48 @@ include "akses.php";
                               LEFT JOIN tb_merk mr ON (prs.id_merk = mr.id_merk)
                               LEFT JOIN tb_lokasi_produk lok ON (prs.id_lokasi = lok.id_lokasi)
                               ";
-                    $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
-                    while ($data = mysqli_fetch_array($query)) {
-                      $id_set = base64_encode($data['id_set_marwa']);
-                    ?>
-                      <tr>
-                        <td class="text-center"><?php echo $no; ?></td>
-                        <td><?php echo $data['kode_set_marwa']; ?></td>
-                        <td><?php echo $data['nama_set_marwa']; ?></td>
-                        <td class="text-center"><?php echo $data['nama_merk']; ?></td>
-                        <?php
-                        $id = $data['id_set_marwa'];
-                        $grand_total = 0;
-                        $sql_data = "SELECT ipsm.*, tpsm.*, tpr.* FROM isi_produk_set_marwa ipsm
+                  $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
+                  while ($data = mysqli_fetch_array($query)) {
+                    $id_set = base64_encode($data['id_set_marwa']);
+                  ?>
+                    <tr>
+                      <td class="text-center"><?php echo $no; ?></td>
+                      <td><?php echo $data['kode_set_marwa']; ?></td>
+                      <td><?php echo $data['nama_set_marwa']; ?></td>
+                      <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                      <?php
+                      $id = $data['id_set_marwa'];
+                      $grand_total = 0;
+                      $sql_data = "SELECT ipsm.*, tpsm.*, tpr.* FROM isi_produk_set_marwa ipsm
                                      LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
                                      LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)
                                      WHERE tpsm.id_set_marwa = '$id'";
-                        $query_data = mysqli_query($connect, $sql_data) or die(mysqli_error($connect, $sql_data));
-                        while ($row = mysqli_fetch_array($query_data)) {
-                          $harga = $row['harga_produk'];
-                          $qty = $row['qty'];
-                          $jumlah = $qty * $harga;
-                          $grand_total += $jumlah;
-                        ?>
-                        <?php } ?>
+                      $query_data = mysqli_query($connect, $sql_data) or die(mysqli_error($connect, $sql_data));
+                      while ($row = mysqli_fetch_array($query_data)) {
+                        $harga = $row['harga_produk'];
+                        $qty = $row['qty'];
+                        $jumlah = $qty * $harga;
+                        $grand_total += $jumlah;
+                      ?>
+                      <?php } ?>
 
-                        <td class="text-end"><?php echo number_format($grand_total, 0, '.', '.'); ?></td>
-                        <td class="text-end"><?php echo number_format($data['harga_set_marwa'], 0, '.', '.'); ?></td>
-                        <td class="text-end"><?php echo number_format($data['stock'], 0, '.', '.'); ?></td>
-                        <td class="text-center">
-                          <!-- Lihat Data -->
-                          <a href="detail-set-marwa.php?detail-id=<?php echo $id_set ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
-                          <!-- Edit Data -->
-                          <a href="edit-data-set-marwa.php?edit-set-marwa=<?php echo $id_set ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
-                          <!-- Hapus Data -->
-                          <a href="proses/proses-produk-set-marwa.php?hapus-set-marwa=<?php echo $id_set ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                        </td>
-                      </tr>
-                      <?php $no++; ?>
-                    <?php } ?>
-                  </tbody>
-                </table>
-              </div>
-            </form>
+                      <td class="text-end"><?php echo number_format($grand_total, 0, '.', '.'); ?></td>
+                      <td class="text-end"><?php echo number_format($data['harga_set_marwa'], 0, '.', '.'); ?></td>
+                      <td class="text-end"><?php echo number_format($data['stock'], 0, '.', '.'); ?></td>
+                      <td class="text-center">
+                        <!-- Lihat Data -->
+                        <a href="detail-set-marwa.php?detail-id=<?php echo $id_set ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
+                        <!-- Edit Data -->
+                        <a href="edit-data-set-marwa.php?edit-set-marwa=<?php echo $id_set ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                        <!-- Hapus Data -->
+                        <a href="proses/proses-produk-set-marwa.php?hapus-set-marwa=<?php echo $id_set ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                      </td>
+                    </tr>
+                    <?php $no++; ?>
+                  <?php } ?>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

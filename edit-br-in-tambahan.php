@@ -67,11 +67,12 @@ include "akses.php";
                 <div class="card shadow p-3">
                     <?php
                     $id = base64_decode($_GET['id']);
-                    $sql = "SELECT ibt.*, pr.*, mr.*, us.nama_user
+                    $sql = "SELECT ibt.*, pr.*, mr.*, us.nama_user, ket_in.*
                             FROM isi_br_tambahan AS ibt
                             LEFT JOIN tb_produk_reguler pr ON(ibt.id_produk_reg = pr.id_produk_reg)
                             LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
                             LEFT JOIN user us ON(ibt.id_user = us.id_user)
+                            LEFT JOIN keterangan_in ket_in ON(ibt.id_ket_in = ket_in.id_ket_in)
                             WHERE id_isi_br_tambahan = '$id'";
                     $query = mysqli_query($connect, $sql);
                     $data = mysqli_fetch_array($query);
@@ -79,7 +80,7 @@ include "akses.php";
                     <form method="post" action="proses/proses-br-in-tambahan.php" class="form">
                         <div class="row">
                             <input type="hidden" class="form-control" name="id_br" value="<?php echo $data['id_isi_br_tambahan'] ?>">
-                            <div class="col-sm-6 mb-3">
+                            <div class="col-sm-4 mb-3">
                                 <label for="nama_produk">Nama Produk</label>
                                 <input type="hidden" class="form-control" name="id_produk" id="idProduk" value="<?php echo $data['id_produk_reg'] ?>">
                                 <input type="text" class="form-control" name="nama_produk" id="namaProduk" value="<?php echo $data['nama_produk'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang" readonly>
@@ -88,14 +89,26 @@ include "akses.php";
                                 <label>Merk</label>
                                 <input type="text" class="form-control" id="merkProduk" value="<?php echo $data['nama_merk'] ?>" readonly>
                             </div>
-                            <div class="col-sm-3 mb-3">
+                            <div class="col-sm-2 mb-3">
                                 <label>Qty</label>
-                                <input type="text" class="form-control" name="qty" id="qtyInput" value="<?php echo $data['qty'] ?>">
+                                <input type="text" class="form-control" name="qty" id="qtyInput" value="<?php echo number_format($data['qty'], 0, '.', '.') ?>">
+                            </div>
+                            <div class="col-sm-3 mb-3">
+                                <label>Keterangan</label>
+                                <select class="form-select" name="keterangan" id="ket">
+                                    <option value="<?php echo $data['id_ket_in'] ?>"> <?php echo $data['ket_in'] ?></option>
+                                    <?php
+                                    $sql = mysqli_query($connect, "SELECT * FROM keterangan_in");
+                                    while ($data = mysqli_fetch_array($sql)) {
+                                    ?>
+                                        <option value="<?php echo $data['id_ket_in'] ?>"> <?php echo $data['ket_in'] ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                         </div>
                         <div class="text-end">
-                            <button type="submit" name="edit" id="submitButton" class="btn btn-primary" disabled><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Ubah Data</button>
-                            <a href="barang-masuk-tambnahan.php" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
+                            <button type="submit" name="edit" id="submitButton" class="btn btn-primary"><i class="bx bx-save" style="color: white; font-size: 18px;"></i> Ubah Data</button>
+                            <a href="barang-masuk-tambahan.php" class="btn btn-secondary"><i class="bi bi-arrow-left-square-fill" style="color: white; font-size: 18px;"></i> Tutup</a>
                         </div>
                     </form>
                 </div>
@@ -181,29 +194,6 @@ include "akses.php";
     });
 </script>
 
-<!-- Clock js -->
-<script>
-    function inputDateTime() {
-        // Get current date and time
-        let currentDate = new Date();
-
-        // Format date and time as yyyy-mm-ddThh:mm:ss
-        let year = currentDate.getFullYear();
-        let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        let day = currentDate.getDate().toString().padStart(2, '0');
-        let hours = currentDate.getHours();
-        let minutes = currentDate.getMinutes().toString().padStart(2, '0');
-        let seconds = currentDate.getSeconds().toString().padStart(2, '0');
-        let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
-
-        // Set value of input field to current date and time
-        document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
-
-    }
-    // Call updateDateTime function every second
-    setInterval(inputDateTime, 1000);
-</script>
-
 <!-- Number Format -->
 <script>
     $(document).on('input', '#qtyInput', function(e) {
@@ -225,7 +215,7 @@ include "akses.php";
     });
 </script>
 
-<script>
+<!-- <script>
     // Deklarasi fungsi
     function enableSubmitButton() {
         $('#submitButton').prop('disabled', false);
@@ -252,6 +242,7 @@ include "akses.php";
         console.log(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
         console.log(cekQty);
         console.log(qtyAct);
+        console.log(ket);
         console.log($('#idProduk').val());
 
         if ($('#table2').val() !== '' || $('#qtyInput').val() !== '') {
@@ -264,4 +255,4 @@ include "akses.php";
             }
         }
     });
-</script>
+</script> -->
