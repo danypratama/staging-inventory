@@ -38,12 +38,12 @@ include "akses.php";
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body p-3">
-                        <form action="" method="POST">
+                        <form action="tampil-data-set-marwa.php" method="POST">
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col-6 mb-3">
                                         <label>Nama Set</label>
-                                        <input type="text" class="form-control" nama="id_set" id="idSet" required>
+                                        <input type="hidden" class="form-control" name="id_set" id="idSet" required>
                                         <input type="text" class="form-control bg-light" name="nama_set" id="namaSet" data-bs-toggle="modal" data-bs-target="#modalSet" readonly>
                                     </div>
                                     <div class="col-5 mb-3">
@@ -57,7 +57,7 @@ include "akses.php";
                                 </div>
                             </div>
                             <div class="mb-3 text-end">
-                                <a href="#" class="btn btn-primary btn-md btn-confirm" data-bs-toggle="modal" data-bs-target="#confirm"><i class="bi bi-save"></i> Confirm</a>
+                                <button type="submit" class="btn btn-primary btn-md" name="simpan"><i class="bi bi-save"></i> Simpan Data</button>
                                 <a href="barang-masuk-set-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
                             </div>
                         </form>
@@ -120,28 +120,6 @@ include "akses.php";
     </div>
     <!-- End Modal -->
 
-    <!-- Confirm Simpan Set -->
-    <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Confirmation</h5>
-                </div>
-                <div class="modal-body">
-                    <?php
-                    $modalIdSet = "Contoh Nilai"; // Nilai yang ingin ditampilkan pada elemen <span>
-                    ?>
-
-                    <span id="modalIdSet"><?php echo $modalIdSet; ?></span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Modal -->
-
     <!-- Select Data -->
     <script>
         // Fngsi Untuk membuat form input Qty menjadi enabled
@@ -155,29 +133,7 @@ include "akses.php";
     </script>
 
     <script>
-        // $(document).ready(function() {
-        //     $('.btn-confirm').click(function() {
-        //         var idNew = $(this).data('id-new');
 
-        //         console.log(idNew);
-
-        //         $('#idNew').html(idNew);
-        //         $('#confirm').modal('show');
-        //     });
-        // });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var confirmButton = document.querySelector('.btn-confirm');
-            var idSetInput = document.getElementById('idSet');
-            var modalIdSet = document.getElementById('modalIdSet');
-
-            confirmButton.addEventListener('click', function() {
-                var idSetValue = idSetInput.value;
-                modalIdSet.textContent = idSetValue;
-            });
-        });
     </script>
 </body>
 
