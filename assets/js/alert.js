@@ -24,6 +24,15 @@ if(notifikasi == "Disimpan" || notifikasi=="Dihapus" || notifikasi == "Diupdate"
 		title: 'Sukses',
 		text: '' +notifikasi,
 	  })
+}else if(notifikasi == "Silahkan Ulangi Kembali"){
+	Swal.fire({
+		imageUrl: 'img/error-icon.png',
+		imageWidth: 100,
+		imageHeight: 80,
+		imageAlt: 'Custom image',
+		 title: 'Terjadi Kesalahan Pada Server',
+		 text: '' +notifikasi,
+	   })
 }
 
 

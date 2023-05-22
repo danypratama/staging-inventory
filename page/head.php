@@ -48,3 +48,12 @@
 
 <!-- animation load data -->
 <link rel="stylesheet" type="text/css" href="assets/css/loading.css">
+
+<!-- Nonaktifkan Go Back -->
+<script>
+    // Menonaktifkan fungsi "Go Back" saat tombol kembali ditekan atau perintah "history.back()" dipanggil
+    // history.pushState(null, null, location.href);
+    // window.onpopstate = function() {
+    //     history.go(1);
+    // };
+</script>

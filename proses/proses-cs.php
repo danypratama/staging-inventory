@@ -15,7 +15,7 @@ if (isset($_POST["simpan-cs"])) {
 
 	if ($cek_cs->num_rows > 0) {
 		$_SESSION['info'] = 'Data Gagal Disimpan';
-		echo "<script>document.location.href='../data-customer.php'</script>";
+		header("Location:../data-customer.php");
 	} else {
 		mysqli_query($connect, "INSERT INTO tb_customer
                       (id_cs, nama_cs, alamat, no_telp, email, created_date) VALUES ('$id_cs', '$nama_cs', '$alamat', '$telp', '$email', '$created')");

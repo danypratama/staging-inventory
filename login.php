@@ -14,6 +14,12 @@
     <div class="shape"></div>
     <div class="shape"></div>
   </div>
+  <!-- SWEET ALERT -->
+  <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                          echo $_SESSION['info'];
+                                        }
+                                        unset($_SESSION['info']); ?>"></div>
+  <!-- END SWEET ALERT -->
   <form action="cek-login.php" method="POST">
     <?php
     if (isset($_GET["gagal"])) { ?>

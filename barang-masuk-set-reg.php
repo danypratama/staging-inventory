@@ -45,6 +45,12 @@ include "akses.php";
         </div>
         <!-- End Page Title -->
         <section>
+            <!-- SWEET ALERT -->
+            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                                        echo $_SESSION['info'];
+                                                    }
+                                                    unset($_SESSION['info']); ?>"></div>
+            <!-- END SWEET ALERT -->
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body p-3">
@@ -64,26 +70,28 @@ include "akses.php";
                                 <tbody>
                                     <?php
                                     include "koneksi.php";
-
                                     $no = 1;
-
+                                    $sql = "SELECT tsm.*, tpsm.nama_set_marwa, tpsm.kode_set_marwa, tpsm.id_merk, mr.nama_merk
+                                            FROM tr_set_marwa AS tsm
+                                            LEFT JOIN tb_produk_set_marwa tpsm ON(tsm.id_set_marwa = tpsm.id_set_marwa)
+                                            LEFT JOIN tb_merk mr ON(tpsm.id_merk = mr.id_merk)
+                                            ORDER BY tsm.created_date";
+                                    $query = mysqli_query($connect, $sql);
+                                    while ($data = mysqli_fetch_array($query)) {
                                     ?>
-                                    <tr>
-                                        <td class="text-center"><?php echo $no; ?></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-end"></td>
-                                        <td class="text-center">
-                                            <!-- Lihat Data -->
-                                            <a href="#" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
-                                            <!-- Edit Data -->
-                                            <a href="#" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
-                                            <!-- Hapus Data -->
-                                            <a href="#" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <?php $no++; ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo $no; ?></td>
+                                            <td><?php echo $data['kode_set_marwa'] ?></td>
+                                            <td><?php echo $data['nama_set_marwa'] ?></td>
+                                            <td class="text-center"><?php echo $data['nama_merk'] ?></td>
+                                            <td class="text-end"><?php echo $data['qty'] ?></td>
+                                            <td class="text-center">
+                                                <!-- Hapus Data -->
+                                                <a href="proses/proses-update-stock-set-marwa.php?hapus=<?php echo base64_encode($data['id_tr_set_marwa']); ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php $no++; ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>

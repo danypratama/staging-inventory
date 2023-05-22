@@ -43,12 +43,14 @@ include "akses.php";
                                 <?php
                                 // Koneksi ke database
                                 include 'koneksi.php';
-                                $UUID = generate_uuid();
-                                $month = date('m');
-                                $year = date('y');
                                 // Menerima nilai dari permintaan
                                 $id = $_POST['id_set'];
+
                                 $qty = $_POST['qty'];
+                                // Generate UUID
+                                $uuid = generate_uuid();
+                                $month = date('m');
+                                $year = date('y');
 
                                 $sql = mysqli_query($connect, "SELECT tpsm.*, mr.* FROM tb_produk_set_marwa tpsm LEFT JOIN tb_merk mr ON (tpsm.id_merk = mr.id_merk) WHERE tpsm.id_set_marwa = '$id'");
                                 $row = mysqli_fetch_array($sql);
@@ -56,13 +58,12 @@ include "akses.php";
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col">
-                                            <label for="">Nama Set Marwa</label>
-                                            <input type="text" name="id_tr_set" class="form-control" value="TR-SET-MRW-<?php echo $year ?><?php echo $UUID ?><?php echo $month ?>" readonly>
+                                            <label for="">Nama Set</label>
                                             <input type="hidden" name="id_set" class="form-control" value="<?php echo $id ?>" readonly>
                                             <input type="text" class="form-control" value="<?php echo $row['nama_set_marwa'] ?>" readonly>
                                         </div>
                                         <div class="col">
-                                            <label for="">Nama Set</label>
+                                            <label for="">Merk</label>
                                             <input type="text" class="form-control" value="<?php echo $row['nama_merk'] ?>" readonly>
                                         </div>
                                         <div class="col">
@@ -71,7 +72,6 @@ include "akses.php";
                                         </div>
                                     </div>
                                 </div>
-
                                 <table class="table">
                                     <thead>
                                         <tr class="bg-primary text-white">
@@ -79,6 +79,7 @@ include "akses.php";
                                             <th class="text-center p-3" style="width: 150px;">Kode Produk</th>
                                             <th class="text-center p-3" style="width: 300px;">Nama Produk</th>
                                             <th class="text-center p-3" style="width: 100px;">Merk Set</th>
+                                            <td class="text-center p-3" style="width: 100px">Stock</td>
                                             <th class="text-center p-3" style="width: 100px;">Qty</th>
                                             <th class="text-center p-3" style="width: 100px;">Total</th>
                                         </tr>
@@ -91,34 +92,48 @@ include "akses.php";
                                         $no = 1;
                                         $id = $_POST['id_set'];
                                         $qty = $_POST['qty'];
+                                        $month = date('m');
+                                        $year = date('dy');
 
-                                        $sql = mysqli_query($connect, "SELECT ipsm.*, tpsm.*, tpr.*, mr.* FROM isi_produk_set_marwa ipsm 
+                                        $sql = mysqli_query($connect, " SELECT ipsm.*, tpsm.*, tpr.*, mr.*, spr.stock AS stock_produk
+                                                                        FROM isi_produk_set_marwa ipsm 
                                                                         LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
                                                                         LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)
                                                                         LEFT JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                                                        LEFT JOIN stock_produk_reguler spr ON (spr.id_produk_reg = ipsm.id_produk)
                                                                         WHERE ipsm.id_set_marwa = '$id'");
+                                        // Hitung total data yang ditampilkan
                                         while ($data = mysqli_fetch_array($sql)) {
                                             $total = $data['qty'] * $qty;
+                                            $tampil_stock = number_format($data['stock_produk']);
+                                            // Generate UUID 
+                                            $uuid = generate_uuid();
                                         ?>
                                             <tr>
                                                 <input type="hidden" name="id_set_isi[]" class="form-control bg-light text-center" value="<?php echo $id ?>" readonly>
                                                 <input type="hidden" name="id_produk[]" class="form-control bg-light text-center" value="<?php echo $data['id_produk'] ?>" readonly>
+                                                <input type="hidden" name="id_tr_set_isi[]" class="form-control bg-light text-center" value="TR-ISI-SET-MRW-<?php echo $year ?><?php echo $uuid ?><?php echo $month ?>" readonly>
                                                 <td><input type="text" class="form-control bg-light text-center" value="<?php echo $no ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light" value="<?php echo $data['kode_produk']; ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light" value="<?php echo $data['nama_produk']; ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light" value="<?php echo $data['nama_merk']; ?>" readonly></td>
+                                                <td><input type="text" name="stock[]" class="form-control bg-light text-end" value="<?php echo $tampil_stock; ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light text-end" value="<?php echo $data['qty']; ?>" readonly></td>
-                                                <td><input type="text" class="form-control bg-light text-end" value="<?php echo $total; ?>" readonly></td>
+                                                <td><input type="text" name="qty[]" class="form-control bg-light text-end" value="<?php echo $total; ?>" readonly></td>
                                                 </td>
                                             </tr>
                                             <?php $no++; ?>
                                         <?php } ?>
                                     </tbody>
                                 </table>
+                                <div class="text-start">
+                                    <p><strong>NB: barang di atas akan mengurangi barang stok yang ada untuk non set</strong></p>
+                                </div>
                                 <div class="mb-3 mt-3 text-end">
+                                    <input type="hidden" name="id_tr_set" class="form-control bg-light text-center" value="TR-SET-MRW-<?php echo $year ?><?php echo $uuid ?><?php echo $month ?>" readonly>
                                     <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
                                     <input type="hidden" class="form-control" name="created" id="datetime-input">
-                                    <button type="submit" class="btn btn-primary btn-md" name="simpan"><i class="bi bi-save"></i> Simpan Data</button>
+                                    <button type="submit" id="simpan" class="btn btn-primary btn-md" name="simpan" disabled><i class="bi bi-save"></i> Simpan Data</button>
                                     <a href="barang-masuk-set-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
                                 </div>
                             </form>
@@ -134,6 +149,37 @@ include "akses.php";
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <?php include "page/script.php" ?>
+
+    <script>
+        // Fungsi untuk memeriksa apakah ada produk dengan stock kosong
+        function checkStock() {
+            var stockInputs = document.getElementsByName("stock[]");
+            var qtyInputs = document.getElementsByName("qty[]");
+            var saveButton = document.getElementById("simpan");
+            var disableButton = false;
+
+            for (var i = 0; i < stockInputs.length; i++) {
+                var stock = parseFloat(stockInputs[i].value.replace(/,/g, ''));
+                var qty = parseFloat(qtyInputs[i].value.replace(/,/g, ''));
+
+                if (stock === 0 || stock < qty) {
+                    disableButton = true;
+                    stockInputs[i].classList.add("bg-danger", "text-white");
+                    stockInputs[i].classList.remove("bg-light");
+                } else {
+                    stockInputs[i].classList.remove("bg-danger", "text-white");
+                    stockInputs[i].classList.add("bg-light");
+                }
+            }
+            saveButton.disabled = disableButton;
+        }
+
+        // Panggil fungsi checkStock saat halaman selesai dimuat
+        window.addEventListener("DOMContentLoaded", function() {
+            checkStock();
+        });
+    </script>
+
 
 </body>
 

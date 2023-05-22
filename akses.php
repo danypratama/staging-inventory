@@ -28,27 +28,35 @@
 
 
 <script>
-    // Fungsi untuk melakukan logout saat tab browser ditutup
-    window.addEventListener('beforeunload', function() {
-        // Kirim permintaan logout ke server melalui AJAX
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'logout.php?id=<?php echo $id_history ?>', false);
-        xhr.send();
-    });
+    // Fungsi untuk mengarahkan ke halaman login
+    function redirectToLogin() {
+        // Arahkan ke halaman login
+        window.location.href = 'login.php';
+    }
+
+    // Fungsi untuk menampilkan Sweet Alert saat sesi habis
+    function showSessionExpiredAlert() {
+        Swal.fire({
+            title: 'Sesi Anda telah habis',
+            text: 'Silakan login kembali',
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false // Tambahkan opsi allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                redirectToLogin();
+            }
+        });
+    }
 
     // Fungsi untuk mengatur timer untuk melakukan logout saat waktu habis
     var timeout;
 
     function startTimer() {
         timeout = setTimeout(function() {
-            // Kirim permintaan logout ke server melalui AJAX
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'logout.php?id=<?php echo $id_history ?>', false);
-            xhr.send();
-            // Tampilkan pesan kepada pengguna bahwa sesi telah habis
-            alert('Sesi Anda telah habis karena tidak aktif. Silakan login kembali.');
-            // Redirect ke halaman login
-            window.location.href = 'login.php';
+            showSessionExpiredAlert();
         }, 900000); // Waktu timeout dalam milidetik (15 menit)
     }
 

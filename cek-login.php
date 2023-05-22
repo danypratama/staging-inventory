@@ -89,7 +89,6 @@ if (isset($_POST['login'])) {
                                         (id_history, id_user, login_time, ip_login, perangkat, jenis_perangkat, lokasi, status_perangkat) 
                                         VALUES 
                                         ('$UUID', '$id_user', '$today', '$ip_address', '$os', '$device', '$locationString', '$online')");
-
             header("Location: dashboard.php");
         } else {
             // Password salah, kembali ke halaman login

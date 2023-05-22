@@ -44,11 +44,11 @@ include "akses.php";
                                     <div class="col-6 mb-3">
                                         <label>Nama Set</label>
                                         <input type="hidden" class="form-control" name="id_set" id="idSet" required>
-                                        <input type="text" class="form-control bg-light" name="nama_set" id="namaSet" data-bs-toggle="modal" data-bs-target="#modalSet" readonly>
+                                        <input type="text" class="form-control bg-light" name="nama_set" id="namaSet" data-bs-toggle="modal" data-bs-target="#modalSet" readonly required>
                                     </div>
                                     <div class="col-5 mb-3">
                                         <label>Merk</label>
-                                        <input type="text" class="form-control bg-light" id="merkSet" readonly>
+                                        <input type="text" class="form-control bg-light" id="merkSet" readonly required>
                                     </div>
                                     <div class="col-1 mb-3">
                                         <label>Qty</label>
@@ -57,7 +57,7 @@ include "akses.php";
                                 </div>
                             </div>
                             <div class="mb-3 text-end">
-                                <button type="submit" class="btn btn-primary btn-md" name="simpan"><i class="bi bi-save"></i> Simpan Data</button>
+                                <button type="submit" class="btn btn-primary btn-md" name="simpan" id="simpan" disabled><i class="bi bi-save"></i> Buat Data Stock</button>
                                 <a href="barang-masuk-set-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
                             </div>
                         </form>
@@ -125,15 +125,15 @@ include "akses.php";
         // Fngsi Untuk membuat form input Qty menjadi enabled
         // select Produk Reguler
         $(document).on('click', '#table2 tbody tr', function(e) {
+            // Mengatur nilai input dengan data yang dipilih
             $('#idSet').val($(this).data('id'));
             $('#namaSet').val($(this).data('nama'));
             $('#merkSet').val($(this).data('merk'));
             $('#modalSet').modal('hide');
+
+            // Mengaktifkan tombol
+            $('#simpan').prop('disabled', false);
         });
-    </script>
-
-    <script>
-
     </script>
 </body>
 
