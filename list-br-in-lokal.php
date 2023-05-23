@@ -89,9 +89,9 @@ include "akses.php";
                                     $no = 1;
                                     $sql = "SELECT ibil.*, iibil.*, pr.*, mr.*
                                                 FROM inv_br_in_lokal AS ibil
-                                                LEFT JOIN isi_inv_br_in_lokal iibil ON (ibil.id_inv_br_in_lokal = iibil.id_inv_br_in_lokal)
-                                                LEFT JOIN tb_produk_reguler pr ON (iibil.id_produk_reg = pr.id_produk_reg)
-                                                LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
+                                                JOIN isi_inv_br_in_lokal iibil ON (ibil.id_inv_br_in_lokal = iibil.id_inv_br_in_lokal)
+                                                JOIN tb_produk_reguler pr ON (iibil.id_produk_reg = pr.id_produk_reg)
+                                                JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
                                                 WHERE ibil.id_inv_br_in_lokal ='$id'";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {

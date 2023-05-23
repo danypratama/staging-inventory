@@ -92,6 +92,7 @@ include "akses.php";
                                         $no = 1;
                                         $id = $_POST['id_set'];
                                         $qty = $_POST['qty'];
+                                        $qty = intval(preg_replace("/[^0-9]/", "", $qty));
                                         $month = date('m');
                                         $year = date('dy');
 
@@ -119,7 +120,7 @@ include "akses.php";
                                                 <td><input type="text" class="form-control bg-light" value="<?php echo $data['nama_merk']; ?>" readonly></td>
                                                 <td><input type="text" name="stock[]" class="form-control bg-light text-end" value="<?php echo $tampil_stock; ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light text-end" value="<?php echo $data['qty']; ?>" readonly></td>
-                                                <td><input type="text" name="qty[]" class="form-control bg-light text-end" value="<?php echo $total; ?>" readonly></td>
+                                                <td><input type="text" name="qty[]" class="form-control bg-light text-end" value="<?php echo number_format($total, 0, '.', '.'); ?>" readonly></td>
                                                 </td>
                                             </tr>
                                             <?php $no++; ?>
@@ -134,7 +135,7 @@ include "akses.php";
                                     <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
                                     <input type="hidden" class="form-control" name="created" id="datetime-input">
                                     <button type="submit" id="simpan" class="btn btn-primary btn-md" name="simpan" disabled><i class="bi bi-save"></i> Simpan Data</button>
-                                    <a href="barang-masuk-set-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
+                                    <a href="input-set-in-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Kembali</a>
                                 </div>
                             </form>
                         </div>

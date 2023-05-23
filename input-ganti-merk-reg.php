@@ -1,10 +1,11 @@
 <?php
-    $page = 'perubahan-merk';
-    $page2  = 'ganti-merk';
-    include "akses.php";
+$page = 'perubahan-merk';
+$page2  = 'ganti-merk';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -15,15 +16,17 @@
   <?php include "page/head.php"; ?>
 
   <style>
-    #table2{
+    #table2 {
       cursor: pointer;
     }
-    #table3{
+
+    #table3 {
       cursor: pointer;
     }
-     input[type="text"]:read-only {
+
+    input[type="text"]:read-only {
       background: #e9ecef;
-      }
+    }
   </style>
 </head>
 
@@ -31,91 +34,94 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
   <main id="main" class="main">
     <section>
       <!-- SWEET ALERT -->
-      <div class="info-data" data-infodata="<?php if(isset($_SESSION['info'])){ echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
+      <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                              echo $_SESSION['info'];
+                                            }
+                                            unset($_SESSION['info']); ?>"></div>
       <!-- END SWEET ALERT -->
       <div class="container-fluid">
         <div class="card">
-            <div class="card-header text-center">Form Perubahan Merk Reguler</div>
-            <div class="shadow card-body">
-                <form action="proses/proses-ganti-merk.php" method="POST">
-                    <?php 
-                      $UUID = generate_uuid();
-                    ?>
-                    <div class="mb-3 mt-3">
-                        <!-- Merk Awal -->
-                        <p style="text-decoration: underline;">Merk Awal</p>
-                        <div class="row">
-                            <div class="col-sm-5">
-                              <label>Nama Produk</label>
-                              <input type="hidden" class="form-control" name="id_ganti_merk_out" value="MERK-UPDATE-<?php echo $UUID; ?>">
-                              <input type="hidden" class="form-control" name="id_produk_awal" id="idProdukAwal">
-                              <input type="text" class="form-control" id="namaProdukAwal" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#merkAwal" readonly>
-                            </div>
-                            <div class="col-sm-2">
-                              <label>Merk Produk</label>
-                              <input type="text" class="form-control" name="merk_awal" id="merkProdukAwal" readonly>
-                            </div>
-                            <div class="col-sm-3">
-                              <label>Grade Produk</label>
-                              <input type="text" class="form-control" id="gradeProdukAwal" readonly>
-                            </div>
-                            <div class="col-sm-1">
-                              <label>Stock</label>
-                              <input type="text" class="form-control" name="stock_awal" id="stockAwal" readonly>
-                            </div>
-                            <div class="col-sm-1">
-                              <label>Qty</label>
-                              <input type="text" class="form-control" name="qty_awal" id="qtyAwal" required>
-                            </div>
-                        </div>
-                        <br>
-                        <!-- Merk Akhir -->
-                        <p style="text-decoration: underline;">Merk AKhir</p>
-                        <div class="row">
-                            <div class="col-sm-5">
-                              <label>Nama Produk</label>
-                              <input type="hidden" class="form-control" name="id_ganti_merk_in" value="MERK-UPDATE-<?php echo $UUID; ?>">
-                              <input type="hidden" class="form-control" name="id_produk_akhir" id="idProdukAkhir">
-                              <input type="text" class="form-control" id="namaProdukAkhir" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#merkAkhir" readonly>
-                            </div>
-                            <div class="col-sm-2">
-                              <label>Merk Produk</label>
-                              <input type="text" class="form-control" name="merk_akhir" id="merkProdukAkhir" readonly>
-                            </div>
-                            <div class="col-sm-3">
-                              <label>Grade Produk</label>
-                              <input type="text" class="form-control" id="gradeProdukAkhir" readonly>
-                            </div>
-                            <div class="col-sm-1">
-                              <label>Stock</label>
-                              <input type="text" class="form-control" name="stock_akhir" id="stockAkhir" readonly>
-                            </div>
-                            <div class="col-sm-1">
-                              <label>Qty</label>
-                              <input type="text" class="form-control" name="qty_akhir" id="qtyAkhir" readonly>
-                            </div>
-                            <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
-                            <input type="hidden" class="form-control" name="created" id="datetime-input">
-                        </div>
-                        <div class="text-center mt-3">
-                          <button type="submit" class="btn btn-primary btn-md m-2" name="simpan-reg"><i class="bx bx-save"></i> Simpan Data</button>
-                          <a href="ganti-merk-reg.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Tutup</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
+          <div class="card-header text-center">Form Perubahan Merk Reguler</div>
+          <div class="shadow card-body">
+            <form action="proses/proses-ganti-merk.php" method="POST">
+              <?php
+              $UUID = generate_uuid();
+              ?>
+              <div class="mb-3 mt-3">
+                <!-- Merk Awal -->
+                <p style="text-decoration: underline;">Merk Awal</p>
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Nama Produk</label>
+                    <input type="hidden" class="form-control" name="id_ganti_merk_out" value="MERK-UPDATE-<?php echo $UUID; ?>">
+                    <input type="hidden" class="form-control" name="id_produk_awal" id="idProdukAwal">
+                    <input type="text" class="form-control" id="namaProdukAwal" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#merkAwal" readonly>
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Merk Produk</label>
+                    <input type="text" class="form-control" name="merk_awal" id="merkProdukAwal" readonly>
+                  </div>
+                  <div class="col-sm-3">
+                    <label>Grade Produk</label>
+                    <input type="text" class="form-control" id="gradeProdukAwal" readonly>
+                  </div>
+                  <div class="col-sm-1">
+                    <label>Stock</label>
+                    <input type="text" class="form-control" name="stock_awal" id="stockAwal" readonly>
+                  </div>
+                  <div class="col-sm-1">
+                    <label>Qty</label>
+                    <input type="text" class="form-control" name="qty_awal" id="qtyAwal" required>
+                  </div>
+                </div>
+                <br>
+                <!-- Merk Akhir -->
+                <p style="text-decoration: underline;">Merk AKhir</p>
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Nama Produk</label>
+                    <input type="hidden" class="form-control" name="id_ganti_merk_in" value="MERK-UPDATE-<?php echo $UUID; ?>">
+                    <input type="hidden" class="form-control" name="id_produk_akhir" id="idProdukAkhir">
+                    <input type="text" class="form-control" id="namaProdukAkhir" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#merkAkhir" readonly>
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Merk Produk</label>
+                    <input type="text" class="form-control" name="merk_akhir" id="merkProdukAkhir" readonly>
+                  </div>
+                  <div class="col-sm-3">
+                    <label>Grade Produk</label>
+                    <input type="text" class="form-control" id="gradeProdukAkhir" readonly>
+                  </div>
+                  <div class="col-sm-1">
+                    <label>Stock</label>
+                    <input type="text" class="form-control" name="stock_akhir" id="stockAkhir" readonly>
+                  </div>
+                  <div class="col-sm-1">
+                    <label>Qty</label>
+                    <input type="text" class="form-control" name="qty_akhir" id="qtyAkhir" readonly>
+                  </div>
+                  <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
+                  <input type="hidden" class="form-control" name="created" id="datetime-input">
+                </div>
+                <div class="text-center mt-3">
+                  <button type="submit" class="btn btn-primary btn-md m-2" name="simpan-reg"><i class="bx bx-save"></i> Simpan Data</button>
+                  <a href="ganti-merk-reg.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Tutup</a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </section>
   </main><!-- End #main -->
-                  
+
   <!-- Footer -->
   <?php include "page/footer.php" ?>
   <!-- End Footer -->
@@ -123,6 +129,7 @@
 
   <?php include "page/script.php" ?>
 </body>
+
 </html>
 
 <!-- Modal Merk Awal -->
@@ -146,12 +153,12 @@
               </tr>
             </thead>
             <tbody>
-              <?php 
-                date_default_timezone_set('Asia/Jakarta');
-                
-                include "koneksi.php";
-                $no = 1;
-                $sql = "SELECT spr.*,  
+              <?php
+              date_default_timezone_set('Asia/Jakarta');
+
+              include "koneksi.php";
+              $no = 1;
+              $sql = "SELECT spr.*,  
                         spr.id_produk_reg AS 'produk_id',
                         mr.*,
                         pr.*,
@@ -162,26 +169,26 @@
                         LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
                         LEFT JOIN tb_kat_penjualan kpenj ON (pr.id_kat_penjualan = kpenj.id_kat_penjualan)
                         LEFT JOIN tb_produk_grade gr ON (pr.id_grade = gr.id_grade)
-                        ORDER BY nama_produk ASC ";
-                $query = mysqli_query($connect, $sql);
-                while($data = mysqli_fetch_array($query)){
-                  $stock = $data['stock'];
-                  $min_stock = $data['min_stock'];
+                        WHERE stock > 0 ORDER BY nama_produk ASC ";
+              $query = mysqli_query($connect, $sql);
+              while ($data = mysqli_fetch_array($query)) {
+                $stock = $data['stock'];
+                $min_stock = $data['min_stock'];
               ?>
-              <tr data-idprod="<?php echo $data['produk_id'];?>" data-namaprod ="<?php echo $data['nama_produk'];?>" data-merkprod ="<?php echo $data['nama_merk'];?>" data-gradeprod="<?php echo $data['nama_grade'] ?>" data-stockprod="<?php echo $data['stock'] ?>" data-bs-dismiss="modal">
-                <td class="text-center"><?php echo $no; ?></td>
-                <td><?php echo $data['nama_produk']; ?></td>
-                <td class="text-center"><?php echo $data['nama_merk']; ?></td>
-                <td class="text-center"><?php echo $data['nama_grade']; ?></td>
-                <?php
-                  if($stock < $min_stock){
+                <tr data-idprod="<?php echo $data['produk_id']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-gradeprod="<?php echo $data['nama_grade'] ?>" data-stockprod="<?php echo $data['stock'] ?>" data-bs-dismiss="modal">
+                  <td class="text-center"><?php echo $no; ?></td>
+                  <td><?php echo $data['nama_produk']; ?></td>
+                  <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                  <td class="text-center"><?php echo $data['nama_grade']; ?></td>
+                  <?php
+                  if ($stock < $min_stock) {
                     echo "<td class='text-end text-white bg-danger'>" . $data['stock'] . "</td>";
-                  }else{
-                    echo "<td class='text-end' style='background-color: #7CFC00'>" . number_format($data['stock'],0,'.','.') . "</td>";
+                  } else {
+                    echo "<td class='text-end' style='background-color: #7CFC00'>" . number_format($data['stock'], 0, '.', '.') . "</td>";
                   }
-                ?>
-              </tr>
-              <?php $no++; ?>
+                  ?>
+                </tr>
+                <?php $no++; ?>
               <?php } ?>
             </tbody>
           </table>
@@ -216,12 +223,12 @@
               </tr>
             </thead>
             <tbody>
-              <?php 
-                date_default_timezone_set('Asia/Jakarta');
-                
-                include "koneksi.php";
-                $no = 1;
-                $sql = "SELECT spr.*,  
+              <?php
+              date_default_timezone_set('Asia/Jakarta');
+
+              include "koneksi.php";
+              $no = 1;
+              $sql = "SELECT spr.*,  
                         spr.id_produk_reg AS 'produk_id',
                         mr.*,
                         pr.*,
@@ -233,25 +240,25 @@
                         LEFT JOIN tb_kat_penjualan kpenj ON (pr.id_kat_penjualan = kpenj.id_kat_penjualan)
                         LEFT JOIN tb_produk_grade gr ON (pr.id_grade = gr.id_grade)
                         ORDER BY nama_produk ASC ";
-                $query = mysqli_query($connect, $sql);
-                while($data = mysqli_fetch_array($query)){
-                  $stock = $data['stock'];
-                  $min_stock = $data['min_stock'];
+              $query = mysqli_query($connect, $sql);
+              while ($data = mysqli_fetch_array($query)) {
+                $stock = $data['stock'];
+                $min_stock = $data['min_stock'];
               ?>
-              <tr data-idprod="<?php echo $data['produk_id'];?>" data-namaprod ="<?php echo $data['nama_produk'];?>" data-merkprod ="<?php echo $data['nama_merk'];?>" data-gradeprod="<?php echo $data['nama_grade'] ?>" data-stockprod="<?php echo $data['stock'] ?>" data-bs-dismiss="modal">
-                <td class="text-center"><?php echo $no; ?></td>
-                <td><?php echo $data['nama_produk']; ?></td>
-                <td class="text-center"><?php echo $data['nama_merk']; ?></td>
-                <td class="text-center"><?php echo $data['nama_grade']; ?></td>
-                <?php
-                  if($stock < $min_stock){
+                <tr data-idprod="<?php echo $data['produk_id']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-gradeprod="<?php echo $data['nama_grade'] ?>" data-stockprod="<?php echo $data['stock'] ?>" data-bs-dismiss="modal">
+                  <td class="text-center"><?php echo $no; ?></td>
+                  <td><?php echo $data['nama_produk']; ?></td>
+                  <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                  <td class="text-center"><?php echo $data['nama_grade']; ?></td>
+                  <?php
+                  if ($stock < $min_stock) {
                     echo "<td class='text-end text-white bg-danger'>" . $data['stock'] . "</td>";
-                  }else{
-                    echo "<td class='text-end' style='background-color: #7CFC00'>" . number_format($data['stock'],0,'.','.') . "</td>";
+                  } else {
+                    echo "<td class='text-end' style='background-color: #7CFC00'>" . number_format($data['stock'], 0, '.', '.') . "</td>";
                   }
-                ?>
-              </tr>
-              <?php $no++; ?>
+                  ?>
+                </tr>
+                <?php $no++; ?>
               <?php } ?>
             </tbody>
           </table>
@@ -270,7 +277,7 @@
 
 <script>
   // select Produk Reguler
-  $(document).on('click', '#table2 tbody tr', function (e) {
+  $(document).on('click', '#table2 tbody tr', function(e) {
     $('#idProdukAwal').val($(this).data('idprod'));
     $('#namaProdukAwal').val($(this).data('namaprod'));
     $('#merkProdukAwal').val($(this).data('merkprod'));
@@ -280,7 +287,7 @@
     $('#modalAwal').modal('hide');
   });
 
-  $(document).on('click', '#table3 tbody tr', function (e) {
+  $(document).on('click', '#table3 tbody tr', function(e) {
     $('#idProdukAkhir').val($(this).data('idprod'));
     $('#namaProdukAkhir').val($(this).data('namaprod'));
     $('#merkProdukAkhir').val($(this).data('merkprod'));
@@ -289,33 +296,33 @@
     $('#modalAkhir').modal('hide');
   });
 
-// format number pada input qtyAwal
-document.getElementById('qtyAwal').addEventListener('input', function() {
-  var value = parseFloat(this.value.replace(/\D/g, ''));
-  this.value = value.toLocaleString('id-ID');
+  // format number pada input qtyAwal
+  document.getElementById('qtyAwal').addEventListener('input', function() {
+    var value = parseFloat(this.value.replace(/\D/g, ''));
+    this.value = value.toLocaleString('id-ID');
 
-  var qty = parseInt(this.value.replace(/\./g, ''));
-  document.getElementById('qtyAkhir').value = qty.toLocaleString('id-ID');
-});
+    var qty = parseInt(this.value.replace(/\./g, ''));
+    document.getElementById('qtyAkhir').value = qty.toLocaleString('id-ID');
+  });
 
-$(document).on('input', '#qtyAwal', function(e) {
-  var stockAwal = parseInt($('#stockAwal').val().replace(/\D/g, ''));
-  var qtyAwal = parseInt($(this).val().replace(/\D/g, ''));
+  $(document).on('input', '#qtyAwal', function(e) {
+    var stockAwal = parseInt($('#stockAwal').val().replace(/\D/g, ''));
+    var qtyAwal = parseInt($(this).val().replace(/\D/g, ''));
 
-  if (qtyAwal > stockAwal) {
-    $(this).val(stockAwal.toLocaleString('id-ID'));
-    $('#qtyAkhir').val(stockAwal.toLocaleString('id-ID'));
-  }
-});
+    if (qtyAwal > stockAwal) {
+      $(this).val(stockAwal.toLocaleString('id-ID'));
+      $('#qtyAkhir').val(stockAwal.toLocaleString('id-ID'));
+    }
+  });
 
-$(document).on('input', '#qtyAkhir', function(e) {
-  var stockAwal = parseInt($('#stockAwal').val().replace(/\D/g, ''));
-  var qtyAkhir = parseInt($(this).val().replace(/\D/g, ''));
+  $(document).on('input', '#qtyAkhir', function(e) {
+    var stockAwal = parseInt($('#stockAwal').val().replace(/\D/g, ''));
+    var qtyAkhir = parseInt($(this).val().replace(/\D/g, ''));
 
-  if (qtyAkhir > stockAwal) {
-    $(this).val(stockAwal.toLocaleString('id-ID'));
-  }
-});
+    if (qtyAkhir > stockAwal) {
+      $(this).val(stockAwal.toLocaleString('id-ID'));
+    }
+  });
 </script>
 
 <!-- auto input qty -->
@@ -328,15 +335,20 @@ $(document).on('input', '#qtyAkhir', function(e) {
 
 <!-- Generate UUID -->
 <?php
-  function generate_uuid() {
-    return sprintf( '%04x%04x%04x',
-      mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-      mt_rand( 0, 0xffff ),
-      mt_rand( 0, 0x0fff ) | 0x4000,
-      mt_rand( 0, 0x3fff ) | 0x8000,
-      mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
-    );
-  }
+function generate_uuid()
+{
+  return sprintf(
+    '%04x%04x%04x',
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0x0fff) | 0x4000,
+    mt_rand(0, 0x3fff) | 0x8000,
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff)
+  );
+}
 ?>
 <!-- End Generate UUID -->
 

@@ -62,7 +62,7 @@ include "akses.php";
               <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>" required>
               <input type="hidden" class="form-control" name="created_date" id="datetime-input" required>
               <div class="mb-3 pt-3 text-end">
-                <button type="submit" name="simpan-stock-reg" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
+                <button type="submit" name="simpan-stock-reg" class="btn btn-primary btn-md" id="simpan" disabled><i class="bx bx-save"></i> Simpan Data</button>
                 <a href="stock-produk-reg.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
               </div>
             </form>
@@ -185,6 +185,9 @@ function generate_uuid()
     $('#namaProduk').val($(this).data('namaprod'));
     $('#merkProduk').val($(this).data('merkprod'));
     $('#modalBarang').modal('hide');
+
+    // Mengaktifkan tombol
+    $('#simpan').prop('disabled', false);
   });
 </script>
 

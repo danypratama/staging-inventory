@@ -52,7 +52,7 @@ include "akses.php";
                                     </div>
                                     <div class="col-1 mb-3">
                                         <label>Qty</label>
-                                        <input type="text" class="form-control" name="qty" id="qty" required>
+                                        <input type="text" class="form-control" name="qty" id="qtyInput" required>
                                     </div>
                                 </div>
                             </div>
@@ -133,6 +133,27 @@ include "akses.php";
 
             // Mengaktifkan tombol
             $('#simpan').prop('disabled', false);
+        });
+    </script>
+
+    <!-- Number Format -->
+    <script>
+        $(document).on('input', '#qtyInput', function(e) {
+            var qtyInput = $(this).val().replace(/\D/g, '');
+            var qtyAwal = qtyInput ? parseInt(qtyInput) : 0;
+            $(this).val(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+
+            console.log(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+
+            // mendapatkan tombol dengan id "submitButton"
+            var submitButton = document.getElementById("submitButton");
+
+            // memeriksa apakah nilai qty sudah diisi atau tidak
+            if ($(this).val().trim() !== '' && parseInt($(this).val().replace(/\D/g, '')) > 0) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
         });
     </script>
 </body>

@@ -86,21 +86,21 @@ if (isset($_POST['simpan-set-marwa'])) {
     $encode = base64_encode($id_set_marwa);
     $id_produk = $_POST['id_produk'];
     $qty = $_POST['qty'];
+    $qty = intval(preg_replace("/[^0-9]/", "", $qty));
 
-    echo $id_set_marwa;
+    $cek_data = mysqli_query($connect, "SELECT * FROM isi_produk_set_marwa WHERE id_set_marwa = '$id_set_marwa'");
+    $data = mysqli_fetch_array($cek_data);
 
-    $simpan_data = "INSERT INTO isi_produk_set_marwa 
+    if ($data['id_set_marwa'] == $id_set_marwa && $data['id_produk'] == $id_produk) {
+        $_SESSION['info'] = "Data sudah ada";
+        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
+    } else {
+        $simpan_data = "INSERT INTO isi_produk_set_marwa 
                     (id_isi_set_marwa, id_set_marwa, id_produk, qty) 
                     VALUES 
                     ('$id_isi_set_marwa', '$id_set_marwa', '$id_produk', '$qty')";
-    $query = mysqli_query($connect, $simpan_data);
-
-    // Alert
-    if ($query) {
+        $query = mysqli_query($connect, $simpan_data);
         $_SESSION['info'] = 'Disimpan';
-        echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
-    } else {
-        $_SESSION['info'] = 'Data Gagal Disimpan';
         echo "<script>document.location.href='../detail-set-marwa.php?detail-id=$encode'</script>";
     }
 } elseif (isset($_POST['edit-isi-set-marwa'])) {

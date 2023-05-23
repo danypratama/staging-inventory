@@ -62,12 +62,12 @@ include "akses.php";
                   </div>
                   <div class="col-sm-2">
                     <label>Qty</label>
-                    <input type="text" class="form-control" name="qty" required>
+                    <input type="text" class="form-control" name="qty" id="qtyInput" required>
                     <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>" required>
                   </div>
                   <div class="mt-3">
-                    <button type="submit" class="btn btn-primary btn md" name="simpan-isi-set-marwa"><i class="bx bx-save"></i> Simpan</button>
-                    <a href="detail-set-marwa.php?detail-id=<?php echo $id_set ?>" class="btn btn-secondary btn md"><i class="bi bi-x"></i> Batal</a>
+                    <button type="submit" class="btn btn-primary btn md" name="simpan-isi-set-marwa" id="simpan" disabled><i class="bx bx-save"></i> Simpan</button>
+                    <a href="detail-set-marwa.php?detail-id=<?php echo base64_encode($id_set) ?>" class="btn btn-secondary btn md"><i class="bi bi-x"></i> Batal</a>
                   </div>
                 </div>
               </div>
@@ -104,6 +104,7 @@ include "akses.php";
                 <td class="text-center p-3" style="width: 50px">No</td>
                 <td class="text-center p-3" style="width: 350px">Nama Produk</td>
                 <td class="text-center p-3" style="width: 100px">Merk</td>
+                <td class="text-center p-3" style="width: 80px">Stock</td>
               </tr>
             </thead>
             <tbody>
@@ -112,18 +113,43 @@ include "akses.php";
 
               include "koneksi.php";
               $no = 1;
-              $sql = "SELECT pr.*,  
-                        mr.*
-                        FROM tb_produk_reguler as pr
-                        LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                        ";
+              $sql = "SELECT * FROM stock_produk_reguler AS spr
+                            LEFT JOIN tb_produk_reguler AS tpr ON (spr.id_produk_reg = tpr.id_produk_reg)
+                            LEFT JOIN tb_merk AS tm ON (tm.id_merk = tpr.id_merk)
+                            LEFT JOIN tb_kat_penjualan tkp ON (tkp.id_kat_penjualan = tpr.id_kat_penjualan)
+                            ORDER BY nama_produk ASC ";
               $query = mysqli_query($connect, $sql);
               while ($data = mysqli_fetch_array($query)) {
+                $id_stock = base64_encode($data['id_stock_prod_reg']);
+                $id_produk = base64_encode($data['id_produk_reg']);
+                $stock = $data['stock'];
+                $min_stock = $data['min_stock'];
+                $max_stock = $data['max_stock'];
+                $low = $min_stock * 0.25;
+                $low_lev = $min_stock - $low;
+                $med_lev = $min_stock + $low;
+                $high = $max_stock * 0.25;
+                $high_lev = $max_stock - $high;
+                $stock_status = '';
+                $tampil_stock = number_format($data['stock'], 0, '.', '.');
               ?>
                 <tr data-idprod="<?php echo $data['id_produk_reg']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
                   <td class="text-center"><?php echo $no; ?></td>
                   <td><?php echo $data['nama_produk']; ?></td>
                   <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                  <?php
+                  if ($stock <= $low_lev) {
+                    echo "<td class='text-end text-white' style='background-color: #cc0000'>" . ($tampil_stock) . "</td>";
+                  } else if ($stock >= $low_lev && $stock <= $min_stock) {
+                    echo "<td class='text-end' style='background-color: #ff4500'>" . ($tampil_stock) . "</td>";
+                  } else if ($stock >= $min_stock && $stock <= $high_lev) {
+                    echo "<td class='text-end' style='background-color: #ffff00'>" . ($tampil_stock) . "</td>";
+                  } else if ($stock >= $high_lev && $stock <= $max_stock) {
+                    echo "<td class='text-end text-white' style='background-color: #469536'>" . ($tampil_stock) . "</td>";
+                  } else if ($stock > $max_stock) {
+                    echo "<td class='text-end text-white' style='background-color: #006600'>" . ($tampil_stock) . "</td>";
+                  }
+                  ?>
                 </tr>
                 <?php $no++; ?>
               <?php } ?>
@@ -165,5 +191,29 @@ function generate_uuid()
     $('#namaProduk').val($(this).data('namaprod'));
     $('#merkProduk').val($(this).data('merkprod'));
     $('#modalBarang').modal('hide');
+
+    // Mengaktifkan tombol
+    $('#simpan').prop('disabled', false);
+  });
+</script>
+
+<!-- Number Format -->
+<script>
+  $(document).on('input', '#qtyInput', function(e) {
+    var qtyInput = $(this).val().replace(/\D/g, '');
+    var qtyAwal = qtyInput ? parseInt(qtyInput) : 0;
+    $(this).val(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+
+    console.log(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+
+    // mendapatkan tombol dengan id "submitButton"
+    var submitButton = document.getElementById("submitButton");
+
+    // memeriksa apakah nilai qty sudah diisi atau tidak
+    if ($(this).val().trim() !== '' && parseInt($(this).val().replace(/\D/g, '')) > 0) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
   });
 </script>
