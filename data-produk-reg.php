@@ -67,8 +67,9 @@ include "akses.php";
               <table class="table table-striped table-bordered" id="table1">
                 <thead>
                   <tr class="text-white" style="background-color: #051683;">
-                    <td class="text-center p-3" style="width: 50px">No</td>
-                    <td class="text-center p-3" style="width: 450px">Nama Produk</td>
+                    <td class="text-center p-3" style="width: 30px">No</td>
+                    <td class="text-center p-3" style="width: 150px">Kode Produk</td>
+                    <td class="text-center p-3" style="width: 400px">Nama Produk</td>
                     <td class="text-center p-3" style="width: 100px">Merk</td>
                     <td class="text-center p-3" style="width: 100px">Harga</td>
                     <td class="text-center p-3" style="width: 80px">Stock</td>
@@ -122,6 +123,7 @@ include "akses.php";
                   ?>
                     <tr>
                       <td class="text-center"><?php echo $no; ?></td>
+                      <td><?php echo $data['kode_produk']; ?></td>
                       <td><?php echo $data['nama_produk']; ?></td>
                       <td class="text-center"><?php echo $data['nama_merk']; ?></td>
                       <td class="text-end">

@@ -161,12 +161,31 @@ include "akses.php";
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" name="update-status">Simpan</button>
+                        <button type="submit" class="btn btn-primary" name="update-status" id="simpan" disabled>Simpan</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     </div>
                 </form>
             </div>
         </div>
+        <script>
+            // Mengambil elemen dengan ID "status"
+            var statusElement = document.getElementById("status");
+
+            // Mengambil elemen tombol "Simpan"
+            var simpanButton = document.getElementById("simpan");
+
+            // Menambahkan event listener untuk memeriksa perubahan pada elemen "status"
+            statusElement.addEventListener("change", function() {
+                // Memeriksa apakah elemen "status" memiliki nilai yang tidak kosong
+                if (statusElement.value !== "") {
+                    // Mengaktifkan tombol "Simpan"
+                    simpanButton.disabled = false;
+                } else {
+                    // Menonaktifkan tombol "Simpan"
+                    simpanButton.disabled = true;
+                }
+            });
+        </script>
     </div>
 
     <!-- Modal Detail -->

@@ -50,11 +50,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <section>
             <!-- SWEET ALERT -->
@@ -67,19 +67,19 @@ include "akses.php";
                 <div class="card shadow p-3">
                     <?php
                     $id = base64_decode($_GET['id']);
-                    $sql = "SELECT ibt.*, pr.*, mr.*, us.nama_user, ket_in.*
-                            FROM isi_br_tambahan AS ibt
-                            LEFT JOIN tb_produk_reguler pr ON(ibt.id_produk_reg = pr.id_produk_reg)
+                    $sql = "SELECT ibor.*, pr.*, mr.*, us.nama_user, ket_out.*
+                            FROM isi_br_out_reg AS ibor
+                            LEFT JOIN tb_produk_reguler pr ON(ibor.id_produk_reg = pr.id_produk_reg)
                             LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
-                            LEFT JOIN user us ON(ibt.id_user = us.id_user)
-                            LEFT JOIN keterangan_in ket_in ON(ibt.id_ket_in = ket_in.id_ket_in)
-                            WHERE id_isi_br_tambahan = '$id'";
+                            LEFT JOIN user us ON(ibor.id_user = us.id_user)
+                            LEFT JOIN keterangan_out ket_out ON(ibor.id_ket_out = ket_out.id_ket_out)
+                            WHERE id_isi_br_out_reg = '$id'";
                     $query = mysqli_query($connect, $sql);
                     $data = mysqli_fetch_array($query);
                     ?>
-                    <form method="post" action="proses/proses-br-in-tambahan.php" class="form">
+                    <form method="post" action="proses/proses-br-out-reg.php" class="form">
                         <div class="row">
-                            <input type="hidden" class="form-control" name="id_br" value="<?php echo $data['id_isi_br_tambahan'] ?>">
+                            <input type="hidden" class="form-control" name="id_br" value="<?php echo $data['id_isi_br_out_reg'] ?>">
                             <div class="col-sm-4 mb-3">
                                 <label for="nama_produk">Nama Produk</label>
                                 <input type="hidden" class="form-control" name="id_produk" id="idProduk" value="<?php echo $data['id_produk_reg'] ?>">
@@ -96,12 +96,12 @@ include "akses.php";
                             <div class="col-sm-3 mb-3">
                                 <label>Keterangan</label>
                                 <select class="form-select" name="keterangan" id="ket">
-                                    <option value="<?php echo $data['id_ket_in'] ?>"> <?php echo $data['ket_in'] ?></option>
+                                    <option value="<?php echo $data['id_ket_out'] ?>"> <?php echo $data['ket_out'] ?></option>
                                     <?php
-                                    $sql = mysqli_query($connect, "SELECT * FROM keterangan_in");
+                                    $sql = mysqli_query($connect, "SELECT * FROM keterangan_out");
                                     while ($data = mysqli_fetch_array($sql)) {
                                     ?>
-                                        <option value="<?php echo $data['id_ket_in'] ?>"> <?php echo $data['ket_in'] ?></option>
+                                        <option value="<?php echo $data['id_ket_out'] ?>"> <?php echo $data['ket_out'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -124,7 +124,6 @@ include "akses.php";
 </body>
 
 </html>
-
 <!-- Number Format -->
 <script>
     $(document).on('input', '#qtyInput', function(e) {

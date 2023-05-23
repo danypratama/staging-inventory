@@ -145,7 +145,7 @@
       </a>
       <ul id="barang-keluar" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="#">
+          <a href="barang-keluar-reg.php">
             <i class="bi bi-circle"></i><span>Barang Keluar Reguler</span>
           </a>
         </li>

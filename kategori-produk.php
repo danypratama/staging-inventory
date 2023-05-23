@@ -159,7 +159,7 @@ include "akses.php";
               </div>
               <div class="mb-3">
                 <label class="form-label">Merk</label>
-                <select class="selectize-js form-select" name="merk">
+                <select class="selectize-js form-select" name="merk" required>
                   <option value="">Pilih Merk...</option>
                   <?php
                   include "koneksi.php";
