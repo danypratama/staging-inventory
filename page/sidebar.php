@@ -29,6 +29,13 @@
           </a>
         </li>
         <li>
+          <a class="<?php if ($page2 == 'data-sl') {
+                      echo 'active';
+                    } ?>" href="data-sales.php">
+            <i class="bi bi-circle"></i><span>Sales</span>
+          </a>
+        </li>
+        <li>
           <a class="<?php if ($page2 == 'data-kat-prod') {
                       echo 'active';
                     } ?>" href="kategori-produk.php">
@@ -106,6 +113,13 @@
                       echo 'active';
                     } ?>" href="keterangan-out.php">
             <i class="bi bi-circle"></i><span>Keterangan Barang Keluar</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'data-or') {
+                      echo 'active';
+                    } ?>" href="data-orderby.php">
+            <i class="bi bi-circle"></i><span>Order By</span>
           </a>
         </li>
       </ul>
