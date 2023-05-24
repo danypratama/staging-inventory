@@ -47,6 +47,7 @@ include "akses.php";
                                 $id = $_POST['id_set'];
 
                                 $qty = $_POST['qty'];
+                                $qty = intval(preg_replace("/[^0-9]/", "", $qty));
                                 // Generate UUID
                                 $uuid = generate_uuid();
                                 $month = date('m');
@@ -68,7 +69,7 @@ include "akses.php";
                                         </div>
                                         <div class="col">
                                             <label for="">Jumlah Set</label>
-                                            <input type="text" class="form-control" name="qty_set" value="<?php echo $qty ?>" readonly>
+                                            <input type="text" class="form-control" name="qty_set" value="<?php echo number_format($qty) ?>" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +121,7 @@ include "akses.php";
                                                 <td><input type="text" class="form-control bg-light" value="<?php echo $data['nama_merk']; ?>" readonly></td>
                                                 <td><input type="text" name="stock[]" class="form-control bg-light text-end" value="<?php echo $tampil_stock; ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light text-end" value="<?php echo $data['qty']; ?>" readonly></td>
-                                                <td><input type="text" name="qty[]" class="form-control bg-light text-end" value="<?php echo number_format($total, 0, '.', '.'); ?>" readonly></td>
+                                                <td><input type="text" name="qty[]" class="form-control bg-light text-end" value="<?php echo number_format($total); ?>" readonly></td>
                                                 </td>
                                             </tr>
                                             <?php $no++; ?>
