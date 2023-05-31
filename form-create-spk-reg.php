@@ -1,10 +1,11 @@
 <?php
-    $page  = 'transaksi';
-    $page2 = 'spk';
-    include "akses.php";
+$page  = 'transaksi';
+$page2 = 'spk';
+include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -19,32 +20,55 @@
   <!-- nav header -->
   <?php include "page/nav-header.php" ?>
   <!-- end nav header -->
-  
+
   <!-- sidebar  -->
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
-  
+
 
   <main id="main" class="main">
     <section>
       <div class="container-fluid">
         <div class="card shadow p-2">
-          <div class="card-header text-center"><h5><strong>FORM SPK REGULER ORDER</strong></h5></div>
-          <form action="input-produk-spk-reg.php" method="POST">
-            <?php 
-              date_default_timezone_set('Asia/Jakarta');
+          <div class="card-header text-center">
+            <h5><strong>FORM SPK REGULER ORDER</strong></h5>
+          </div>
+          <form action="proses/proses-spk-reg.php" method="POST">
+            <?php
+            // UUID
+            $uuid = generate_uuid();
+            $year = date('y');
+            $day = date('d');
+            $month = date('m');
+
+            include "koneksi.php";
+            $thn  = date('Y');
+            $sql  = mysqli_query($connect, "SELECT max(no_spk) as maxID, STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl FROM spk_reg WHERE YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$thn'");
+            $data = mysqli_fetch_array($sql);
+
+            $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
+            $kode = $data['maxID'];
+            $ket1 = "/SPK/";
+            $bln = $array_bln[date('n')];
+            $ket2 = "/";
+            $ket3 = date("Y");
+            $urutkan = (int)substr($kode, 0, 3);
+            $urutkan++;
+            $no_spk = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
             ?>
+
             <div class="card-body">
               <div class="row mt-3">
-                <div class="col-sm-6">  
+                <div class="col-sm-6">
                   <div class="card-body">
                     <div class="mt-3">
                       <label for="no_spk" class="form-label">No. SPK</label>
-                      <input type="text" class="form-control" id="no_spk" name="no_spk" required>
+                      <input type="hidden" name="id_spk_reg" value="SPKREG-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+                      <input type="text" class="form-control" id="no_spk" name="no_spk" value="<?php echo $no_spk ?>" required>
                     </div>
                     <div class="mt-3">
                       <label for="tgl_spk" class="form-label">Tanggal SPK</label>
-                      <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl_spk" value="<?php echo date('d/m/Y, G:i'); ?>" readonly>
+                      <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl_spk" id="datetime-input" readonly>
                     </div>
                     <div class="mt-3">
                       <label for="no_po" class="form-label">NO. PO</label>
@@ -52,16 +76,20 @@
                     </div>
                     <div class="mt-3">
                       <label for="tgl_pesan" class="form-label">Tanggal Pesanan</label>
-                      <input type="date" style="background-color:white;" class="bg-white form-control" name="tgl_pesan" id="date" placeholder="dd/mm/yyyy" required>
+                      <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl_pesan" id="date" placeholder="dd/mm/yyyy" required>
                     </div>
                     <div class="mt-3">
                       <label for="order_via" class="form-label">Order Via</label>
-                      <select class="selectize-js form-select" name="order_via" required>
-                        <option value=""></option>
-                        <option value="1">Whatsapp</option>
-                        <option value="2">E-Mail</option>
-                        <option value="3">OL Shop</option>
-                        <option value="4">Telepon</option>
+                      <select class="selectize-js form-select" name="order_by" required>
+                        <option value="">Pilih...</option>
+                        <?php
+                        include "koneksi.php";
+                        $sql2 = "SELECT * FROM tb_orderby";
+                        $query2 = mysqli_query($connect, $sql2);
+                        while ($data2 = mysqli_fetch_array($query2)) {
+                        ?>
+                          <option value="<?php echo $data2['id_orderby'] ?>"><?php echo $data2['order_by'] ?></option>
+                        <?php } ?>
                       </select>
                     </div>
                   </div>
@@ -71,16 +99,21 @@
                     <div class="mt-3">
                       <label for="sales" class="form-label">Sales</label>
                       <select class="selectize-js form-select" name="sales" required>
-                        <option value=""></option>
-                        <option value="1">Annas</option>
-                        <option value="2">Agung</option>
-                        <option value="3">Rita</option>
-                        <option value="4">Sugiyanto</option>
+                        <option value="">Pilih...</option>
+                        <?php
+                        include "koneksi.php";
+                        $sql_sales = "SELECT * FROM tb_sales";
+                        $query_sales = mysqli_query($connect, $sql_sales);
+                        while ($data3 = mysqli_fetch_array($query_sales)) {
+                        ?>
+                          <option value="<?php echo $data3['id_sales'] ?>"><?php echo $data3['nama_sales'] ?></option>
+                        <?php } ?>
                       </select>
                     </div>
                     <div class="mt-3">
                       <label for="Pelanggan" class="form-label">Pelanggan</label>
-                      <input type="text" class="form-control bg-white" id="pelanggan" name="pelanggan" data-bs-toggle="modal" data-bs-target="#modal-cs" readonly>
+                      <input type="hidden" class="form-control" id="id" name="id_cs">
+                      <input type="text" class="form-control bg-white" id="cs" name="pelanggan" data-bs-toggle="modal" data-bs-target="#modalCs" readonly>
                     </div>
                     <div class="mt-3">
                       <label for="alamat" class="form-label">Alamat</label>
@@ -90,23 +123,24 @@
                       <label for="note" class="form-label">Note</label>
                       <textarea type="text" class="form-control" id="note" name="note"></textarea>
                     </div>
+                    <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
                   </div>
                 </div>
                 <div class="text-center mt-3">
-                  <button type="submit" class="btn btn-primary btn-md m-2"><i class="bx bx-save"></i> Simpan Data</button>
+                  <button type="submit" name="simpan" class="btn btn-primary btn-md m-2"><i class="bx bx-save"></i> Simpan Data</button>
                   <a href="spk-reg.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Cancel</a>
                 </div>
               </div>
             </div>
           </form>
-          </div>
         </div>
+      </div>
       </div>
     </section>
   </main><!-- End #main -->
 
   <!-- Large Modal -->
-  <div class="modal fade" id="modal-cs" tabindex="-1">
+  <div class="modal fade" id="modalCs" tabindex="-1">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -115,24 +149,29 @@
         </div>
         <div class="modal-body">
           <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered" id="select-cs">
+            <table class="table table-hover table-striped table-bordered" id="table2">
               <thead>
-                  <tr class="bg-primary bg-gradient text-white">
-                    <td class="col-1">No</td>
-                    <td class="col-4">Nama Customer</td>
-                    <td class="col-5">Alamat</td>
-                    <td class="col-2">Telepon</td>
-                  </tr>
+                <tr class="bg-primary bg-gradient text-white">
+                  <td class="col-4">Nama Customer</td>
+                  <td class="col-6">Alamat</td>
+                  <td class="col-2">Telepon</td>
+                </tr>
               </thead>
               <tbody>
-                  <tr id="data-cs" pelanggan="Ibu Melly" alamat="Jakarta" data-bs-dismiss="modal">
-                    <td class="text-center">1</td>
-                    <td>Ibu Melly</td>
-                    <td>Jakarta</td>
-                    <td>0812xxxx</td>
+                <?php
+                include "koneksi.php";
+                $sql_cs = "SELECT * FROM tb_customer";
+                $query_cs = mysqli_query($connect, $sql_cs);
+                while ($data_cs = mysqli_fetch_array($query_cs)) {
+                ?>
+                  <tr data-id="<?php echo $data_cs['id_cs'] ?>" data-nama="<?php echo $data_cs['nama_cs'] ?>" data-alamat="<?php echo $data_cs['alamat'] ?>" data-bs-dismiss="modal">
+                    <td><?php echo $data_cs['nama_cs'] ?></td>
+                    <td><?php echo $data_cs['alamat'] ?></td>
+                    <td><?php echo $data_cs['no_telp'] ?></td>
                   </tr>
+                <?php } ?>
               </tbody>
-            </table>          
+            </table>
           </div>
         </div>
       </div>
@@ -146,4 +185,67 @@
 
   <?php include "page/script.php" ?>
 </body>
+
 </html>
+<!-- Generate UUID -->
+<?php
+function generate_uuid()
+{
+  return sprintf(
+    '%04x%04x%04x',
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0x0fff) | 0x4000,
+    mt_rand(0, 0x3fff) | 0x8000,
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff),
+    mt_rand(0, 0xffff)
+  );
+}
+?>
+
+<!-- Clock js -->
+<script>
+  function inputDateTime() {
+    // Get current date and time
+    let currentDate = new Date();
+
+    // Format date and time as yyyy-mm-ddThh:mm:ss
+    let year = currentDate.getFullYear();
+    let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    let day = currentDate.getDate().toString().padStart(2, '0');
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes().toString().padStart(2, '0');
+    let seconds = currentDate.getSeconds().toString().padStart(2, '0');
+    let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
+
+    // Set value of input field to current date and time
+    document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
+
+  }
+  // Call updateDateTime function every second
+  setInterval(inputDateTime, 1000);
+</script>
+
+<!-- date picker with flatpick -->
+<script type="text/javascript">
+  flatpickr("#date", {
+    dateFormat: "d/m/Y",
+  });
+
+  flatpickr("#tgl_kirim", {
+    dateFormat: "d/m/Y",
+  });
+</script>
+<!-- end date picker -->
+
+<!-- Script Select Data Supplier -->
+<script>
+  $(document).on('click', '#table2 tbody tr', function(e) {
+    $('#id').val($(this).data('id'));
+    $('#cs').val($(this).data('nama'));
+    $('#alamat').val($(this).data('alamat'));
+    $('#modalCs').modal('hide');
+  });
+</script>

@@ -30,8 +30,8 @@
 <script>
     // Fungsi untuk mengarahkan ke halaman login
     function redirectToLogin() {
-        // Arahkan ke halaman login
-        window.location.href = 'login.php';
+        // Arahkan ke halaman logout
+        window.location.href = 'logout.php';
     }
 
     // Fungsi untuk menampilkan Sweet Alert saat sesi habis
@@ -51,20 +51,24 @@
         });
     }
 
-    // Fungsi untuk mengatur timer untuk melakukan logout saat waktu habis
-    var timeout;
+    // Fungsi untuk mereset timer saat pengguna berinteraksi dengan halaman web
+    function resetTimer() {
+        clearTimeout(timeout);
+        startTimer();
+    }
 
+    // Fungsi untuk memulai timer
     function startTimer() {
         timeout = setTimeout(function() {
             showSessionExpiredAlert();
         }, 900000); // Waktu timeout dalam milidetik (15 menit)
     }
 
-    // Fungsi untuk mereset timer saat pengguna berinteraksi dengan halaman web
-    function resetTimer() {
+    // Event listener saat pengguna melakukan refresh halaman
+    window.addEventListener('unload', function() {
         clearTimeout(timeout);
-        startTimer();
-    }
+        redirectToLogin();
+    });
 
     // Mulai timer dan atur event listener untuk mereset timer saat pengguna berinteraksi dengan halaman web
     startTimer();

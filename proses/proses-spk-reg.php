@@ -1,0 +1,37 @@
+<?php
+session_start(); 
+include "../koneksi.php";
+
+if(isset($_POST['simpan'])){
+    $id_spk = $_POST['id_spk_reg'];
+    $no_spk = $_POST['no_spk'];
+    $tgl_spk = $_POST['tgl_spk'];
+    $no_po = $_POST['no_po'];
+    $tgl_pesan = $_POST['tgl_pesan'];
+    $order_by = $_POST['order_by'];
+    $sales = $_POST['sales'];
+    $id_cs = $_POST['id_cs'];
+    $note = $_POST['note'];
+    $id_user = $_POST['id_user'];
+    $id_status = 'Belum Diproses';
+
+    $cek_data = mysqli_query($connect, "SELECT no_spk FROM spk_reg WHERE no_spk = '$no_spk'");
+
+    if($cek_data->num_rows > 0){
+        $_SESSION['info'] = 'Data Gagal Disimpan';
+        header("Location:../input-produk-spk-reg.php");
+    } else {
+        $simpan = "INSERT INTO spk_reg
+                   (id_spk_reg, no_spk, tgl_spk, no_po, tgl_pesanan, id_orderby, id_sales, id_customer, note, id_user, status_spk, created_date)
+                   VALUES
+                   ('$id_spk', '$no_spk', '$tgl_spk', '$no_po', '$tgl_pesan', '$order_by', '$sales', '$id_cs', '$note', '$id_user', '$id_status', '$tgl_spk')";
+        $query = mysqli_query($connect, $simpan);
+        $_SESSION['info'] = 'Disimpan';
+        header("Location:../input-produk-spk-reg.php?id=$id_spk");
+    }
+
+}
+
+
+
+?>

@@ -153,7 +153,7 @@ include "akses.php";
                             $UUID = generate_uuid();
                             ?>
                             <div class="mb-3">
-                                <label class="form-label">Nama Custumer</label>
+                                <label class="form-label">Nama Sales</label>
                                 <input type="hidden" class="form-control" name="id_sales" value="SL<?php echo $UUID; ?>">
                                 <input type="text" class="form-control" name="nama_sales" required>
                             </div>
