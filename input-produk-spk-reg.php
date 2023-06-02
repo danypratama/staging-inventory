@@ -43,7 +43,7 @@ include "akses.php";
           </div>
           <?php
           include "koneksi.php";
-          $id_spk = $_GET['id'];
+          $id_spk = base64_decode($_GET['id']);
           $sql = "SELECT sr.*, cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
                     FROM spk_reg AS sr
                     JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
@@ -63,7 +63,7 @@ include "akses.php";
                       <p style="float: right;">:</p>
                     </div>
                     <div class="col-7">
-                      <?php echo $data['id_spk_reg'] ?>
+                      <?php echo $data['no_spk'] ?>
                     </div>
                   </div>
                   <div class="row">
@@ -82,8 +82,8 @@ include "akses.php";
                     </div>
                     <div class="col-7">
                       <?php
-                      if ($data['note'] != '') {
-                        echo $data['note'];
+                      if ($data['no_po'] != '') {
+                        echo $data['no_po'];
                       } else {
                         echo '-';
                       }
@@ -192,7 +192,7 @@ include "akses.php";
                 </div>
               </div>
             </div>
-            <form action="">
+            <form action="proses/proses-produk-spk-reg.php" method="POST">
               <?php
               $year = date('y');
               $day = date('d');
@@ -215,21 +215,24 @@ include "akses.php";
                   <div class="">
                     <div class="row">
                       <div class="col-sm-5">
-                        <input type="hidden" id="id_<?php echo $data['id_tmp'] ?>" value="SPKREGPROD-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>" readonly>
-                        <input type="hidden" class="form-control" name="nama_produk" value="<?php echo $data['id_produk'] ?>" readonly>
+                        <input type="hidden" name="id_transaksi[]" id="id_<?php echo $data['id_tmp'] ?>" value="SPKREGPROD-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>" readonly>
+                        <input type="hidden" class="form-control" name="id_spk_reg[]" value="<?php echo $id_spk_reg ?>" readonly>
+                        <input type="hidden" class="form-control" name="id_produk[]" value="<?php echo $data['id_produk'] ?>" readonly>
                         <input type="text" class="form-control bg-light" name="nama_produk" value="<?php echo $data['nama_produk'] ?>" readonly>
                       </div>
                       <div class="col-sm-2">
                         <input type="text" class="form-control bg-light text-center" name="merk" value="<?php echo $data['nama_merk'] ?>" readonly>
                       </div>
                       <div class="col-sm-2">
-                        <input type="text" class="form-control bg-light text-end" name="harga" value="<?php echo number_format($data['harga_produk']) ?>" readonly>
+                        <input type="text" class="form-control bg-light text-end" name="harga[]" value="<?php echo number_format($data['harga_produk']) ?>" readonly>
                       </div>
                       <div class="col-sm-2">
                         <input type="text" class="form-control bg-light text-end" name="stock" id="stock_<?php echo $data['id_tmp'] ?>" value="<?php echo $data['stock'] ?>" readonly>
                       </div>
                       <div class="col-sm-1">
-                        <input type="text" class="form-control text-end" name="qty" id="qtyInput_<?php echo $data['id_tmp'] ?>" oninput="checkStock('<?php echo $data['id_tmp'] ?>')" required>
+                        <input type="text" class="form-control text-end" name="qty[]" id="qtyInput_<?php echo $data['id_tmp'] ?>" oninput="checkStock('<?php echo $data['id_tmp'] ?>')" required>
+                        <input type="hidden" class="form-control" name="id_user[]" value="<?php echo $_SESSION['tiket_id']; ?>">
+                        <input type="hidden" class="form-control" name="created[]" id="datetime-input">
                       </div>
                     </div>
                   </div>
@@ -241,7 +244,7 @@ include "akses.php";
               <?php } else { // Jika ada data, tampilkan tombol simpan 
               ?>
                 <div class="card-body mt-3 text-end">
-                  <button type="submit" class="btn btn-primary"> Simpan</button>
+                  <button type="submit" class="btn btn-primary" name="simpan"> Simpan</button>
                 </div>
               <?php } ?>
             </form>
@@ -274,7 +277,7 @@ include "akses.php";
                 <tbody>
                   <?php
                   include "koneksi.php";
-                  $id = $_GET['id'];
+                  $id = base64_decode($_GET['id']);
                   $selected_produk = [];
                   $id_spk = $id_spk_reg;
                   $no = 1;
@@ -438,25 +441,25 @@ function generate_uuid()
 
 <!-- Clock js -->
 <script>
-  // function inputDateTime() {
-  //   // Get current date and time
-  //   let currentDate = new Date();
+  function inputDateTime() {
+    // Get current date and time
+    let currentDate = new Date();
 
-  //   // Format date and time as yyyy-mm-ddThh:mm:ss
-  //   let year = currentDate.getFullYear();
-  //   let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-  //   let day = currentDate.getDate().toString().padStart(2, '0');
-  //   let hours = currentDate.getHours();
-  //   let minutes = currentDate.getMinutes().toString().padStart(2, '0');
-  //   let seconds = currentDate.getSeconds().toString().padStart(2, '0');
-  //   let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
+    // Format date and time as yyyy-mm-ddThh:mm:ss
+    let year = currentDate.getFullYear();
+    let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    let day = currentDate.getDate().toString().padStart(2, '0');
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes().toString().padStart(2, '0');
+    let seconds = currentDate.getSeconds().toString().padStart(2, '0');
+    let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
 
-  //   // Set value of input field to current date and time
-  //   document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
+    // Set value of input field to current date and time
+    document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
 
-  // }
-  // // Call updateDateTime function every second
-  // setInterval(inputDateTime, 1000);
+  }
+  // Call updateDateTime function every second
+  setInterval(inputDateTime, 1000);
 </script>
 
 <!-- Kode Untuk Qty   -->

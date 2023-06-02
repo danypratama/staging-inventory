@@ -119,7 +119,7 @@ include "akses.php";
                               <td><?php echo $data['nama_cs'] ?></td>
                               <td><?php echo $data['note'] ?></td>
                               <td class="text-center">
-                                <a href="" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
+                                <a href="detail-produk-spk-reg.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                                 <a href="" class="btn btn-secondary btn-sm mb-2"><i class="bi bi-send"></i> Proses Pesanan</a>
                               </td>
                             </tr>

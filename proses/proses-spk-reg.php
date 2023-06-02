@@ -1,8 +1,8 @@
 <?php
-session_start(); 
+session_start();
 include "../koneksi.php";
 
-if(isset($_POST['simpan'])){
+if (isset($_POST['simpan'])) {
     $id_spk = $_POST['id_spk_reg'];
     $no_spk = $_POST['no_spk'];
     $tgl_spk = $_POST['tgl_spk'];
@@ -14,10 +14,11 @@ if(isset($_POST['simpan'])){
     $note = $_POST['note'];
     $id_user = $_POST['id_user'];
     $id_status = 'Belum Diproses';
+    $id_spk_encode = base64_encode($id_spk);
 
     $cek_data = mysqli_query($connect, "SELECT no_spk FROM spk_reg WHERE no_spk = '$no_spk'");
 
-    if($cek_data->num_rows > 0){
+    if ($cek_data->num_rows > 0) {
         $_SESSION['info'] = 'Data Gagal Disimpan';
         header("Location:../input-produk-spk-reg.php");
     } else {
@@ -27,11 +28,6 @@ if(isset($_POST['simpan'])){
                    ('$id_spk', '$no_spk', '$tgl_spk', '$no_po', '$tgl_pesan', '$order_by', '$sales', '$id_cs', '$note', '$id_user', '$id_status', '$tgl_spk')";
         $query = mysqli_query($connect, $simpan);
         $_SESSION['info'] = 'Disimpan';
-        header("Location:../input-produk-spk-reg.php?id=$id_spk");
+        header("Location:../input-produk-spk-reg.php?id=$id_spk_encode");
     }
-
 }
-
-
-
-?>
