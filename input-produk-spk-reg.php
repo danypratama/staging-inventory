@@ -410,35 +410,6 @@ function generate_uuid()
   });
 </script>
 
-<script>
-  // Fungsi untuk membuat form input Qty menjadi enabled
-  function enableQty() {
-    $('#qtyInput').prop('disabled', false);
-  }
-
-  // Select Produk Reguler
-  $(document).on('click', '#pilih', function(e) {
-    $('#idProduk').val($(this).data('idprod'));
-    $('#namaProduk').val($(this).data('namaprod'));
-    $('#merkProduk').val($(this).data('merkprod'));
-    // $('#stock').val($(this).data('stock'));
-    var stock = $(this).data('stock');
-    var formattedStock = stock.toLocaleString(); // Memformat angka
-
-    $('#stock').val(formattedStock);
-    $('#modalBarang').modal('hide');
-
-    // Tampilkan nilai stock di konsol
-    console.log(formattedStock);
-
-    // Tampilkan nilai stock di konsol
-    console.log($('#stock').val());
-
-    // Aktifkan input qtyActual
-    enableQty();
-  });
-</script>
-
 <!-- Clock js -->
 <script>
   function inputDateTime() {
