@@ -159,148 +159,230 @@ include "akses.php";
                         </div>
                     </div>
                 </div>
-                <div class="card shadow p-2">
-                    <div class="card-body mt-3">
-                        <div class="text-start">
-                            <a class="btn btn-primary btn-detail" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
-                                <i class="bi bi-plus-circle"></i> Tambah Produk
-                            </a>
-                        </div>
-                    </div>
-                    <div class="container-fluid">
-                        <div class="card-body border">
-                            <div class="text-center">
-                                <div class="row">
-                                    <p></p>
-                                    <div class="col-sm-5">
-                                        <strong>Nama Produk</strong>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <strong>Merk</strong>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <strong>Harga</strong>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <strong>Stock Tersedia</strong>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <strong>Qty</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <form action="proses/proses-produk-spk-reg.php" method="POST">
-                            <?php
-                            $year = date('y');
-                            $day = date('d');
-                            $month = date('m');
-                            $id_spk_reg = $data['id_spk_reg'];
-                            $sql = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
-                      FROM spk_reg AS sr
-                      JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
-                      JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
-                      JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
-                      JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                      WHERE sr.id_spk_reg = '$id_spk_reg'";
-                            $query = mysqli_query($connect, $sql);
-                            $isEmpty = true; // Tambahkan variabel pengecekan apakah data kosong
-                            while ($data = mysqli_fetch_array($query)) {
-                                $uuid = generate_uuid();
-                                $isEmpty = false; // Setel variabel pengecekan menjadi false jika ada data
-                            ?>
-                                <div class="card-body border p-2">
-                                    <div class="">
-                                        <div class="row">
-                                            <div class="col-sm-5">
-                                                <input type="hidden" name="id_transaksi[]" id="id_<?php echo $data['id_tmp'] ?>" value="SPKREGPROD-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>" readonly>
-                                                <input type="hidden" class="form-control" name="id_spk_reg[]" value="<?php echo $id_spk_reg ?>" readonly>
-                                                <input type="hidden" class="form-control" name="id_produk[]" value="<?php echo $data['id_produk'] ?>" readonly>
-                                                <input type="text" class="form-control bg-light" name="nama_produk" value="<?php echo $data['nama_produk'] ?>" readonly>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control bg-light text-center" name="merk" value="<?php echo $data['nama_merk'] ?>" readonly>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control bg-light text-end" name="harga[]" value="<?php echo number_format($data['harga_produk']) ?>" readonly>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control bg-light text-end" name="stock" id="stock_<?php echo $data['id_tmp'] ?>" value="<?php echo $data['stock'] ?>" readonly>
-                                            </div>
-                                            <div class="col-sm-1">
-                                                <input type="text" class="form-control text-end" name="qty[]" id="qtyInput_<?php echo $data['id_tmp'] ?>" oninput="checkStock('<?php echo $data['id_tmp'] ?>')" required>
-                                                <input type="hidden" class="form-control" name="id_user[]" value="<?php echo $_SESSION['tiket_id']; ?>">
-                                                <input type="hidden" class="form-control" name="created[]" id="datetime-input">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            <?php } ?>
-                            <?php if ($isEmpty) { // Cek apakah data kosong 
-                            ?>
-                            <?php } else { // Jika ada data, tampilkan tombol simpan 
-                            ?>
-                                <div class="card-body mt-3 text-end">
-                                    <button type="submit" class="btn btn-primary" name="simpan"> Simpan</button>
-                                </div>
-                            <?php } ?>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Butto Modal Dialog -->
+                <!-- Tampil data -->
                 <div class="card shadow">
                     <div class="card-body p-3">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr class="text-white" style="background-color: #051683;">
-                                        <th class="text-center p-3" style="width:30px">No</th>
-                                        <th class="text-center p-3" style="width:250px">Nama Produk</th>
-                                        <th class="text-center p-3" style="width:100px">Merk</th>
-                                        <th class="text-center p-3" style="width:100px">Harga</th>
-                                        <th class="text-center p-3" style="width:80px">Stock</th>
-                                        <th class="text-center p-3" style="width:80px">Qty</th>
-                                        <th class="text-center p-3" style="width:80px">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                            <form action="proses/proses-produk-spk-reg.php" method="POST">
+                                <div class="text-start mb-3">
+                                    <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail">
+                                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                    </a>
+                                    <a class="btn btn-primary btn-detail" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                                        <i class="bi bi-plus-circle"></i> Tambah Produk
+                                    </a>
                                     <?php
-                                    include "koneksi.php";
-                                    $id_spk = base64_decode($_GET['id']);
-                                    $no = 1;
-                                    $sql_trx = "SELECT trpr.*, spr.id_produk_reg, spr.stock, tpr.nama_produk, tpr.id_merk, tpr.harga_produk, mr.nama_merk
-                                            FROM transaksi_produk_reg AS trpr
-                                            LEFT JOIN stock_produk_reguler spr ON (trpr.id_produk = spr.id_produk_reg)
-                                            LEFT JOIN tb_produk_reguler tpr ON (trpr.id_produk = tpr.id_produk_reg)
-                                            LEFT JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                            WHERE trpr.id_spk = '$id_spk'";
-                                    $trx_produk_reg = mysqli_query($connect, $sql_trx);
-                                    while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                    $id_spk_decode = base64_decode($_GET['id']);
+                                    $sql_thead = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
+                                        FROM spk_reg AS sr
+                                        JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
+                                        JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1'";
+                                    $query_thead = mysqli_query($connect, $sql_thead);
+                                    $totalRows = mysqli_num_rows($query_thead);
+                                    if ($totalRows != 0) {
+                                        echo '<button type="submit" class="btn btn-secondary" name="simpan-trx"><i class="bi bi-send"></i> Proses Pesanan</button>';
+                                    }
                                     ?>
-                                        <tr>
-                                            <td class="text-center"><?php echo $no; ?></td>
-                                            <td><?php echo $data_trx['nama_produk'] ?></td>
-                                            <td class="text-center"><?php echo $data_trx['nama_merk'] ?></td>
-                                            <td class="text-end"><?php echo $data_trx['harga'] ?></td>
-                                            <td class="text-end"><?php echo $data_trx['stock'] ?></td>
-                                            <td class="text-end"><?php echo $data_trx['qty'] ?></td>
-                                            <td class="text-center">
-                                                <a href="" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
-                                                <a href="" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        <?php $no++; ?>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+
+                                </div>
+                                <table class="table table-striped table-bordered">
+                                    <?php
+                                    $id_spk_decode = base64_decode($_GET['id']);
+                                    $sql_thead = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
+                                        FROM spk_reg AS sr
+                                        JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
+                                        JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1'";
+                                    $query_thead = mysqli_query($connect, $sql_thead);
+                                    $totalRows = mysqli_num_rows($query_thead);
+                                    if ($totalRows != 0) {
+                                        echo ' 
+                                        <thead>
+                                            <tr class="text-white" style="background-color: #051683;">
+                                                <th class="text-center p-3" style="width:20px">No</th>
+                                                <th class="text-center p-3" style="width:300px">Nama Produk</th>
+                                                <th class="text-center p-3" style="width:100px">Merk</th>
+                                                <th class="text-center p-3" style="width:100px">Harga</th>
+                                                <th class="text-center p-3" style="width:80px">Qty Order</th>
+                                                <th class="text-center p-3" style="width:80px">Aksi</th>
+                                            </tr>
+                                        </thead>  ';
+                                    }
+                                    ?>
+                                    <tbody>
+                                        <?php
+                                        include "koneksi.php";
+                                        $year = date('y');
+                                        $day = date('d');
+                                        $month = date('m');
+                                        $id_spk_decode = base64_decode($_GET['id']);
+                                        $no = 1;
+                                        $sql_trx = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
+                                                FROM spk_reg AS sr
+                                                JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
+                                                JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
+                                                JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
+                                                JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                                WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1'";
+                                        $trx_produk_reg = mysqli_query($connect, $sql_trx);
+                                        while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                            $uuid = generate_uuid();
+                                            $stock_edit = $data_trx['qty'] + $data_trx['stock'];
+                                        ?>
+                                            <tr>
+                                                <input type="hidden" name="id_transaksi[]" id="id_<?php echo $data_trx['id_tmp'] ?>" value="TRX-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>" readonly>
+                                                <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
+                                                <input type="hidden" class="form-control" name="id_spk_reg[]" value="<?php echo $data_trx['id_spk'] ?>" readonly>
+                                                <input type="hidden" class="form-control" name="id_produk[]" value="<?php echo $data_trx['id_produk'] ?>" readonly>
+                                                <td><input type="text" class="form-control text-center" value="<?php echo $no; ?>" readonly></td>
+                                                <td><input type="text" class="form-control" name="nama_produk[]" value="<?php echo $data_trx['nama_produk'] ?>" readonly></td>
+                                                <td><input type="text" class="form-control text-center" value="<?php echo $data_trx['nama_merk'] ?>" readonly></td>
+                                                <td><input type="text" class="form-control text-end" name="harga[]" value="<?php echo number_format($data_trx['harga_produk']) ?>" readonly></td>
+                                                <td><input type="text" class="form-control text-end" name="qty[]" value="<?php echo number_format($data_trx['qty']) ?>" readonly></td>
+                                                <td class="text-center">
+                                                    <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?php echo $data_trx['id_tmp'] ?>" data-nama="<?php echo $data_trx['nama_produk'] ?>" data-merk="<?php echo $data_trx['nama_merk'] ?>" data-stock="<?php echo number_format($stock_edit) ?>" data-qty="<?php echo $data_trx['qty'] ?>"><i class="bi bi-pencil"></i></a>
+                                                    <a href="" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                </td>
+                                                <!-- Modal Edit -->
+                                                <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body p-2">
+                                                                <form action="">
+                                                                    <input type="hidden" id="idTmpValue" name="id_tmp" class="form-control">
+                                                                    <div class="mb-3">
+                                                                        <label class="text-start">Nama Produk</label>
+                                                                        <input type="text" id="namaTmpValue" class="form-control bg-light" readonly>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="text-start">Merk Produk</label>
+                                                                        <input type="text" id="merkTmpValue" class="form-control bg-light" readonly>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="text-start">Stock Tersedia</label>
+                                                                        <input type="text" id="stockTmpValue" class="form-control bg-light" readonly>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="text-start">Qty Order</label>
+                                                                        <input type="text" id="qtyTmpValue" class="form-control">
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End Modal Edit -->
+                                            </tr>
+                                            <?php $no++; ?>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+
+                                <div class="container">
+                                    <?php
+                                    $id_spk_reg = $data['id_spk_reg'];
+                                    $sql = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
+                                        FROM spk_reg AS sr
+                                        JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
+                                        JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0'";
+                                    $query = mysqli_query($connect, $sql);
+                                    $totalRows = mysqli_num_rows($query);
+                                    if ($totalRows != 0) {
+                                        echo '<h5 class="text-center">Tambah Produk Pesanan</h5>';
+                                    }
+                                    ?>
+                                </div>
+                                <?php
+                                $no = 1;
+                                $id_spk_reg = $data['id_spk_reg'];
+                                $sql = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
+                                    FROM spk_reg AS sr
+                                    JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
+                                    JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
+                                    JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
+                                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                    WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0'";
+                                $query = mysqli_query($connect, $sql);
+                                $isEmpty = true; // Tambahkan variabel pengecekan apakah data kosong
+                                while ($data = mysqli_fetch_array($query)) {
+                                    $uuid = generate_uuid();
+                                    $isEmpty = false; // Setel variabel pengecekan menjadi false jika ada data
+                                ?>
+                                    <div class="card-body border p-2">
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <input type="text" class="form-control text-center" value="<?php echo $no; ?>">
+                                                <?php $no++ ?>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input type="hidden" name="id_tmp[]" id="id_<?php echo $data['id_tmp'] ?>" value="<?php echo $data['id_tmp'] ?>" readonly>
+                                                <input type="hidden" class="form-control" name="id_spk_reg_tmp[]" value="<?php echo $id_spk_reg ?>" readonly>
+                                                <input type="hidden" class="form-control" name="id_produk_tmp[]" value="<?php echo $data['id_produk'] ?>" readonly>
+                                                <input type="text" class="form-control bg-light" value="<?php echo $data['nama_produk'] ?>" readonly>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control bg-light text-center" value="<?php echo $data['nama_merk'] ?>" readonly>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control bg-light text-end" value="<?php echo number_format($data['harga_produk']) ?>" readonly>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control bg-light text-end" name="stock" id="stock_<?php echo $data['id_tmp'] ?>" value="<?php echo number_format($data['stock']) ?>" readonly>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <input type="text" class="form-control text-end" name="qty_tmp[]" id="qtyInput_<?php echo $data['id_tmp'] ?>" oninput="checkStock('<?php echo $data['id_tmp'] ?>')" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <?php } ?>
+                                <?php if ($isEmpty) { // Cek apakah data kosong 
+                                ?>
+                                <?php } else { // Jika ada data, tampilkan tombol simpan 
+                                ?>
+
+                                <?php } ?>
+                                <div class="card-body mt-3 text-end">
+                                    <?php
+                                    $sql = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
+                                        FROM spk_reg AS sr
+                                        JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
+                                        JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0'";
+                                    $query = mysqli_query($connect, $sql);
+                                    $totalRows = mysqli_num_rows($query);
+                                    if ($totalRows != 0) {
+                                        echo '<button type="submit" class="btn btn-primary" name="simpan-tmp" id="simpan-data"><i class="bi bi-save"></i> Simpan</button>';
+                                    }
+                                    ?>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </main><!-- End #main -->
+
+
     <!-- Modal Barang -->
     <div class="modal fade" id="modalBarang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -507,7 +589,36 @@ function generate_uuid()
     }
 </script>
 
+<!-- Fungsi menonaktifkan kerboard enter -->
+<script>
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("simpan-data").click();
+        }
+    });
+</script>
 
-<!-- <button class="btn btn-primary btn-sm" id="pilih" data-idprod="' . $data['id_produk_reg'] . '" data-namaprod="' . $data['nama_produk'] . '" data-merkprod="' . $data['nama_merk'] . '" data-stock="' . $data['stock'] . '" data-bs-dismiss="modal">Pilih</button> -->
+<!-- Edit Data -->
+<script>
+    $(document).ready(function() {
+        $('#modalEdit').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Tombol yang membuka modal
+            var idTmp = button.data('id'); // Mengambil data-id dari atribut data
+            var namaTmp = button.data('nama'); // Mengambil data-nama dari atribut data
+            var merkTmp = button.data('merk'); // Mengambil data-merk dari atribut data
+            var qtyTmp = button.data('qty'); // Mengambil data-qty dari atribut data
+            var stockTmp = button.data('stock'); // Mengambil data-stock dari atribut data
 
-<!-- Modal Barang -->
+            // Mengisi nilai idTmp ke dalam elemen dengan id "idTmpValue"
+            $('#idTmpValue').val(idTmp);
+            $('#namaTmpValue').val(namaTmp);
+            $('#merkTmpValue').val(merkTmp);
+            $('#stockTmpValue').val(stockTmp);
+
+            // Mengisi nilai qtyTmp ke dalam elemen dengan id "qtyTmpValue" dengan format angka
+            var formattedQty = numberWithCommas(qtyTmp);
+            $('#qtyTmpValue').val(formattedQty);
+        });
+    });
+</script>

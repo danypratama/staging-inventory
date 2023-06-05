@@ -28,6 +28,6 @@ if (isset($_POST['simpan'])) {
                    ('$id_spk', '$no_spk', '$tgl_spk', '$no_po', '$tgl_pesan', '$order_by', '$sales', '$id_cs', '$note', '$id_user', '$id_status', '$tgl_spk')";
         $query = mysqli_query($connect, $simpan);
         $_SESSION['info'] = 'Disimpan';
-        header("Location:../input-produk-spk-reg.php?id=$id_spk_encode");
+        header("Location:../detail-produk-spk-reg.php?id=$id_spk_encode");
     }
 }

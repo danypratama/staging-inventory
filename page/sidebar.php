@@ -201,7 +201,7 @@
         <li>
           <a class="<?php if ($page2 == 'spk') {
                       echo 'active';
-                    } ?>" href="spk-reg.php">
+                    } ?>" href="spk-reg.php?sort=baru">
             <i class="bi bi-circle"></i><span>SPK</span>
           </a>
         </li>

@@ -194,17 +194,14 @@ include "akses.php";
             </div>
             <form action="proses/proses-produk-spk-reg.php" method="POST">
               <?php
-              $year = date('y');
-              $day = date('d');
-              $month = date('m');
               $id_spk_reg = $data['id_spk_reg'];
               $sql = "SELECT sr.*, tps.*, spr.stock, tpr.nama_produk, tpr.harga_produk, mr.* 
-                      FROM spk_reg AS sr
-                      JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
-                      JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
-                      JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
-                      JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                      WHERE sr.id_spk_reg = '$id_spk_reg'";
+                                    FROM spk_reg AS sr
+                                    JOIN tmp_produk_spk tps ON(sr.id_spk_reg = tps.id_spk)
+                                    JOIN stock_produk_reguler spr ON(tps.id_produk = spr.id_produk_reg)
+                                    JOIN tb_produk_reguler tpr ON(tps.id_produk = tpr.id_produk_reg)
+                                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                    WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0'";
               $query = mysqli_query($connect, $sql);
               $isEmpty = true; // Tambahkan variabel pengecekan apakah data kosong
               while ($data = mysqli_fetch_array($query)) {
@@ -215,7 +212,7 @@ include "akses.php";
                   <div class="">
                     <div class="row">
                       <div class="col-sm-5">
-                        <input type="hidden" name="id_transaksi[]" id="id_<?php echo $data['id_tmp'] ?>" value="SPKREGPROD-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>" readonly>
+                        <input type="hidden" name="id_tmp[]" id="id_<?php echo $data['id_tmp'] ?>" value="<?php echo $data['id_tmp'] ?>" readonly>
                         <input type="hidden" class="form-control" name="id_spk_reg[]" value="<?php echo $id_spk_reg ?>" readonly>
                         <input type="hidden" class="form-control" name="id_produk[]" value="<?php echo $data['id_produk'] ?>" readonly>
                         <input type="text" class="form-control bg-light" name="nama_produk" value="<?php echo $data['nama_produk'] ?>" readonly>
@@ -231,8 +228,6 @@ include "akses.php";
                       </div>
                       <div class="col-sm-1">
                         <input type="text" class="form-control text-end" name="qty[]" id="qtyInput_<?php echo $data['id_tmp'] ?>" oninput="checkStock('<?php echo $data['id_tmp'] ?>')" required>
-                        <input type="hidden" class="form-control" name="id_user[]" value="<?php echo $_SESSION['tiket_id']; ?>">
-                        <input type="hidden" class="form-control" name="created[]" id="datetime-input">
                       </div>
                     </div>
                   </div>
@@ -244,7 +239,7 @@ include "akses.php";
               <?php } else { // Jika ada data, tampilkan tombol simpan 
               ?>
                 <div class="card-body mt-3 text-end">
-                  <button type="submit" class="btn btn-primary" name="simpan"> Simpan</button>
+                  <button type="submit" class="btn btn-primary" name="simpan-tmp"> Simpan</button>
                 </div>
               <?php } ?>
             </form>

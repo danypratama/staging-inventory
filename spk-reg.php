@@ -61,10 +61,10 @@ include "akses.php";
             </div>
             <ul class="nav nav-tabs d-flex" role="tablist" id="myTab" role="tablist">
               <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link active" id="belum-diproses-tab" data-bs-toggle="tab" data-bs-target="#belum-diproses-tab-pane" type="button" role="tab" aria-controls="belum-diproses-tab-pane" aria-selected="true">Belum Diproses</button>
+                <a class="nav-link active" id="belum-diproses-tab" data-bs-toggle="tab" data-bs-target="#belum-diproses-tab-pane" type="button" role="tab" aria-controls="belum-diproses-tab-pane" aria-selected="true">Belum Diproses</a>
               </li>
               <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link" id="dalam-proses-tab" data-bs-toggle="tab" data-bs-target="#dalam-proses-tab-pane" type="button" role="tab" aria-controls="dalam-proses-tab-pane" aria-selected="false">Dalam Proses</button>
+                <a class="nav-link" href="spk-dalam-proses.php?sort=baru">Dalam Proses</a>
               </li>
               <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link" id="siap-kirim-tab" data-bs-toggle="tab" data-bs-target="#siap-kirim-tab-pane" type="button" role="tab" aria-controls="siap-kirim-tab-pane" aria-selected="false">Siap Kirim</button>
@@ -83,12 +83,27 @@ include "akses.php";
               </li>
             </ul>
             <div class="card-body bg-body rounded mt-3">
-              <div class="tab-content" id="myTabContent">
+              <!-- Menampilkan Data SPK -->
+              <div class="tab-content">
                 <!-- Belum diproses -->
                 <div class="tab-pane fade show active" id="belum-diproses-tab-pane" role="tabpanel" aria-labelledby="belum-diproses-tab" tabindex="0">
                   <div class="card-body pt-3">
+                    <div class="row mb-3">
+                      <div class="col-2">
+                        <form action="" method="GET">
+                          <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange='if(this.value != 0) { this.form.submit(); }'>
+                            <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
+                                                    echo "selected";
+                                                  } ?>>Paling Baru</option>
+                            <option value="lama" <?php if (isset($_GET['sort']) && $_GET['sort'] == "lama") {
+                                                    echo "selected";
+                                                  } ?>>Paling Lama</option>
+                          </select>
+                        </form>
+                      </div>
+                    </div>
                     <div class="table-responsive">
-                      <table class="table table-bordered table striped" id="table1">
+                      <table class="table table-bordered table striped" id="tableA">
                         <thead>
                           <tr class="bg-primary text-white">
                             <th class="text-center p-3" style="width: 30px">No</th>
@@ -104,10 +119,18 @@ include "akses.php";
                           <?php
                           include "koneksi.php";
                           $no = 1;
+                          $filter = '';
+                          if (isset($_GET['sort'])) {
+                            if ($_GET['sort'] == "baru") {
+                              $filter = "ORDER BY tgl_spk DESC";
+                            } elseif ($_GET['sort'] == "lama") {
+                              $filter = "ORDER BY tgl_spk ASC";
+                            }
+                          }
                           $sql = "SELECT sr.*, cs.nama_cs, cs.alamat
                                 FROM spk_reg AS sr
                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_spk = 'Belum Diproses' ORDER BY no_spk ASC";
+                                WHERE status_spk = 'Belum Diproses' $filter";
                           $query = mysqli_query($connect, $sql);
                           while ($data = mysqli_fetch_array($query)) {
                           ?>
@@ -119,8 +142,7 @@ include "akses.php";
                               <td><?php echo $data['nama_cs'] ?></td>
                               <td><?php echo $data['note'] ?></td>
                               <td class="text-center">
-                                <a href="detail-produk-spk-reg.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
-                                <a href="" class="btn btn-secondary btn-sm mb-2"><i class="bi bi-send"></i> Proses Pesanan</a>
+                                <a href="detail-produk-spk-reg.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" id="detail-spk" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                               </td>
                             </tr>
                             <?php $no++ ?>
@@ -134,73 +156,6 @@ include "akses.php";
                 <!-- ================================================ -->
 
                 <!-- Dalam Proses -->
-                <div class="tab-pane fade" id="dalam-proses-tab-pane" role="tabpanel" aria-labelledby="dalam-proses-tab" tabindex="0">
-                  <div class="card-body pt-3">
-                    <div class="row">
-                      <div class="col-2">
-                        <select class="form-select" aria-label="Default select example">
-                          <option value="1">Paling Baru</option>
-                          <option value="2">Paling Lama</option>
-                        </select>
-                      </div>
-                      <div class="col-3">
-                        <div class="input-group">
-                          <div class="form-outline">
-                            <input type="search" id="form1" class="form-control" placeholder="Cari di sini">
-                          </div>
-                          <button type="button" class="btn btn-primary">
-                            <i class="bi bi-search"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card">
-                    <div class="card-header">
-                      <div class="row">
-                        <div class="col-sm-10 text-dark"><a class="text-primary">SPK/REG/001/1/2023</a> / <a>PO-001</a> / <a><i class="bi bi-clock"></i> 01 Jan 2023, 08.30 WIB</a></div>
-                        <div class="col-sm-2"><a class="btn btn-warning btn-sm">Kirim Hari Ini <i class="bi bi-info-circle"></i></a></div>
-                      </div>
-                    </div>
-                    <div class="card-body p-2">
-                      <div class="row p-1">
-                        <div class="col-sm-4 m-1 border">
-                          <p>
-                            Customer :<br>
-                            Ibu Melly
-                          </p>
-                        </div>
-                        <div class="col-sm-5 m-1 border">
-                          <p>
-                            Alamat :<br>
-                            Jakarta
-                          </p>
-                        </div>
-                        <div class="col-sm-2 p-2">
-                          <a href="#" class="btn btn-primary btn-sm m-1"><i class="bi bi-eye-fill"></i> Lihat Data</a>
-                          <a href="#" class="btn btn-secondary btn-sm m-1"><i class="bi bi-send"></i> Pesanan Siap Kirim</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Pagination -->
-                  <!-- <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-end">
-                      <li class="page-item disabled">
-                        <a class="page-link">Previous</a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link active" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                      </li>
-                    </ul>
-                  </nav> -->
-                  <!-- End Pagination -->
-                </div>
-                <!-- End Dalam Proses -->
-                <!-- ================================================ -->
 
                 <!-- Siap Kirim -->
                 <div class="tab-pane fade mb-3" id="siap-kirim-tab-pane" role="tabpanel" aria-labelledby="siap-kirim-tab" tabindex="0">
@@ -427,6 +382,7 @@ include "akses.php";
                 <!-- End Transaksi Selesai -->
                 <!-- ================================================ -->
               </div>
+              <!-- End Menampilkan Data SPK -->
             </div>
           </div>
         </div>
@@ -452,3 +408,69 @@ include "akses.php";
 
 <!-- sort data -->
 <script src="assets/js/sorting.js"></script>
+
+<script>
+  $(document).ready(function() {
+    var table = $('#tableA').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+    });
+  });
+  $(document).ready(function() {
+    var table = $('#tableB').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+    });
+  });
+  $(document).ready(function() {
+    var table = $('#tableC').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+    });
+  });
+  $(document).ready(function() {
+    var table = $('#tableD').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+    });
+  });
+  $(document).ready(function() {
+    var table = $('#tableE').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+    });
+  });
+  $(document).ready(function() {
+    var table = $('#tableF').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+    });
+  });
+  $(document).ready(function() {
+    var table = $('#tableG').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $("#select").change(function() {
+      var open = $(this).data("isopen");
+      if (open) {
+        window.location.href = $(this).val();
+      }
+      //set isopen to opposite so next time when user clicks select box
+      //it won't trigger this event
+      $(this).data("isopen", !open);
+    });
+  });
+</script>

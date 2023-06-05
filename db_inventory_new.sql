@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2023 at 12:14 PM
+-- Generation Time: Jun 03, 2023 at 10:16 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -484,7 +484,10 @@ CREATE TABLE `spk_reg` (
 INSERT INTO `spk_reg` (`id_spk_reg`, `id_user`, `id_customer`, `id_inv`, `id_sales`, `id_orderby`, `status_spk`, `no_spk`, `no_po`, `tgl_spk`, `tgl_pesanan`, `note`, `created_date`, `user_updated`, `updated_date`) VALUES
 ('SPKREG-230539e3761ae8ab29', 'USER03595a8447ab', 'CS01111c859db5', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '002/SPK/V/2023', '', '29/05/2023, 9:28', '29/05/2023', 'Urgent', '29/05/2023, 9:28', '', ''),
 ('SPKREG-230575e3c7ba400229', 'USER03595a8447ab', 'CS01111c859db5', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '003/SPK/V/2023', '', '29/05/2023, 10:22', '29/05/2023', 'Urgent', '29/05/2023, 10:22', '', ''),
-('SPKREG-2305e3737255c7a428SPKREG-2305e3737255c7a428', 'USER03595a8447ab', 'CS0087ea6067d9', '', 'SL3bca54585e28', 'ORDER68aa0a74872f', 'Belum Diproses', '001/SPK/V/2023', '', '28/05/2023, 19:05', '28/05/2023', 'Urgent', '28/05/2023, 19:05', '', '');
+('SPKREG-230663f237a844da02', 'USER03595a8447ab', 'CS0087ea6067d9', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '004/SPK/VI/2023', '003', '02/06/2023, 16:17', '02/06/2023', '', '02/06/2023, 16:17', '', ''),
+('SPKREG-2306944b54ccad4602', 'USER03595a8447ab', 'CS018b7ca30d99', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '006/SPK/VI/2023', '009', '02/06/2023, 16:30', '02/06/2023', 'urgrnt', '02/06/2023, 16:30', '', ''),
+('SPKREG-2306a1d24f0b6d8a02', 'USER03595a8447ab', 'CS01111c859db5', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '005/SPK/VI/2023', '003', '02/06/2023, 16:27', '02/06/2023', '', '02/06/2023, 16:27', '', ''),
+('SPKREG-2306a47b1462ee4a03', 'USER03595a8447ab', 'CS015858a52568', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '007/SPK/VI/2023', '006', '03/06/2023, 11:30', '03/06/2023', 'URGENT', '03/06/2023, 11:30', '', '');
 
 -- --------------------------------------------------------
 
@@ -1017,18 +1020,27 @@ INSERT INTO `tb_supplier` (`id_sp`, `id_user`, `nama_sp`, `no_telp`, `alamat`, `
 --
 
 CREATE TABLE `tmp_produk_spk` (
-  `id_tmp` int(11) NOT NULL,
+  `id_tmp` varchar(50) NOT NULL,
   `id_spk` varchar(50) NOT NULL,
-  `id_produk` varchar(50) NOT NULL
+  `id_produk` varchar(50) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `status_tmp` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tmp_produk_spk`
 --
 
-INSERT INTO `tmp_produk_spk` (`id_tmp`, `id_spk`, `id_produk`) VALUES
-(105, 'SPKREG-230539e3761ae8ab29', 'BR-REGf5b9f0e4432e'),
-(106, 'SPKREG-230539e3761ae8ab29', 'BR-REGb74bb17fa836');
+INSERT INTO `tmp_produk_spk` (`id_tmp`, `id_spk`, `id_produk`, `qty`, `status_tmp`) VALUES
+('2023025ccbf763ce06', 'SPKREG-230539e3761ae8ab29', 'BR-REGffb0b62a09cf', 50, 1),
+('2023396332c32a7b06', 'SPKREG-230539e3761ae8ab29', 'BR-REG2fa92bf1f42b', 15, 1),
+('202343d6128f814406', 'SPKREG-230539e3761ae8ab29', 'BR-REGd5137f56b7b4', 10, 1),
+('20234c9231f7879b06', 'SPKREG-230539e3761ae8ab29', 'BR-REGe2e00ce0199b', 15, 1),
+('2023b6f2f32b4bc406', 'SPKREG-230539e3761ae8ab29', 'BR-REG072519133768', 100, 1),
+('2023bf06281ffe1306', 'SPKREG-230539e3761ae8ab29', 'BR-REG8809b92738c3', 15, 1),
+('2023c0e32a6567f206', 'SPKREG-230539e3761ae8ab29', 'BR-REG2ec4a0fc3a7a', 10, 1),
+('2023c84dc2d5c82606', 'SPKREG-230539e3761ae8ab29', 'BR-REGb74bb17fa836', 98, 1),
+('2023ca361b1baa7106', 'SPKREG-230539e3761ae8ab29', 'BR-REGf5b9f0e4432e', 18, 1);
 
 -- --------------------------------------------------------
 
@@ -1045,10 +1057,38 @@ CREATE TABLE `transaksi_produk_reg` (
   `qty` int(11) NOT NULL,
   `disc` int(11) NOT NULL,
   `total_harga` int(11) NOT NULL,
-  `created_date` varchar(25) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `user_updated` varchar(25) NOT NULL,
   `updated_date` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Triggers `transaksi_produk_reg`
+--
+DELIMITER $$
+CREATE TRIGGER `add_trx_prod_reg` AFTER INSERT ON `transaksi_produk_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock - NEW.qty 
+WHERE id_produk_reg = NEW.id_produk;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `del_trx_prod_reg` AFTER DELETE ON `transaksi_produk_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty 
+WHERE id_produk_reg = OLD.id_produk;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `edit_trx_prod_reg` AFTER UPDATE ON `transaksi_produk_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty - NEW.qty
+WHERE id_produk_reg = NEW.id_produk;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1189,17 +1229,23 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HIS1433744e3f20', 'USER47100114a730', '23/05/2023 10:14:26', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS1704b4a5abd2', 'USER03595a8447ab', '31/05/2023 15:41:39', '2023/05/31 16:29:06', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS1c66840cad15', 'USER03595a8447ab', '31/05/2023 9:04:28', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HIS1f191d1f6af3', 'USER03595a8447ab', '02/06/2023 14:38:16', '2023/06/02 15:20:10', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS28d3de1dc028', 'USER03595a8447ab', '23/05/2023 17:05:40', '', '180.244.166.20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS35b3c5cf52d6', 'USER03595a8447ab', '26/05/2023 8:07:50', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS4336312cc383', 'USER03595a8447ab', '23/05/2023 14:52:26', '', '110.138.80.148', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS4bc3ceddd241', 'USER03595a8447ab', '02/06/2023 13:07:22', '2023/06/02 14:38:11', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS4c0c92c63957', 'USER03595a8447ab', '26/05/2023 16:42:56', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HIS59b8ce6c1302', 'USER03595a8447ab', '02/06/2023 8:20:23', '2023/06/02 13:07:09', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS5e58834b05d2', 'USER47100114a730', '23/05/2023 14:57:02', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS654ab3c06611', 'USER03595a8447ab', '02/06/2023 15:20:18', '2023/06/02 15:46:21', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS678833f6098a', 'USER03595a8447ab', '31/05/2023 15:12:01', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS696720700493', 'USER03595a8447ab', '25/05/2023 8:18:00', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS6c6006b1fc59', 'USER03595a8447ab', '31/05/2023 13:18:55', '2023/05/31 14:38:23', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS6ca5203a7330', 'USER03595a8447ab', '24/05/2023 16:43:23', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS7498865baba0', 'USER03595a8447ab', '02/06/2023 15:46:26', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS7846a686d478', 'USER47100114a730', '23/05/2023 10:37:46', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS78db382a807e', 'USER03595a8447ab', '29/05/2023 14:53:19', '', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0', 'Desktop', ',\r\n', 'Online'),
+('HIS8385993c114b', 'USER03595a8447ab', '03/06/2023 9:11:04', '2023/06/03 10:20:03', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS84a097a151c8', 'USER03595a8447ab', '31/05/2023 16:31:19', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS85a5ddfd7a2f', 'USER47100114a730', '24/05/2023 16:52:13', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS97b2251baee0', 'USER03595a8447ab', '25/05/2023 9:09:39', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
@@ -1215,6 +1261,7 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HISe6bdfb3d29d4', 'USER47100114a730', '24/05/2023 16:23:17', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISe6ed1dff228a', 'USER03595a8447ab', '29/05/2023 8:38:52', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HISf21ec41fa931', 'USER03595a8447ab', '24/05/2023 8:26:10', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf37bceac99c5', 'USER03595a8447ab', '03/06/2023 10:20:08', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HISf69d5157c157', 'USER03595a8447ab', '23/05/2023 16:35:16', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISf7790792b7ab', 'USER03595a8447ab', '31/05/2023 14:38:56', '2023/05/31 15:11:49', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISfe52bb262bf2', 'USER03595a8447ab', '23/05/2023 15:01:39', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online');
@@ -1437,16 +1484,6 @@ ALTER TABLE `user_history`
 --
 ALTER TABLE `user_role`
   ADD PRIMARY KEY (`id_user_role`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `tmp_produk_spk`
---
-ALTER TABLE `tmp_produk_spk`
-  MODIFY `id_tmp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- Constraints for dumped tables
