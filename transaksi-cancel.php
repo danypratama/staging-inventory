@@ -118,6 +118,7 @@ include "akses.php";
                                                 <th class="text-center p-3" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3" style="width: 200px">Nama Customer</th>
                                                 <th class="text-center p-3" style="width: 150px">Alasan</th>
+                                                <th class="text-center p-3" style="width: 150px">Posisi Transaksi</th>
                                                 <th class="text-center p-3" style="width: 150px">Aksi</th>
                                             </tr>
                                         </thead>
@@ -147,8 +148,9 @@ include "akses.php";
                                                     <td><?php echo $data['no_po'] ?></td>
                                                     <td><?php echo $data['nama_cs'] ?></td>
                                                     <td><?php echo $data['note'] ?></td>
+                                                    <td><?php echo $data['menu_cancel'] ?></td>
                                                     <td class="text-center">
-                                                        <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
+                                                        <a href="detail-transaksi-cancel.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>

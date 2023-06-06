@@ -150,7 +150,7 @@ include "akses.php";
                                                     <td class="text-center">
                                                         <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                                                         <p></p>
-                                                        <a href="#" data-id="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Cancel Order</a>
+                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Cancel Order</a>
                                                     </td>
                                                     <!-- Modal -->
                                                     <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -168,7 +168,7 @@ include "akses.php";
                                                                             <input type="text" class="form-control" name="alasan" required>
                                                                         </div>
                                                                         <div class="modal-footer">
-                                                                            <button type="submit" class="btn btn-primary" name="cancel">Ya, Cancel Transaksi</button>
+                                                                            <button type="submit" class="btn btn-primary" name="cancel-dalam-proses">Ya, Cancel Transaksi</button>
                                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                                         </div>
                                                                     </form>
