@@ -30,4 +30,34 @@ if (isset($_POST['simpan'])) {
         $_SESSION['info'] = 'Disimpan';
         header("Location:../detail-produk-spk-reg.php?id=$id_spk_encode");
     }
+
+    // Edit 
+} else if (isset($_POST['edit'])) {
+    $id_spk = $_POST['id_spk_reg'];
+    $no_po = $_POST['no_po'];
+    $tgl_pesan = $_POST['tgl_pesan'];
+    $order_by = $_POST['order_by'];
+    $sales = $_POST['sales'];
+    $note = $_POST['note'];
+    $id_user = $_POST['id_user'];
+    $id_status = 'Belum Diproses';
+    $id_spk_encode = base64_encode($id_spk);
+    $tgl_updated = $_POST['updated'];
+
+    echo $id_spk_encode;
+
+    $update = "UPDATE spk_reg 
+               SET
+               no_po = '$no_po',
+               tgl_pesanan = '$tgl_pesan',
+               id_orderby = '$order_by',
+               id_sales = '$sales',
+               note = '$note',
+               user_updated = '$id_user',
+               updated_date = '$tgl_updated'
+               WHERE id_spk_reg = '$id_spk'";
+    $query = mysqli_query($connect, $update);
+
+    $_SESSION['info'] = 'Diupdate';
+    header("Location:../detail-produk-spk-reg-dalam-proses.php?id=$id_spk_encode");
 }

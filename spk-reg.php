@@ -27,6 +27,13 @@ include "akses.php";
 
 
   <main id="main" class="main">
+    <!-- Loading -->
+    <div class="loader loader">
+      <div class="loading">
+        <img src="img/loading.gif" width="200px" height="auto">
+      </div>
+    </div>
+    <!-- ENd Loading -->
     <div class="pagetitle">
       <h1>Dashboard</h1>
       <nav>
@@ -61,13 +68,13 @@ include "akses.php";
             </div>
             <ul class="nav nav-tabs d-flex" role="tablist" id="myTab" role="tablist">
               <li class="nav-item flex-fill" role="presentation">
-                <a class="nav-link active" id="belum-diproses-tab" data-bs-toggle="tab" data-bs-target="#belum-diproses-tab-pane" type="button" role="tab" aria-controls="belum-diproses-tab-pane" aria-selected="true">Belum Diproses</a>
+                <a class="nav-link active">Belum Diproses</a>
               </li>
               <li class="nav-item flex-fill" role="presentation">
                 <a class="nav-link" href="spk-dalam-proses.php?sort=baru">Dalam Proses</a>
               </li>
               <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link" id="siap-kirim-tab" data-bs-toggle="tab" data-bs-target="#siap-kirim-tab-pane" type="button" role="tab" aria-controls="siap-kirim-tab-pane" aria-selected="false">Siap Kirim</button>
+                <a class="nav-link" href="spk-siap-kirim.php?sort=baru">Siap Kirim</a>
               </li>
               <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link" id="dicetak-tab" data-bs-toggle="tab" data-bs-target="#dicetak-tab-pane" type="button" role="tab" aria-controls="dicetak-tab-pane" aria-selected="false">Invoice Sudah Dicetak</button>
@@ -80,6 +87,9 @@ include "akses.php";
               </li>
               <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
+              </li>
+              <li class="nav-item flex-fill" role="presentation">
+                <a class="nav-link" href="transaksi-cancel.php">Transaksi Cancel</a>
               </li>
             </ul>
             <div class="card-body bg-body rounded mt-3">
@@ -103,9 +113,9 @@ include "akses.php";
                       </div>
                     </div>
                     <div class="table-responsive">
-                      <table class="table table-bordered table striped" id="tableA">
+                      <table class="table table-bordered table-striped" id="tableA">
                         <thead>
-                          <tr class="bg-primary text-white">
+                          <tr class="text-white" style="background-color: navy;">
                             <th class="text-center p-3" style="width: 30px">No</th>
                             <th class="text-center p-3" style="width: 150px">No. SPK</th>
                             <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>

@@ -71,10 +71,10 @@ include "akses.php";
                                 <a class="nav-link" href="spk-reg.php">Belum Diproses</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link active">Dalam Proses</button>
+                                <a class="nav-link" href="spk-dalam-proses.php">Belum Diproses</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-siap-kirim.php?sort=baru">Siap Kirim</a>
+                                <button class="nav-link active">Siap Kirim</button>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
                                 <button class="nav-link" id="dicetak-tab" data-bs-toggle="tab" data-bs-target="#dicetak-tab-pane" type="button" role="tab" aria-controls="dicetak-tab-pane" aria-selected="false">Invoice Sudah Dicetak</button>
@@ -118,7 +118,7 @@ include "akses.php";
                                                 <th class="text-center p-3" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3" style="width: 200px">Nama Customer</th>
                                                 <th class="text-center p-3" style="width: 150px">Note</th>
-                                                <th class="text-center p-3" style="width: 200px">Aksi</th>
+                                                <th class="text-center p-3" style="width: 150px">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -136,7 +136,7 @@ include "akses.php";
                                             $sql = "SELECT sr.*, cs.nama_cs, cs.alamat
                                                             FROM spk_reg AS sr
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_spk = 'Dalam Proses'  $filter";
+                                                            WHERE status_spk = 'Siap Kirim'  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -148,34 +148,8 @@ include "akses.php";
                                                     <td><?php echo $data['nama_cs'] ?></td>
                                                     <td><?php echo $data['note'] ?></td>
                                                     <td class="text-center">
-                                                        <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
-                                                        <p></p>
-                                                        <a href="#" data-id="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Cancel Order</a>
+                                                        <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                                                     </td>
-                                                    <!-- Modal -->
-                                                    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h4><strong>Silahkan Isi Alasan</strong></h4>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <form action="proses/proses-produk-spk-reg.php" method="POST">
-                                                                        <div class="mb-3">
-                                                                            <input type="hidden" name="id_spk" value="<?php echo $data['id_spk_reg'] ?>">
-                                                                            <Label>Alasan Cancel</Label>
-                                                                            <input type="text" class="form-control" name="alasan" required>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="submit" class="btn btn-primary" name="cancel">Ya, Cancel Transaksi</button>
-                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </tr>
                                                 <?php $no++ ?>
                                             <?php } ?>

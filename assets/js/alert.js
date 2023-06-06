@@ -1,6 +1,6 @@
 var notifikasi = $('.info-data').data('infodata');
 
-if(notifikasi == "Disimpan" || notifikasi=="Dihapus" || notifikasi == "Diupdate"){
+if(notifikasi == "Disimpan" || notifikasi=="Dihapus" || notifikasi == "Diupdate" || notifikasi == "Dicancel"){
 	Swal.fire({
 	  icon: 'success',
 	  title: 'Sukses',
@@ -54,3 +54,45 @@ $('.delete-data').on('click', function(e){
 	  }
 	})
 });
+
+// $('.cancel-data').on('click', function(e){
+// 	e.preventDefault();
+// 	var getLink = $(this).attr('href');
+
+// 	Swal.fire({
+// 	  title: 'Anda Yakin Cancel Transaksi Ini ?',
+// 	  text: "Transaksi Ini Akan Dicancel Permanen",
+// 	  icon: 'warning',
+// 	  showCancelButton: true,
+// 	  confirmButtonColor: '#3085d6',
+// 	  cancelButtonColor: '#d33',
+// 	  confirmButtonText: 'Ya, Cancel Transaksi'
+// 	}).then((result) => {
+// 	  if (result.value) {
+// 	    window.location.href = getLink;
+// 	  }
+// 	})
+// });
+
+$('.cancel-data').on('click', function(e) {
+    e.preventDefault();
+    var form = $(this).closest('form');
+    var getAction = form.attr('action');
+    var cancelValue = form.find('input[name="id_spk"]').val();
+
+    Swal.fire({
+        title: 'Anda Yakin Cancel Transaksi Ini ?',
+        text: "Transaksi Ini Akan Dicancel Permanen",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Cancel Transaksi'
+    }).then((result) => {
+        if (result.value) {
+            form.attr('action', getAction);
+            form.submit();
+        }
+    });
+});
+

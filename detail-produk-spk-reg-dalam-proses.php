@@ -36,10 +36,16 @@ include "akses.php";
 
     <main id="main" class="main">
         <section>
+            <!-- SWEET ALERT -->
+            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                                        echo $_SESSION['info'];
+                                                    }
+                                                    unset($_SESSION['info']); ?>"></div>
+            <!-- END SWEET ALERT -->
             <div class="container-fluid">
                 <div class="card shadow p-2">
                     <div class="card-header text-center">
-                        <h5><strong>DETAIL PRODUK SPK</strong></h5>
+                        <h5><strong>DETAIL SPK</strong></h5>
                     </div>
                     <?php
                     include "koneksi.php";
@@ -157,6 +163,10 @@ include "akses.php";
                                 </div>
                             </div>
                         </div>
+                        <div class="text-center mt-3">
+                            <a href="edit-detail-spk-reg.php?edit_id=<?php echo base64_encode($id_spk) ?>" class="btn btn-info text-white"><i class="bi bi-pencil"></i> Edit data detail</a>
+                        </div>
+
                     </div>
                 </div>
                 <!-- Tampil data -->
@@ -165,7 +175,7 @@ include "akses.php";
                         <div class="table-responsive">
                             <form action="proses/proses-produk-spk-reg.php" method="POST">
                                 <div class="text-start mb-3">
-                                    <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail">
+                                    <a href="spk-dalam-proses.php?sort=baru" class="btn btn-warning btn-detail">
                                         <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                     </a>
                                     <button type="submit" class="btn btn-secondary" name="siap-kirim"><i class="bi bi-send"></i> Siap Kirim</button>
@@ -206,7 +216,7 @@ include "akses.php";
                                                 <td class="text-end"><?php echo number_format($data_trx['harga_produk']) ?></td>
                                                 <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                                 <td class="text-center">
-                                                    <a href="" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                    <a href="proses/proses-produk-spk-reg.php?hapus_trx=<?php echo base64_encode($data_trx['id_transaksi']) ?> && id_spk=<?php echo base64_encode($data_trx['id_spk']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                                 </td>
                                             </tr>
                                             <?php $no++; ?>

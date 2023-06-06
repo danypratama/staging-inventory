@@ -15,9 +15,8 @@ if (isset($_POST['simpan-tmp'])) {
         for ($i = 0; $i < count($id_tmp); $i++) {
             $id = $id_tmp[$i];
             $spk_reg = $id_spk_reg[$i];
-            $newQty = $qty[$i];
             $newQtyInt = str_replace(',', '', $qty[$i]); // Menghapus tanda ribuan (,)
-            $newQtyInt = intval($newQty); // Mengubah string harga menjadi integer
+            $newQtyInt = intval($newQtyInt); // Mengubah string harga menjadi integer
             $id_spk_encode = base64_encode($id_spk_reg[$i]);
 
             // Lakukan proses penyimpanan data qty ke dalam database sesuai dengan ID transaksi
@@ -49,7 +48,6 @@ if (isset($_POST['simpan-tmp'])) {
     $id_produk = $_POST['id_produk'];
     $harga = $_POST['harga'];
     $qty = $_POST['qty'];
-    $created = $_POST['created'];
 
     mysqli_begin_transaction($connect);
 
@@ -62,11 +60,11 @@ if (isset($_POST['simpan-tmp'])) {
             $produk = $id_produk[$i];
             $hrg = str_replace(',', '', $harga[$i]); // Menghapus tanda ribuan (,)
             $hrg = intval($hrg); // Mengubah string harga menjadi integer
-            $jumlah = $qty[$i];
-            $tanggal = $created;
+            $jml =  str_replace(',', '', $qty[$i]);
+            $jml = intval($jml);
 
             // Query INSERT
-            $sql = "INSERT INTO transaksi_produk_reg (id_transaksi, id_user, id_spk, id_produk, harga, qty) VALUES ('$id_trx', '$user', '$spk_reg', '$produk', '$hrg', '$jumlah')";
+            $sql = "INSERT INTO transaksi_produk_reg (id_transaksi, id_user, id_spk, id_produk, harga, qty) VALUES ('$id_trx', '$user', '$spk_reg', '$produk', '$hrg', '$jml')";
             $query1 = mysqli_query($connect, $sql);
 
             $sql_spk = "UPDATE spk_reg SET status_spk = 'Dalam Proses' WHERE id_spk_reg = '$spk_reg'";
@@ -83,7 +81,6 @@ if (isset($_POST['simpan-tmp'])) {
                 throw new Exception("Terjadi kesalahan saat menyimpan data.");
             }
         }
-
         // Jika tidak terjadi kesalahan, commit transaksi
         mysqli_commit($connect);
         $_SESSION['info'] = 'Disimpan';
@@ -91,7 +88,68 @@ if (isset($_POST['simpan-tmp'])) {
     } catch (Exception $e) {
         // Jika terjadi kesalahan, rollback transaksi
         mysqli_rollback($connect);
-        $_SESSION['info'] = 'Silahkan Ulangi Kembali';
+        $_SESSION['info'] = 'Silahkan Ulang
+       i Kembali';
         header("Location:../spk-reg.php");
+    }
+} else if (isset($_POST['edit'])) {
+    $id_tmp = $_POST['id_tmp'];
+    $id_spk = $_POST['id_spk'];
+    $qty_edit = $_POST['qty_edit'];
+    $qty =  str_replace(',', '', $qty_edit);
+    $qty = intval($qty);
+    $id_spk_encode = base64_encode($id_spk);
+
+    $update = mysqli_query($connect, "UPDATE tmp_produk_spk SET qty = '$qty' WHERE id_tmp = '$id_tmp'");
+    if ($update) {
+        $_SESSION['info'] = 'Diupdate';
+        header("Location:../detail-produk-spk-reg.php?id='$id_spk_encode'");
+    }
+} else if (isset($_GET['hapus_tmp'])) {
+    $idh = base64_decode($_GET['hapus_tmp']);
+    $id_spk = $_GET['id_spk'];
+
+    $update = mysqli_query($connect, "DELETE FROM tmp_produk_spk WHERE id_tmp = '$idh'");
+
+    $_SESSION['info'] = 'Dihapus';
+    header("Location:../detail-produk-spk-reg.php?id='$id_spk'");
+
+    // hapus produk trx
+} else if (isset($_GET['hapus_trx'])) {
+    $idh = base64_decode($_GET['hapus_trx']);
+    $id_spk = $_GET['id_spk'];
+
+    $update = mysqli_query($connect, "DELETE FROM transaksi_produk_reg WHERE id_transaksi = '$idh'");
+
+    $_SESSION['info'] = 'Dihapus';
+    header("Location:../detail-produk-spk-reg-dalam-proses.php?id='$id_spk'");
+
+    // cancel pesanan
+} else if (isset($_POST['cancel'])) {
+    $id_spk = $_POST['id_spk'];
+    $alasan = $_POST['alasan'];
+
+    mysqli_begin_transaction($connect);
+
+    try {
+        $insert = mysqli_query($connect, "INSERT INTO trx_cancel (id_trx_cancel, id_spk, id_user, id_produk, harga, qty, disc, total_harga) SELECT id_transaksi, id_spk, id_user,  id_produk, harga, qty, disc, total_harga FROM transaksi_produk_reg WHERE id_spk ='$id_spk'");
+
+        $delete = mysqli_query($connect, "DELETE FROM transaksi_produk_reg WHERE id_spk = '$id_spk'");
+
+        $update = mysqli_query($connect, "UPDATE spk_reg SET status_spk = 'Cancel Order', note = '$alasan' WHERE id_spk_reg = '$id_spk'");
+
+        if (!$insert || !$delete || !$update) {
+            throw new Exception("Terjadi kesalahan saat menyimpan data.");
+        }
+
+        // Jika tidak terjadi kesalahan, commit transaksi
+        mysqli_commit($connect);
+        $_SESSION['info'] = 'Dicancel';
+        header("Location:../spk-dalam-proses.php?sort=baru");
+    } catch (Exception $e) {
+        // Jika terjadi kesalahan, rollback transaksi
+        mysqli_rollback($connect);
+        $_SESSION['info'] = 'Silahkan Ulangi Kembali';
+        header("Location:../spk-dalam-proses.php?sort=baru");
     }
 }

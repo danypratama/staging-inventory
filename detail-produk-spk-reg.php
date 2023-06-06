@@ -36,6 +36,12 @@ include "akses.php";
 
     <main id="main" class="main">
         <section>
+            <!-- SWEET ALERT -->
+            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                                        echo $_SESSION['info'];
+                                                    }
+                                                    unset($_SESSION['info']); ?>"></div>
+            <!-- END SWEET ALERT -->
             <div class="container-fluid">
                 <div class="card shadow p-2">
                     <div class="card-header text-center">
@@ -183,6 +189,7 @@ include "akses.php";
                                     $query_thead = mysqli_query($connect, $sql_thead);
                                     $totalRows = mysqli_num_rows($query_thead);
                                     if ($totalRows != 0) {
+                                        // Button Hide and show
                                         echo '<button type="submit" class="btn btn-secondary" name="simpan-trx"><i class="bi bi-send"></i> Proses Pesanan</button>';
                                     }
                                     ?>
@@ -245,20 +252,21 @@ include "akses.php";
                                                 <td><input type="text" class="form-control text-end" name="harga[]" value="<?php echo number_format($data_trx['harga_produk']) ?>" readonly></td>
                                                 <td><input type="text" class="form-control text-end" name="qty[]" value="<?php echo number_format($data_trx['qty']) ?>" readonly></td>
                                                 <td class="text-center">
-                                                    <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?php echo $data_trx['id_tmp'] ?>" data-nama="<?php echo $data_trx['nama_produk'] ?>" data-merk="<?php echo $data_trx['nama_merk'] ?>" data-stock="<?php echo number_format($stock_edit) ?>" data-qty="<?php echo $data_trx['qty'] ?>"><i class="bi bi-pencil"></i></a>
-                                                    <a href="" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                    <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?php echo $data_trx['id_tmp'] ?>" data-spk="<?php echo $data_trx['id_spk'] ?>" data-nama="<?php echo $data_trx['nama_produk'] ?>" data-merk="<?php echo $data_trx['nama_merk'] ?>" data-stock="<?php echo $stock_edit ?>" data-qty="<?php echo $data_trx['qty'] ?>"><i class="bi bi-pencil"></i></a>
+                                                    <a href="proses/proses-produk-spk-reg.php?hapus_tmp=<?php echo base64_encode($data_trx['id_tmp']) ?>&&id_spk=<?php echo base64_encode($data_trx['id_spk']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                                 </td>
                                                 <!-- Modal Edit -->
                                                 <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data</h1>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body p-2">
-                                                                <form action="">
+                                                                <form action="proses/proses-produk-spk-reg.php" method="POST">
                                                                     <input type="hidden" id="idTmpValue" name="id_tmp" class="form-control">
+                                                                    <input type="hidden" id="spkTmpValue" name="id_spk" class="form-control">
                                                                     <div class="mb-3">
                                                                         <label class="text-start">Nama Produk</label>
                                                                         <input type="text" id="namaTmpValue" class="form-control bg-light" readonly>
@@ -273,11 +281,11 @@ include "akses.php";
                                                                     </div>
                                                                     <div class="mb-3">
                                                                         <label class="text-start">Qty Order</label>
-                                                                        <input type="text" id="qtyTmpValue" class="form-control">
+                                                                        <input type="text" id="qtyTmpValue" name="qty_edit" class="form-control">
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                                        <button type="submit" class="btn btn-primary" id="edit" name="edit" disabled>Simpan Perubahan</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -536,29 +544,6 @@ function generate_uuid()
     });
 </script>
 
-<!-- Clock js -->
-<script>
-    function inputDateTime() {
-        // Get current date and time
-        let currentDate = new Date();
-
-        // Format date and time as yyyy-mm-ddThh:mm:ss
-        let year = currentDate.getFullYear();
-        let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        let day = currentDate.getDate().toString().padStart(2, '0');
-        let hours = currentDate.getHours();
-        let minutes = currentDate.getMinutes().toString().padStart(2, '0');
-        let seconds = currentDate.getSeconds().toString().padStart(2, '0');
-        let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
-
-        // Set value of input field to current date and time
-        document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
-
-    }
-    // Call updateDateTime function every second
-    setInterval(inputDateTime, 1000);
-</script>
-
 <!-- Kode Untuk Qty   -->
 <script>
     function formatNumber(number) {
@@ -602,23 +587,62 @@ function generate_uuid()
 <!-- Edit Data -->
 <script>
     $(document).ready(function() {
-        $('#modalEdit').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Tombol yang membuka modal
-            var idTmp = button.data('id'); // Mengambil data-id dari atribut data
-            var namaTmp = button.data('nama'); // Mengambil data-nama dari atribut data
-            var merkTmp = button.data('merk'); // Mengambil data-merk dari atribut data
-            var qtyTmp = button.data('qty'); // Mengambil data-qty dari atribut data
-            var stockTmp = button.data('stock'); // Mengambil data-stock dari atribut data
+        var initialQty = null;
 
-            // Mengisi nilai idTmp ke dalam elemen dengan id "idTmpValue"
+        $('#modalEdit').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var idTmp = button.data('id');
+            var spkTmp = button.data('spk');
+            var namaTmp = button.data('nama');
+            var merkTmp = button.data('merk');
+            var qtyTmp = button.data('qty');
+            var stockTmp = button.data('stock');
+
+            initialQty = qtyTmp;
+
+            // Format angka qty dengan ribuan separator
+            var formattedQty = numberWithCommas(qtyTmp);
+
+            // Format angka stock dengan ribuan separator
+            var formattedStock = numberWithCommas(stockTmp);
+
             $('#idTmpValue').val(idTmp);
+            $('#spkTmpValue').val(spkTmp);
             $('#namaTmpValue').val(namaTmp);
             $('#merkTmpValue').val(merkTmp);
-            $('#stockTmpValue').val(stockTmp);
-
-            // Mengisi nilai qtyTmp ke dalam elemen dengan id "qtyTmpValue" dengan format angka
-            var formattedQty = numberWithCommas(qtyTmp);
+            $('#stockTmpValue').val(formattedStock);
             $('#qtyTmpValue').val(formattedQty);
+        });
+
+        // Fungsi untuk menambahkan separator ribuan pada angka
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Validasi saat nilai qty berubah
+        $('#qtyTmpValue').on('input', function() {
+            var qtyValue = parseFloat($(this).val().replace(/,/g, ''));
+            var stockValue = parseFloat($('#stockTmpValue').val().replace(/,/g, ''));
+
+            if (isNaN(qtyValue)) {
+                qtyValue = 0;
+            }
+
+            if (qtyValue > stockValue) {
+                qtyValue = stockValue;
+            }
+
+            // Format angka qty dengan ribuan separator
+            var formattedQty = numberWithCommas(qtyValue);
+
+            $(this).val(formattedQty);
+
+            // Cek apakah nilai qty berubah dari nilai awal
+            if (qtyValue !== initialQty) {
+                $('#edit').prop('disabled', false);
+            } else {
+                $('#edit').prop('disabled', true);
+            }
         });
     });
 </script>
