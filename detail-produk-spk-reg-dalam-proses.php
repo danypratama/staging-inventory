@@ -172,6 +172,10 @@ include "akses.php";
                                     <a href="spk-dalam-proses.php?sort=baru" class="btn btn-warning btn-detail">
                                         <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                     </a>
+                                    <?php
+                                    $id_spk = base64_decode($_GET['id']);
+                                    ?>
+                                    <input type="hidden" name="id_spk_reg" value="<?php echo $id_spk ?>">
                                     <button type="submit" class="btn btn-secondary" name="siap-kirim"><i class="bi bi-send"></i> Siap Kirim</button>
                                 </div>
                                 <table class="table table-striped table-bordered">

@@ -184,4 +184,13 @@ if (isset($_POST['simpan-tmp'])) {
         $_SESSION['info'] = 'Silahkan Ulangi Kembali';
         header("Location:../spk-dalam-proses.php?sort=baru");
     }
+    // ===========================================================================================================================
+    // Proses Siap Kirim
+} else if (isset($_POST['siap-kirim'])) {
+    $id_spk_reg = $_POST['id_spk_reg'];
+    $id_spk_encode = base64_encode($id_spk_reg);
+    $sql_spk = "UPDATE spk_reg SET status_spk = 'Siap Kirim' WHERE id_spk_reg = '$id_spk_reg'";
+    $query_spk = mysqli_query($connect, $sql_spk);
+
+    header("Location:../spk-dalam-proses.php?sort=baru");
 }

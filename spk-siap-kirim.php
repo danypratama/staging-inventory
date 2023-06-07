@@ -94,67 +94,76 @@ include "akses.php";
                         </ul>
                         <div class="card-body bg-body rounded mt-3">
                             <div class="card-body pt-3">
-                                <div class="row mb-3">
-                                    <div class="col-2">
-                                        <form action="" method="GET">
-                                            <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange='if(this.value != 0) { this.form.submit(); }'>
-                                                <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
-                                                                            echo "selected";
-                                                                        } ?>>Paling Baru</option>
-                                                <option value="lama" <?php if (isset($_GET['sort']) && $_GET['sort'] == "lama") {
-                                                                            echo "selected";
-                                                                        } ?>>Paling Lama</option>
-                                            </select>
-                                        </form>
-                                    </div>
-                                </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped" id="table2">
-                                        <thead>
-                                            <tr class="text-white" style="background-color: navy;">
-                                                <th class="text-center p-3" style="width: 30px">No</th>
-                                                <th class="text-center p-3" style="width: 150px">No. SPK</th>
-                                                <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
-                                                <th class="text-center p-3" style="width: 150px">No. PO</th>
-                                                <th class="text-center p-3" style="width: 200px">Nama Customer</th>
-                                                <th class="text-center p-3" style="width: 150px">Note</th>
-                                                <th class="text-center p-3" style="width: 150px">Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            include "koneksi.php";
-                                            $no = 1;
-                                            $filter = '';
-                                            if (isset($_GET['sort'])) {
-                                                if ($_GET['sort'] == "baru") {
-                                                    $filter = "ORDER BY tgl_spk DESC";
-                                                } elseif ($_GET['sort'] == "lama") {
-                                                    $filter = "ORDER BY tgl_spk ASC";
-                                                }
-                                            }
-                                            $sql = "SELECT sr.*, cs.nama_cs, cs.alamat
+                                    <form id="invoiceForm" name="proses" method="POST">
+                                        <div class="row mb-3">
+                                            <div class="row mb-3">
+                                                <div class="col-2">
+                                                    <form action="" method="GET">
+                                                        <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange='if(this.value != 0) { this.form.submit(); }'>
+                                                            <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
+                                                                                        echo "selected";
+                                                                                    } ?>>Paling Baru</option>
+                                                            <option value="lama" <?php if (isset($_GET['sort']) && $_GET['sort'] == "lama") {
+                                                                                        echo "selected";
+                                                                                    } ?>>Paling Lama</option>
+                                                        </select>
+                                                    </form>
+                                                </div>
+                                                <div class="col-6">
+                                                    <input id="nonPpnButton" type="button" name="inv-nonppn" class="btn btn-primary btn-md" value="Create Invoice Non PPN" onclick="submitForm('form-invoice-nonppn.php')">
+                                                    <input id="ppnButton" type="button" class="btn btn-secondary btn-md" value="Buat Invoice PPN" onclick="submitForm('form-invoice-ppn.php')">
+                                                </div>
+                                            </div>
+                                            <table class="table table-bordered table-striped" id="table2">
+                                                <thead>
+                                                    <tr class="text-white" style="background-color: navy;">
+                                                        <th class="text-center p-3" style="width: 20px">Pilih</th>
+                                                        <th class="text-center p-3" style="width: 30px">No</th>
+                                                        <th class="text-center p-3" style="width: 150px">No. SPK</th>
+                                                        <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
+                                                        <th class="text-center p-3" style="width: 150px">No. PO</th>
+                                                        <th class="text-center p-3" style="width: 200px">Nama Customer</th>
+                                                        <th class="text-center p-3" style="width: 150px">Note</th>
+                                                        <th class="text-center p-3" style="width: 150px">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    include "koneksi.php";
+                                                    $no = 1;
+                                                    $filter = '';
+                                                    if (isset($_GET['sort'])) {
+                                                        if ($_GET['sort'] == "baru") {
+                                                            $filter = "ORDER BY tgl_spk DESC";
+                                                        } elseif ($_GET['sort'] == "lama") {
+                                                            $filter = "ORDER BY tgl_spk ASC";
+                                                        }
+                                                    }
+                                                    $sql = "SELECT sr.*, cs.nama_cs, cs.alamat
                                                             FROM spk_reg AS sr
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                             WHERE status_spk = 'Siap Kirim'  $filter";
-                                            $query = mysqli_query($connect, $sql);
-                                            while ($data = mysqli_fetch_array($query)) {
-                                            ?>
-                                                <tr>
-                                                    <td class="text-center"><?php echo $no; ?></td>
-                                                    <td><?php echo $data['no_spk'] ?></td>
-                                                    <td><?php echo $data['tgl_spk'] ?></td>
-                                                    <td><?php echo $data['no_po'] ?></td>
-                                                    <td><?php echo $data['nama_cs'] ?></td>
-                                                    <td><?php echo $data['note'] ?></td>
-                                                    <td class="text-center">
-                                                        <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
-                                                    </td>
-                                                </tr>
-                                                <?php $no++ ?>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
+                                                    $query = mysqli_query($connect, $sql);
+                                                    while ($data = mysqli_fetch_array($query)) {
+                                                    ?>
+                                                        <tr>
+                                                            <td class="text-center"><input type="checkbox" name="spk_id[]" id="spk" value="<?php echo $data['id_spk_reg'] ?>" data-customer="<?php echo $data['nama_cs'] ?>"></td>
+                                                            <td class="text-center"><?php echo $no; ?></td>
+                                                            <td><?php echo $data['no_spk'] ?></td>
+                                                            <td><?php echo $data['tgl_spk'] ?></td>
+                                                            <td><?php echo $data['no_po'] ?></td>
+                                                            <td><?php echo $data['nama_cs'] ?></td>
+                                                            <td><?php echo $data['note'] ?></td>
+                                                            <td class="text-center">
+                                                                <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
+                                                            </td>
+                                                        </tr>
+                                                        <?php $no++ ?>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -189,4 +198,138 @@ include "akses.php";
             $(this).data("isopen", !open);
         });
     });
+</script>
+
+<script>
+    const form = document.getElementById("invoiceForm");
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="spk"]');
+    const nonPpnButton = document.getElementById("nonPpnButton");
+    const ppnButton = document.getElementById("ppnButton");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        // Tidak perlu mengubah bagian ini
+
+        // Jika SPK yang dipilih sesuai dengan pelanggan yang dipilih, lanjutkan proses invoice
+        if (selectedSpk) {
+            console.log("Data Pelanggan:");
+            console.log("Nama Customer:", selectedCustomer);
+            console.log("SPK yang Dipilih:");
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked && checkbox.getAttribute("data-customer") === selectedCustomer) {
+                    console.log("ID SPK:", checkbox.value);
+                }
+            });
+            // Lakukan tindakan selanjutnya, seperti mengirim data ke server atau melakukan tindakan lainnya
+        }
+    });
+
+    function updateButtonState() {
+        let selectedCustomer = null;
+        let checkedCustomers = new Set(); // Menyimpan nama pelanggan yang dipilih
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                checkedCustomers.add(checkbox.getAttribute("data-customer")); // Tambahkan nama pelanggan yang dipilih ke dalam Set
+            }
+        });
+
+        if (checkedCustomers.size <= 5) { // Cek apakah jumlah data yang dicentang tidak melebihi 5
+            if (checkedCustomers.size === 1) {
+                selectedCustomer = checkedCustomers.values().next().value; // Ambil nama pelanggan dari Set
+
+                nonPpnButton.disabled = false;
+                ppnButton.disabled = false;
+            } else {
+                nonPpnButton.disabled = true;
+                ppnButton.disabled = true;
+            }
+        } else {
+            // Jika jumlah data yang dicentang melebihi 5, nonaktifkan tombol dan tampilkan peringatan
+            nonPpnButton.disabled = true;
+            ppnButton.disabled = true;
+
+            Swal.fire({
+                title: '<strong>HTML <u>example</u></strong>',
+                icon: 'info',
+                html: 'You can use <b>bold text</b>, ' +
+                    '<a href="//sweetalert2.github.io">links</a> ' +
+                    'and other HTML tags',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+                confirmButtonAriaLabel: 'Thumbs up, great!',
+                cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
+                cancelButtonAriaLabel: 'Thumbs down'
+            })
+        }
+    }
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener("change", function(event) {
+            updateButtonState();
+
+            // Membatasi pemilihan data hingga maksimal 5
+            let checkedCount = 0;
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    checkedCount++;
+                    if (checkedCount > 5) {
+                        checkbox.checked = false;
+                        Swal.fire({
+                            title: '<strong>Batas Maksimum Pemilihan</strong>',
+                            icon: 'info',
+                            html: 'Anda hanya dapat memilih maksimal 5 data.',
+                            confirmButtonText: 'OK'
+                        })
+                    }
+                }
+            });
+
+            updateButtonState();
+        });
+    });
+
+
+
+
+    function checkInitialCheckbox() {
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.getAttribute("data-customer") === "agung") {
+                checkbox.checked = true;
+            }
+        });
+        updateButtonState();
+    }
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener("change", updateButtonState);
+    });
+
+    checkInitialCheckbox();
+</script>
+
+<script>
+    // function nonppn() {
+    //     document.getElementById("invoiceForm").action = 'form-invoice-nonppn.php';
+    //     document.getElementById("invoiceForm").submit();
+    // }
+
+    // function ppn() {
+    //     document.getElementById("invoiceForm").action = 'form-invoice-ppn.php';
+    //     document.getElementById("invoiceForm").submit();
+    // }
+</script>
+
+<script>
+    // function nonppn() {
+    //     document.getElementById("invoiceForm").submit();
+    // }
+</script>
+<script>
+    function submitForm(action) {
+        document.getElementById("invoiceForm").action = action;
+        document.getElementById("invoiceForm").submit();
+    }
 </script>

@@ -43,7 +43,7 @@ include "akses.php";
 
             include "koneksi.php";
             $thn  = date('Y');
-            $sql  = mysqli_query($connect, "SELECT max(no_spk) as maxID, STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl FROM spk_reg WHERE YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$thn'");
+            $sql  = mysqli_query($connect, "SELECT max(no_spk) as maxID, STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl FROM spk_reg WHERE MONTH(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$month'");
             $data = mysqli_fetch_array($sql);
 
             $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
@@ -139,7 +139,7 @@ include "akses.php";
     </section>
   </main><!-- End #main -->
 
-  <!-- Large Modal -->
+  <!-- Modal -->
   <div class="modal fade" id="modalCs" tabindex="-1">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">

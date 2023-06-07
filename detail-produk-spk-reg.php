@@ -16,6 +16,14 @@ include "akses.php";
     <?php include "page/head.php"; ?>
 
     <style type="text/css">
+        /* Menghilangkan garis pada input */
+        input {
+            border: none;
+            outline: none;
+            background: none;
+            width: 100%;
+        }
+
         @media only screen and (max-width: 500px) {
             body {
                 font-size: 10px;
@@ -36,12 +44,6 @@ include "akses.php";
 
     <main id="main" class="main">
         <section>
-            <!-- SWEET ALERT -->
-            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
-                                                        echo $_SESSION['info'];
-                                                    }
-                                                    unset($_SESSION['info']); ?>"></div>
-            <!-- END SWEET ALERT -->
             <div class="container-fluid">
                 <div class="card shadow p-2">
                     <div class="card-header text-center">
@@ -246,11 +248,11 @@ include "akses.php";
                                                 <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
                                                 <input type="hidden" class="form-control" name="id_spk_reg[]" value="<?php echo $data_trx['id_spk'] ?>" readonly>
                                                 <input type="hidden" class="form-control" name="id_produk[]" value="<?php echo $data_trx['id_produk'] ?>" readonly>
-                                                <td><input type="text" class="form-control text-center" value="<?php echo $no; ?>" readonly></td>
-                                                <td><input type="text" class="form-control" name="nama_produk[]" value="<?php echo $data_trx['nama_produk'] ?>" readonly></td>
-                                                <td><input type="text" class="form-control text-center" value="<?php echo $data_trx['nama_merk'] ?>" readonly></td>
-                                                <td><input type="text" class="form-control text-end" name="harga[]" value="<?php echo number_format($data_trx['harga_produk']) ?>" readonly></td>
-                                                <td><input type="text" class="form-control text-end" name="qty[]" value="<?php echo number_format($data_trx['qty']) ?>" readonly></td>
+                                                <td><input type="text" class="text-center" value="<?php echo $no; ?>" readonly></td>
+                                                <td><input type="text" class="" name="nama_produk[]" value="<?php echo $data_trx['nama_produk'] ?>" readonly></td>
+                                                <td><input type="text" class="text-center" value="<?php echo $data_trx['nama_merk'] ?>" readonly></td>
+                                                <td><input type="text" class="text-end" name="harga[]" value="<?php echo number_format($data_trx['harga_produk']) ?>" readonly></td>
+                                                <td><input type="text" class="text-end" name="qty[]" value="<?php echo number_format($data_trx['qty']) ?>" readonly></td>
                                                 <td class="text-center">
                                                     <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?php echo $data_trx['id_tmp'] ?>" data-spk="<?php echo $data_trx['id_spk'] ?>" data-nama="<?php echo $data_trx['nama_produk'] ?>" data-merk="<?php echo $data_trx['nama_merk'] ?>" data-stock="<?php echo $stock_edit ?>" data-qty="<?php echo $data_trx['qty'] ?>"><i class="bi bi-pencil"></i></a>
                                                     <a href="proses/proses-produk-spk-reg.php?hapus_tmp=<?php echo base64_encode($data_trx['id_tmp']) ?>&&id_spk=<?php echo base64_encode($data_trx['id_spk']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
@@ -563,13 +565,6 @@ function generate_uuid()
 
         if (parseInt(qty) > stock) {
             qtyInput.value = formatNumber(stock);
-        }
-
-        var simpanButton = document.getElementById('simpan');
-        if (parseInt(qty) > 0) {
-            simpanButton.disabled = false;
-        } else {
-            simpanButton.disabled = true;
         }
     }
 </script>
