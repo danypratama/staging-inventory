@@ -77,7 +77,7 @@ include "akses.php";
                                 <a class="nav-link" href="spk-siap-kirim.php?sort=baru">Siap Kirim</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link" id="dicetak-tab" data-bs-toggle="tab" data-bs-target="#dicetak-tab-pane" type="button" role="tab" aria-controls="dicetak-tab-pane" aria-selected="false">Invoice Sudah Dicetak</button>
+                                <a class="nav-link" href="invoice-reguler.php?sort=baru">Invoice Sudah Dicetak</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
                                 <button class="nav-link" id="dikirim-tab" data-bs-toggle="tab" data-bs-target="#dikirim-tab-pane" type="button" role="tab" aria-controls="dikirim-tab-pane" aria-selected="false">Dikirim</button>

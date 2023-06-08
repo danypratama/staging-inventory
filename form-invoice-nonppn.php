@@ -42,7 +42,7 @@ include "akses.php";
               // Lakukan sesuatu dengan data yang dipilih
               // Misalnya, tampilkan daftar ID SPK yang dipilih
               foreach ($selectedSpkIds as $spkId) {
-                echo '<input type="text" name="id_spk[]" value="' . $spkId . '">';
+                echo '<input type="hidden" name="id_spk[]" value="' . $spkId . '">';
                 $sql = mysqli_query($connect, " SELECT sr.id_customer, cs.nama_cs, cs.alamat
                                                 FROM spk_reg AS sr
                                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
@@ -76,7 +76,7 @@ include "akses.php";
             $no_inv = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
             ?>
             <div class="row g-3 p-3">
-              <input type="text" name="id_inv_nonppn" value="NONPPN-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+              <input type="hidden" name="id_inv_nonppn" value="NONPPN-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
               <div class="col-sm-2">
                 <label><strong>No Invoice Nonppn</strong></label>
                 <input type="text" class="form-control" name="no_inv_nonppn" value="<?php echo $no_inv ?>" required>

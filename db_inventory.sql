@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2023 at 10:45 AM
+-- Generation Time: Jun 08, 2023 at 10:43 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -43,7 +43,8 @@ CREATE TABLE `act_br_import` (
 --
 
 INSERT INTO `act_br_import` (`id_act_br_import`, `id_isi_inv_br_import`, `id_produk_reg`, `qty_act`, `id_user`, `created_date`, `updated_date`, `user_updated`) VALUES
-('ACT-IMPORT-05982adb84df0523', 'BR-IMPORT-233ef57b19bf6405', 'BR-REGe2e00ce0199b', '400', 'USER03595a8447ab', '16/05/2023, 15:16', '', '');
+('ACT-IMPORT-05d9f054868c8423', 'BR-IMPORT-23c54205625a1305', 'BR-REGffb0b62a09cf', '5400', 'USER03595a8447ab', '23/05/2023, 16:40', '', ''),
+('ACT-IMPORT-05ef16c9d87efd23', 'BR-IMPORT-23c54205625a1305', 'BR-REGffb0b62a09cf', '1000000', 'USER03595a8447ab', '23/05/2023, 16:40', '', '');
 
 --
 -- Triggers `act_br_import`
@@ -88,15 +89,6 @@ CREATE TABLE `ganti_merk_reg_in` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `ganti_merk_reg_in`
---
-
-INSERT INTO `ganti_merk_reg_in` (`id_ganti_merk_in`, `id_user`, `id_produk_reg`, `qty`, `created_date`) VALUES
-('MERK-UPDATE-923ea058228a', 'USER03595a8447ab', 'BR-REG072519133768', 1000, '10/04/2023, 16:24'),
-('MERK-UPDATE-c9aeb4d37776', 'USER47100114a730', 'BR-REG072519133768', 1000, '06/04/2023, 14:14'),
-('MERK-UPDATE-d175f652b0c6', 'USER03595a8447ab', 'BR-REG072519133768', 1000, '06/04/2023, 11:19');
-
---
 -- Triggers `ganti_merk_reg_in`
 --
 DELIMITER $$
@@ -129,15 +121,6 @@ CREATE TABLE `ganti_merk_reg_out` (
   `qty` int(11) NOT NULL,
   `created_date` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `ganti_merk_reg_out`
---
-
-INSERT INTO `ganti_merk_reg_out` (`id_ganti_merk_out`, `id_user`, `id_produk_reg`, `qty`, `created_date`) VALUES
-('MERK-UPDATE-923ea058228a', 'USER03595a8447ab', 'BR-REG6d4d12f6c304', 1000, '10/04/2023, 16:24'),
-('MERK-UPDATE-c9aeb4d37776', 'USER47100114a730', 'BR-REGe2e00ce0199b', 1000, '06/04/2023, 14:14'),
-('MERK-UPDATE-d175f652b0c6', 'USER03595a8447ab', 'BR-REG6d4d12f6c304', 1000, '06/04/2023, 11:19');
 
 --
 -- Triggers `ganti_merk_reg_out`
@@ -188,9 +171,8 @@ CREATE TABLE `inv_br_import` (
 --
 
 INSERT INTO `inv_br_import` (`id_inv_br_import`, `id_user`, `id_supplier`, `no_inv`, `tgl_inv`, `no_order`, `tgl_order`, `shipping_by`, `no_awb`, `tgl_kirim`, `tgl_est`, `status_pengiriman`, `tgl_terima`, `keterangan`, `created_date`) VALUES
-('INV-IMPORT9e26e0d28b4c', 'USER03595a8447ab', 'SP0d8111e5dcf6', '00123', '09/04/2023', '00123', '13/04/2023', 'Udara', 'ABC1234', '12/04/2023', '22/04/2023', 'Sudah Diterima', '10/05/2023', 'Barang Diterima Lebih Awal 3 hari', '13/04/2023, 14:02'),
-('INV-IMPORTba1cf705e8d9', 'USER03595a8447ab', 'SP1407504e42bd', '002', '13/04/2023', '001', '13/04/2023', 'Laut', 'ABCD', '13/04/2023', '13/05/2023', 'Masih Dalam Perjalanan', '', 'Mohon tunggu / silahkan hubungi supplier kembali', '13/04/2023, 15:45'),
-('INV-IMPORTdeefb1d075ca', 'USER03595a8447ab', 'SP1407504e42bd', '0001', '13/04/2023', '001', '13/04/2023', 'Udara', 'ABCD', '13/04/2023', '23/04/2023', 'Kendala Di Pelabuhan', '', 'Dokumen belum lengkap', '13/04/2023, 15:45');
+('INV-IMPORT1ebd36eefe40', 'USER03595a8447ab', 'SP1407504e42bd', '087', '23/05/2023', '1111', '23/05/2023', 'Udara', '10000', '23/05/2023', '08/05/2023', 'Sudah Diterima', '25/05/2023', 'Barang Diterima Telat 17 hari', '23/05/2023, 11:53'),
+('INV-IMPORT414edd954c45', 'USER47100114a730', 'SP0d8111e5dcf6', '1321313', '23/05/2023', '12121', '23/05/2023', 'Udara', '31313131313131', '23/05/2023', '02/06/2023', 'Belum Dikirim', '', 'Mohon tunggu / silahkan hubungi supplier kembali', '23/05/2023, 10:52');
 
 -- --------------------------------------------------------
 
@@ -212,9 +194,99 @@ CREATE TABLE `inv_br_in_lokal` (
 --
 
 INSERT INTO `inv_br_in_lokal` (`id_inv_br_in_lokal`, `id_user`, `id_sp`, `no_inv`, `tgl_inv`, `created_date`) VALUES
-('INV-LOKAL707ec58d72f0', 'USER03595a8447ab', 'SP75d3d772951e', 'INV001', '18/05/2023', '05/05/2023, 16:26'),
-('INV-LOKAL75c76b0339a6', 'USER03595a8447ab', 'SP0d8111e5dcf6', '001', '05/05/2023', '05/05/2023, 15:18'),
-('INV-LOKAL879316f386d1', 'USER03595a8447ab', 'SP1407504e42bd', '005', '12/05/2023', '05/05/2023, 16:16');
+('INV-LOKAL29304ecbc0fa', 'USER03595a8447ab', 'SP75d3d772951e', '087', '24/05/2023', '23/05/2023, 11:54'),
+('INV-LOKAL6849e61df660', 'USER47100114a730', 'SP5d25a18a4094', '1321313', '23/05/2023', '23/05/2023, 11:06'),
+('INV-LOKAL858a05c1222d', 'USER34e2f73c9751', 'SP0d8111e5dcf6', '1548726', '26/05/2023', '26/05/2023, 8:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inv_nonppn`
+--
+
+CREATE TABLE `inv_nonppn` (
+  `id_inv_nonppn` varchar(50) NOT NULL,
+  `no_inv` varchar(50) NOT NULL,
+  `tgl_inv` varchar(30) NOT NULL,
+  `cs_inv` text NOT NULL,
+  `tgl_tempo` varchar(30) NOT NULL,
+  `sp_disc` decimal(3,1) NOT NULL,
+  `note_inv` text NOT NULL,
+  `kategori_inv` varchar(20) NOT NULL,
+  `ongkir` int(11) NOT NULL,
+  `total_harga` int(11) NOT NULL,
+  `status_transaksi` varchar(30) NOT NULL,
+  `dikirim_oleh` varchar(30) NOT NULL,
+  `user_created` varchar(30) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `user_updated` varchar(20) NOT NULL,
+  `updated_date` varchar(20) NOT NULL,
+  `status_simpan` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `inv_nonppn`
+--
+
+INSERT INTO `inv_nonppn` (`id_inv_nonppn`, `no_inv`, `tgl_inv`, `cs_inv`, `tgl_tempo`, `sp_disc`, `note_inv`, `kategori_inv`, `ongkir`, `total_harga`, `status_transaksi`, `dikirim_oleh`, `user_created`, `created_date`, `user_updated`, `updated_date`, `status_simpan`) VALUES
+('NONPPN-2306620aa528e65e08', '017/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:26:16', '', '', 0),
+('NONPPN-23069682d31f534208', '020/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:31:34', '', '', 0),
+('NONPPN-23069e9565e4f2b908', '016/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', '', '2023-06-08 12:21:01', '', '', 0),
+('NONPPN-2306a27320d92a9c08', '015/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', '', '2023-06-08 11:52:50', '', '', 0),
+('NONPPN-2306ab522967e52c08', '019/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:30:42', '', '', 0),
+('NONPPN-2306e33ff6d4d0b008', '018/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:27:54', '', '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `isi_br_out_reg`
+--
+
+CREATE TABLE `isi_br_out_reg` (
+  `id_isi_br_out_reg` varchar(50) NOT NULL,
+  `id_user` varchar(50) NOT NULL,
+  `id_produk_reg` varchar(50) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `id_ket_out` varchar(50) NOT NULL,
+  `created_date` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `isi_br_out_reg`
+--
+
+INSERT INTO `isi_br_out_reg` (`id_isi_br_out_reg`, `id_user`, `id_produk_reg`, `qty`, `id_ket_out`, `created_date`) VALUES
+('BR-OUT-2327b6cf35acba05', 'USER47100114a730', 'BR-REGffb0b62a09cf', 500, 'KET-OUT-3be1123e6e26', '23/05/2023, 14:57'),
+('BR-OUT-235fa612a9f32405', 'USER03595a8447ab', 'BR-REGe2e00ce0199b', 100, 'KET-OUT-5994e66e943d', '23/05/2023, 14:40'),
+('BR-OUT-2383b0ba6f6d3e05', 'USER03595a8447ab', 'BR-REGffb0b62a09cf', 300, 'KET-OUT-3be1123e6e26', '23/05/2023, 14:53');
+
+--
+-- Triggers `isi_br_out_reg`
+--
+DELIMITER $$
+CREATE TRIGGER `add_br_out_reg` AFTER INSERT ON `isi_br_out_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock - NEW.qty 
+WHERE id_produk_reg = NEW.id_produk_reg;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `del_br_out_reg` AFTER DELETE ON `isi_br_out_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty 
+WHERE id_produk_reg = OLD.id_produk_reg;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `edit_br_out_reg` AFTER UPDATE ON `isi_br_out_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty - NEW.qty
+WHERE id_produk_reg = NEW.id_produk_reg;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -227,6 +299,7 @@ CREATE TABLE `isi_br_tambahan` (
   `id_user` varchar(50) NOT NULL,
   `id_produk_reg` varchar(50) NOT NULL,
   `qty` int(11) NOT NULL,
+  `id_ket_in` varchar(50) NOT NULL,
   `created_date` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -234,9 +307,8 @@ CREATE TABLE `isi_br_tambahan` (
 -- Dumping data for table `isi_br_tambahan`
 --
 
-INSERT INTO `isi_br_tambahan` (`id_isi_br_tambahan`, `id_user`, `id_produk_reg`, `qty`, `created_date`) VALUES
-('BR-TAMBAHAN-231c230ce0591805', 'USER03595a8447ab', 'BR-REG2fa92bf1f42b', 3, '16/05/2023, 14:29'),
-('BR-TAMBAHAN-23e92b1b7d2d3d05', 'USER03595a8447ab', 'BR-REG2fa92bf1f42b', 1000, '16/05/2023, 15:05');
+INSERT INTO `isi_br_tambahan` (`id_isi_br_tambahan`, `id_user`, `id_produk_reg`, `qty`, `id_ket_in`, `created_date`) VALUES
+('BR-TAMBAHAN-23e9119de3836505', 'USER03595a8447ab', 'BR-REGffb0b62a09cf', 1000, 'Pilih...', '23/05/2023, 11:55');
 
 --
 -- Triggers `isi_br_tambahan`
@@ -288,7 +360,7 @@ CREATE TABLE `isi_inv_br_import` (
 --
 
 INSERT INTO `isi_inv_br_import` (`id_isi_inv_br_import`, `id_inv_br_import`, `id_produk_reg`, `qty`, `id_user`, `created_date`, `updated_date`, `user_updated`) VALUES
-('BR-IMPORT-233ef57b19bf6405', 'INV-IMPORT9e26e0d28b4c', 'BR-REGe2e00ce0199b', 500, 'USER47100114a730', '11/05/2023, 9:29', '', '');
+('BR-IMPORT-23c54205625a1305', 'INV-IMPORT414edd954c45', 'BR-REG6d4d12f6c304', 1000, 'USER03595a8447ab', '23/05/2023, 16:39', '', '');
 
 -- --------------------------------------------------------
 
@@ -304,6 +376,13 @@ CREATE TABLE `isi_inv_br_in_lokal` (
   `qty` int(11) NOT NULL,
   `created_date` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `isi_inv_br_in_lokal`
+--
+
+INSERT INTO `isi_inv_br_in_lokal` (`id_isi_inv_br_in_lokal`, `id_inv_br_in_lokal`, `id_user`, `id_produk_reg`, `qty`, `created_date`) VALUES
+('BR-LOKAL-2374f539a708ab05', 'INV-LOKAL29304ecbc0fa', 'USER03595a8447ab', 'BR-REGffb0b62a09cf', 1000, '23/05/2023, 11:55');
 
 --
 -- Triggers `isi_inv_br_in_lokal`
@@ -351,7 +430,8 @@ CREATE TABLE `isi_produk_set_marwa` (
 --
 
 INSERT INTO `isi_produk_set_marwa` (`id_isi_set_marwa`, `id_set_marwa`, `id_produk`, `qty`) VALUES
-('BR-SET-MRW-e588fbca94b0', 'SETMRWfa80e75c366d', 'BR-REG2fa92bf1f42b', 3);
+('BR-SET-MRW-3b692d8521ec', 'SETMRW608112486bb9', 'BR-REGffb0b62a09cf', 1000),
+('BR-SET-MRW-a68c1d2ebad8', 'SETMRW608112486bb9', 'BR-REG6d4d12f6c304', 1100);
 
 -- --------------------------------------------------------
 
@@ -379,6 +459,50 @@ CREATE TABLE `keterangan_out` (
   `created_date` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `keterangan_out`
+--
+
+INSERT INTO `keterangan_out` (`id_ket_out`, `id_user`, `ket_out`, `created_date`) VALUES
+('KET-OUT-3be1123e6e26', 'USER03595a8447ab', 'Riject', '23/05/2023, 10:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `spk_reg`
+--
+
+CREATE TABLE `spk_reg` (
+  `id_spk_reg` varchar(50) NOT NULL,
+  `id_user` varchar(50) NOT NULL,
+  `id_customer` varchar(50) NOT NULL,
+  `id_inv` varchar(50) NOT NULL,
+  `id_sales` varchar(50) NOT NULL,
+  `id_orderby` varchar(50) NOT NULL,
+  `status_spk` varchar(25) NOT NULL,
+  `no_spk` varchar(25) NOT NULL,
+  `no_po` varchar(25) NOT NULL,
+  `tgl_spk` varchar(20) NOT NULL,
+  `tgl_pesanan` varchar(20) NOT NULL,
+  `note` varchar(100) NOT NULL,
+  `menu_cancel` varchar(20) NOT NULL,
+  `created_date` varchar(25) NOT NULL,
+  `user_updated` varchar(25) NOT NULL,
+  `updated_date` varchar(25) NOT NULL,
+  `user_cancel` varchar(50) NOT NULL,
+  `date_cancel` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `spk_reg`
+--
+
+INSERT INTO `spk_reg` (`id_spk_reg`, `id_user`, `id_customer`, `id_inv`, `id_sales`, `id_orderby`, `status_spk`, `no_spk`, `no_po`, `tgl_spk`, `tgl_pesanan`, `note`, `menu_cancel`, `created_date`, `user_updated`, `updated_date`, `user_cancel`, `date_cancel`) VALUES
+('SPKREG-23062d62bd096b9406', 'USER03595a8447ab', 'CS015858a52568', '', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Cancel Order', '001/SPK/VI/2023', '001', '06/06/2023, 19:49', '06/06/2023', 'Harga Tidak Cocok', 'Dalam Proses', '06/06/2023, 19:49', '', '', 'dany_pratama', '06/06/2023, 19:53:29'),
+('SPKREG-230660a24114639608', 'USER03595a8447ab', 'CS015858a52568', 'NONPPN-23069682d31f534208', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '003/SPK/VI/2023', '172/PO-dsa/VI/2023', '08/06/2023, 9:11', '08/06/2023', '', '', '08/06/2023, 9:11', '', '', '', ''),
+('SPKREG-2306d338fb231a7307', 'USER03595a8447ab', 'CS01111c859db5', 'NONPPN-23069682d31f534208', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '002/SPK/VI/2023', 'PO IUD IMPLANT BATUBARA', '07/06/2023, 8:42', '07/06/2023', '', '', '07/06/2023, 8:42', '', '', '', ''),
+('SPKREG-2306f6b9f4deb64308', 'USER03595a8447ab', 'CS018b7ca30d99', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '004/SPK/VI/2023', '001', '08/06/2023, 14:34', '08/06/2023', '', '', '08/06/2023, 14:34', '', '', '', '');
+
 -- --------------------------------------------------------
 
 --
@@ -398,7 +522,9 @@ CREATE TABLE `stock_produk_reguler` (
 --
 
 INSERT INTO `stock_produk_reguler` (`id_stock_prod_reg`, `id_user`, `id_produk_reg`, `stock`, `created_date`) VALUES
-('STOCKREG2ed0274aeb60', 'USER03595a8447ab', 'BR-REGe2e00ce0199b', 400, '16/05/2023, 15:14');
+('STOCKREG194c62c4f0f1', 'USER34e2f73c9751', 'BR-REGb74bb17fa836', 700, '24/05/2023, 17:09'),
+('STOCKREG40bcdec3c8d0', 'USER03595a8447ab', 'BR-REG6d4d12f6c304', 900, '23/05/2023, 17:06'),
+('STOCKREGb175abd5c42f', 'USER03595a8447ab', 'BR-REGffb0b62a09cf', 998893, '23/05/2023, 11:51');
 
 -- --------------------------------------------------------
 
@@ -660,8 +786,7 @@ CREATE TABLE `tb_kat_penjualan` (
 --
 
 INSERT INTO `tb_kat_penjualan` (`id_kat_penjualan`, `id_user`, `nama_kategori`, `min_stock`, `max_stock`, `created_date`, `updated_date`, `user_updated`) VALUES
-('KATPENJ3a92d8708967', 'USER03595a8447ab', 'Super Fast Market', 5000, 20000, '13/03/2023, 11:31', '10/04/2023, 16:24', 'USER03595a8447ab'),
-('KATPENJcb479a0b2166', 'USER47100114a730', 'Fast Market ', 1000, 10000, '06/04/2023, 13:56', '10/04/2023, 16:25', 'USER03595a8447ab');
+('KATPENJ64328641f032', 'USER47100114a730', 'Fast Market ', 1000, 50000, '23/05/2023, 10:25', '', '');
 
 -- --------------------------------------------------------
 
@@ -685,8 +810,11 @@ CREATE TABLE `tb_kat_produk` (
 --
 
 INSERT INTO `tb_kat_produk` (`id_kat_produk`, `id_user`, `nama_kategori`, `id_merk`, `no_izin_edar`, `created_date`, `updated_date`, `user_updated`) VALUES
-('KATPRODafef61dd4c39', 'USER03595a8447ab', 'Operating Scissors', 'MERK2ce36179b1d3', '123456', '15/03/2023, 16:28', '', ''),
-('KATPRODf77d30badbc6', 'USER03595a8447ab', 'Forceps', 'MERK2ce36179b1d3', '1234', '15/03/2023, 16:28', '', '');
+('KATPROD2ec542dacb2a', 'USER47100114a730', 'Surgical Instrument', 'MERK2ce36179b1d3', '2121231313131313', '23/05/2023, 10:18', '', ''),
+('KATPROD4e8e83106dc2', 'USER34e2f73c9751', 'iud', 'MERK36d48fe7aff0', 'AKL12548621', '26/05/2023, 15:46', '', ''),
+('KATPROD536974b61951', 'USER03595a8447ab', 'Operating Scissors - Saffa', '', '1111111', '23/05/2023, 11:44', '', ''),
+('KATPRODada57ad8f3e1', 'USER47100114a730', 'Operating Scissors - Saffa', 'Marwa', '212123131313188', '23/05/2023, 10:18', '23/05/2023, 11:42', 'USER03595a8447ab'),
+('KATPRODef22e44d1e27', 'USER47100114a730', 'SS', 'MERK2ce36179b1d3', '2121231313131313', '23/05/2023, 10:15', '', '');
 
 -- --------------------------------------------------------
 
@@ -712,6 +840,7 @@ CREATE TABLE `tb_lokasi_produk` (
 
 INSERT INTO `tb_lokasi_produk` (`id_lokasi`, `id_user`, `nama_lokasi`, `no_lantai`, `nama_area`, `no_rak`, `created_date`, `updated_date`, `user_updated`) VALUES
 ('LOK172cba11ee8d', 'USER03595a8447ab', 'P1-15', '1', 'Surgical', '12', '', '', ''),
+('LOK2f313907fa89', 'USER34e2f73c9751', 'kma ', '3', 'IUD', '45', '26/05/2023, 15:48', '', ''),
 ('LOK5a52042305bc', 'USER03595a8447ab', 'kma ', '2', 'Forceps', '1-1', '15/03/2023, 17:04', '', '');
 
 -- --------------------------------------------------------
@@ -734,6 +863,27 @@ CREATE TABLE `tb_merk` (
 INSERT INTO `tb_merk` (`id_merk`, `id_user`, `nama_merk`, `created_date`) VALUES
 ('MERK2ce36179b1d3', 'USER03595a8447ab', 'Saffa', '11/03/2023, 17:57'),
 ('MERK36d48fe7aff0', 'USER03595a8447ab', 'Marwa', '13/03/2023, 11:32');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_orderby`
+--
+
+CREATE TABLE `tb_orderby` (
+  `id_orderby` varchar(50) NOT NULL,
+  `id_user` varchar(50) NOT NULL,
+  `order_by` varchar(20) NOT NULL,
+  `created_date` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_orderby`
+--
+
+INSERT INTO `tb_orderby` (`id_orderby`, `id_user`, `order_by`, `created_date`) VALUES
+('ORDERa55599e088ce', 'USER47100114a730', 'Email', '24/05/2023, 16:52'),
+('ORDERe51d8b7e2db9', 'USER03595a8447ab', 'Whatsapp', '24/05/2023, 16:30');
 
 -- --------------------------------------------------------
 
@@ -786,10 +936,11 @@ CREATE TABLE `tb_produk_reguler` (
 INSERT INTO `tb_produk_reguler` (`id_produk_reg`, `id_user`, `id_merk`, `id_kat_produk`, `id_kat_penjualan`, `id_grade`, `id_lokasi`, `kode_produk`, `nama_produk`, `harga_produk`, `gambar`, `created_date`, `updated_date`, `user_updated`, `register_value`) VALUES
 ('BR-REG072519133768', 'USER03595a8447ab', 'MERK36d48fe7aff0', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-DF18', 'Thumb Dressing Forceps 18 cm', 15000, 'IMG641e801508f53.jpg', '16/03/2023, 19:58', '06/04/2023, 9:21', '', 0),
 ('BR-REG2fa92bf1f42b', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODafef61dd4c39', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-MAYO17', 'Mayo Scissors 17 CM', 15000, 'IMG641ea85d5bd0a.jpg', '25/03/2023, 14:53', '', '', 0),
-('BR-REG6d4d12f6c304', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'S-DF18', 'Thumb Dressing Forceps 18 cm', 20000, 'IMG642e2cd2f0809.jpg', '06/04/2023, 9:22', '', '', 0),
+('BR-REG6d4d12f6c304', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'S-DF18', 'Thumb Dressing Forceps 18 cm', 20000, 'IMG642e2cd2f0809.jpg', '06/04/2023, 9:22', '', '', 1),
+('BR-REGb74bb17fa836', 'USER34e2f73c9751', 'MERK2ce36179b1d3', 'KATPRODef22e44d1e27', 'KATPENJ64328641f032', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', '95846', 'dressing drum ', 450000, 'IMG646de1a77cbb0.jpg', '24/05/2023, 17:06', '', '', 1),
 ('BR-REGd5137f56b7b4', 'USER03595a8447ab', 'MERK36d48fe7aff0', 'KATPRODafef61dd4c39', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', 'M-COTTONPLIER', 'Meriam Cotton Plier', 15000, 'IMG641e7adc19849.jpg', '25/03/2023, 11:35', '25/03/2023, 12:00', '', 0),
-('BR-REGe2e00ce0199b', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-DF16', 'Thumb Dressing Forceps 16 cm', 7500, 'IMG641e90d9b5fcf.jpg', '16/03/2023, 19:20', '25/03/2023, 13:12', '', 1),
-('BR-REGffb0b62a09cf', 'USER47100114a730', 'MERK2ce36179b1d3', 'KATPRODafef61dd4c39', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', '1111', 'AbcczC', 428000, 'IMG642e73886c763.jpg', '06/04/2023, 14:24', '13/05/2023, 14:05', '', 0);
+('BR-REGe2e00ce0199b', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-DF16', 'Thumb Dressing Forceps 16 cm', 7500, 'IMG641e90d9b5fcf.jpg', '16/03/2023, 19:20', '25/03/2023, 13:12', '', 0),
+('BR-REGffb0b62a09cf', 'USER47100114a730', 'MERK2ce36179b1d3', 'KATPRODafef61dd4c39', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', '1111', 'Abc', 428000, 'IMG642e73886c763.jpg', '06/04/2023, 14:24', '', '', 1);
 
 -- --------------------------------------------------------
 
@@ -816,7 +967,28 @@ CREATE TABLE `tb_produk_set_marwa` (
 --
 
 INSERT INTO `tb_produk_set_marwa` (`id_set_marwa`, `kode_set_marwa`, `nama_set_marwa`, `id_user`, `id_lokasi`, `id_merk`, `harga_set_marwa`, `stock`, `created_date`, `updated_date`, `user_updated`) VALUES
-('SETMRWfa80e75c366d', 'MRW-Minor', 'MINOR SET', 'USER03595a8447ab', 'LOK172cba11ee8d', 'MERK36d48fe7aff0', 975000, 0, '13/05/2023, 14:30', 'USER03595a8447ab', '');
+('SETMRW608112486bb9', '001', 'Minor', 'USER03595a8447ab', 'LOK172cba11ee8d', 'MERK2ce36179b1d3', 30000, 2, '23/05/2023, 17:11', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_sales`
+--
+
+CREATE TABLE `tb_sales` (
+  `id_sales` varchar(50) NOT NULL,
+  `id_user` varchar(50) NOT NULL,
+  `nama_sales` varchar(30) NOT NULL,
+  `no_telp` varchar(15) NOT NULL,
+  `created_date` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_sales`
+--
+
+INSERT INTO `tb_sales` (`id_sales`, `id_user`, `nama_sales`, `no_telp`, `created_date`) VALUES
+('SL1bb8c1f9e592', 'USER03595a8447ab', 'Agung', '08111', '24/05/2023, 14:19');
 
 -- --------------------------------------------------------
 
@@ -848,6 +1020,219 @@ INSERT INTO `tb_supplier` (`id_sp`, `id_user`, `nama_sp`, `no_telp`, `alamat`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tmp_produk_spk`
+--
+
+CREATE TABLE `tmp_produk_spk` (
+  `id_tmp` varchar(50) NOT NULL,
+  `id_spk` varchar(50) NOT NULL,
+  `id_produk` varchar(50) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `status_tmp` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tmp_produk_spk`
+--
+
+INSERT INTO `tmp_produk_spk` (`id_tmp`, `id_spk`, `id_produk`, `qty`, `status_tmp`) VALUES
+('20235efae4e3a79306', 'SPKREG-2306f6b9f4deb64308', 'BR-REGffb0b62a09cf', 1007, 1);
+
+--
+-- Triggers `tmp_produk_spk`
+--
+DELIMITER $$
+CREATE TRIGGER `add_tmp` AFTER INSERT ON `tmp_produk_spk` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock - NEW.qty 
+WHERE id_produk_reg = NEW.id_produk;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `del_tmp` BEFORE DELETE ON `tmp_produk_spk` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty 
+WHERE id_produk_reg = OLD.id_produk;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `edit_tmp` AFTER UPDATE ON `tmp_produk_spk` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty - NEW.qty
+WHERE id_produk_reg = NEW.id_produk;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transaksi_produk_reg`
+--
+
+CREATE TABLE `transaksi_produk_reg` (
+  `id_transaksi` varchar(50) NOT NULL,
+  `id_spk` varchar(50) NOT NULL,
+  `id_produk` varchar(50) NOT NULL,
+  `harga` int(11) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `disc` decimal(3,1) NOT NULL,
+  `total_harga` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `transaksi_produk_reg`
+--
+
+INSERT INTO `transaksi_produk_reg` (`id_transaksi`, `id_spk`, `id_produk`, `harga`, `qty`, `disc`, `total_harga`, `created_date`) VALUES
+('TRX-230619f22d4c2f4c08', 'SPKREG-2306d338fb231a7307', 'BR-REGb74bb17fa836', 450000, 100, 0.0, 0, '2023-06-08 09:12:07'),
+('TRX-2306340aac2bcf8e08', 'SPKREG-230660a24114639608', 'BR-REGffb0b62a09cf', 428000, 100, 0.0, 0, '2023-06-08 09:12:00'),
+('TRX-23063a5deb8e19a408', 'SPKREG-2306d338fb231a7307', 'BR-REGffb0b62a09cf', 428000, 7598, 0.0, 0, '2023-06-08 09:12:07'),
+('TRX-2306f79ed7680fae08', 'SPKREG-230660a24114639608', 'BR-REGb74bb17fa836', 450000, 100, 0.0, 0, '2023-06-08 09:12:00');
+
+--
+-- Triggers `transaksi_produk_reg`
+--
+DELIMITER $$
+CREATE TRIGGER `add_trx_prod_reg` AFTER INSERT ON `transaksi_produk_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock - NEW.qty 
+WHERE id_produk_reg = NEW.id_produk;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `del_trx_prod_reg` AFTER DELETE ON `transaksi_produk_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty 
+WHERE id_produk_reg = OLD.id_produk;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `edit_trx_prod_reg` AFTER UPDATE ON `transaksi_produk_reg` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty - NEW.qty
+WHERE id_produk_reg = NEW.id_produk;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `trx_cancel`
+--
+
+CREATE TABLE `trx_cancel` (
+  `id_trx_cancel` varchar(50) NOT NULL,
+  `id_spk` varchar(50) NOT NULL,
+  `id_produk` varchar(50) NOT NULL,
+  `harga` int(11) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `disc` decimal(3,1) NOT NULL,
+  `total_harga` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `trx_cancel`
+--
+
+INSERT INTO `trx_cancel` (`id_trx_cancel`, `id_spk`, `id_produk`, `harga`, `qty`, `disc`, `total_harga`, `created_date`) VALUES
+('TRX-230678c31cdd8ff506', 'SPKREG-23062d62bd096b9406', 'BR-REGb74bb17fa836', 450000, 100, 0.0, 0, '2023-06-06 19:53:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tr_set_marwa`
+--
+
+CREATE TABLE `tr_set_marwa` (
+  `id_tr_set_marwa` varchar(50) NOT NULL,
+  `id_set_marwa` varchar(50) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `id_user` varchar(50) NOT NULL,
+  `created_date` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tr_set_marwa`
+--
+
+INSERT INTO `tr_set_marwa` (`id_tr_set_marwa`, `id_set_marwa`, `qty`, `id_user`, `created_date`) VALUES
+('TR-SET-MRW-2323ee30974ea95c05', 'SETMRW608112486bb9', 2, 'USER03595a8447ab', '23/05/2023, 17:15');
+
+--
+-- Triggers `tr_set_marwa`
+--
+DELIMITER $$
+CREATE TRIGGER `add_set_marwa` AFTER INSERT ON `tr_set_marwa` FOR EACH ROW BEGIN
+UPDATE tb_produk_set_marwa
+SET stock = stock + NEW.qty 
+WHERE id_set_marwa = NEW.id_set_marwa;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `del_set_marwa` AFTER DELETE ON `tr_set_marwa` FOR EACH ROW BEGIN
+UPDATE tb_produk_set_marwa 
+SET stock = stock - OLD.qty 
+WHERE id_set_marwa = OLD.id_set_marwa;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tr_set_marwa_isi`
+--
+
+CREATE TABLE `tr_set_marwa_isi` (
+  `id_tr_set_marwa_isi` varchar(50) NOT NULL,
+  `id_tr_set_marwa` varchar(50) NOT NULL,
+  `id_set_marwa` varchar(50) NOT NULL,
+  `id_produk_reg` varchar(50) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `id_user` varchar(50) NOT NULL,
+  `created_date` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tr_set_marwa_isi`
+--
+
+INSERT INTO `tr_set_marwa_isi` (`id_tr_set_marwa_isi`, `id_tr_set_marwa`, `id_set_marwa`, `id_produk_reg`, `qty`, `id_user`, `created_date`) VALUES
+('TR-ISI-SET-MRW-2323dac079f3086805', 'TR-SET-MRW-2323ee30974ea95c05', 'SETMRW608112486bb9', 'BR-REG6d4d12f6c304', 2, 'USER03595a8447ab', '23/05/2023, 17:15'),
+('TR-ISI-SET-MRW-2323ee30974ea95c05', 'TR-SET-MRW-2323ee30974ea95c05', 'SETMRW608112486bb9', 'BR-REGffb0b62a09cf', 2, 'USER03595a8447ab', '23/05/2023, 17:15');
+
+--
+-- Triggers `tr_set_marwa_isi`
+--
+DELIMITER $$
+CREATE TRIGGER `add_set_marwa_isi` AFTER INSERT ON `tr_set_marwa_isi` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock - NEW.qty
+WHERE id_produk_reg = NEW.id_produk_reg;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `del_set_marwa_isi` AFTER DELETE ON `tr_set_marwa_isi` FOR EACH ROW BEGIN
+UPDATE stock_produk_reguler 
+SET stock = stock + OLD.qty
+WHERE id_produk_reg = OLD.id_produk_reg;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -868,6 +1253,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id_user`, `id_user_role`, `nama_user`, `jenkel`, `email`, `username`, `password`, `created_date`) VALUES
 ('USER03595a8447ab', 'RL98cb89863ece', 'Dany Pratama Saputro', 'Laki-Laki', 'pratamadany87@gmail.com', 'dany_pratama', '$2y$10$2SooH9kLwLo.fcVq9yXOAOljSTfX2zFG4eUs7IKMPBhv.2Ec/jYEm', '07/03/2023, 9:32'),
+('USER34e2f73c9751', 'RL98cb89863ece', 'Abidah', 'Perempuan', 'abidah@gmail.com', 'Abidah', '$2y$10$BtF3UJG/S.HBJ1W.TaPy8OwxO3ry15ctjzaPhipHVK8eQv8lr0DTO', '23/05/2023, 17:27'),
 ('USER47100114a730', 'RLf278f224eb37', 'Paijo', 'Laki-Laki', 'firmansyahas@hotmail.com', 'Firmansyah13', '$2y$10$GdptgMT/.caxIDdPzmCltuSXcg43nQweyPuJELUaW7dooM.pD/JxG', '07/03/2023, 9:36');
 
 -- --------------------------------------------------------
@@ -893,18 +1279,57 @@ CREATE TABLE `user_history` (
 --
 
 INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`, `ip_login`, `perangkat`, `jenis_perangkat`, `lokasi`, `status_perangkat`) VALUES
-('HIS0c4e57d55d41', 'USER03595a8447ab', '12/05/2023 17:21:26', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
-('HIS0f250bf2325f', 'USER03595a8447ab', '12/05/2023 16:15:02', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
-('HIS121f76f7959c', 'USER03595a8447ab', '12/05/2023 17:06:04', '', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0', 'Desktop', ',\r\n', 'Online'),
-('HIS2590c5830ae1', 'USER03595a8447ab', '13/05/2023 10:32:01', '2023/05/13 13:23:24', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
-('HIS32f3a5e39611', 'USER03595a8447ab', '12/05/2023 17:06:11', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
-('HIS5be81b225d0f', 'USER03595a8447ab', '13/05/2023 9:13:52', '2023/05/13 10:31:55', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
-('HIS6da5469adb7a', 'USER03595a8447ab', '12/05/2023 16:55:30', '2023/05/12 17:05:21', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
-('HIS8d698af1f679', 'USER03595a8447ab', '13/05/2023 13:23:29', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
-('HIS905011ebb1e7', 'USER03595a8447ab', '16/05/2023 13:25:51', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
-('HISde07c37949a6', 'USER03595a8447ab', '12/05/2023 17:05:29', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
-('HISebb5d8352d14', 'USER03595a8447ab', '16/05/2023 14:55:54', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
-('HISfd2aca109f7a', 'USER03595a8447ab', '12/05/2023 15:41:13', '', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0', 'Desktop', ',\r\n', 'Online');
+('HIS0032debdef12', 'USER47100114a730', '06/06/2023 17:51:52', '', '110.138.89.254', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
+('HIS0067aa877a20', 'USER03595a8447ab', '03/06/2023 10:13:40', '', '110.138.83.9', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS0406bcd8995f', 'USER34e2f73c9751', '25/05/2023 8:03:20', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS07e3a3adf44c', 'USER47100114a730', '02/06/2023 6:20:39', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
+('HIS0be4dcae2c22', 'USER47100114a730', '23/05/2023 11:20:45', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS0d3b834789c6', 'USER47100114a730', '02/06/2023 17:32:03', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
+('HIS130abc404849', 'USER34e2f73c9751', '26/05/2023 9:35:24', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS1433744e3f20', 'USER47100114a730', '23/05/2023 10:14:26', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS18a9956e557e', 'USER03595a8447ab', '07/06/2023 8:36:27', '2023/06/07 9:24:46', '125.160.234.251', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Offline'),
+('HIS197edeca5663', 'USER47100114a730', '25/05/2023 9:00:48', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS1f982dd2f54d', 'USER47100114a730', '06/06/2023 17:51:52', '', '110.138.89.254', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
+('HIS26c340adec2a', 'USER47100114a730', '25/05/2023 13:06:02', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS28d3de1dc028', 'USER03595a8447ab', '23/05/2023 17:05:40', '', '180.244.166.20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS39a99f93e968', 'USER03595a8447ab', '29/05/2023 9:10:29', '', '110.138.93.247', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS3d085f572541', 'USER03595a8447ab', '31/05/2023 15:59:35', '', '110.138.94.146', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS4336312cc383', 'USER03595a8447ab', '23/05/2023 14:52:26', '', '110.138.80.148', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS448965bcd4d7', 'USER03595a8447ab', '02/06/2023 19:13:23', '', '103.155.168.17', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36', 'Mobile', 'Karawang,Indonesia\n', 'Online'),
+('HIS4a91337fde93', 'USER34e2f73c9751', '29/05/2023 13:39:29', '', '110.138.89.200', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS5e58834b05d2', 'USER47100114a730', '23/05/2023 14:57:02', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS5e90966c60da', 'USER34e2f73c9751', '29/05/2023 9:19:37', '', '110.138.89.108', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS61beed25c823', 'USER34e2f73c9751', '25/05/2023 14:58:20', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS6ca5203a7330', 'USER03595a8447ab', '24/05/2023 16:43:23', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS7846a686d478', 'USER47100114a730', '23/05/2023 10:37:46', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS7bdd837926d1', 'USER03595a8447ab', '26/05/2023 8:41:51', '', '110.138.87.166', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS85a5ddfd7a2f', 'USER47100114a730', '24/05/2023 16:52:13', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS876cd0b32b8b', 'USER47100114a730', '25/05/2023 13:06:01', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS8dd4eaf0fb8f', 'USER47100114a730', '03/06/2023 8:41:31', '', '112.215.235.250', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
+('HIS9e2d8d0ae92e', 'USER34e2f73c9751', '26/05/2023 15:44:49', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISa2e6b85fe592', 'USER03595a8447ab', '23/05/2023 17:28:14', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISa968ef15a554', 'USER34e2f73c9751', '24/05/2023 16:55:05', '', '114.79.3.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISaa49f46a5c35', 'USER34e2f73c9751', '29/05/2023 9:50:45', '', '110.138.89.108', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISb00ba4b820bf', 'USER03595a8447ab', '25/05/2023 12:00:43', '2023/05/25 12:02:22', '180.242.71.136', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Offline'),
+('HISb56f6e52db24', 'USER34e2f73c9751', '26/05/2023 8:28:28', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISb89ed5fb6c5b', 'USER47100114a730', '06/06/2023 9:49:44', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
+('HISbcf16947601e', 'USER03595a8447ab', '03/06/2023 9:27:55', '', '110.138.83.9', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISc02b5b55aeb6', 'USER03595a8447ab', '23/05/2023 11:42:32', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISc56e0c456135', 'USER34e2f73c9751', '24/05/2023 16:14:52', '', '114.79.3.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISc6fbc3189b82', 'USER47100114a730', '05/06/2023 15:05:40', '', '110.138.87.78', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIScf6427638413', 'USER34e2f73c9751', '25/05/2023 9:14:32', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISd301cefd97d8', 'USER47100114a730', '07/06/2023 8:13:12', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/114.0.5735.99 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
+('HISd45648941fe5', 'USER03595a8447ab', '08/06/2023 15:12:18', '2023/06/08 15:43:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
+('HISd673d360fc81', 'USER03595a8447ab', '05/06/2023 16:44:15', '', '125.160.230.98', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISde56ba9d3cff', 'USER47100114a730', '25/05/2023 10:30:40', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISe216e588033b', 'USER03595a8447ab', '06/06/2023 10:08:13', '', '110.138.81.127', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
+('HISe6bdfb3d29d4', 'USER47100114a730', '24/05/2023 16:23:17', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISecc1060510da', 'USER34e2f73c9751', '25/05/2023 14:39:16', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf21ec41fa931', 'USER03595a8447ab', '24/05/2023 8:26:10', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf69d5157c157', 'USER03595a8447ab', '23/05/2023 16:35:16', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf9ee9e35dba2', 'USER47100114a730', '25/05/2023 9:12:21', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISfdcc159257d5', 'USER03595a8447ab', '06/06/2023 17:35:49', '', '110.138.93.104', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISfe52bb262bf2', 'USER03595a8447ab', '23/05/2023 15:01:39', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online');
 
 -- --------------------------------------------------------
 
@@ -962,6 +1387,19 @@ ALTER TABLE `inv_br_in_lokal`
   ADD PRIMARY KEY (`id_inv_br_in_lokal`);
 
 --
+-- Indexes for table `inv_nonppn`
+--
+ALTER TABLE `inv_nonppn`
+  ADD PRIMARY KEY (`id_inv_nonppn`),
+  ADD UNIQUE KEY `no_inv` (`no_inv`);
+
+--
+-- Indexes for table `isi_br_out_reg`
+--
+ALTER TABLE `isi_br_out_reg`
+  ADD PRIMARY KEY (`id_isi_br_out_reg`);
+
+--
 -- Indexes for table `isi_br_tambahan`
 --
 ALTER TABLE `isi_br_tambahan`
@@ -998,6 +1436,13 @@ ALTER TABLE `keterangan_out`
   ADD PRIMARY KEY (`id_ket_out`);
 
 --
+-- Indexes for table `spk_reg`
+--
+ALTER TABLE `spk_reg`
+  ADD PRIMARY KEY (`id_spk_reg`),
+  ADD KEY `id_spk_reg` (`id_spk_reg`);
+
+--
 -- Indexes for table `stock_produk_reguler`
 --
 ALTER TABLE `stock_produk_reguler`
@@ -1028,6 +1473,12 @@ ALTER TABLE `tb_lokasi_produk`
   ADD PRIMARY KEY (`id_lokasi`);
 
 --
+-- Indexes for table `tb_orderby`
+--
+ALTER TABLE `tb_orderby`
+  ADD PRIMARY KEY (`id_orderby`);
+
+--
 -- Indexes for table `tb_produk_grade`
 --
 ALTER TABLE `tb_produk_grade`
@@ -1046,10 +1497,46 @@ ALTER TABLE `tb_produk_set_marwa`
   ADD PRIMARY KEY (`id_set_marwa`);
 
 --
+-- Indexes for table `tb_sales`
+--
+ALTER TABLE `tb_sales`
+  ADD PRIMARY KEY (`id_sales`);
+
+--
 -- Indexes for table `tb_supplier`
 --
 ALTER TABLE `tb_supplier`
   ADD PRIMARY KEY (`id_sp`);
+
+--
+-- Indexes for table `tmp_produk_spk`
+--
+ALTER TABLE `tmp_produk_spk`
+  ADD PRIMARY KEY (`id_tmp`);
+
+--
+-- Indexes for table `transaksi_produk_reg`
+--
+ALTER TABLE `transaksi_produk_reg`
+  ADD PRIMARY KEY (`id_transaksi`);
+
+--
+-- Indexes for table `trx_cancel`
+--
+ALTER TABLE `trx_cancel`
+  ADD PRIMARY KEY (`id_trx_cancel`);
+
+--
+-- Indexes for table `tr_set_marwa`
+--
+ALTER TABLE `tr_set_marwa`
+  ADD PRIMARY KEY (`id_tr_set_marwa`);
+
+--
+-- Indexes for table `tr_set_marwa_isi`
+--
+ALTER TABLE `tr_set_marwa_isi`
+  ADD PRIMARY KEY (`id_tr_set_marwa_isi`);
 
 --
 -- Indexes for table `user`
