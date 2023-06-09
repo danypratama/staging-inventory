@@ -174,48 +174,43 @@ include "akses.php";
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center mt-3">
-                            <a href="edit-detail-spk-reg.php?edit_id=<?php echo base64_encode($id_spk) ?>" class="btn btn-info text-white"><i class="bi bi-pencil"></i> Edit data detail</a>
-                        </div>
-
                     </div>
                 </div>
                 <!-- Tampil data -->
                 <div class="card shadow">
                     <div class="card-body p-3">
                         <div class="table-responsive">
-                            <form action="proses/proses-produk-spk-reg.php" method="POST">
-                                <div class="text-start mb-3">
-                                    <a href="spk-dalam-proses.php?sort=baru" class="btn btn-warning btn-detail">
-                                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                                    </a>
+                            <div class="text-start mb-3">
+                                <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail">
+                                    <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                </a>
+                                <?php
+                                $id_inv_nonppn = base64_decode($_GET['id']);
+                                ?>
+                                <input type="hidden" name="id_spk_reg" value="<?php echo $id_inv_nonppn ?>">
+                                <a href="cetak-inv-nonppn-reg.php?id=<?php echo base64_encode($id_inv_nonppn) ?>" class="btn btn-secondary"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
+                            </div>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr class="text-white" style="background-color: #051683;">
+                                        <th class="text-center p-3" style="width:20px">No</th>
+                                        <th class="text-center p-3" style="width:100px">No. SPK</th>
+                                        <th class="text-center p-3" style="width:200px">Nama Produk</th>
+                                        <th class="text-center p-3" style="width:100px">Merk</th>
+                                        <th class="text-center p-3" style="width:100px">Harga</th>
+                                        <th class="text-center p-3" style="width:80px">Qty Order</th>
+                                        <th class="text-center p-3" style="width:80px">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     <?php
-                                    $id_spk = base64_decode($_GET['id']);
-                                    ?>
-                                    <input type="hidden" name="id_spk_reg" value="<?php echo $id_spk ?>">
-                                    <button type="submit" class="btn btn-secondary" name="siap-kirim"><i class="bi bi-send"></i> Siap Kirim</button>
-                                </div>
-                                <table class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr class="text-white" style="background-color: #051683;">
-                                            <th class="text-center p-3" style="width:20px">No</th>
-                                            <th class="text-center p-3" style="width:100px">No. SPK</th>
-                                            <th class="text-center p-3" style="width:200px">Nama Produk</th>
-                                            <th class="text-center p-3" style="width:100px">Merk</th>
-                                            <th class="text-center p-3" style="width:100px">Harga</th>
-                                            <th class="text-center p-3" style="width:80px">Qty Order</th>
-                                            <th class="text-center p-3" style="width:80px">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        include "koneksi.php";
-                                        $year = date('y');
-                                        $day = date('d');
-                                        $month = date('m');
-                                        $id_nonppn_decode = base64_decode($_GET['id']);
-                                        $no = 1;
-                                        $sql_trx = "SELECT 
+                                    include "koneksi.php";
+                                    $year = date('y');
+                                    $day = date('d');
+                                    $month = date('m');
+                                    $id_nonppn_decode = base64_decode($_GET['id']);
+                                    $no = 1;
+                                    $sql_trx = "SELECT 
                                                     nonppn.id_inv_nonppn, nonppn.status_simpan,
                                                     sr.id_inv, sr.no_spk,
                                                     trx.*, 
@@ -229,25 +224,24 @@ include "akses.php";
                                                     JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
                                                     JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
                                                     WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND nonppn.status_simpan = '0' ORDER BY no_spk ASC";
-                                        $trx_produk_reg = mysqli_query($connect, $sql_trx);
-                                        while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
-                                        ?>
-                                            <tr>
-                                                <td class="text-center"><?php echo $no; ?></td>
-                                                <td class="text-center"><?php echo $data_trx['no_spk']; ?></td>
-                                                <td><?php echo $data_trx['nama_produk'] ?></td>
-                                                <td class="text-center"><?php echo $data_trx['nama_merk'] ?></td>
-                                                <td class="text-end"><?php echo number_format($data_trx['harga_produk']) ?></td>
-                                                <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
-                                                <td class="text-center">
-                                                    <a href="proses/proses-produk-spk-reg.php?hapus_trx=<?php echo base64_encode($data_trx['id_transaksi']) ?> && id_spk=<?php echo base64_encode($data_trx['id_spk']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                                                </td>
-                                            </tr>
-                                            <?php $no++; ?>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </form>
+                                    $trx_produk_reg = mysqli_query($connect, $sql_trx);
+                                    while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                    ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo $no; ?></td>
+                                            <td class="text-center"><?php echo $data_trx['no_spk']; ?></td>
+                                            <td><?php echo $data_trx['nama_produk'] ?></td>
+                                            <td class="text-center"><?php echo $data_trx['nama_merk'] ?></td>
+                                            <td class="text-end"><?php echo number_format($data_trx['harga_produk']) ?></td>
+                                            <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
+                                            <td class="text-center">
+                                                <a href="proses/proses-produk-spk-reg.php?hapus_trx=<?php echo base64_encode($data_trx['id_transaksi']) ?> && id_spk=<?php echo base64_encode($data_trx['id_spk']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php $no++; ?>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

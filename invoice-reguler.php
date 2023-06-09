@@ -145,7 +145,7 @@ include "akses.php";
                                                             <td><?php echo $data['nama_cs'] ?></td>
                                                             <td><?php echo $data['note_inv'] ?></td>
                                                             <td class="text-center">
-                                                                <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
+                                                                <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                                                             </td>
                                                         </tr>
                                                         <?php $no++ ?>
