@@ -211,7 +211,7 @@ include "akses.php";
                                     $id_nonppn_decode = base64_decode($_GET['id']);
                                     $no = 1;
                                     $sql_trx = "SELECT 
-                                                    nonppn.id_inv_nonppn, nonppn.status_simpan,
+                                                    nonppn.id_inv_nonppn,
                                                     sr.id_inv, sr.no_spk,
                                                     trx.*, 
                                                     spr.stock, 
@@ -223,7 +223,7 @@ include "akses.php";
                                                     JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
                                                     JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
                                                     JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND nonppn.status_simpan = '0' ORDER BY no_spk ASC";
+                                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' ORDER BY no_spk ASC";
                                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                     ?>

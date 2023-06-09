@@ -16,7 +16,7 @@
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            padding: 0.5cm;
+            padding: 1.5cm;
             background-color: #ffffff;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
@@ -25,7 +25,7 @@
             text-align: left;
             display: grid;
             margin-bottom: 0.5cm;
-            grid-template-columns: 4fr 1fr 1fr 4fr;
+            grid-template-columns: 3fr 1fr 1fr 5fr;
             grid-gap: 0.5cm;
         }
 
@@ -35,7 +35,7 @@
         }
 
         .col-header-1 {
-            grid-column: 1;
+            grid-column: 1 / span 2;
             padding: 0.1cm;
             display: flex;
             justify-content: left;
@@ -94,7 +94,8 @@
         .invoice-payment {
             text-align: left;
             display: grid;
-            grid-template-columns: 3fr 1fr 1fr 2.8fr;
+            margin-top: 0.5cm;
+            grid-template-columns: 3fr 1fr 1fr 4fr;
             grid-gap: 0.5cm;
         }
 
@@ -113,7 +114,7 @@
         }
 
         .grand-total {
-            text-align: left;
+            text-align: right;
         }
 
         .amount {
@@ -121,6 +122,7 @@
         }
 
         .invoice-footer {
+            font-weight: bold;
             text-align: center;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 2fr;
@@ -211,6 +213,7 @@
     // Tampilkan data lain jika ada
     ?>
     <div class="invoice">
+        <h2 align='right'><strong>INVOICE</strong></h2>
         <div class="invoice-header">
             <div class="col-header-1">
                 <!-- Kolom pertama -->
@@ -234,12 +237,9 @@
 
             </div>
         </div>
-        <div class="invoice-header">
-            <div class="col-header-3">
-                <!-- Kolom kedua -->
-                No. PO : <br>
-                <?php
-                $sql2 = "SELECT 
+        <!-- Kolom kedua -->
+        <?php
+        $sql2 = "SELECT 
                 nonppn.*, 
                 sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                 cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
@@ -249,41 +249,36 @@
                 JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                 JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
                 WHERE nonppn.id_inv_nonppn = '$id_inv'";
-                $query2 = mysqli_query($connect, $sql2);
-                $rowIndex = 0;
-                $totalRows = mysqli_num_rows($query2);
-                $dataCount = 0;
-                $output = ''; // Variabel untuk menyimpan hasil output
+        $query2 = mysqli_query($connect, $sql2);
+        $rowIndex = 0;
+        $totalRows = mysqli_num_rows($query2);
+        $dataCount = 0;
+        $output = ''; // Variabel untuk menyimpan hasil output
+        while ($data2 = mysqli_fetch_array($query2)) {
+            $dataCount++;
+            // Periksa jika nilai no_po tidak kosong
+            if (!empty($data2['no_po'])) {
+                // Tampilkan nilai kolom pada setiap baris
+                $output .= $data2['no_po'];
 
-                while ($data2 = mysqli_fetch_array($query2)) {
-                    $dataCount++;
-                    // Periksa jika nilai no_po tidak kosong
-                    if (!empty($data2['no_po'])) {
-                        // Tampilkan nilai kolom pada setiap baris
-                        $output .= $data2['no_po'];
-
-                        // Tambahkan koma jika bukan baris terakhir
-                        if ($rowIndex < $totalRows - 1 && $dataCount < $totalRows) {
-                            $output .= ', ';
-                        }
-                    }
-
-                    $rowIndex++;
+                // Tambahkan koma jika bukan baris terakhir
+                if ($rowIndex < $totalRows - 1 && $dataCount < $totalRows) {
+                    $output .= ', ';
                 }
+            }
 
-                // Tambahkan tanda titik di akhir data
-                if (!empty($output)) {
-                    $output .= '.';
-                }
+            $rowIndex++;
+        }
 
-                // Tampilkan hasil output
-                echo $output;
+        // Tambahkan tanda titik di akhir data
+        if (!empty($output)) {
+            $output .= '.';
 
+            // Tampilkan hanya jika ada data yang ditampilkan
+            echo "<div class='invoice-header'><div class='col-header-3'>No.PO :  <br>"  . $output . "</div></div>";
+        }
+        ?>
 
-                ?>
-
-            </div>
-        </div>
         <div class="invoice-body">
             <table class="invoice-table">
                 <thead>
@@ -292,7 +287,11 @@
                         <th style="width: 200px;">Nama Produk</th>
                         <th style="width: 40px;">Qty</th>
                         <th style="width: 80px;">Harga</th>
-                        <th style="width: 40px;">Disc</th>
+                        <?php
+                        if ($data['kategori_inv'] == 'Diskon') {
+                            echo '<th style="width: 40px;">Disc</th>';
+                        }
+                        ?>
                         <th style="width: 80px;">Total</th>
                     </tr>
                 </thead>
@@ -305,8 +304,9 @@
                     $month = date('m');
                     $id_nonppn_decode = base64_decode($_GET['id']);
                     $no = 1;
+                    $grand_total = 0;
                     $sql_trx = "SELECT
-                    nonppn.id_inv_nonppn, nonppn.status_simpan,
+                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc,
                     sr.id_inv, sr.no_spk,
                     trx.*,
                     spr.stock,
@@ -318,37 +318,66 @@
                     JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
                     JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
                     JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND nonppn.status_simpan = '0' ORDER BY no_spk ASC";
+                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' ORDER BY no_spk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                        $kat_inv = $data_trx['kategori_inv'];
+                        $qty = $data_trx['qty'];
+                        $harga = $data_trx['harga_produk'];
+                        $disc = $data_trx['disc'] / 100;
+                        $tampil_disc = $data_trx['disc'];
+                        $tampil_spdisc = $data_trx['sp_disc'];
+                        $harga_disc = $harga * $disc;
+                        $total = $harga - $harga_disc;
+                        $sub_total = floor($total * $qty);
+                        $sp_disc = $data_trx['sp_disc'] / 100;
+                        $sub_total_spdisc = $sub_total * $sp_disc;
+                        $sub_total_fix = floor($sub_total - $sub_total_spdisc);
+                        $grand_total += floor($sub_total_fix);
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
                             <td><?php echo $data_trx['nama_produk'] ?></td>
-                            <td align="right"><?php echo number_format($data_trx['qty']) ?></td>
-                            <td align="right"><?php echo number_format($data_trx['harga_produk']) ?></td>
-                            <td align="right"><?php echo number_format($data_trx['qty']) ?></td>
-                            <td align="right"><?php echo number_format($data_trx['qty']) ?></td>
+                            <td align="right"><?php echo number_format($data_trx['qty'], 0, '.', '.') ?></td>
+                            <td align="right"><?php echo number_format($data_trx['harga_produk'], 0, '.', '.') ?></td>
+                            <?php
+                            if ($data_trx['kategori_inv'] == 'Diskon') {
+                                echo '<td align="right">' . $tampil_disc . ' %</td>';
+                            }
+                            ?>
+                            <td align="right"><?php echo number_format($sub_total_fix, 0, '.', '.') ?></td>
                         </tr>
                         <?php $no++ ?>
                     <?php } ?>
                 </tbody>
             </table>
         </div>
-
         <div class="invoice-payment">
             <div class="col-payment-1">
                 <!-- Kolom pertama -->
                 Terbilang :<br>
-                Satu Juta Lima Ratus Ribu Rupiah
+                <?php echo terbilang($grand_total) ?> Rupiah
             </div>
             <div class="col-payment-2">
                 <!-- Kolom kedua -->
                 <div class="grand-total">
+                    <?php
+                    if ($kat_inv == 'Spesial Diskon') {
+                        echo 'Spesial Diskon :';
+                        echo "<br>";
+                    }
+                    ?>
+
                     Grand total (Rp):
                 </div>
                 <div class="amount">
-                    1.569.300
+                    <?php
+                    if ($kat_inv == 'Spesial Diskon') {
+                        echo "$tampil_spdisc (%)";
+                        echo "<br>";
+                    }
+                    ?>
+                    <?php echo number_format($grand_total, 0, '.', '.') ?>
                 </div>
             </div>
         </div>
@@ -385,3 +414,44 @@
 </body>
 
 </html>
+
+<?php
+function penyebut($nilai)
+{
+    $nilai = abs($nilai);
+    $huruf = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
+    $temp = "";
+    if ($nilai < 12) {
+        $temp = " " . $huruf[$nilai];
+    } else if ($nilai < 20) {
+        $temp = penyebut($nilai - 10) . " Belas";
+    } else if ($nilai < 100) {
+        $temp = penyebut($nilai / 10) . " Puluh" . penyebut($nilai % 10);
+    } else if ($nilai < 200) {
+        $temp = " Seratus" . penyebut($nilai - 100);
+    } else if ($nilai < 1000) {
+        $temp = penyebut($nilai / 100) . " Ratus" . penyebut($nilai % 100);
+    } else if ($nilai < 2000) {
+        $temp = " seribu" . penyebut($nilai - 1000);
+    } else if ($nilai < 1000000) {
+        $temp = penyebut($nilai / 1000) . " Ribu" . penyebut($nilai % 1000);
+    } else if ($nilai < 1000000000) {
+        $temp = penyebut($nilai / 1000000) . " Juta" . penyebut($nilai % 1000000);
+    } else if ($nilai < 1000000000000) {
+        $temp = penyebut($nilai / 1000000000) . " Milyar" . penyebut(fmod($nilai, 1000000000));
+    } else if ($nilai < 1000000000000000) {
+        $temp = penyebut($nilai / 1000000000000) . " Trilyun" . penyebut(fmod($nilai, 1000000000000));
+    }
+    return $temp;
+}
+
+function terbilang($nilai)
+{
+    if ($nilai < 0) {
+        $hasil = "minus " . trim(penyebut($nilai));
+    } else {
+        $hasil = trim(penyebut($nilai));
+    }
+    return $hasil;
+}
+?>
