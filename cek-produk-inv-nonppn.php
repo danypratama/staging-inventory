@@ -35,6 +35,12 @@ include "akses.php";
 
 
     <main id="main" class="main">
+        <!-- SWEET ALERT -->
+        <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                                    echo $_SESSION['info'];
+                                                }
+                                                unset($_SESSION['info']); ?>"></div>
+        <!-- END SWEET ALERT -->
         <section>
             <div class="container-fluid">
                 <div class="card shadow p-2">
@@ -184,24 +190,70 @@ include "akses.php";
                                 <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail">
                                     <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                 </a>
+                                <a href="#" class="btn btn-primary btn-detail">
+                                    <i class="bi bi-plus-circle"></i> Tambah SPK
+                                </a>
                                 <?php
                                 $id_inv_nonppn = base64_decode($_GET['id']);
+                                $sql_cek = "SELECT 
+                                        nonppn.id_inv_nonppn, kategori_inv,
+                                        sr.id_inv, sr.no_spk,
+                                        trx.*, 
+                                        spr.stock, 
+                                        tpr.nama_produk, 
+                                        tpr.harga_produk, mr.* 
+                                        FROM inv_nonppn AS nonppn
+                                        JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn' AND status_trx = '1' ORDER BY no_spk ASC";
+                                $query_cek = mysqli_query($connect, $sql_cek);
+                                $data_cek = mysqli_fetch_array($query_cek);
+                                $total_data = mysqli_num_rows($query_cek);
                                 ?>
-                                <input type="hidden" name="id_spk_reg" value="<?php echo $id_inv_nonppn ?>">
-                                <a href="cetak-inv-nonppn-reg.php?id=<?php echo base64_encode($id_inv_nonppn) ?>" class="btn btn-secondary"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
+                                <?php
+                                if ($total_data != 0) {
+                                    echo '
+                                        <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_nonppn) . '">
+                                        <a href="cetak-inv-nonppn-reg.php?id=' . base64_encode($id_inv_nonppn) . '" class="btn btn-secondary"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>';
+                                }
+                                ?>
                             </div>
                             <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr class="text-white" style="background-color: #051683;">
-                                        <th class="text-center p-3" style="width:20px">No</th>
-                                        <th class="text-center p-3" style="width:100px">No. SPK</th>
-                                        <th class="text-center p-3" style="width:200px">Nama Produk</th>
-                                        <th class="text-center p-3" style="width:100px">Merk</th>
-                                        <th class="text-center p-3" style="width:100px">Harga</th>
-                                        <th class="text-center p-3" style="width:80px">Qty Order</th>
-                                        <th class="text-center p-3" style="width:80px">Aksi</th>
-                                    </tr>
-                                </thead>
+                                <?php
+                                if ($total_data != 0) {
+                                    if ($data_cek['kategori_inv'] != 'Diskon') {
+                                        echo '
+                                        <thead>
+                                            <tr class="text-white" style="background-color: #051683;">
+                                                <th class="text-center p-3" style="width:20px">No</th>
+                                                <th class="text-center p-3" style="width:100px">No. SPK</th>
+                                                <th class="text-center p-3" style="width:200px">Nama Produk</th>
+                                                <th class="text-center p-3" style="width:100px">Merk</th>
+                                                <th class="text-center p-3" style="width:100px">Harga</th>
+                                                <th class="text-center p-3" style="width:80px">Qty Order</th>
+                                                <th class="text-center p-3" style="width:80px">Aksi</th>
+                                            </tr>
+                                        </thead>';
+                                    } else {
+                                        echo '
+                                        <thead>
+                                            <tr class="text-white" style="background-color: #051683;">
+                                                <th class="text-center p-3" style="width:20px">No</th>
+                                                <th class="text-center p-3" style="width:100px">No. SPK</th>
+                                                <th class="text-center p-3" style="width:200px">Nama Produk</th>
+                                                <th class="text-center p-3" style="width:100px">Merk</th>
+                                                <th class="text-center p-3" style="width:100px">Harga</th>
+                                                <th class="text-center p-3" style="width:100px">Diskon</th>
+                                                <th class="text-center p-3" style="width:80px">Qty Order</th>
+                                                <th class="text-center p-3" style="width:80px">Aksi</th>
+                                            </tr>
+                                        </thead>';
+                                    }
+                                }
+                                ?>
                                 <tbody>
                                     <?php
                                     include "koneksi.php";
@@ -223,25 +275,143 @@ include "akses.php";
                                                     JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
                                                     JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
                                                     JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' ORDER BY no_spk ASC";
+                                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '1' ORDER BY no_spk ASC";
                                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                        $disc = $data_trx['disc'];
                                     ?>
                                         <tr>
                                             <td class="text-center"><?php echo $no; ?></td>
                                             <td class="text-center"><?php echo $data_trx['no_spk']; ?></td>
                                             <td><?php echo $data_trx['nama_produk'] ?></td>
                                             <td class="text-center"><?php echo $data_trx['nama_merk'] ?></td>
-                                            <td class="text-end"><?php echo number_format($data_trx['harga_produk']) ?></td>
+                                            <td class="text-end"><?php echo number_format($data_trx['harga']) ?></td>
+                                            <?php
+                                            if ($total_data != 0) {
+                                                if ($data_cek['kategori_inv'] == 'Diskon') {
+                                                    echo "<td class='text-end'>" . $disc . "</td>";
+                                                }
+                                            }
+                                            ?>
                                             <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                             <td class="text-center">
-                                                <a href="proses/proses-produk-spk-reg.php?hapus_trx=<?php echo base64_encode($data_trx['id_transaksi']) ?> && id_spk=<?php echo base64_encode($data_trx['id_spk']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                <button class="btn btn-warning btn-sm" data-id="<?php echo $data_trx['id_transaksi'] ?>" data-harga="<?php echo number_format($data_trx['harga']) ?>" data-bs-toggle="modal" data-bs-target="#edit"><i class="bi bi-pencil"></i></button>
                                             </td>
                                         </tr>
                                         <?php $no++; ?>
                                     <?php } ?>
                                 </tbody>
+                                <!-- Modal -->
+                                <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Harga</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="proses/proses-invoice-nonppn.php" method="POST">
+                                                    <input type="hidden" name="id_trx" id="id_trx" readonly>
+                                                    <input type="hidden" name="id_inv" value="<?php echo $id_nonppn_decode ?>" readonly>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="basic-addon1">Rp</span>
+                                                        <input type="text" class="form-control text-end harga_produk" name="harga_produk" id="harga_produk" required>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-primary" name="update-harga">Update Harga</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </table>
+                            <div class="container">
+                                <?php
+                                if ($total_data == 0) {
+                                    echo '<h5 class="text-center">Cek Harga Produk</h5>';
+                                }
+                                ?>
+                            </div>
+                            <form action="proses/proses-invoice-nonppn.php" method="POST">
+                                <?php
+                                $no = 1;
+                                $id_nonppn_decode = base64_decode($_GET['id']);
+                                $sql_cek_harga = "SELECT 
+                                    nonppn.id_inv_nonppn, kategori_inv,
+                                    sr.id_inv, sr.no_spk,
+                                    trx.*, 
+                                    spr.stock, 
+                                    tpr.nama_produk, 
+                                    tpr.harga_produk, mr.* 
+                                    FROM inv_nonppn AS nonppn
+                                    JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                    JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                    JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '0' ORDER BY no_spk ASC";
+                                $query_cek_harga = mysqli_query($connect, $sql_cek_harga);
+                                $total_cek_harga = mysqli_num_rows($query_cek_harga);
+                                while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
+                                ?>
+                                    <div class="card-body border p-2">
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <input type="text" class="form-control text-center" value="<?php echo $no; ?>">
+                                                <?php $no++ ?>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input type="hidden" name="id_inv" value="<?php echo $data_cek_harga['id_inv_nonppn'] ?>" readonly>
+                                                <input type="hidden" name="id_trx[]" id="id_<?php echo $data_cek_harga['id_transaksi'] ?>" value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly>
+                                                <input type="text" class="form-control bg-light" value="<?php echo $data_cek_harga['nama_produk'] ?>" readonly>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <input type="text" class="form-control bg-light text-center" value="<?php echo $data_cek_harga['nama_merk'] ?>" readonly>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="basic-addon1">Rp</span>
+                                                    <input type="text" class="form-control text-end harga_produk" name="harga_produk[]" value="<?php echo number_format($data_cek_harga['harga']) ?>" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <?php
+                                                if ($total_cek_harga != 0) {
+                                                    if ($data_cek_harga['kategori_inv'] == 'Diskon') {
+                                                        echo '<div class="input-group">
+                                                                    <input type="text" class="form-control text-end" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" required>
+                                                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                                                </div>';
+                                                    } else {
+                                                        echo '<div class="input-group">
+                                                                    <input type="text" class="form-control text-end bg-light" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" readonly>
+                                                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                                                </div>';
+                                                    }
+                                                }
+                                                ?>
+
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="basic-addon1">Qty</span>
+                                                    <input type="text" class="form-control bg-light text-end" nama="qty" value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <?php } ?>
+                                <div class="card-body mt-3 text-end">
+                                    <?php
+                                    if ($total_data == 0) {
+                                        echo '<button type="submit" class="btn btn-primary" name="simpan-cek-harga" id="simpan-data"><i class="bi bi-save"></i> Simpan</button>';
+                                    }
+                                    ?>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -325,59 +495,6 @@ function generate_uuid()
     });
 </script>
 
-<!-- Clock js -->
-<script>
-    function inputDateTime() {
-        // Get current date and time
-        let currentDate = new Date();
-
-        // Format date and time as yyyy-mm-ddThh:mm:ss
-        let year = currentDate.getFullYear();
-        let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        let day = currentDate.getDate().toString().padStart(2, '0');
-        let hours = currentDate.getHours();
-        let minutes = currentDate.getMinutes().toString().padStart(2, '0');
-        let seconds = currentDate.getSeconds().toString().padStart(2, '0');
-        let formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}`;
-
-        // Set value of input field to current date and time
-        document.getElementById("datetime-input").setAttribute('value', formattedDateTime);
-
-    }
-    // Call updateDateTime function every second
-    setInterval(inputDateTime, 1000);
-</script>
-
-<!-- Kode Untuk Qty   -->
-<script>
-    function formatNumber(number) {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    function formatInputValue(value) {
-        return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    function checkStock(inputId) {
-        var stock = parseInt(document.getElementById('stock_' + inputId).value.replace(/,/g, '')); // Menggunakan ID yang sesuai untuk elemen stock
-        var qtyInput = document.getElementById('qtyInput_' + inputId); // Menggunakan ID yang sesuai untuk elemen qtyInput
-        var qty = qtyInput.value.replace(/,/g, '');
-
-        qtyInput.value = formatInputValue(qty);
-
-        if (parseInt(qty) > stock) {
-            qtyInput.value = formatNumber(stock);
-        }
-
-        var simpanButton = document.getElementById('simpan');
-        if (parseInt(qty) > 0) {
-            simpanButton.disabled = false;
-        } else {
-            simpanButton.disabled = true;
-        }
-    }
-</script>
-
 <!-- Fungsi menonaktifkan kerboard enter -->
 <script>
     document.addEventListener("keydown", function(event) {
@@ -385,5 +502,45 @@ function generate_uuid()
             event.preventDefault();
             document.getElementById("simpan-data").click();
         }
+    });
+</script>
+
+<!-- Number format untuk harga -->
+
+<script>
+    // Mendapatkan referensi elemen input
+    var hargaProdukInputs = document.querySelectorAll('.harga_produk');
+
+    // Menambahkan event listener untuk memformat angka saat nilai berubah
+    hargaProdukInputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            formatNumber(input);
+        });
+    });
+
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function formatNumber(input) {
+        var hargaProdukValue = input.value.replace(/[^0-9.-]+/g, '');
+
+        if (hargaProdukValue !== '') {
+            var formattedNumber = numberFormat(hargaProdukValue);
+            input.value = formattedNumber;
+        }
+    }
+
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function numberFormat(number) {
+        return new Intl.NumberFormat('en-US').format(number);
+    }
+</script>
+<!-- Edit Harga -->
+<script>
+    $('#edit').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('harga');
+
+        $('#id_trx').val(idTrx);
+        $('#harga_produk').val(harga);
     });
 </script>

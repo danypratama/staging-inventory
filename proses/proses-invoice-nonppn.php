@@ -59,4 +59,49 @@ if (isset($_POST['simpan-inv'])) {
         mysqli_rollback($connect);
         echo "Error: " . $e->getMessage();
     }
+} else if (isset($_POST['simpan-cek-harga'])) {
+    $id_inv = base64_encode($_POST['id_inv']);
+    $id_trx = $_POST['id_trx'];
+    $harga_produk = $_POST['harga_produk'];
+    $disc = $_POST['disc'];
+    $update_status_trx = 1;
+
+    // Mulai transaction
+    mysqli_begin_transaction($connect);
+
+    try {
+        for ($i = 0; $i < count($id_trx); $i++) {
+            $id_trx_array = $id_trx[$i];
+            $harga =  str_replace(',', '', $harga_produk[$i]);
+            $harga = intval($harga);
+            $disc_array = $disc[$i];
+            $update_status_trx_array = $update_status_trx;
+
+            $update_data = mysqli_query($connect,  "UPDATE transaksi_produk_reg SET
+                                                    harga = '$harga',
+                                                    disc = '$disc_array',
+                                                    status_trx = '$update_status_trx_array'
+                                                    WHERE id_transaksi = '$id_trx_array'");
+        }
+
+        // Commit transaction jika semua query berhasil
+        mysqli_commit($connect);
+        $_SESSION['info'] = 'Diupdate';
+        header("Location:../cek-produk-inv-nonppn.php?id='$id_inv'");
+    } catch (Exception $e) {
+        // Rollback transaction jika terjadi kesalahan
+        mysqli_rollback($connect);
+        $_SESSION['info'] = 'Silahkan Ulangi Kembali';
+        header("Location:../cek-produk-inv-nonppn.php?id='$id_inv'");
+    }
+} else if (isset($_POST['update-harga'])) {
+    $id_trx = $_POST['id_trx'];
+    $id_inv = base64_encode($_POST['id_inv']);
+    $harga_produk = $_POST['harga_produk'];
+    $hrg = str_replace(',', '', $harga_produk); // Menghapus tanda ribuan (,)
+    $hrg = intval($hrg); // Mengubah string harga menjadi integer
+
+    $update_data = mysqli_query($connect, "UPDATE transaksi_produk_reg SET harga = '$hrg' WHERE id_transaksi = '$id_trx'");
+    $_SESSION['info'] = 'Diupdate';
+    header("Location:../cek-produk-inv-nonppn.php?id='$id_inv'");
 }

@@ -3,6 +3,9 @@
 
 <head>
     <title>Invoice</title>
+    <link href="assets/img/logo-kma.png" rel="icon">
+    <link href="assets/img/logo-kma.png" rel="apple-touch-icon">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
