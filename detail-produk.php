@@ -50,7 +50,7 @@
                 <div class="card-body p-3">
                 <div class="row">
                     <div class="col-5">
-                    <img alt="Gambar Produk" src="gambar/upload-marwa/<?php echo $img ?>" style="height:600px; width:600px" class="img-fluid">
+                    <img alt="Gambar Produk" src="gambar/upload-marwa/<?php echo $img ?>" class="img-fluid">
                     </div>
                     <div class="col-7">
                     <table class="table table-bordered table-striped">

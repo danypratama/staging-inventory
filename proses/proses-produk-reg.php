@@ -18,7 +18,7 @@
         $created = $_POST['created'];
 
 		// Untuk proses simpan QR Code
-		$url_qr = "https://staging-inventory.mandirialkesindo.com/detail-produk?id=$id_produk";
+		$url_qr = "https://staging-inventory.mandirialkesindo.com/detail-produk.php?id=$id_produk";
 
 		// Nama file output
 		$outputFile = "../gambar/QRcode/$nama.png";
