@@ -80,7 +80,6 @@ include "akses.php";
                 <tbody>
                   <?php
                   date_default_timezone_set('Asia/Jakarta');
-
                   include "koneksi.php";
                   $no = 1;
                   $sql = "SELECT pr.*,

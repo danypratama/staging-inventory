@@ -1,6 +1,7 @@
 <?php 
 	session_start();
 	include "../koneksi.php";
+	include '../assets/Qrcode/qrlib.php';
 
 	// Simpan
 	if (isset($_POST["simpan-produk-reg"])) {
@@ -15,6 +16,23 @@
         $grade = $_POST['grade'];
         $id_user = $_POST['id_user'];
         $created = $_POST['created'];
+
+		// Untuk proses simpan QR Code
+		$url_qr = "https://staging-inventory.mandirialkesindo.com/detail-produk?id=$id_produk";
+
+		// Nama file output
+		$outputFile = "../gambar/QRcode/$nama.png";
+		$nama_qr_image = "$nama.png";
+
+		// Ukuran QR code (pixels)
+		$size = 300;
+
+		// Tingkat koreksi kesalahan: L (Low), M (Medium), Q (Quartile), H (High)
+		$correctionLevel = 'M';
+
+		// Membuat QR code
+		QRcode::png($url_qr, $outputFile, $correctionLevel, $size);
+		// End Proses QR Code
 
 		
 		// Convert budget to integer
@@ -52,6 +70,10 @@
                 VALUES
                 ('$id_produk', '$id_user', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$harga', '$nama_file_baru', '$created')";
         		$query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
+
+				$qr = mysqli_query($connect, "INSERT INTO qr_link
+						(id_produk_qr, url_qr, qr_img) VALUES ('$id_produk', '$url_qr', '$nama_qr_image')
+						");
 
 				$_SESSION['info'] = 'Disimpan';
             	echo "<script>document.location.href='../data-produk-reg.php'</script>";
