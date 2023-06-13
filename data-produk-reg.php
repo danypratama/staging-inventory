@@ -168,6 +168,7 @@ include "akses.php";
                             </li>
                             <li><a class="dropdown-item" href="edit-produk-reg.php?edit-data=<?php echo $id_produk ?>">Edit</a></li>
                             <li><a class="dropdown-item delete-data" href="proses/proses-produk-reg.php?hapus-produk-reg=<?php echo $id_produk ?>">Hapus</a></li>
+                            <li><a class="dropdown-item" href="cetak-qr-code.php?id=<?php echo $id_produk ?>">Cetak QR</a></li>
                           </ul>
                         </div>
                       </td>
@@ -194,10 +195,10 @@ include "akses.php";
             </div>
             <div class="card-body p-3">
               <div class="row">
-                <div class="col-5">
+                <div class="col-md-5">
                   <img alt="Gambar Produk" id="gambarProduk" class="img-fluid">
                 </div>
-                <div class="col-7">
+                <div class="col-md-7">
                   <table class="table table-bordered table-striped">
                     <tr>
                       <td>Kode Produk</td>

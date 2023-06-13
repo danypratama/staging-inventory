@@ -56,64 +56,64 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <tr>
-                                    <td>Kode Produk</td>
-                                    <td><?php echo $data['kode_produk'] ?></td>
+                                        <td>Kode Produk</td>
+                                        <td><?php echo $data['kode_produk'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>No Izin Edar</td>
-                                    <td><?php echo $data['no_izin_edar'] ?></td>
+                                        <td>No Izin Edar</td>
+                                        <td><?php echo $data['no_izin_edar'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Nama Produk</td>
-                                    <td><?php echo $data['nama_produk']; ?></td>
+                                        <td>Nama Produk</td>
+                                        <td><?php echo $data['nama_produk']; ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Merk Produk</td>
-                                    <td><?php echo $data['nama_merk']; ?></td>
+                                        <td>Merk Produk</td>
+                                        <td><?php echo $data['nama_merk']; ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Harga Produk</td>
-                                    <td>Rp.<?php echo number_format($data['harga_produk']) ?></td>
+                                        <td>Harga Produk</td>
+                                        <td>Rp.<?php echo number_format($data['harga_produk']) ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Stock Produk</td>
-                                    <td><?php echo $data['stock'] ?></td>
+                                        <td>Stock Produk</td>
+                                        <td><?php echo $data['stock'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Kategori Produk</td>
-                                    <td><?php echo $data['kat_prod'] ?></td>
+                                        <td>Kategori Produk</td>
+                                        <td><?php echo $data['kat_prod'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Kategori Penjualan</td>
-                                    <td><?php echo $data['kat_penj'] ?></td>
+                                        <td>Kategori Penjualan</td>
+                                        <td><?php echo $data['kat_penj'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Kategori Penjualan</td>
-                                    <td><?php echo $data['nama_grade'] ?></td>
+                                        <td>Kategori Penjualan</td>
+                                        <td><?php echo $data['nama_grade'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Lokasi Produk</td>
-                                    <td><?php echo $data['nama_lokasi'] ?></td>
+                                        <td>Lokasi Produk</td>
+                                        <td><?php echo $data['nama_lokasi'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>No. Lantai</td>
-                                    <td><?php echo $data['no_lantai'] ?></td>
+                                        <td>No. Lantai</td>
+                                        <td><?php echo $data['no_lantai'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Area</td>
-                                    <td><?php echo $data['nama_area'] ?></td>
+                                        <td>Area</td>
+                                        <td><?php echo $data['nama_area'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>No. Rak</td>
-                                    <td><?php echo $data['no_rak'] ?></td>
+                                        <td>No. Rak</td>
+                                        <td><?php echo $data['no_rak'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Dibuat Tanggal</td>
-                                    <td><?php echo $data['produk_created'] ?></td>
+                                        <td>Dibuat Tanggal</td>
+                                        <td><?php echo $data['produk_created'] ?></td>
                                     </tr>
                                     <tr>
-                                    <td>Dibuat Oleh</td>
-                                    <td><?php echo $data['user_created'] ?></td>
+                                        <td>Dibuat Oleh</td>
+                                        <td><?php echo $data['user_created'] ?></td>
                                     </tr>
                                 </table>
                             </div>
