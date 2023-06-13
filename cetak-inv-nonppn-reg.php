@@ -237,7 +237,6 @@
                 Kepada : <br>
                 <?php echo $data['nama_cs'] ?> <br>
                 <?php echo $data['alamat'] ?>
-
             </div>
         </div>
         <!-- Kolom kedua -->
@@ -308,8 +307,9 @@
                     $id_nonppn_decode = base64_decode($_GET['id']);
                     $no = 1;
                     $grand_total = 0;
+                    $sub_total_spdisc = 0;
                     $sql_trx = "SELECT
-                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc,
+                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc, nonppn.note_inv,
                     sr.id_inv, sr.no_spk,
                     trx.*,
                     spr.stock,
@@ -324,6 +324,7 @@
                     WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' ORDER BY no_spk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                        $note_inv = $data_trx['note_inv'];
                         $kat_inv = $data_trx['kategori_inv'];
                         $qty = $data_trx['qty'];
                         $harga = $data_trx['harga_produk'];
@@ -334,9 +335,11 @@
                         $total = $harga - $harga_disc;
                         $sub_total = floor($total * $qty);
                         $sp_disc = $data_trx['sp_disc'] / 100;
-                        $sub_total_spdisc = $sub_total * $sp_disc;
                         $sub_total_fix = floor($sub_total - $sub_total_spdisc);
                         $grand_total += floor($sub_total_fix);
+                        $sub_total_spdisc = $grand_total * $sp_disc;
+                        $grand_total_fix = $grand_total - $sub_total_spdisc;
+
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
@@ -380,11 +383,19 @@
                         echo "<br>";
                     }
                     ?>
-                    <?php echo number_format($grand_total, 0, '.', '.') ?>
+                    <?php echo number_format($grand_total_fix, 0, '.', '.') ?>
                 </div>
             </div>
         </div>
-
+        <!-- Tampilan Note -->
+        <?php
+        if ($note_inv != '') {
+            echo "<div class='col-header-2'>";
+            echo "Note : <br>";
+            echo $note_inv;
+            echo "</div>";
+        }
+        ?>
         <div class="invoice-footer">
             <div class="col1">
                 <!-- Kolom pertama -->

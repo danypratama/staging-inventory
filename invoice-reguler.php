@@ -112,9 +112,10 @@ include "akses.php";
                                                         <th class="text-center p-3" style="width: 150px">No. Invoice</th>
                                                         <th class="text-center p-3" style="width: 150px">Tgl. Invoice</th>
                                                         <th class="text-center p-3" style="width: 150px">No. PO</th>
-                                                        <th class="text-center p-3" style="width: 200px">Nama Customer</th>
-                                                        <th class="text-center p-3" style="width: 150px">Note</th>
-                                                        <th class="text-center p-3" style="width: 150px">Aksi</th>
+                                                        <th class="text-center p-3" style="width: 250px">Nama Customer</th>
+                                                        <th class="text-center p-3" style="width: 100px">Kat. Inv</th>
+                                                        <th class="text-center p-3" style="width: 100px">Note</th>
+                                                        <th class="text-center p-3" style="width: 80px">Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -143,9 +144,10 @@ include "akses.php";
                                                             <td><?php echo $data['tgl_inv'] ?></td>
                                                             <td><?php echo $data['no_po'] ?></td>
                                                             <td><?php echo $data['nama_cs'] ?></td>
+                                                            <td><?php echo $data['kategori_inv'] ?></td>
                                                             <td><?php echo $data['note_inv'] ?></td>
                                                             <td class="text-center">
-                                                                <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
+                                                                <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                             </td>
                                                         </tr>
                                                         <?php $no++ ?>

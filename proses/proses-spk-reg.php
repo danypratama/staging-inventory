@@ -27,7 +27,6 @@ if (isset($_POST['simpan'])) {
                    VALUES
                    ('$id_spk', '$no_spk', '$tgl_spk', '$no_po', '$tgl_pesan', '$order_by', '$sales', '$id_cs', '$note', '$id_user', '$id_status', '$tgl_spk')";
         $query = mysqli_query($connect, $simpan);
-        $_SESSION['info'] = 'Disimpan';
         header("Location:../detail-produk-spk-reg.php?id=$id_spk_encode");
     }
 
@@ -57,7 +56,5 @@ if (isset($_POST['simpan'])) {
                updated_date = '$tgl_updated'
                WHERE id_spk_reg = '$id_spk'";
     $query = mysqli_query($connect, $update);
-
-    $_SESSION['info'] = 'Diupdate';
     header("Location:../detail-produk-spk-reg-dalam-proses.php?id=$id_spk_encode");
 }

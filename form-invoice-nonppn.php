@@ -87,7 +87,7 @@ include "akses.php";
               </div>
               <div class="col-sm-4">
                 <label><strong>Pelanggan Invoice</strong></label>
-                <input type="text" class="form-control" name="cs_inv" required>
+                <input type="text" class="form-control" name="cs_inv" value="<?php echo $data_spk['nama_cs']; ?>" required>
               </div>
               <div class="col-sm-2">
                 <label><strong>Jenis Invoice</strong></label>
@@ -117,7 +117,7 @@ include "akses.php";
               </div>
               <div class="col">
                 <label><strong>Note Invoice</strong></label>
-                <input type="text" class="form-control" name="note_inv" required>
+                <input type="text" class="form-control" name="note_inv">
               </div>
             </div>
             <div class="text-center mt-2">
