@@ -36,11 +36,6 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- SWEET ALERT -->
-        <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
-                                                    echo $_SESSION['info'];
-                                                }
-                                                unset($_SESSION['info']); ?>"></div>
-        <!-- END SWEET ALERT -->
         <section>
             <div class="container-fluid">
                 <div class="card shadow p-2">
@@ -100,6 +95,7 @@ include "akses.php";
                                             while ($data2 = mysqli_fetch_array($query)) {
                                                 $id_inv = $data2['id_inv_nonppn'];
                                                 $kat_inv = $data2['kategori_inv'];
+                                                $id_cs = $data2['id_customer'];
                                             ?>
                                                 <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / (<?php echo $data2['no_po'] ?>) / (<?php echo $data2['no_spk'] ?>)</p>
                                                 <?php $no++; ?>
@@ -218,9 +214,76 @@ include "akses.php";
                                 <button class="btn btn-info btn-detail" data-bs-toggle="modal" data-bs-target="#ubahKat">
                                     <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
                                 </button>
-                                <a href="#" class="btn btn-primary btn-detail">
+                                <a href="#" class="btn btn-primary btn-detail" data-bs-toggle="modal" data-bs-target="#addSpk">
                                     <i class="bi bi-plus-circle"></i> Tambah SPK
                                 </a>
+                                <!-- Modal Add SPK-->
+                                <div class="modal fade" id="addSpk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="table-responsive">
+                                                    <form action="proses/proses-invoice-nonppn.php" method="POST">
+                                                        <table class="table table-bordered table-striped" id="table2">
+                                                            <thead>
+                                                                <tr class="text-white" style="background-color: navy;">
+                                                                    <th class="text-center p-3" style="width: 20px">Pilih</th>
+                                                                    <th class="text-center p-3" style="width: 30px">No</th>
+                                                                    <th class="text-center p-3" style="width: 150px">No. SPK</th>
+                                                                    <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
+                                                                    <th class="text-center p-3" style="width: 150px">No. PO</th>
+                                                                    <th class="text-center p-3" style="width: 200px">Nama Customer</th>
+                                                                    <th class="text-center p-3" style="width: 150px">Note</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                include "koneksi.php";
+                                                                $no = 1;
+                                                                $filter = '';
+                                                                if (isset($_GET['sort'])) {
+                                                                    if ($_GET['sort'] == "baru") {
+                                                                        $filter = "ORDER BY tgl_spk DESC";
+                                                                    } elseif ($_GET['sort'] == "lama") {
+                                                                        $filter = "ORDER BY tgl_spk ASC";
+                                                                    }
+                                                                }
+                                                                $sql = "SELECT sr.*, cs.nama_cs, cs.alamat
+                                                            FROM spk_reg AS sr
+                                                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                            WHERE status_spk = 'Siap Kirim' AND id_customer = '$id_cs'  $filter";
+                                                                $query = mysqli_query($connect, $sql);
+                                                                while ($data = mysqli_fetch_array($query)) {
+                                                                ?>
+                                                                    <tr>
+                                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                                                        <td class="text-center"><input type="checkbox" name="id_spk[]" id="spk" value="<?php echo $data['id_spk_reg'] ?>"></td>
+                                                                        <td class="text-center"><?php echo $no; ?></td>
+                                                                        <td><?php echo $data['no_spk'] ?></td>
+                                                                        <td><?php echo $data['tgl_spk'] ?></td>
+                                                                        <td><?php echo $data['no_po'] ?></td>
+                                                                        <td><?php echo $data['nama_cs'] ?></td>
+                                                                        <td><?php echo $data['note'] ?></td>
+                                                                    </tr>
+                                                                    <?php $no++ ?>
+                                                                <?php } ?>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+                                                            <button type="submit" class="btn btn-primary" name="add-spk"><i class="bi bi-plus-circle"></i> Add SPK</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Modal Add SPK -->
                                 <?php
                                 $id_inv_nonppn = base64_decode($_GET['id']);
                                 $sql_cek = "SELECT 

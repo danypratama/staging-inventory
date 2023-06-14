@@ -65,7 +65,7 @@ include "akses.php";
                                 <a class="nav-link" href="spk-reg.php">Belum Diproses</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-dalam-proses.php">Belum Diproses</a>
+                                <a class="nav-link" href="spk-dalam-proses.php">Dalam Proses</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
                                 <a class="nav-link" href="spk-siap-kirim.php">Siap Kirim</a>

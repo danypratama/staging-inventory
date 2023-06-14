@@ -71,7 +71,7 @@ include "akses.php";
                                 <a class="nav-link" href="spk-reg.php">Belum Diproses</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-dalam-proses.php">Belum Diproses</a>
+                                <a class="nav-link" href="spk-dalam-proses.php">Dalam Proses</a>
                             </li>
                             <li class="nav-item flex-fill" role="presentation">
                                 <button class="nav-link active">Siap Kirim</button>
@@ -156,13 +156,14 @@ include "akses.php";
                                                             <td><?php echo $data['nama_cs'] ?></td>
                                                             <td><?php echo $data['note'] ?></td>
                                                             <td class="text-center">
-                                                                <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
+                                                                <a href="detail-produk-spk-reg-siap-kirim.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                                                             </td>
                                                         </tr>
                                                         <?php $no++ ?>
                                                     <?php } ?>
                                                 </tbody>
                                             </table>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

@@ -244,6 +244,7 @@ include "akses.php";
                                             $stock_edit = $data_trx['qty'] + $data_trx['stock'];
                                         ?>
                                             <tr>
+                                                <input type="text" name="id_inv[]" value="<?php echo $data_trx['id_inv'] ?>" readonly>
                                                 <input type="hidden" name="id_transaksi[]" id="id_<?php echo $data_trx['id_tmp'] ?>" value="TRX-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>" readonly>
                                                 <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
                                                 <input type="hidden" class="form-control" name="id_spk_reg[]" value="<?php echo $data_trx['id_spk'] ?>" readonly>

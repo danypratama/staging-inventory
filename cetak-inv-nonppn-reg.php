@@ -309,7 +309,7 @@
                     $grand_total = 0;
                     $sub_total_spdisc = 0;
                     $sql_trx = "SELECT
-                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc, nonppn.note_inv,
+                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc, nonppn.note_inv, nonppn.total_inv,
                     sr.id_inv, sr.no_spk,
                     trx.*,
                     spr.stock,
@@ -324,6 +324,8 @@
                     WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' ORDER BY no_spk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                        $id_inv_update = $data_trx['id_inv_nonppn'];
+                        $total_inv = $data_trx['total_inv'];
                         $note_inv = $data_trx['note_inv'];
                         $kat_inv = $data_trx['kategori_inv'];
                         $qty = $data_trx['qty'];
@@ -334,12 +336,8 @@
                         $harga_disc = $harga * $disc;
                         $total = $harga - $harga_disc;
                         $sub_total = floor($total * $qty);
-                        $sp_disc = $data_trx['sp_disc'] / 100;
                         $sub_total_fix = floor($sub_total - $sub_total_spdisc);
                         $grand_total += floor($sub_total_fix);
-                        $sub_total_spdisc = $grand_total * $sp_disc;
-                        $grand_total_fix = $grand_total - $sub_total_spdisc;
-
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
@@ -359,10 +357,18 @@
             </table>
         </div>
         <div class="invoice-payment">
+            <?php
+            $sql_inv = mysqli_query($connect, "SELECT id_inv_nonppn, sp_disc FROM inv_nonppn WHERE id_inv_nonppn = '$id_nonppn_decode'");
+            $data_inv = mysqli_fetch_array($sql_inv);
+            $sp_disc = $data_inv['sp_disc'] / 100;
+            $sub_total_spdisc = $grand_total * $sp_disc;
+            $grand_total_fix = $grand_total - $sub_total_spdisc;
+            ?>
             <div class="col-payment-1">
                 <!-- Kolom pertama -->
                 Terbilang :<br>
-                <?php echo terbilang($grand_total) ?> Rupiah
+                <?php echo terbilang($grand_total_fix) ?>
+
             </div>
             <div class="col-payment-2">
                 <!-- Kolom kedua -->
@@ -379,7 +385,7 @@
                 <div class="amount">
                     <?php
                     if ($kat_inv == 'Spesial Diskon') {
-                        echo "$tampil_spdisc (%)";
+                        echo $data_inv['sp_disc'] . '(%)';
                         echo "<br>";
                     }
                     ?>
@@ -395,6 +401,14 @@
             echo $note_inv;
             echo "</div>";
         }
+        ?>
+
+        <!-- Kode untuk update total harga -->
+        <?php
+        if ($total_inv != $grand_total_fix) {
+            mysqli_query($connect, "UPDATE inv_nonppn SET total_inv = '$grand_total_fix' WHERE id_inv_nonppn = '$id_inv'");
+        }
+
         ?>
         <div class="invoice-footer">
             <div class="col1">

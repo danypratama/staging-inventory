@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 10, 2023 at 10:42 AM
+-- Generation Time: Jun 13, 2023 at 03:15 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -228,14 +228,7 @@ CREATE TABLE `inv_nonppn` (
 --
 
 INSERT INTO `inv_nonppn` (`id_inv_nonppn`, `no_inv`, `tgl_inv`, `cs_inv`, `tgl_tempo`, `sp_disc`, `note_inv`, `kategori_inv`, `ongkir`, `total_harga`, `status_transaksi`, `dikirim_oleh`, `user_created`, `created_date`, `user_updated`, `updated_date`) VALUES
-('NONPPN-2306620aa528e65e08', '017/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:26:16', '', ''),
-('NONPPN-23069682d31f534208', '020/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Diskon', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:31:34', '', ''),
-('NONPPN-23069e9565e4f2b908', '016/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', '', '2023-06-08 12:21:01', '', ''),
-('NONPPN-2306a27320d92a9c08', '015/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', '', '2023-06-08 11:52:50', '', ''),
-('NONPPN-2306ab522967e52c08', '019/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:30:42', '', ''),
-('NONPPN-2306da98b5b50c9309', '021/KM/VI/2023', '09/06/2023', 'abc', '09/06/2023', 50.0, 'Kirim Gojek', 'Spesial Diskon', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-09 20:15:47', '', ''),
-('NONPPN-2306ddd612efb3a310', '022/KM/VI/2023', '10/06/2023', 'abc', '10/06/2023', 2.5, 'Kirim Gojek', 'Diskon', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-10 08:41:23', '', ''),
-('NONPPN-2306e33ff6d4d0b008', '018/KM/VI/2023', '08/06/2023', 'abc', '08/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-08 13:27:54', '', '');
+('NONPPN-2306b9a7fc02475113', '001/KM/VI/2023', '13/06/2023', 'PT. Dhyas Mitra Usaha', '13/07/2023', 10.0, 'Kirim Gosend', 'Spesial Diskon', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-13 19:17:55', '', '');
 
 -- --------------------------------------------------------
 
@@ -470,6 +463,32 @@ INSERT INTO `keterangan_out` (`id_ket_out`, `id_user`, `ket_out`, `created_date`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `qr_link`
+--
+
+CREATE TABLE `qr_link` (
+  `id_link` int(11) NOT NULL,
+  `id_produk_qr` varchar(50) NOT NULL,
+  `url_qr` varchar(180) NOT NULL,
+  `qr_img` varchar(50) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `qr_link`
+--
+
+INSERT INTO `qr_link` (`id_link`, `id_produk_qr`, `url_qr`, `qr_img`, `created_date`) VALUES
+(1, 'BR-REGac53521f2f53', 'https://staging-inventory.mandirialkesindo.com/detail-produk?id=BR-REGac53521f2f53', 'Mayo Scissors 22 CM.png', '2023-06-12 10:29:00'),
+(2, 'BR-REG5778c542e341', 'https://staging-inventory.mandirialkesindo.com/detail-produk?id=BR-REG5778c542e341', 'Thumb Dressing Forceps 19 cm.png', '2023-06-12 10:29:58'),
+(3, 'BR-REG6d6493ef01bf', 'https://staging-inventory.mandirialkesindo.com/detail-produk?id=BR-REG6d6493ef01bf', 'Thumb Dressing Forceps 23 cm.png', '2023-06-12 10:54:48'),
+(4, 'BR-REG5036d872cb87', 'https://staging-inventory.mandirialkesindo.com/detail-produk.php?id=BR-REG5036d872cb87', 'Thumb Dressing Forceps 14 cm.png', '2023-06-13 19:12:35'),
+(5, 'BR-REG9b682f3c5838', 'https://staging-inventory.mandirialkesindo.com/detail-produk.php?id=BR-REG9b682f3c5838', 'Meriam Cotton Plier 16 cm.png', '2023-06-13 19:13:34'),
+(6, 'BR-REG835084308577', 'https://staging-inventory.mandirialkesindo.com/detail-produk.php?id=BR-REG835084308577', 'Thumb Dressing Forceps 18 cm.png', '2023-06-13 19:14:10');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `spk_reg`
 --
 
@@ -499,13 +518,8 @@ CREATE TABLE `spk_reg` (
 --
 
 INSERT INTO `spk_reg` (`id_spk_reg`, `id_user`, `id_customer`, `id_inv`, `id_sales`, `id_orderby`, `status_spk`, `no_spk`, `no_po`, `tgl_spk`, `tgl_pesanan`, `note`, `menu_cancel`, `created_date`, `user_updated`, `updated_date`, `user_cancel`, `date_cancel`) VALUES
-('SPKREG-23062d62bd096b9406', 'USER03595a8447ab', 'CS015858a52568', '', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Cancel Order', '001/SPK/VI/2023', '001', '06/06/2023, 19:49', '06/06/2023', 'Harga Tidak Cocok', 'Dalam Proses', '06/06/2023, 19:49', '', '', 'dany_pratama', '06/06/2023, 19:53:29'),
-('SPKREG-23063398469b3eae09', 'USER03595a8447ab', 'CS03492a42198f', 'NONPPN-2306ddd612efb3a310', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '006/SPK/VI/2023', '002', '09/06/2023, 14:21', '09/06/2023', '', '', '09/06/2023, 14:21', '', '', '', ''),
-('SPKREG-230660a24114639608', 'USER03595a8447ab', 'CS015858a52568', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '003/SPK/VI/2023', '172/PO-dsa/VI/2023', '08/06/2023, 9:11', '08/06/2023', '', '', '08/06/2023, 9:11', '', '', '', ''),
-('SPKREG-2306a92a304d7fa710', 'USER03595a8447ab', 'CS018b7ca30d99', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Belum Diproses', '007/SPK/VI/2023', '003', '10/06/2023, 15:10', '10/06/2023', '', '', '10/06/2023, 15:10', '', '', '', ''),
-('SPKREG-2306d338fb231a7307', 'USER03595a8447ab', 'CS01111c859db5', 'NONPPN-23069682d31f534208', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '002/SPK/VI/2023', 'PO IUD IMPLANT BATUBARA', '07/06/2023, 8:42', '07/06/2023', '', '', '07/06/2023, 8:42', '', '', '', ''),
-('SPKREG-2306ed22f78767bd09', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306da98b5b50c9309', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '005/SPK/VI/2023', '173/PO-dsa/VI/2023', '09/06/2023, 14:11', '09/06/2023', '', '', '09/06/2023, 14:11', '', '', '', ''),
-('SPKREG-2306f6b9f4deb64308', 'USER03595a8447ab', 'CS018b7ca30d99', '', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Siap Kirim', '004/SPK/VI/2023', '001', '08/06/2023, 14:34', '08/06/2023', '', '', '08/06/2023, 14:34', '', '', '', '');
+('SPKREG-230630b015fb6abf13', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306b9a7fc02475113', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '002/SPK/VI/2023', '002', '13/06/2023, 19:09', '13/06/2023', '', '', '13/06/2023, 19:09', '', '', '', ''),
+('SPKREG-2306b032a045519513', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306b9a7fc02475113', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '001/SPK/VI/2023', '001', '13/06/2023, 19:07', '13/06/2023', '', '', '13/06/2023, 19:07', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -526,9 +540,9 @@ CREATE TABLE `stock_produk_reguler` (
 --
 
 INSERT INTO `stock_produk_reguler` (`id_stock_prod_reg`, `id_user`, `id_produk_reg`, `stock`, `created_date`) VALUES
-('STOCKREG194c62c4f0f1', 'USER34e2f73c9751', 'BR-REGb74bb17fa836', 500, '24/05/2023, 17:09'),
-('STOCKREG40bcdec3c8d0', 'USER03595a8447ab', 'BR-REG6d4d12f6c304', 300, '23/05/2023, 17:06'),
-('STOCKREGb175abd5c42f', 'USER03595a8447ab', 'BR-REGffb0b62a09cf', 997000, '23/05/2023, 11:51');
+('STOCKREG55e46f5fa230', 'USER03595a8447ab', 'BR-REG835084308577', 4500, '13/06/2023, 19:14'),
+('STOCKREG8e323a72e891', 'USER03595a8447ab', 'BR-REG9b682f3c5838', 1500, '13/06/2023, 19:14'),
+('STOCKREGff8ea8359574', 'USER03595a8447ab', 'BR-REG5036d872cb87', 7500, '13/06/2023, 19:14');
 
 -- --------------------------------------------------------
 
@@ -938,13 +952,9 @@ CREATE TABLE `tb_produk_reguler` (
 --
 
 INSERT INTO `tb_produk_reguler` (`id_produk_reg`, `id_user`, `id_merk`, `id_kat_produk`, `id_kat_penjualan`, `id_grade`, `id_lokasi`, `kode_produk`, `nama_produk`, `harga_produk`, `gambar`, `created_date`, `updated_date`, `user_updated`, `register_value`) VALUES
-('BR-REG072519133768', 'USER03595a8447ab', 'MERK36d48fe7aff0', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-DF18', 'Thumb Dressing Forceps 18 cm', 15000, 'IMG641e801508f53.jpg', '16/03/2023, 19:58', '06/04/2023, 9:21', '', 0),
-('BR-REG2fa92bf1f42b', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODafef61dd4c39', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-MAYO17', 'Mayo Scissors 17 CM', 15000, 'IMG641ea85d5bd0a.jpg', '25/03/2023, 14:53', '', '', 0),
-('BR-REG6d4d12f6c304', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'S-DF18', 'Thumb Dressing Forceps 18 cm', 20000, 'IMG642e2cd2f0809.jpg', '06/04/2023, 9:22', '', '', 1),
-('BR-REGb74bb17fa836', 'USER34e2f73c9751', 'MERK2ce36179b1d3', 'KATPRODef22e44d1e27', 'KATPENJ64328641f032', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', '95846', 'dressing drum ', 450000, 'IMG646de1a77cbb0.jpg', '24/05/2023, 17:06', '', '', 1),
-('BR-REGd5137f56b7b4', 'USER03595a8447ab', 'MERK36d48fe7aff0', 'KATPRODafef61dd4c39', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', 'M-COTTONPLIER', 'Meriam Cotton Plier', 15000, 'IMG641e7adc19849.jpg', '25/03/2023, 11:35', '25/03/2023, 12:00', '', 0),
-('BR-REGe2e00ce0199b', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPRODf77d30badbc6', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-DF16', 'Thumb Dressing Forceps 16 cm', 7500, 'IMG641e90d9b5fcf.jpg', '16/03/2023, 19:20', '25/03/2023, 13:12', '', 0),
-('BR-REGffb0b62a09cf', 'USER47100114a730', 'MERK2ce36179b1d3', 'KATPRODafef61dd4c39', 'KATPENJ3a92d8708967', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', '1111', 'Abc', 428000, 'IMG642e73886c763.jpg', '06/04/2023, 14:24', '', '', 1);
+('BR-REG5036d872cb87', 'USER03595a8447ab', 'MERK36d48fe7aff0', 'KATPROD2ec542dacb2a', 'KATPENJ64328641f032', 'GRADE51ee38cc29ad', 'LOK172cba11ee8d', 'M-DF14', 'Thumb Dressing Forceps 14 cm', 7500, 'IMG64885d330a1d4.jpg', '13/06/2023, 19:12', '', '', 1),
+('BR-REG835084308577', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPROD2ec542dacb2a', 'KATPENJ64328641f032', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', 'M-DF18', 'Thumb Dressing Forceps 18 cm', 15000, 'IMG64885d926c87d.jpg', '13/06/2023, 19:14', '', '', 1),
+('BR-REG9b682f3c5838', 'USER03595a8447ab', 'MERK2ce36179b1d3', 'KATPROD2ec542dacb2a', 'KATPENJ64328641f032', 'GRADE51ee38cc29ad', 'LOK5a52042305bc', 'M-COTTON_PLIER', 'Meriam Cotton Plier 16 cm', 10000, 'IMG64885d6e66c3d.jpg', '13/06/2023, 19:13', '', '', 1);
 
 -- --------------------------------------------------------
 
@@ -1036,14 +1046,6 @@ CREATE TABLE `tmp_produk_spk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `tmp_produk_spk`
---
-
-INSERT INTO `tmp_produk_spk` (`id_tmp`, `id_spk`, `id_produk`, `qty`, `status_tmp`) VALUES
-('20234376d4baf7f006', 'SPKREG-2306a92a304d7fa710', 'BR-REGffb0b62a09cf', 893, 1),
-('2023c4b93ed7746506', 'SPKREG-2306a92a304d7fa710', 'BR-REGb74bb17fa836', 100, 1);
-
---
 -- Triggers `tmp_produk_spk`
 --
 DELIMITER $$
@@ -1094,14 +1096,10 @@ CREATE TABLE `transaksi_produk_reg` (
 --
 
 INSERT INTO `transaksi_produk_reg` (`id_transaksi`, `id_spk`, `id_produk`, `harga`, `qty`, `disc`, `total_harga`, `status_trx`, `created_date`) VALUES
-('TRX-2306052bc76f7d8a09', 'SPKREG-23063398469b3eae09', 'BR-REG6d4d12f6c304', 25000, 600, 0.0, 0, 1, '2023-06-09 14:21:37'),
-('TRX-230619f22d4c2f4c08', 'SPKREG-2306d338fb231a7307', 'BR-REGb74bb17fa836', 450000, 100, 0.0, 0, 0, '2023-06-08 09:12:07'),
-('TRX-23062927b5d5f26009', 'SPKREG-2306ed22f78767bd09', 'BR-REGffb0b62a09cf', 428000, 1000, 0.0, 0, 0, '2023-06-09 14:12:02'),
-('TRX-2306340aac2bcf8e08', 'SPKREG-230660a24114639608', 'BR-REGffb0b62a09cf', 428000, 100, 0.0, 0, 0, '2023-06-08 09:12:00'),
-('TRX-23063a5deb8e19a408', 'SPKREG-2306d338fb231a7307', 'BR-REGffb0b62a09cf', 428000, 7598, 0.0, 0, 0, '2023-06-08 09:12:07'),
-('TRX-2306448a0ba811da09', 'SPKREG-23063398469b3eae09', 'BR-REGb74bb17fa836', 45000, 100, 0.0, 0, 1, '2023-06-09 14:21:37'),
-('TRX-2306ef981ad07fb109', 'SPKREG-2306f6b9f4deb64308', 'BR-REGffb0b62a09cf', 428000, 1007, 0.0, 0, 0, '2023-06-09 20:15:09'),
-('TRX-2306f79ed7680fae08', 'SPKREG-230660a24114639608', 'BR-REGb74bb17fa836', 450000, 100, 0.0, 0, 0, '2023-06-08 09:12:00');
+('TRX-23062994f3abf94213', 'SPKREG-2306b032a045519513', 'BR-REG9b682f3c5838', 10000, 500, 0.0, 5000000, 1, '2023-06-13 19:15:58'),
+('TRX-2306335937bbd7ee13', 'SPKREG-230630b015fb6abf13', 'BR-REG835084308577', 15000, 500, 0.0, 7500000, 1, '2023-06-13 19:15:34'),
+('TRX-230642753b1bd27c13', 'SPKREG-2306b032a045519513', 'BR-REG5036d872cb87', 7500, 1500, 0.0, 11250000, 1, '2023-06-13 19:15:58'),
+('TRX-2306fe597b0ba1a413', 'SPKREG-230630b015fb6abf13', 'BR-REG5036d872cb87', 7500, 1000, 0.0, 7500000, 1, '2023-06-13 19:15:34');
 
 --
 -- Triggers `transaksi_produk_reg`
@@ -1147,13 +1145,6 @@ CREATE TABLE `trx_cancel` (
   `total_harga` int(11) NOT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `trx_cancel`
---
-
-INSERT INTO `trx_cancel` (`id_trx_cancel`, `id_spk`, `id_produk`, `harga`, `qty`, `disc`, `total_harga`, `created_date`) VALUES
-('TRX-230678c31cdd8ff506', 'SPKREG-23062d62bd096b9406', 'BR-REGb74bb17fa836', 450000, 100, 0.0, 0, '2023-06-06 19:53:29');
 
 -- --------------------------------------------------------
 
@@ -1296,6 +1287,7 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HIS0be4dcae2c22', 'USER47100114a730', '23/05/2023 11:20:45', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS0d3b834789c6', 'USER47100114a730', '02/06/2023 17:32:03', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
 ('HIS0d3b8ac4f214', 'USER03595a8447ab', '10/06/2023 13:06:59', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HIS11c23651892a', 'USER03595a8447ab', '12/06/2023 10:24:20', '2023/06/12 10:27:46', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS130abc404849', 'USER34e2f73c9751', '26/05/2023 9:35:24', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS1433744e3f20', 'USER47100114a730', '23/05/2023 10:14:26', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS18a9956e557e', 'USER03595a8447ab', '07/06/2023 8:36:27', '2023/06/07 9:24:46', '125.160.234.251', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Offline'),
@@ -1303,14 +1295,17 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HIS1f982dd2f54d', 'USER47100114a730', '06/06/2023 17:51:52', '', '110.138.89.254', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS26c340adec2a', 'USER47100114a730', '25/05/2023 13:06:02', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS28d3de1dc028', 'USER03595a8447ab', '23/05/2023 17:05:40', '', '180.244.166.20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS3801f3a1f2f0', 'USER03595a8447ab', '13/06/2023 18:57:46', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS39a99f93e968', 'USER03595a8447ab', '29/05/2023 9:10:29', '', '110.138.93.247', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS3d085f572541', 'USER03595a8447ab', '31/05/2023 15:59:35', '', '110.138.94.146', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS4336312cc383', 'USER03595a8447ab', '23/05/2023 14:52:26', '', '110.138.80.148', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS448965bcd4d7', 'USER03595a8447ab', '02/06/2023 19:13:23', '', '103.155.168.17', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36', 'Mobile', 'Karawang,Indonesia\n', 'Online'),
 ('HIS4a91337fde93', 'USER34e2f73c9751', '29/05/2023 13:39:29', '', '110.138.89.200', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS52c2e349c7f5', 'USER03595a8447ab', '13/06/2023 12:14:35', '2023/06/13 13:07:36', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS5e58834b05d2', 'USER47100114a730', '23/05/2023 14:57:02', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS5e90966c60da', 'USER34e2f73c9751', '29/05/2023 9:19:37', '', '110.138.89.108', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS61beed25c823', 'USER34e2f73c9751', '25/05/2023 14:58:20', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS6bd964efdb4f', 'USER03595a8447ab', '12/06/2023 15:46:26', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS6ca5203a7330', 'USER03595a8447ab', '24/05/2023 16:43:23', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS7846a686d478', 'USER47100114a730', '23/05/2023 10:37:46', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS7bdd837926d1', 'USER03595a8447ab', '26/05/2023 8:41:51', '', '110.138.87.166', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
@@ -1318,29 +1313,39 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HIS85a5ddfd7a2f', 'USER47100114a730', '24/05/2023 16:52:13', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS876cd0b32b8b', 'USER47100114a730', '25/05/2023 13:06:01', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS8dd4eaf0fb8f', 'USER47100114a730', '03/06/2023 8:41:31', '', '112.215.235.250', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
+('HIS9205fec2f23f', 'USER03595a8447ab', '12/06/2023 8:06:06', '2023/06/12 8:45:01', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS93614e089ff2', 'USER03595a8447ab', '09/06/2023 8:21:51', '2023/06/09 8:54:04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
+('HIS99c4fc383d9f', 'USER03595a8447ab', '13/06/2023 17:32:31', '2023/06/13 17:38:42', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS9e2d8d0ae92e', 'USER34e2f73c9751', '26/05/2023 15:44:49', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISa2e6b85fe592', 'USER03595a8447ab', '23/05/2023 17:28:14', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISa968ef15a554', 'USER34e2f73c9751', '24/05/2023 16:55:05', '', '114.79.3.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISaa49f46a5c35', 'USER34e2f73c9751', '29/05/2023 9:50:45', '', '110.138.89.108', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISadbf8aeae159', 'USER03595a8447ab', '12/06/2023 10:28:29', '2023/06/12 15:46:21', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISb00ba4b820bf', 'USER03595a8447ab', '25/05/2023 12:00:43', '2023/05/25 12:02:22', '180.242.71.136', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Offline'),
 ('HISb56f6e52db24', 'USER34e2f73c9751', '26/05/2023 8:28:28', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISb89ed5fb6c5b', 'USER47100114a730', '06/06/2023 9:49:44', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
+('HISba0fbd8f2b31', 'USER03595a8447ab', '12/06/2023 8:45:47', '2023/06/12 9:39:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISbcf16947601e', 'USER03595a8447ab', '03/06/2023 9:27:55', '', '110.138.83.9', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISbf5f0217d558', 'USER03595a8447ab', '09/06/2023 8:54:10', '2023/06/09 13:08:39', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISc02b5b55aeb6', 'USER03595a8447ab', '23/05/2023 11:42:32', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISc2120c6d1560', 'USER03595a8447ab', '13/06/2023 17:38:58', '2023/06/13 18:57:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISc56e0c456135', 'USER34e2f73c9751', '24/05/2023 16:14:52', '', '114.79.3.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISc6fbc3189b82', 'USER47100114a730', '05/06/2023 15:05:40', '', '110.138.87.78', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISc9b0b7f90486', 'USER03595a8447ab', '13/06/2023 13:08:48', '2023/06/13 16:50:35', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIScf6427638413', 'USER34e2f73c9751', '25/05/2023 9:14:32', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISd14332f8e704', 'USER03595a8447ab', '13/06/2023 16:50:40', '2023/06/13 17:32:27', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISd301cefd97d8', 'USER47100114a730', '07/06/2023 8:13:12', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/114.0.5735.99 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
 ('HISd45648941fe5', 'USER03595a8447ab', '08/06/2023 15:12:18', '2023/06/08 15:43:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISd673d360fc81', 'USER03595a8447ab', '05/06/2023 16:44:15', '', '125.160.230.98', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISda13dbd24976', 'USER03595a8447ab', '13/06/2023 8:08:52', '2023/06/13 12:14:28', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISde56ba9d3cff', 'USER47100114a730', '25/05/2023 10:30:40', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISe216e588033b', 'USER03595a8447ab', '06/06/2023 10:08:13', '', '110.138.81.127', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
 ('HISe65dcb283b5b', 'USER03595a8447ab', '10/06/2023 8:40:35', '2023/06/10 13:06:53', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISe6bdfb3d29d4', 'USER47100114a730', '24/05/2023 16:23:17', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISecc1060510da', 'USER34e2f73c9751', '25/05/2023 14:39:16', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf10d251d0941', 'USER03595a8447ab', '12/06/2023 9:39:53', '2023/06/12 9:47:16', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISf21ec41fa931', 'USER03595a8447ab', '24/05/2023 8:26:10', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf5eebd16a65e', 'USER03595a8447ab', '12/06/2023 9:39:07', '2023/06/12 9:39:41', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISf69d5157c157', 'USER03595a8447ab', '23/05/2023 16:35:16', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISf9ee9e35dba2', 'USER47100114a730', '25/05/2023 9:12:21', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISfdcc159257d5', 'USER03595a8447ab', '06/06/2023 17:35:49', '', '110.138.93.104', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
@@ -1449,6 +1454,12 @@ ALTER TABLE `keterangan_in`
 --
 ALTER TABLE `keterangan_out`
   ADD PRIMARY KEY (`id_ket_out`);
+
+--
+-- Indexes for table `qr_link`
+--
+ALTER TABLE `qr_link`
+  ADD PRIMARY KEY (`id_link`);
 
 --
 -- Indexes for table `spk_reg`
@@ -1571,6 +1582,16 @@ ALTER TABLE `user_history`
 --
 ALTER TABLE `user_role`
   ADD PRIMARY KEY (`id_user_role`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `qr_link`
+--
+ALTER TABLE `qr_link`
+  MODIFY `id_link` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

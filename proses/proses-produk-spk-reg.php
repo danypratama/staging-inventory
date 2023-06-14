@@ -60,9 +60,10 @@ if (isset($_POST['simpan-tmp'])) {
             $hrg = intval($hrg); // Mengubah string harga menjadi integer
             $jml =  str_replace(',', '', $qty[$i]);
             $jml = intval($jml);
+            $total_harga = $hrg * $jml;
 
             // Query INSERT
-            $sql = "INSERT INTO transaksi_produk_reg (id_transaksi, id_spk, id_produk, harga, qty) VALUES ('$id_trx', '$spk_reg', '$produk', '$hrg', '$jml')";
+            $sql = "INSERT INTO transaksi_produk_reg (id_transaksi, id_spk, id_produk, harga, qty, total_harga) VALUES ('$id_trx', '$spk_reg', '$produk', '$hrg', '$jml', '$total_harga')";
             $query1 = mysqli_query($connect, $sql);
 
             $sql_spk = "UPDATE spk_reg SET status_spk = 'Dalam Proses' WHERE id_spk_reg = '$spk_reg'";
