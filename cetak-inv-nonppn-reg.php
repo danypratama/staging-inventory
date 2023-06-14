@@ -358,11 +358,12 @@
         </div>
         <div class="invoice-payment">
             <?php
-            $sql_inv = mysqli_query($connect, "SELECT id_inv_nonppn, sp_disc FROM inv_nonppn WHERE id_inv_nonppn = '$id_nonppn_decode'");
+            $sql_inv = mysqli_query($connect, "SELECT id_inv_nonppn, sp_disc, ongkir FROM inv_nonppn WHERE id_inv_nonppn = '$id_nonppn_decode'");
             $data_inv = mysqli_fetch_array($sql_inv);
             $sp_disc = $data_inv['sp_disc'] / 100;
+            $ongkir = $data_inv['ongkir'];
             $sub_total_spdisc = $grand_total * $sp_disc;
-            $grand_total_fix = $grand_total - $sub_total_spdisc;
+            $grand_total_fix = $grand_total - $sub_total_spdisc + $ongkir;
             ?>
             <div class="col-payment-1">
                 <!-- Kolom pertama -->
@@ -374,6 +375,13 @@
                 <!-- Kolom kedua -->
                 <div class="grand-total">
                     <?php
+                    if ($ongkir != 0) {
+                        echo "Ongkir (Rp):";
+                        echo "<br>";
+                    }
+                    ?>
+
+                    <?php
                     if ($kat_inv == 'Spesial Diskon') {
                         echo 'Spesial Diskon :';
                         echo "<br>";
@@ -383,6 +391,13 @@
                     Grand total (Rp):
                 </div>
                 <div class="amount">
+                    <?php
+                    if ($ongkir != 0) {
+                        echo number_format($ongkir, 0, '.', '.');
+                        echo "<br>";
+                    }
+                    ?>
+
                     <?php
                     if ($kat_inv == 'Spesial Diskon') {
                         echo $data_inv['sp_disc'] . '(%)';
