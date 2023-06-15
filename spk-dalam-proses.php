@@ -14,6 +14,16 @@ include "akses.php";
     <meta content="" name="description">
     <meta content="" name="keywords">
     <?php include "page/head.php"; ?>
+    <style>
+        @media (max-width: 767px) {
+
+            /* Tambahkan aturan CSS khusus untuk tampilan mobile di bawah 767px */
+            .col-12.col-md-2 {
+                /* Contoh: Mengatur tinggi elemen select pada tampilan mobile */
+                height: 50px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -45,57 +55,124 @@ include "akses.php";
         </div><!-- End Page Title -->
 
         <section>
-            <div class="container-fluid">
-                <div class="card">
-                    <div class="card-body mt-3">
-                        <a href="form-create-spk-reg.php" class="btn btn-primary btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK Reguler</a>
-                        <a href="form-create-spk-ecat.php" class="btn btn-success btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK E-cat</a>
+            <div class="card">
+                <div class="card-body mt-3">
+                    <div class="row mt-4 text-center">
+                        <div class="mb-4" style="width: 180px;">
+                            <a href="form-create-spk-reg.php" class="btn btn-primary btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK Reguler</a>
+                        </div>
+                        <div class="mb-4" style="width: 160px;">
+                            <a href="form-create-spk-ecat.php" class="btn btn-success btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK E-cat</a>
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-body mt-3">
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-7">
-                                    <nav>
-                                        <ol class="breadcrumb" style="font-size: 15px;">
-                                            <li class="breadcrumb-item active">SPK Reguler</li>
-                                            <li class="breadcrumb-item"><a style="color: blue;" href="spk-ecat.php">SPK E-Cat</a></li>
-                                        </ol>
-                                    </nav>
-                                </div>
+            </div>
+            <div class="card">
+                <div class="mt-4">
+                    <div class="ps-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <nav>
+                                    <ol class="breadcrumb" style="font-size: 18px;">
+                                        <li class="breadcrumb-item active">SPK Reguler</li>
+                                        <li class="breadcrumb-item"><a style="color: blue;" href="spk-ecat.php">SPK E-Cat</a></li>
+                                    </ol>
+                                </nav>
                             </div>
                         </div>
-                        <ul class="nav nav-tabs d-flex" role="tablist" id="myTab" role="tablist">
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-reg.php">Belum Diproses</a>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link active">Dalam Proses</button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-siap-kirim.php?sort=baru">Siap Kirim</a>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="invoice-reguler.php?sort=baru">Invoice Sudah Dicetak</a>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link" id="dikirim-tab" data-bs-toggle="tab" data-bs-target="#dikirim-tab-pane" type="button" role="tab" aria-controls="dikirim-tab-pane" aria-selected="false">Dikirim</button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link" id="diterima-tab" data-bs-toggle="tab" data-bs-target="#diterima-tab-pane" type="button" role="tab" aria-controls="diterima-tab-pane" aria-selected="false">Diterima</button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="transaksi-cancel.php">Transaksi Cancel</a>
-                            </li>
-                        </ul>
-                        <div class="card-body bg-body rounded mt-3">
-                            <div class="card-body pt-3">
+                    </div>
+                    <ul class="nav nav-tabs d-flex ms-3 me-3 justify-content-between" role="tablist" id="myTab" role="tablist">
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            $sql_belum_diproses = " SELECT sr.*, cs.nama_cs, cs.alamat
+                                                        FROM spk_reg AS sr
+                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                        WHERE status_spk = 'Belum Diproses'";
+                            $query_belum_diproses = mysqli_query($connect, $sql_belum_diproses);
+                            $total_data_belum_diproses = mysqli_num_rows($query_belum_diproses);
+                            ?>
+                            <a class="nav-link" href="spk-reg.php">
+                                Belum Diproses &nbsp;
+                                <?php if ($total_data_belum_diproses != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $total_data_belum_diproses . '</span>';
+                                }
+                                ?>
+                            </a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            $sql_dalam_proses = " SELECT sr.*, cs.nama_cs, cs.alamat
+                                                        FROM spk_reg AS sr
+                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                        WHERE status_spk = 'Dalam Proses'";
+                            $query_dalam_proses = mysqli_query($connect, $sql_dalam_proses);
+                            $total_data_dalam_proses = mysqli_num_rows($query_dalam_proses);
+                            ?>
+                            <button class="nav-link active">
+                                Dalam Proses &nbsp;
+                                <?php if ($total_data_dalam_proses != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $total_data_dalam_proses . '</span>';
+                                }
+                                ?>
+                            </button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            include "koneksi.php";
+                            $sql_siap_kirim = " SELECT sr.*, cs.nama_cs, cs.alamat
+                                    FROM spk_reg AS sr
+                                    JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                    WHERE status_spk = 'Siap Kirim'";
+                            $query_siap_kirim = mysqli_query($connect, $sql_siap_kirim);
+                            $total_data_siap_kirim = mysqli_num_rows($query_siap_kirim);
+                            ?>
+                            <a class="nav-link" href="spk-siap-kirim.php?sort=baru">Siap Kirim &nbsp;<span class="badge text-bg-secondary"><?php echo $total_data_siap_kirim ?></span></a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            $sql_inv = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_nonppn AS nonppn
+                                LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+                            $query_inv = mysqli_query($connect, $sql_inv);
+                            $total_inv = mysqli_num_rows($query_inv);
+                            ?>
+                            <?php
+                            $sql_inv_ppn = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_ppn AS ppn
+                                LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+                            $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
+                            $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
+                            ?>
+                            <a class="nav-link" href="invoice-reguler.php?sort=baru">
+                                Invoice Sudah Dicetak &nbsp;
+                                <?php if ($total_inv != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $total_inv + $total_inv_ppn . '</span>';
+                                }
+                                ?>
+                            </a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="dikirim-tab" data-bs-toggle="tab" data-bs-target="#dikirim-tab-pane" type="button" role="tab" aria-controls="dikirim-tab-pane" aria-selected="false">Dikirim</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="diterima-tab" data-bs-toggle="tab" data-bs-target="#diterima-tab-pane" type="button" role="tab" aria-controls="diterima-tab-pane" aria-selected="false">Diterima</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <a class="nav-link" href="transaksi-cancel.php">Transaksi Cancel</a>
+                        </li>
+                    </ul>
+                    <div class="card-body bg-body rounded mt-3">
+                        <div class="tab-content">
+                            <div class="card p-3 pt-3">
                                 <div class="row mb-3">
-                                    <div class="col-2">
+                                    <div class="col-12 col-md-2">
                                         <form action="" method="GET">
                                             <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange='if(this.value != 0) { this.form.submit(); }'>
                                                 <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
@@ -183,9 +260,8 @@ include "akses.php";
                                     </table>
                                 </div>
                             </div>
+
                         </div>
-                        <!-- End Dalam Proses -->
-                        <!-- ================================================ -->
                     </div>
                 </div>
             </div>

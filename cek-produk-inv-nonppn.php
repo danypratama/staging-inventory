@@ -92,6 +92,8 @@ include "akses.php";
                                                     JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
                                                     WHERE nonppn.id_inv_nonppn = '$id_inv'";
                                             $query = mysqli_query($connect, $sql);
+                                            $totalData = mysqli_num_rows($query);
+
                                             while ($data2 = mysqli_fetch_array($query)) {
                                                 $id_inv = $data2['id_inv_nonppn'];
                                                 $kat_inv = $data2['kategori_inv'];
@@ -227,6 +229,14 @@ include "akses.php";
                                             </div>
                                             <div class="modal-body">
                                                 <div class="table-responsive">
+                                                    <?php
+                                                    include "koneksi.php";
+                                                    $id_inv = base64_decode($_GET['id']);
+                                                    $no = 1;
+                                                    $sql = "SELECT * FROM spk_reg WHERE id_inv = '$id_inv'";
+                                                    $query = mysqli_query($connect, $sql);
+                                                    $totalData = mysqli_num_rows($query);
+                                                    ?>
                                                     <form action="proses/proses-invoice-nonppn.php" method="POST">
                                                         <table class="table table-bordered table-striped" id="table2">
                                                             <thead>
@@ -244,30 +254,22 @@ include "akses.php";
                                                                 <?php
                                                                 include "koneksi.php";
                                                                 $no = 1;
-                                                                $filter = '';
-                                                                if (isset($_GET['sort'])) {
-                                                                    if ($_GET['sort'] == "baru") {
-                                                                        $filter = "ORDER BY tgl_spk DESC";
-                                                                    } elseif ($_GET['sort'] == "lama") {
-                                                                        $filter = "ORDER BY tgl_spk ASC";
-                                                                    }
-                                                                }
-                                                                $sql = "SELECT sr.*, cs.nama_cs, cs.alamat
-                                                            FROM spk_reg AS sr
-                                                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_spk = 'Siap Kirim' AND id_customer = '$id_cs'  $filter";
-                                                                $query = mysqli_query($connect, $sql);
-                                                                while ($data = mysqli_fetch_array($query)) {
+                                                                $sql_inv = "SELECT sr.*, cs.nama_cs, cs.alamat
+                                                                        FROM spk_reg AS sr
+                                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                                        WHERE status_spk = 'Siap Kirim' AND id_cs = '$id_cs'";
+                                                                $query_inv = mysqli_query($connect, $sql_inv);
+                                                                while ($data_inv = mysqli_fetch_array($query_inv)) {
                                                                 ?>
                                                                     <tr>
                                                                         <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                                        <td class="text-center"><input type="checkbox" name="id_spk[]" id="spk" value="<?php echo $data['id_spk_reg'] ?>"></td>
+                                                                        <td class="text-center"><input type="checkbox" name="id_spk[]" value="<?php echo $data_inv['id_spk_reg'] ?>"></td>
                                                                         <td class="text-center"><?php echo $no; ?></td>
-                                                                        <td><?php echo $data['no_spk'] ?></td>
-                                                                        <td><?php echo $data['tgl_spk'] ?></td>
-                                                                        <td><?php echo $data['no_po'] ?></td>
-                                                                        <td><?php echo $data['nama_cs'] ?></td>
-                                                                        <td><?php echo $data['note'] ?></td>
+                                                                        <td><?php echo $data_inv['no_spk'] ?></td>
+                                                                        <td><?php echo $data_inv['tgl_spk'] ?></td>
+                                                                        <td><?php echo $data_inv['no_po'] ?></td>
+                                                                        <td><?php echo $data_inv['nama_cs'] ?></td>
+                                                                        <td><?php echo $data_inv['note'] ?></td>
                                                                     </tr>
                                                                     <?php $no++ ?>
                                                                 <?php } ?>
@@ -278,6 +280,49 @@ include "akses.php";
                                                             <button type="submit" class="btn btn-primary" name="add-spk"><i class="bi bi-plus-circle"></i> Add SPK</button>
                                                         </div>
                                                     </form>
+                                                    <script>
+                                                        // Mendapatkan checkbox SPK
+                                                        const spkCheckboxes = document.querySelectorAll('input[name="id_spk[]"]');
+
+                                                        // Mendapatkan jumlah total checkbox yang dipilih
+                                                        function getSelectedCheckboxCount() {
+                                                            let count = 0;
+                                                            spkCheckboxes.forEach(function(checkbox) {
+                                                                if (checkbox.checked) {
+                                                                    count++;
+                                                                }
+                                                            });
+                                                            return count;
+                                                        }
+
+                                                        // Event listener untuk setiap checkbox
+                                                        spkCheckboxes.forEach(function(checkbox) {
+                                                            checkbox.addEventListener('change', function() {
+                                                                // console.log("Total Data: " + <?php echo $totalData; ?>);
+                                                                // console.log("Total Checkbox: " + getSelectedCheckboxCount());
+
+                                                                const totalData = <?php echo $totalData; ?>;
+                                                                const maxAllowed = 5;
+
+                                                                if (totalData + getSelectedCheckboxCount() > maxAllowed) {
+                                                                    const message = "Data Anda saat ini: " + totalData + " Anda hanya bisa menambahkan " + (maxAllowed - totalData) + " data.";
+                                                                    Swal.fire({
+                                                                        icon: 'error',
+                                                                        title: 'Data melebihi batasan maksimum',
+                                                                        text: message,
+                                                                        didOpen: () => {
+                                                                            // Mengatur ulang semua checkbox menjadi tidak dipilih
+                                                                            spkCheckboxes.forEach(function(checkbox) {
+                                                                                checkbox.checked = false;
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                        });
+                                                    </script>
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -317,6 +362,43 @@ include "akses.php";
                                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
                                 }
                                 ?>
+                                <button class="btn btn-warning btn-detail" data-bs-toggle="modal" data-bs-target="#Dikirim">
+                                    <i class="bi bi-send"></i> Proses Dikirim
+                                </button>
+                                <!-- Modal Add SPK-->
+                                <div class="modal fade" id="Dikirim" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="proses/proses-invoice-nonppn.php" method="POST">
+                                                    <div class="mb-3">
+                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                                        <label>Dikirim Oleh</label>
+                                                        <select name="pengirim" class="form-select">
+                                                            <option value="">Pilih...</option>
+                                                            <?php
+                                                            include "koneksi.php";
+                                                            $sql_driver = mysqli_query($connect, "SELECT * FROM tb_driver");
+                                                            while ($data_driver = mysqli_fetch_array($sql_driver)) {
+                                                            ?>
+                                                                <option value="<?php echo $data_driver['nama_pengirim'] ?>"><?php echo $data_driver['nama_pengirim'] ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                                        <button class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Modal Add SPK -->
                             </div>
                             <!-- Modal Input SPdisc Inv -->
                             <div class="modal fade" id="inputSpdisc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -331,11 +413,11 @@ include "akses.php";
                                                 <?php
                                                 $id_inv_kat = $id_inv;
                                                 $sql_kat = "SELECT 
-                                            nonppn.*, 
-                                            sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan
-                                            FROM inv_nonppn AS nonppn
-                                            JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                            WHERE nonppn.id_inv_nonppn = '$id_inv_kat'";
+                                                            nonppn.*, 
+                                                            sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan
+                                                            FROM inv_nonppn AS nonppn
+                                                            JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                                            WHERE nonppn.id_inv_nonppn = '$id_inv_kat'";
                                                 $query_kat = mysqli_query($connect, $sql_kat);
                                                 $data_kat = mysqli_fetch_array($query_kat);
                                                 ?>
@@ -566,15 +648,15 @@ include "akses.php";
                                             <?php
                                             if ($total_cek_harga != 0) {
                                                 if ($data_cek_harga['kategori_inv'] == 'Diskon') {
-                                                    echo '<div class="input-group">
-                                                                    <input type="text" class="form-control text-end" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" required>
-                                                                    <span class="input-group-text" id="basic-addon1">%</span>
-                                                                </div>';
+                                                    echo '  <div class="input-group">
+                                                                <input type="text" class="form-control text-end" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" required>
+                                                                <span class="input-group-text" id="basic-addon1">%</span>
+                                                            </div>';
                                                 } else {
-                                                    echo '<div class="input-group">
-                                                                    <input type="text" class="form-control text-end bg-light" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" readonly>
-                                                                    <span class="input-group-text" id="basic-addon1">%</span>
-                                                                </div>';
+                                                    echo '  <div class="input-group">
+                                                                <input type="text" class="form-control text-end bg-light" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" readonly>
+                                                                <span class="input-group-text" id="basic-addon1">%</span>
+                                                            </div>';
                                                 }
                                             }
                                             ?>

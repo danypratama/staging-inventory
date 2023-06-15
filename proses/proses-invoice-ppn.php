@@ -4,8 +4,8 @@ include "../koneksi.php";
 
 if (isset($_POST['simpan-inv'])) {
     $id_spk = $_POST['id_spk'];
-    $id_inv_nonppn = $_POST['id_inv_nonppn'];
-    $no_inv_nonppn = $_POST['no_inv_nonppn'];
+    $id_inv_ppn = $_POST['id_inv_ppn'];
+    $no_inv_ppn = $_POST['no_inv_ppn'];
     $tgl_inv = $_POST['tgl_inv'];
     $cs = $_POST['cs'];
     $cs_inv = $_POST['cs_inv'];
@@ -17,7 +17,7 @@ if (isset($_POST['simpan-inv'])) {
     $status_inv = 'Belum Dikirim';
     $status_spk = 'Invoice Sudah Diterbitkan';
     $user = $_SESSION['tiket_nama'];
-    $id_inv_nonppn_encode = base64_encode($id_inv_nonppn);
+    $id_inv_ppn_encode = base64_encode($id_inv_ppn);
 
     // Mulai transaksi
     // Mulai transaksi
@@ -25,13 +25,13 @@ if (isset($_POST['simpan-inv'])) {
 
     try {
         $success = true;
-        $sql_inv = mysqli_query($connect, "INSERT INTO inv_nonppn 
-                                            (id_inv_nonppn, no_inv, tgl_inv, cs_inv, tgl_tempo, sp_disc, note_inv, kategori_inv, ongkir, status_transaksi, user_created)
+        $sql_inv = mysqli_query($connect, "INSERT INTO inv_ppn 
+                                            (id_inv_ppn, no_inv, tgl_inv, cs_inv, tgl_tempo, sp_disc, note_inv, kategori_inv, ongkir, status_transaksi, user_created)
                                             VALUES
-                                            ('$id_inv_nonppn', '$no_inv_nonppn', '$tgl_inv', '$cs_inv', '$tgl_tempo', '$sp_disc', '$note_inv', '$jenis_inv', '$ongkir', '$status_inv', '$user')");
+                                            ('$id_inv_ppn', '$no_inv_ppn', '$tgl_inv', '$cs_inv', '$tgl_tempo', '$sp_disc', '$note_inv', '$jenis_inv', '$ongkir', '$status_inv', '$user')");
         for ($i = 0; $i < count($id_spk); $i++) {
             $id_spk_array = $_POST['id_spk'][$i];
-            $sql = mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv_nonppn', status_spk = '$status_spk' WHERE id_spk_reg = '$id_spk_array'");
+            $sql = mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv_ppn', status_spk = '$status_spk' WHERE id_spk_reg = '$id_spk_array'");
 
             if (!$sql) {
                 $success = false;
@@ -47,7 +47,7 @@ if (isset($_POST['simpan-inv'])) {
         if ($success) {
             // Jika kedua query berhasil, lakukan commit
             mysqli_commit($connect);
-            header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_nonppn_encode'");
+            header("Location:../cek-produk-inv-ppn.php?id='$id_inv_ppn_encode'");
         } else {
             // Rollback jika terjadi kesalahan
             mysqli_rollback($connect);
@@ -96,12 +96,12 @@ if (isset($_POST['simpan-inv'])) {
         // Commit transaction jika semua query berhasil
         mysqli_commit($connect);
         $_SESSION['info'] = 'Diupdate';
-        header("Location:../cek-produk-inv-nonppn.php?id='$id_inv'");
+        header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     } catch (Exception $e) {
         // Rollback transaction jika terjadi kesalahan
         mysqli_rollback($connect);
         $_SESSION['info'] = 'Silahkan Ulangi Kembali';
-        header("Location:../cek-produk-inv-nonppn.php?id='$id_inv'");
+        header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     }
 } else if (isset($_POST['update-harga'])) {
     $id_trx = $_POST['id_trx'];
@@ -116,7 +116,7 @@ if (isset($_POST['simpan-inv'])) {
 
     $update_data = mysqli_query($connect, "UPDATE transaksi_produk_reg SET harga = '$hrg', total_harga = '$total' WHERE id_transaksi = '$id_trx'");
     $_SESSION['info'] = 'Diupdate';
-    header("Location:../cek-produk-inv-nonppn.php?id='$id_inv'");
+    header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     // =======================================
 } else if (isset($_POST['update-harga-diskon'])) {
     $id_trx = $_POST['id_trx'];
@@ -135,29 +135,29 @@ if (isset($_POST['simpan-inv'])) {
     $grand_total = $total - $total_disc;
 
     $update_data = mysqli_query($connect, "UPDATE transaksi_produk_reg SET harga = '$hrg', disc = '$disc_tampil', total_harga = '$grand_total' WHERE id_transaksi = '$id_trx'");
-    header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_encode'");
+    header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
     // ==========================
 } else if (isset($_POST['ubah-kategori'])) {
     $id_inv = $_POST['id_inv'];
     $id_inv_encode = base64_encode($id_inv);
     $kat_inv = $_POST['kat_inv'];
-    mysqli_query($connect, "UPDATE inv_nonppn SET kategori_inv = '$kat_inv', sp_disc = '0' WHERE id_inv_nonppn = '$id_inv'");
+    mysqli_query($connect, "UPDATE inv_ppn SET kategori_inv = '$kat_inv', sp_disc = '0' WHERE id_inv_ppn = '$id_inv'");
     mysqli_query($connect, "UPDATE transaksi_produk_reg AS tpr
                             JOIN spk_reg AS sr ON (tpr.id_spk = sr.id_spk_reg)
-                            JOIN inv_nonppn AS nonppn ON (sr.id_inv = nonppn.id_inv_nonppn)
+                            JOIN inv_ppn AS ppn ON (sr.id_inv = ppn.id_inv_ppn)
                             SET tpr.disc = '0',
                                 tpr.total_harga = tpr.harga * tpr.qty
-                            WHERE nonppn.id_inv_nonppn = '$id_inv';
+                            WHERE ppn.id_inv_ppn = '$id_inv';
                             
                                                     ");
-    header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_encode'");
+    header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
     // =================================
 } else if (isset($_POST['ubah-sp'])) {
     $id_inv = $_POST['id_inv'];
     $id_inv_encode = base64_encode($id_inv);
     $spdisc = $_POST['spdisc'];
-    mysqli_query($connect, "UPDATE inv_nonppn SET sp_disc = '$spdisc' WHERE id_inv_nonppn = '$id_inv'");
-    header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_encode'");
+    mysqli_query($connect, "UPDATE inv_ppn SET sp_disc = '$spdisc' WHERE id_inv_ppn = '$id_inv'");
+    header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
 } else if (isset($_POST['add-spk'])) {
     $id_spk = $_POST['id_spk'];
     $id_inv = $_POST['id_inv'];
@@ -173,7 +173,7 @@ if (isset($_POST['simpan-inv'])) {
     $id_inv = $_POST['id_inv'];
     $pengirim = $_POST['pengirim'];
 
-    $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim', dikirim_oleh = '$pengirim' WHERE id_inv_nonppn = '$id_inv'");
+    $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim', dikirim_oleh = '$pengirim' WHERE id_inv_ppn = '$id_inv'");
 
     if ($ubah_status) {
         $_SESSION['info'] = 'Diupdate';

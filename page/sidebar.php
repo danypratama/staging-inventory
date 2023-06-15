@@ -122,6 +122,13 @@
             <i class="bi bi-circle"></i><span>Order By</span>
           </a>
         </li>
+        <li>
+          <a class="<?php if ($page2 == 'data-driver') {
+                      echo 'active';
+                    } ?>" href="driver.php">
+            <i class="bi bi-circle"></i><span>Pengirim</span>
+          </a>
+        </li>
       </ul>
     </li><!-- End Data Nav -->
 

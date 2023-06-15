@@ -6,7 +6,7 @@ include "../koneksi.php";
 if (isset($_POST["simpan-cs"])) {
 	$id_cs = $_POST['id_cs'];
 	$nama_cs = $_POST['nama_cs'];
-	$alamat = $_POST['alamat_cs'];
+	$alamat = $connect->real_escape_string($_POST['alamat_cs']);
 	$telp = $_POST['telp_cs'];
 	$email = $_POST['email'];
 	$created = $_POST['created'];
@@ -28,7 +28,7 @@ if (isset($_POST["simpan-cs"])) {
 } elseif (isset($_POST["edit-cs"])) {
 	$id_cs = $_POST['id_cs'];
 	$nama_cs = $_POST['nama_cs'];
-	$alamat = $_POST['alamat_cs'];
+	$alamat = $connect->real_escape_string($_POST['alamat_cs']);
 	$telp = $_POST['telp_cs'];
 	$email = $_POST['email'];
 	$updated = $_POST['updated'];

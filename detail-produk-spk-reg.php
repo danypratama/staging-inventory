@@ -26,7 +26,7 @@ include "akses.php";
 
         @media only screen and (max-width: 500px) {
             body {
-                font-size: 10px;
+                font-size: 14px;
             }
         }
     </style>
@@ -172,7 +172,7 @@ include "akses.php";
                     <div class="card-body p-3">
                         <div class="table-responsive">
                             <form action="proses/proses-produk-spk-reg.php" method="POST">
-                                <div class="text-start mb-3">
+                                <div class="text-start mb-3 mt-2">
                                     <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail">
                                         <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                     </a>
@@ -337,26 +337,26 @@ include "akses.php";
                                 ?>
                                     <div class="card-body border p-2">
                                         <div class="row">
-                                            <div class="col-1">
+                                            <div class="col-sm-1 mb-2">
                                                 <input type="text" class="form-control text-center" value="<?php echo $no; ?>">
                                                 <?php $no++ ?>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-4 mb-2">
                                                 <input type="hidden" name="id_tmp[]" id="id_<?php echo $data['id_tmp'] ?>" value="<?php echo $data['id_tmp'] ?>" readonly>
                                                 <input type="hidden" class="form-control" name="id_spk_reg_tmp[]" value="<?php echo $id_spk_reg ?>" readonly>
                                                 <input type="hidden" class="form-control" name="id_produk_tmp[]" value="<?php echo $data['id_produk'] ?>" readonly>
                                                 <input type="text" class="form-control bg-light" value="<?php echo $data['nama_produk'] ?>" readonly>
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-2 mb-2">
                                                 <input type="text" class="form-control bg-light text-center" value="<?php echo $data['nama_merk'] ?>" readonly>
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-2 mb-2">
                                                 <input type="text" class="form-control bg-light text-end" value="<?php echo number_format($data['harga_produk']) ?>" readonly>
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-2 mb-2">
                                                 <input type="text" class="form-control bg-light text-end" name="stock" id="stock_<?php echo $data['id_tmp'] ?>" value="<?php echo number_format($data['stock']) ?>" readonly>
                                             </div>
-                                            <div class="col-sm-1">
+                                            <div class="col-sm-1 mb-2">
                                                 <input type="text" class="form-control text-end" name="qty_tmp[]" id="qtyInput_<?php echo $data['id_tmp'] ?>" oninput="checkStock('<?php echo $data['id_tmp'] ?>')" required>
                                             </div>
                                         </div>

@@ -65,8 +65,7 @@
     }
 
     // Event listener saat pengguna melakukan refresh halaman
-    window.addEventListener('unload', function() {
-        clearTimeout(timeout);
+    window.addEventListener('beforeunload', function() {
         redirectToLogin();
     });
 

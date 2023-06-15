@@ -14,6 +14,23 @@ include "akses.php";
     <meta content="" name="description">
     <meta content="" name="keywords">
     <?php include "page/head.php"; ?>
+
+    <style>
+        @media (max-width: 767px) {
+
+            /* Tambahkan aturan CSS khusus untuk tampilan mobile di bawah 767px */
+            .col-12.col-md-2 {
+                /* Contoh: Mengatur tinggi elemen select pada tampilan mobile */
+                height: 50px;
+            }
+        }
+
+        .btn.active {
+            background-color: black;
+            color: white;
+            border-color: 1px solid white;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,7 +53,7 @@ include "akses.php";
         <!-- ENd Loading -->
         <div class="pagetitle">
             <h1>Dashboard</h1>
-            <nav>
+            <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
                     <li class="breadcrumb-item active">SPK</li>
@@ -45,122 +62,346 @@ include "akses.php";
         </div><!-- End Page Title -->
 
         <section>
-            <div class="container-fluid">
-                <div class="card">
-                    <div class="card-body mt-3">
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-7">
-                                    <nav>
-                                        <ol class="breadcrumb" style="font-size: 15px;">
-                                            <li class="breadcrumb-item active">SPK Reguler</li>
-                                            <li class="breadcrumb-item"><a style="color: blue;" href="spk-ecat.php">SPK E-Cat</a></li>
-                                        </ol>
-                                    </nav>
-                                </div>
+            <div class="card">
+                <div class="mt-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-7">
+                                <nav>
+                                    <ol class="breadcrumb" style="font-size: 18px;">
+                                        <li class="breadcrumb-item active">SPK Reguler</li>
+                                        <li class="breadcrumb-item"><a style="color: blue;" href="spk-ecat.php">SPK E-Cat</a></li>
+                                    </ol>
+                                </nav>
                             </div>
                         </div>
-                        <ul class="nav nav-tabs d-flex" role="tablist" id="myTab" role="tablist">
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-reg.php">Belum Diproses</a>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-dalam-proses.php">Dalam Proses</a>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="spk-siap-kirim.php">Siap Kirim</a>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link active">Invoice Sudah Dicetak</a>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link" id="dikirim-tab" data-bs-toggle="tab" data-bs-target="#dikirim-tab-pane" type="button" role="tab" aria-controls="dikirim-tab-pane" aria-selected="false">Dikirim</button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link" id="diterima-tab" data-bs-toggle="tab" data-bs-target="#diterima-tab-pane" type="button" role="tab" aria-controls="diterima-tab-pane" aria-selected="false">Diterima</button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <a class="nav-link" href="transaksi-cancel.php">Transaksi Cancel</a>
-                            </li>
-                        </ul>
-                        <div class="card-body bg-body rounded mt-3">
-                            <div class="card-body pt-3">
-                                <div class="table-responsive">
-                                    <form id="invoiceForm" name="proses" method="POST">
-                                        <div class="row mb-3">
-                                            <div class="row mb-3">
-                                                <div class="col-2">
-                                                    <form action="" method="GET">
-                                                        <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange='if(this.value != 0) { this.form.submit(); }'>
-                                                            <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
-                                                                                        echo "selected";
-                                                                                    } ?>>Paling Baru</option>
-                                                            <option value="lama" <?php if (isset($_GET['sort']) && $_GET['sort'] == "lama") {
-                                                                                        echo "selected";
-                                                                                    } ?>>Paling Lama</option>
-                                                        </select>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <table class="table table-bordered table-striped" id="table2">
-                                                <thead>
-                                                    <tr class="text-white" style="background-color: navy;">
-                                                        <th class="text-center p-3" style="width: 30px">No</th>
-                                                        <th class="text-center p-3" style="width: 150px">No. Invoice</th>
-                                                        <th class="text-center p-3" style="width: 150px">Tgl. Invoice</th>
-                                                        <th class="text-center p-3" style="width: 150px">No. PO</th>
-                                                        <th class="text-center p-3" style="width: 250px">Nama Customer</th>
-                                                        <th class="text-center p-3" style="width: 100px">Kat. Inv</th>
-                                                        <th class="text-center p-3" style="width: 100px">Note</th>
-                                                        <th class="text-center p-3" style="width: 80px">Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    include "koneksi.php";
-                                                    $no = 1;
-                                                    $filter = '';
-                                                    if (isset($_GET['sort'])) {
-                                                        if ($_GET['sort'] == "baru") {
-                                                            $filter = "ORDER BY tgl_inv DESC";
-                                                        } elseif ($_GET['sort'] == "lama") {
-                                                            $filter = "ORDER BY tgl_inv ASC";
-                                                        }
-                                                    }
-                                                    $sql = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                    </div>
+                    <ul class="nav nav-tabs d-flex ms-3 me-3 justify-content-between" role="tablist" id="myTab" role="tablist">
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            $sql_belum_diproses = " SELECT sr.*, cs.nama_cs, cs.alamat
+                                        FROM spk_reg AS sr
+                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                        WHERE status_spk = 'Belum Diproses'";
+                            $query_belum_diproses = mysqli_query($connect, $sql_belum_diproses);
+                            $total_data_belum_diproses = mysqli_num_rows($query_belum_diproses);
+                            ?>
+                            <a class="nav-link" href="spk-reg.php">
+                                Belum Diproses &nbsp;
+                                <?php if ($total_data_belum_diproses != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $total_data_belum_diproses . '</span>';
+                                }
+                                ?>
+                            </a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            $sql_dalam_proses = " SELECT sr.*, cs.nama_cs, cs.alamat
+                                        FROM spk_reg AS sr
+                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                        WHERE status_spk = 'Dalam Proses'";
+                            $query_dalam_proses = mysqli_query($connect, $sql_dalam_proses);
+                            $total_data_dalam_proses = mysqli_num_rows($query_dalam_proses);
+                            ?>
+                            <a class="nav-link" href="spk-dalam-proses.php">
+                                Dalam Proses &nbsp;
+                                <?php if ($total_data_dalam_proses != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $total_data_dalam_proses . '</span>';
+                                }
+                                ?>
+                            </a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            include "koneksi.php";
+                            $sql_siap_kirim = " SELECT sr.*, cs.nama_cs, cs.alamat
+                                    FROM spk_reg AS sr
+                                    JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                    WHERE status_spk = 'Siap Kirim'";
+                            $query_siap_kirim = mysqli_query($connect, $sql_siap_kirim);
+                            $total_data_siap_kirim = mysqli_num_rows($query_siap_kirim);
+                            ?>
+                            <a class="nav-link" href="spk-siap-kirim.php?sort=baru">Siap Kirim &nbsp;<span class="badge text-bg-secondary"><?php echo $total_data_siap_kirim ?></span></a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <?php
+                            $sql_inv = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_nonppn AS nonppn
+                                LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+                            $query_inv = mysqli_query($connect, $sql_inv);
+                            $total_inv = mysqli_num_rows($query_inv);
+                            ?>
+                            <?php
+                            $sql_inv_ppn = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_ppn AS ppn
+                                LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+                            $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
+                            $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
+                            ?>
+                            <a class="nav-link active">
+                                Invoice Sudah Dicetak &nbsp;
+                                <?php if ($total_inv != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $total_inv + $total_inv_ppn . '</span>';
+                                }
+                                ?>
+                            </a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="dikirim-tab" data-bs-toggle="tab" data-bs-target="#dikirim-tab-pane" type="button" role="tab" aria-controls="dikirim-tab-pane" aria-selected="false">Dikirim</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="diterima-tab" data-bs-toggle="tab" data-bs-target="#diterima-tab-pane" type="button" role="tab" aria-controls="diterima-tab-pane" aria-selected="false">Diterima</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <a class="nav-link" href="transaksi-cancel.php">Transaksi Cancel</a>
+                        </li>
+                    </ul>
+                    <div class="card-body bg-body rounded mt-3">
+                        <a class="btn btn-outline-dark <?php if ($activeButton == 'nonppn') echo 'active'; ?>" data-bs-toggle="collapse" href="#nonppn" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Invoice Non PPN &nbsp;
+                            <?php if ($total_inv != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv . '</span>';
+                            } ?>
+                        </a>
+
+                        <a class="btn btn-outline-dark <?php if ($activeButton == 'ppn') echo 'active'; ?>" data-bs-toggle="collapse" href="#ppn" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Invoice PPN &nbsp;
+                            <?php if ($total_inv != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_ppn . '</span>';
+                            } ?>
+                        </a>
+                        <div class="collapse <?php if ($activeButton == 'nonppn') echo 'show'; ?>" id="nonppn" data-bs-parent="#accordion">
+                            <div class="table-responsive" id="filteredData">
+                                <form id="invoiceForm" name="proses" method="POST">
+                                    <div class="row mb-3 mt-4">
+                                        <div class="col-md-2">
+                                            <form action="" method="GET">
+                                                <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange="filterData()">
+                                                    <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
+                                                                                echo "selected";
+                                                                            } ?>>Paling Baru</option>
+                                                    <option value="lama" <?php if (isset($_GET['sort']) && $_GET['sort'] == "lama") {
+                                                                                echo "selected";
+                                                                            } ?>>Paling Lama</option>
+                                                </select>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered table-striped" id="table2">
+                                        <thead>
+                                            <tr class="text-white" style="background-color: navy;">
+                                                <th class="text-center p-3" style="width: 30px">No</th>
+                                                <th class="text-center p-3" style="width: 150px">No. Invoice</th>
+                                                <th class="text-center p-3" style="width: 150px">Tgl. Invoice</th>
+                                                <th class="text-center p-3" style="width: 150px">No. PO</th>
+                                                <th class="text-center p-3" style="width: 250px">Nama Customer</th>
+                                                <th class="text-center p-3" style="width: 100px">Kat. Inv</th>
+                                                <th class="text-center p-3" style="width: 100px">Note</th>
+                                                <th class="text-center p-3" style="width: 80px">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            include "koneksi.php";
+                                            $no = 1;
+                                            $filter = '';
+                                            if (isset($_GET['sort'])) {
+                                                if ($_GET['sort'] == "baru") {
+                                                    $filter = "ORDER BY tgl_inv DESC";
+                                                } elseif ($_GET['sort'] == "lama") {
+                                                    $filter = "ORDER BY tgl_inv ASC";
+                                                }
+                                            }
+                                            $sql = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
                                                             FROM inv_nonppn AS nonppn
                                                             LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                             WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
-                                                    $query = mysqli_query($connect, $sql);
-                                                    while ($data = mysqli_fetch_array($query)) {
-                                                    ?>
-                                                        <tr>
-                                                            <td class="text-center"><?php echo $no; ?></td>
-                                                            <td><?php echo $data['no_inv'] ?></td>
-                                                            <td><?php echo $data['tgl_inv'] ?></td>
-                                                            <td><?php echo $data['no_po'] ?></td>
-                                                            <td><?php echo $data['nama_cs'] ?></td>
-                                                            <td><?php echo $data['kategori_inv'] ?></td>
-                                                            <td><?php echo $data['note_inv'] ?></td>
-                                                            <td class="text-center">
-                                                                <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
-                                                            </td>
-                                                        </tr>
-                                                        <?php $no++ ?>
-                                                    <?php } ?>
-                                                </tbody>
-                                            </table>
-                                    </form>
-                                </div>
+                                            $query = mysqli_query($connect, $sql);
+                                            while ($data = mysqli_fetch_array($query)) {
+                                            ?>
+                                                <tr>
+                                                    <td class="text-center"><?php echo $no; ?></td>
+                                                    <td><?php echo $data['no_inv'] ?></td>
+                                                    <td><?php echo $data['tgl_inv'] ?></td>
+                                                    <td><?php echo $data['no_po'] ?></td>
+                                                    <td><?php echo $data['nama_cs'] ?></td>
+                                                    <td><?php echo $data['kategori_inv'] ?></td>
+                                                    <td><?php echo $data['note_inv'] ?></td>
+                                                    <td class="text-center">
+                                                        <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                    </td>
+                                                </tr>
+                                                <?php $no++ ?>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </form>
                             </div>
                         </div>
-                        <!-- End Dalam Proses -->
-                        <!-- ================================================ -->
+                        <div class="collapse <?php if ($activeButton == 'ppn') echo 'show'; ?>" id="ppn" data-bs-parent="#accordion">
+                            <div class="table-responsive" id="filteredDataPpn">
+                                <form id="invoiceForm" name="proses" method="POST">
+                                    <div class="row mb-3 mt-4">
+                                        <div class="col-md-2">
+                                            <form action="" method="GET">
+                                                <select name="sort" class="form-select" id="select_ppn" aria-label="Default select example" onchange="filterDataPpn()">
+                                                    <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
+                                                                                echo "selected";
+                                                                            } ?>>Paling Baru</option>
+                                                    <option value="lama" <?php if (isset($_GET['sort']) && $_GET['sort'] == "lama") {
+                                                                                echo "selected";
+                                                                            } ?>>Paling Lama</option>
+                                                </select>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered table-striped" id="tableppn">
+                                        <thead>
+                                            <tr class="text-white" style="background-color: navy;">
+                                                <th class="text-center p-3" style="width: 30px">No</th>
+                                                <th class="text-center p-3" style="width: 150px">No. Invoice</th>
+                                                <th class="text-center p-3" style="width: 150px">Tgl. Invoice</th>
+                                                <th class="text-center p-3" style="width: 150px">No. PO</th>
+                                                <th class="text-center p-3" style="width: 250px">Nama Customer</th>
+                                                <th class="text-center p-3" style="width: 100px">Kat. Inv</th>
+                                                <th class="text-center p-3" style="width: 100px">Note</th>
+                                                <th class="text-center p-3" style="width: 80px">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            include "koneksi.php";
+                                            $no = 1;
+                                            $filter = '';
+                                            if (isset($_GET['sort'])) {
+                                                if ($_GET['sort'] == "baru") {
+                                                    $filter = "ORDER BY tgl_inv DESC";
+                                                } elseif ($_GET['sort'] == "lama") {
+                                                    $filter = "ORDER BY tgl_inv ASC";
+                                                }
+                                            }
+                                            $sql = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                                            FROM inv_ppn AS ppn
+                                                            LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
+                                                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                            WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
+                                            $query = mysqli_query($connect, $sql);
+                                            while ($data = mysqli_fetch_array($query)) {
+                                            ?>
+                                                <tr>
+                                                    <td class="text-center"><?php echo $no; ?></td>
+                                                    <td><?php echo $data['no_inv'] ?></td>
+                                                    <td><?php echo $data['tgl_inv'] ?></td>
+                                                    <td><?php echo $data['no_po'] ?></td>
+                                                    <td><?php echo $data['nama_cs'] ?></td>
+                                                    <td><?php echo $data['kategori_inv'] ?></td>
+                                                    <td><?php echo $data['note_inv'] ?></td>
+                                                    <td class="text-center">
+                                                        <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                    </td>
+                                                </tr>
+                                                <?php $no++ ?>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                        <script>
+                            // Filter Non PPN
+                            // Fungsi untuk mengirim permintaan AJAX
+                            function filterData() {
+                                // Ambil nilai filter dari elemen select
+                                var sortValue = document.getElementById('select').value;
+
+                                // Buat objek XMLHttpRequest
+                                var xhttp = new XMLHttpRequest();
+
+                                // Atur callback function untuk menangani perubahan status permintaan
+                                xhttp.onreadystatechange = function() {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                        // Update elemen filteredData dengan hasil filter yang diterima dari server
+                                        document.getElementById('filteredData').innerHTML = this.responseText;
+                                    }
+                                };
+
+                                // Buat permintaan GET ke file PHP yang akan memproses filter
+                                xhttp.open('GET', 'filter-data-nonppn.php?sort=' + sortValue, true);
+                                xhttp.send();
+                            }
+
+                            // Filter PPN
+                            // Fungsi untuk mengirim permintaan AJAX
+                            function filterDataPpn() {
+                                // Ambil nilai filter dari elemen select
+                                var sortValue = document.getElementById('select_ppn').value;
+
+                                // Buat objek XMLHttpRequest
+                                var xhttp = new XMLHttpRequest();
+
+                                // Atur callback function untuk menangani perubahan status permintaan
+                                xhttp.onreadystatechange = function() {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                        // Update elemen filteredData dengan hasil filter yang diterima dari server
+                                        document.getElementById('filteredDataPpn').innerHTML = this.responseText;
+                                    }
+                                };
+
+                                // Buat permintaan GET ke file PHP yang akan memproses filter
+                                xhttp.open('GET', 'filter-data-ppn.php?sort=' + sortValue, true);
+                                xhttp.send();
+                            }
+                        </script>
+
+                        <script>
+                            var collToggle = document.querySelectorAll('[data-bs-toggle="collapse"]');
+                            var collTargets = document.querySelectorAll('.collapse');
+
+                            collToggle.forEach(function(toggle) {
+                                toggle.addEventListener('click', function() {
+                                    var target = toggle.getAttribute('href');
+                                    var targetCollapse = document.querySelector(target);
+                                    var isExpanded = targetCollapse.classList.contains('show');
+
+                                    collTargets.forEach(function(collapse) {
+                                        collapse.classList.remove('show');
+                                    });
+
+                                    collToggle.forEach(function(toggle) {
+                                        toggle.classList.remove('active');
+                                    });
+
+                                    if (!isExpanded) {
+                                        targetCollapse.classList.add('show');
+                                        toggle.classList.add('active');
+                                    } else {
+                                        targetCollapse.classList.remove('show');
+                                        toggle.classList.remove('active');
+                                    }
+                                });
+                            });
+
+                            collToggle.forEach(function(toggle) {
+                                var target = toggle.getAttribute('href');
+                                var isActive = document.querySelector('.collapse' + target).classList.contains('show');
+                                if (isActive) {
+                                    toggle.classList.add('active');
+                                }
+                            });
+                        </script>
                     </div>
+                    <!-- End Dalam Proses -->
+                    <!-- ================================================ -->
                 </div>
             </div>
         </section>
@@ -187,6 +428,16 @@ include "akses.php";
             //set isopen to opposite so next time when user clicks select box
             //it won't trigger this event
             $(this).data("isopen", !open);
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        var table = $('#tableppn').DataTable({
+            "lengthChange": false,
+            "ordering": false,
+            "autoWidth": false
         });
     });
 </script>
