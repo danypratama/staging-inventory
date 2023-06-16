@@ -142,7 +142,7 @@ include "akses.php";
                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                 WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
               $query_inv = mysqli_query($connect, $sql_inv);
-              $total_inv = mysqli_num_rows($query_inv);
+              $total_inv_nonppn = mysqli_num_rows($query_inv);
               ?>
               <?php
               $sql_inv_ppn = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
@@ -152,7 +152,7 @@ include "akses.php";
                                 WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
               $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
               $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
-              $hasil = $total_inv_ppn + $total_inv_ppn;
+              $hasil = $total_inv_nonppn + $total_inv_ppn;
               ?>
               <a class="nav-link" href="invoice-reguler.php?sort=baru">
                 Invoice Sudah Dicetak &nbsp;

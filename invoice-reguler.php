@@ -121,7 +121,13 @@ include "akses.php";
                             $query_siap_kirim = mysqli_query($connect, $sql_siap_kirim);
                             $total_data_siap_kirim = mysqli_num_rows($query_siap_kirim);
                             ?>
-                            <a class="nav-link" href="spk-siap-kirim.php?sort=baru">Siap Kirim &nbsp;<span class="badge text-bg-secondary"><?php echo $total_data_siap_kirim ?></span></a>
+                            <a class="nav-link" href="spk-siap-kirim.php?sort=baru">
+                                Siap Kirim &nbsp;
+                                <?php if ($total_data_siap_kirim != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $total_data_siap_kirim . '</span>';
+                                }
+                                ?>
+                            </a>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
                             <?php
@@ -131,7 +137,7 @@ include "akses.php";
                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                 WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
                             $query_inv = mysqli_query($connect, $sql_inv);
-                            $total_inv = mysqli_num_rows($query_inv);
+                            $total_inv_nonppn = mysqli_num_rows($query_inv);
                             ?>
                             <?php
                             $sql_inv_ppn = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
@@ -141,7 +147,7 @@ include "akses.php";
                                 WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
                             $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
                             $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
-                            $hasil = $total_inv_ppn + $total_inv_ppn;
+                            $hasil = $total_inv_nonppn + $total_inv_ppn;
                             ?>
                             <a class="nav-link active">
                                 Invoice Sudah Dicetak &nbsp;
@@ -167,14 +173,14 @@ include "akses.php";
                     <div class="card-body bg-body rounded mt-3">
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'nonppn') echo 'active'; ?>" data-bs-toggle="collapse" href="#nonppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice Non PPN &nbsp;
-                            <?php if ($total_inv != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv . '</span>';
+                            <?php if ($total_inv_nonppn != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn . '</span>';
                             } ?>
                         </a>
 
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'ppn') echo 'active'; ?>" data-bs-toggle="collapse" href="#ppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice PPN &nbsp;
-                            <?php if ($total_inv != 0) {
+                            <?php if ($total_inv_ppn != 0) {
                                 echo '<span class="badge text-bg-secondary">' . $total_inv_ppn . '</span>';
                             } ?>
                         </a>
