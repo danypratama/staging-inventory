@@ -118,7 +118,7 @@ include "akses.php";
                     </div>
                     <div class="mt-3">
                       <label><strong>Ongkir</strong></label>
-                      <input type="text" class="form-control" name="ongkir" required>
+                      <input type="text" class="form-control harga_produk" name="ongkir" required>
                     </div>
                     <div class="mt-3">
                       <label><strong>Note Invoice</strong></label>
@@ -199,3 +199,30 @@ function generate_uuid()
   );
 }
 ?>
+
+<script>
+  // Mendapatkan referensi elemen input
+  var hargaProdukInputs = document.querySelectorAll('.harga_produk');
+
+  // Menambahkan event listener untuk memformat angka saat nilai berubah
+  hargaProdukInputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+      formatNumber(input);
+    });
+  });
+
+  // Fungsi untuk memformat angka dengan pemisah ribuan
+  function formatNumber(input) {
+    var hargaProdukValue = input.value.replace(/[^0-9.-]+/g, '');
+
+    if (hargaProdukValue !== '') {
+      var formattedNumber = numberFormat(hargaProdukValue);
+      input.value = formattedNumber;
+    }
+  }
+
+  // Fungsi untuk memformat angka dengan pemisah ribuan
+  function numberFormat(number) {
+    return new Intl.NumberFormat('en-US').format(number);
+  }
+</script>

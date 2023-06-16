@@ -14,6 +14,22 @@ include "akses.php";
   <meta content="" name="description">
   <meta content="" name="keywords">
   <?php include "page/head.php"; ?>
+  <style>
+    .custom-width {
+      width: 50%;
+      /* Atur lebar kolom menjadi 50% saat tampil pada mobile */
+    }
+
+    /* Gaya khusus untuk mengatur lebar kolom pada tampilan mobile */
+    @media only screen and (max-width: 480px) {
+      .wrap-text {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        max-width: 300px;
+        /* Contoh lebar maksimum elemen */
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -152,9 +168,9 @@ include "akses.php";
             <table class="table table-hover table-striped table-bordered" id="table2">
               <thead>
                 <tr class="bg-primary bg-gradient text-white">
-                  <td class="col-4">Nama Customer</td>
-                  <td class="col-6">Alamat</td>
-                  <td class="col-2">Telepon</td>
+                  <td class="col-4 text-nowrap">Nama Customer</td>
+                  <td class="col-6 text-nowrap">Alamat Customer</td>
+                  <td class="col-2 text-nowrap">Telepon</td>
                 </tr>
               </thead>
               <tbody>
@@ -167,7 +183,7 @@ include "akses.php";
                   <tr data-id="<?php echo $data_cs['id_cs'] ?>" data-nama="<?php echo $data_cs['nama_cs'] ?>" data-alamat="<?php echo $data_cs['alamat'] ?>" data-bs-dismiss="modal">
                     <td><?php echo $data_cs['nama_cs'] ?></td>
                     <td><?php echo $data_cs['alamat'] ?></td>
-                    <td><?php echo $data_cs['no_telp'] ?></td>
+                    <td class="text-nowrap"><?php echo $data_cs['no_telp'] ?></td>
                   </tr>
                 <?php } ?>
               </tbody>

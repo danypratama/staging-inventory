@@ -13,7 +13,8 @@ if (isset($_POST['simpan-inv'])) {
     $tgl_tempo = $_POST['tgl_tempo'];
     $sp_disc = $_POST['sp_disc'];
     $note_inv = $_POST['note_inv'];
-    $ongkir = $_POST['ongkir'];
+    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
+    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
     $status_inv = 'Belum Dikirim';
     $status_spk = 'Invoice Sudah Diterbitkan';
     $user = $_SESSION['tiket_nama'];
