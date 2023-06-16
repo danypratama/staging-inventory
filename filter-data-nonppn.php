@@ -103,6 +103,15 @@ include "akses.php";
         </form>
     </div>
     <?php include "page/script.php" ?>
+    <script>
+        $(document).ready(function() {
+            var table = $('#table2').DataTable({
+                "lengthChange": false,
+                "ordering": false,
+                "autoWidth": false
+            });
+        });
+    </script>
 </body>
 
 </html>

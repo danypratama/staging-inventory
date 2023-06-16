@@ -34,6 +34,13 @@ include "akses.php";
 </head>
 
 <body>
+    <!-- nav header -->
+    <?php include "page/nav-header.php" ?>
+    <!-- end nav header -->
+
+    <!-- sidebar  -->
+    <?php include "page/sidebar.php"; ?>
+    <!-- end sidebar -->
     <div class="table-responsive" id="filteredDataPpn">
         <form id="invoiceForm" name="proses" method="POST">
             <div class="row mb-3 mt-4">
@@ -106,3 +113,12 @@ include "akses.php";
 </body>
 
 </html>
+<script>
+    $(document).ready(function() {
+        var table = $('#tableppn').DataTable({
+            "lengthChange": false,
+            "ordering": false,
+            "autoWidth": false
+        });
+    });
+</script>

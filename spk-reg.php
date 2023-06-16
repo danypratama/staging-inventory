@@ -152,11 +152,12 @@ include "akses.php";
                                 WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
               $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
               $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
+              $hasil = $total_inv_ppn + $total_inv_ppn;
               ?>
               <a class="nav-link" href="invoice-reguler.php?sort=baru">
                 Invoice Sudah Dicetak &nbsp;
-                <?php if ($total_inv != 0) {
-                  echo '<span class="badge text-bg-secondary">' . $total_inv + $total_inv_ppn . '</span>';
+                <?php if ($hasil != 0) {
+                  echo '<span class="badge text-bg-secondary">' . $hasil . '</span>';
                 }
                 ?>
               </a>

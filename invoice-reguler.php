@@ -141,11 +141,12 @@ include "akses.php";
                                 WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
                             $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
                             $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
+                            $hasil = $total_inv_ppn + $total_inv_ppn;
                             ?>
                             <a class="nav-link active">
                                 Invoice Sudah Dicetak &nbsp;
-                                <?php if ($total_inv != 0) {
-                                    echo '<span class="badge text-bg-secondary">' . $total_inv + $total_inv_ppn . '</span>';
+                                <?php if ($hasil != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $hasil . '</span>';
                                 }
                                 ?>
                             </a>
@@ -374,11 +375,15 @@ include "akses.php";
                                     var isExpanded = targetCollapse.classList.contains('show');
 
                                     collTargets.forEach(function(collapse) {
-                                        collapse.classList.remove('show');
+                                        if (collapse !== targetCollapse) {
+                                            collapse.classList.remove('show');
+                                        }
                                     });
 
                                     collToggle.forEach(function(toggle) {
-                                        toggle.classList.remove('active');
+                                        if (toggle !== this) {
+                                            toggle.classList.remove('active');
+                                        }
                                     });
 
                                     if (!isExpanded) {
@@ -390,15 +395,10 @@ include "akses.php";
                                     }
                                 });
                             });
-
-                            collToggle.forEach(function(toggle) {
-                                var target = toggle.getAttribute('href');
-                                var isActive = document.querySelector('.collapse' + target).classList.contains('show');
-                                if (isActive) {
-                                    toggle.classList.add('active');
-                                }
-                            });
                         </script>
+
+
+
                     </div>
                     <!-- End Dalam Proses -->
                     <!-- ================================================ -->
