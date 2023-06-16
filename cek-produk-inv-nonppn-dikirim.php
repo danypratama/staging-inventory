@@ -18,7 +18,7 @@ include "akses.php";
     <style type="text/css">
         @media only screen and (max-width: 500px) {
             body {
-                font-size: 12px;
+                font-size: 10px;
             }
         }
     </style>
@@ -225,125 +225,9 @@ include "akses.php";
                     <div class="card-body p-3">
                         <div class="table-responsive">
                             <div class="text-start mb-3">
-                                <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail">
+                                <a href="invoice-reguler-dikirim.php?sort=baru" class="btn btn-warning btn-detail">
                                     <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                 </a>
-                                <button class="btn btn-info btn-detail" data-bs-toggle="modal" data-bs-target="#ubahKat">
-                                    <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
-                                </button>
-                                <a href="#" class="btn btn-primary btn-detail" data-bs-toggle="modal" data-bs-target="#addSpk">
-                                    <i class="bi bi-plus-circle"></i> Tambah SPK
-                                </a>
-                                <!-- Modal Add SPK-->
-                                <div class="modal fade" id="addSpk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-xl">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="table-responsive">
-                                                    <?php
-                                                    include "koneksi.php";
-                                                    $id_inv = base64_decode($_GET['id']);
-                                                    $no = 1;
-                                                    $sql = "SELECT * FROM spk_reg WHERE id_inv = '$id_inv'";
-                                                    $query = mysqli_query($connect, $sql);
-                                                    $totalData = mysqli_num_rows($query);
-                                                    ?>
-                                                    <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                                        <table class="table table-bordered table-striped" id="table2">
-                                                            <thead>
-                                                                <tr class="text-white" style="background-color: navy;">
-                                                                    <th class="text-center p-3" style="width: 20px">Pilih</th>
-                                                                    <th class="text-center p-3" style="width: 30px">No</th>
-                                                                    <th class="text-center p-3" style="width: 150px">No. SPK</th>
-                                                                    <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
-                                                                    <th class="text-center p-3" style="width: 150px">No. PO</th>
-                                                                    <th class="text-center p-3" style="width: 200px">Nama Customer</th>
-                                                                    <th class="text-center p-3" style="width: 150px">Note</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                include "koneksi.php";
-                                                                $no = 1;
-                                                                $sql_inv = "SELECT sr.*, cs.nama_cs, cs.alamat
-                                                                        FROM spk_reg AS sr
-                                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                                        WHERE status_spk = 'Siap Kirim' AND id_cs = '$id_cs'";
-                                                                $query_inv = mysqli_query($connect, $sql_inv);
-                                                                while ($data_inv = mysqli_fetch_array($query_inv)) {
-                                                                ?>
-                                                                    <tr>
-                                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                                        <td class="text-center"><input type="checkbox" name="id_spk[]" value="<?php echo $data_inv['id_spk_reg'] ?>"></td>
-                                                                        <td class="text-center"><?php echo $no; ?></td>
-                                                                        <td><?php echo $data_inv['no_spk'] ?></td>
-                                                                        <td><?php echo $data_inv['tgl_spk'] ?></td>
-                                                                        <td><?php echo $data_inv['no_po'] ?></td>
-                                                                        <td><?php echo $data_inv['nama_cs'] ?></td>
-                                                                        <td><?php echo $data_inv['note'] ?></td>
-                                                                    </tr>
-                                                                    <?php $no++ ?>
-                                                                <?php } ?>
-                                                            </tbody>
-                                                        </table>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
-                                                            <button type="submit" class="btn btn-primary" name="add-spk"><i class="bi bi-plus-circle"></i> Add SPK</button>
-                                                        </div>
-                                                    </form>
-                                                    <script>
-                                                        // Mendapatkan checkbox SPK
-                                                        const spkCheckboxes = document.querySelectorAll('input[name="id_spk[]"]');
-
-                                                        // Mendapatkan jumlah total checkbox yang dipilih
-                                                        function getSelectedCheckboxCount() {
-                                                            let count = 0;
-                                                            spkCheckboxes.forEach(function(checkbox) {
-                                                                if (checkbox.checked) {
-                                                                    count++;
-                                                                }
-                                                            });
-                                                            return count;
-                                                        }
-
-                                                        // Event listener untuk setiap checkbox
-                                                        spkCheckboxes.forEach(function(checkbox) {
-                                                            checkbox.addEventListener('change', function() {
-                                                                // console.log("Total Data: " + <?php echo $totalData; ?>);
-                                                                // console.log("Total Checkbox: " + getSelectedCheckboxCount());
-
-                                                                const totalData = <?php echo $totalData; ?>;
-                                                                const maxAllowed = 5;
-
-                                                                if (totalData + getSelectedCheckboxCount() > maxAllowed) {
-                                                                    const message = "Data Anda saat ini: " + totalData + " Anda hanya bisa menambahkan " + (maxAllowed - totalData) + " data.";
-                                                                    Swal.fire({
-                                                                        icon: 'error',
-                                                                        title: 'Data melebihi batasan maksimum',
-                                                                        text: message,
-                                                                        didOpen: () => {
-                                                                            // Mengatur ulang semua checkbox menjadi tidak dipilih
-                                                                            spkCheckboxes.forEach(function(checkbox) {
-                                                                                checkbox.checked = false;
-                                                                            });
-                                                                        }
-                                                                    });
-                                                                }
-                                                            });
-                                                        });
-                                                    </script>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Modal Add SPK -->
                                 <?php
                                 $id_inv_nonppn = base64_decode($_GET['id']);
                                 $sql_cek = "SELECT 
@@ -364,27 +248,11 @@ include "akses.php";
                                 $data_cek = mysqli_fetch_array($query_cek);
                                 $total_data = mysqli_num_rows($query_cek);
                                 ?>
-                                <?php
-                                if ($total_data != 0) {
-                                    echo '
-                                        <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_nonppn) . '">
-                                        <a href="cetak-inv-nonppn-reg.php?id=' . base64_encode($id_inv_nonppn) . '" class="btn btn-secondary"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>';
-                                }
-                                ?>
-                                <?php
-                                if ($kat_inv == 'Spesial Diskon') {
-                                    echo '
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
-                                }
-                                ?>
-                                <button class="btn btn-primary btn-detail" data-bs-toggle="modal" data-bs-target="#ongkir">
-                                    <i class="bi bi-truck"></i> Tambah Ongkir
-                                </button>
-                                <button class="btn btn-warning btn-detail" data-bs-toggle="modal" data-bs-target="#Dikirim">
-                                    <i class="bi bi-send"></i> Proses Dikirim
+                                <button class="btn btn-secondary btn-detail" data-bs-toggle="modal" data-bs-target="#Diterima">
+                                    <i class="bi bi-send"></i> Diterima
                                 </button>
                                 <!-- Modal Add SPK-->
-                                <div class="modal fade" id="Dikirim" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="Diterima" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -395,20 +263,11 @@ include "akses.php";
                                                 <form action="proses/proses-invoice-nonppn.php" method="POST">
                                                     <div class="mb-3">
                                                         <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                        <label>Dikirim Oleh</label>
-                                                        <select name="pengirim" class="form-select">
-                                                            <option value="">Pilih...</option>
-                                                            <?php
-                                                            include "koneksi.php";
-                                                            $sql_driver = mysqli_query($connect, "SELECT * FROM tb_driver");
-                                                            while ($data_driver = mysqli_fetch_array($sql_driver)) {
-                                                            ?>
-                                                                <option value="<?php echo $data_driver['nama_pengirim'] ?>"><?php echo $data_driver['nama_pengirim'] ?></option>
-                                                            <?php } ?>
-                                                        </select>
+                                                        <label>Diterima Oleh</label>
+                                                        <input type="text" class="form-control" name="diterima" required>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                                        <button class="btn btn-primary" name="diterima"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
                                                         <button class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</button>
                                                     </div>
                                                 </form>
@@ -417,69 +276,9 @@ include "akses.php";
                                     </div>
                                 </div>
                                 <!-- End Modal Add SPK -->
-                                <!-- Modal Add Ongkir-->
-                                <div class="modal fade" id="ongkir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Biaya Ongkir</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                        <label>Masukkan Biaya Ongkir (Rp)</label>
-                                                        <input type="text" class="form-control harga_produk" name="ongkir" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
-                                                    <button class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Modal Add SPK -->
-                        </div>
-                        <!-- Modal Input SPdisc Inv -->
-                        <div class="modal fade" id="inputSpdisc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kategori</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                            <?php
-                                            $id_inv_kat = $id_inv;
-                                            $sql_kat = "SELECT 
-                                                            nonppn.*, 
-                                                            sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan
-                                                            FROM inv_nonppn AS nonppn
-                                                            JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                                            WHERE nonppn.id_inv_nonppn = '$id_inv_kat'";
-                                            $query_kat = mysqli_query($connect, $sql_kat);
-                                            $data_kat = mysqli_fetch_array($query_kat);
-                                            ?>
-                                            <input type="hidden" name="id_inv" value="<?php echo $id_inv_kat ?>" readonly>
-                                            <div class="mb-3">
-                                                <label>Spesial Diskon (%)</label>
-                                                <input type="number" step="any" class="form-control" name="spdisc" required>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary" name="ubah-sp">Update Kategori</button>
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
-                        <!-- End Modal -->
                         <table class="table table-striped table-bordered">
                             <?php
                             if ($total_data != 0) {
@@ -494,7 +293,6 @@ include "akses.php";
                                                 <th class="text-center p-3" style="width:100px">Harga</th>
                                                 <th class="text-center p-3" style="width:80px">Qty Order</th>
                                                 <th class="text-center p-3" style="width:80px">Total</th>
-                                                <th class="text-center p-3" style="width:80px">Aksi</th>
                                             </tr>
                                         </thead>';
                                 } else {
@@ -509,7 +307,6 @@ include "akses.php";
                                                 <th class="text-center p-3" style="width:100px">Diskon</th>
                                                 <th class="text-center p-3" style="width:80px">Qty Order</th>
                                                 <th class="text-center p-3" style="width:80px">Total</th>
-                                                <th class="text-center p-3" style="width:80px">Aksi</th>
                                             </tr>
                                         </thead>';
                                 }
@@ -557,86 +354,11 @@ include "akses.php";
                                         ?>
                                         <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['total_harga']) ?></td>
-                                        <td class="text-center">
-                                            <?php
-                                            if ($total_data != 0) {
-                                                if ($data_cek['kategori_inv'] == 'Diskon') {
-                                                    echo '<button class="btn btn-warning btn-sm" data-id="' . $data_trx['id_transaksi'] . '" data-hargadisc="' . number_format($data_trx['harga']) . '" data-diskon="' . $data_trx['disc'] . '" data-qty="' . number_format($data_trx['qty']) . '" data-bs-toggle="modal" data-bs-target="#edit-diskon"><i class="bi bi-pencil"></i></button>';
-                                                } else {
-                                                    echo '<button class="btn btn-warning btn-sm" data-id="' . $data_trx['id_transaksi'] . '" data-harga="' . number_format($data_trx['harga']) . '" data-qty="' . number_format($data_trx['qty']) . '" data-bs-toggle="modal" data-bs-target="#edit"><i class="bi bi-pencil"></i></button>';
-                                                }
-                                            }
-                                            ?>
-
-                                        </td>
                                     </tr>
                                     <?php $no++; ?>
                                 <?php } ?>
                             </tbody>
                             <!-- Modal -->
-                            <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Harga</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                                <input type="hidden" name="id_trx" id="id_trx" readonly>
-                                                <input type="hidden" name="id_inv" value="<?php echo $id_nonppn_decode ?>" readonly>
-                                                <div class="mb-3">
-                                                    <label><strong>Harga</strong></label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" id="basic-addon1">Rp</span>
-                                                        <input type="text" class="form-control text-end harga_produk" name="harga_produk" id="harga_produk" required>
-                                                        <input type="hidden" class="form-control text-end harga_produk" name="qty" id="qty" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary" name="update-harga">Update Harga</button>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal fade" id="edit-diskon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Harga</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                                <input type="hidden" name="id_trx" id="id_trxdisc" readonly>
-                                                <input type="hidden" name="id_inv" value="<?php echo $id_nonppn_decode ?>" readonly>
-                                                <div class="mb-3">
-                                                    <label><strong>Harga</strong></label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" id="basic-addon1">Rp</span>
-                                                        <input type="text" class="form-control text-end harga_produk" name="harga_produk" id="harga_produk_disc" required>
-                                                        <input type="hidden" class="form-control text-end harga_produk" name="qty" id="qtydisc" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-mb3">
-                                                    <label><b>Diskon</b></label>
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control text-end harga_produk" name="disc" id="discc" required>
-                                                        <span class="input-group-text" id="basic-addon1">%</span>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary" name="update-harga-diskon">Update Harga</button>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </table>
                     </div>
                     <div class="container">

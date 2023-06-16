@@ -38,11 +38,11 @@ include "akses.php";
 
   <main id="main" class="main">
     <!-- Loading -->
-    <div class="loader loader">
+    <!-- <div class="loader loader">
       <div class="loading">
         <img src="img/loading.gif" width="200px" height="auto">
       </div>
-    </div>
+    </div> -->
     <!-- ENd Loading -->
     <div class="pagetitle">
       <h1>Dashboard</h1>
@@ -163,7 +163,32 @@ include "akses.php";
               </a>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link" id="dikirim-tab" data-bs-toggle="tab" data-bs-target="#dikirim-tab-pane" type="button" role="tab" aria-controls="dikirim-tab-pane" aria-selected="false">Dikirim</button>
+              <?php
+              $sql_inv_dikirim = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_nonppn AS nonppn
+                                LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
+              $query_inv_dikirim = mysqli_query($connect, $sql_inv_dikirim);
+              $total_inv_nonppn_dikirim = mysqli_num_rows($query_inv_dikirim);
+              ?>
+              <?php
+              $sql_inv_ppn_dikirim = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_ppn AS ppn
+                                LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
+              $query_inv_ppn_dikirim = mysqli_query($connect, $sql_inv_ppn_dikirim);
+              $total_inv_ppn_dikirim = mysqli_num_rows($query_inv_ppn_dikirim);
+              $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim;
+              ?>
+              <a class="nav-link" href="invoice-reguler-dikirim.php?sort=baru">
+                Dikirim &nbsp;
+                <?php if ($hasil_dikirim != 0) {
+                  echo '<span class="badge text-bg-secondary">' . $hasil_dikirim . '</span>';
+                }
+                ?>
+              </a>
             </li>
             <li class="nav-item flex-fill" role="presentation">
               <button class="nav-link" id="diterima-tab" data-bs-toggle="tab" data-bs-target="#diterima-tab-pane" type="button" role="tab" aria-controls="diterima-tab-pane" aria-selected="false">Diterima</button>
@@ -199,13 +224,13 @@ include "akses.php";
                     <table class="table table-bordered table-striped" id="tableA">
                       <thead>
                         <tr class="text-white" style="background-color: navy;">
-                          <th class="text-center p-3" style="width: 30px">No</th>
-                          <th class="text-center p-3" style="width: 150px">No. SPK</th>
-                          <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
-                          <th class="text-center p-3" style="width: 150px">No. PO</th>
-                          <th class="text-center p-3" style="width: 200px">Nama Customer</th>
-                          <th class="text-center p-3" style="width: 150px">Note</th>
-                          <th class="text-center p-3" style="width: 150px">Aksi</th>
+                          <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
+                          <th class="text-center p-3 text-nowrap" style="width: 150px">No. SPK</th>
+                          <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. SPK</th>
+                          <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
+                          <th class="text-center p-3 text-nowrap" style="width: 200px">Nama Customer</th>
+                          <th class="text-center p-3 text-nowrap" style="width: 150px">Note</th>
+                          <th class="text-center p-3 text-nowrap" style="width: 150px">Aksi</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -228,13 +253,13 @@ include "akses.php";
                         while ($data = mysqli_fetch_array($query)) {
                         ?>
                           <tr>
-                            <td class="text-center"><?php echo $no; ?></td>
-                            <td><?php echo $data['no_spk'] ?></td>
-                            <td><?php echo $data['tgl_spk'] ?></td>
-                            <td><?php echo $data['no_po'] ?></td>
-                            <td><?php echo $data['nama_cs'] ?></td>
-                            <td><?php echo $data['note'] ?></td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                            <td class="text-nowrap"><?php echo $data['no_spk'] ?></td>
+                            <td class="text-nowrap"><?php echo $data['tgl_spk'] ?></td>
+                            <td class="text-nowrap"><?php echo $data['no_po'] ?></td>
+                            <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
+                            <td class="text-nowrap"><?php echo $data['note'] ?></td>
+                            <td class="text-center text-nowrap">
                               <a href="detail-produk-spk-reg.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" id="detail-spk" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i> Lihat Produk</a>
                               <p></p>
                               <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Cancel Order</a>

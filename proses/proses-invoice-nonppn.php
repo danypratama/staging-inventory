@@ -179,4 +179,12 @@ if (isset($_POST['simpan-inv'])) {
         $_SESSION['info'] = 'Diupdate';
         header("Location:../invoice-reguler.php?sort=baru");
     }
+} else if (isset($_POST['update-ongkir'])) {
+    $id_inv = $_POST['id_inv'];
+    $id_inv_encode = base64_encode($id_inv);
+    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
+    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
+
+    $update_data = mysqli_query($connect, "UPDATE inv_nonppn SET ongkir = '$ongkir' WHERE id_inv_nonppn = '$id_inv'");
+    header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_encode'");
 }

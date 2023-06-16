@@ -78,7 +78,8 @@ if (isset($_POST['simpan-inv'])) {
             $qty_array = str_replace(',', '', $qty[$i]);
             $qty_array = intval($qty_array);
             $update_status_trx_array = $update_status_trx;
-
+            $ongkir =  str_replace(',', '', $ongkir[$i]);
+            $harga = intval($ongkir);
             $diskon = $disc_array / 100;
             $harga_disc = $harga * $diskon;
             $total = $harga * $qty_array;
@@ -179,4 +180,13 @@ if (isset($_POST['simpan-inv'])) {
         $_SESSION['info'] = 'Diupdate';
         header("Location:../invoice-reguler.php?sort=baru");
     }
+} else if (isset($_POST['update-ongkir'])) {
+    $id_trx = $_POST['id_trx'];
+    $id_inv = $_POST['id_inv'];
+    $id_inv_encode = base64_encode($id_inv);
+    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
+    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
+
+    $update_data = mysqli_query($connect, "UPDATE inv_ppn SET ongkir = '$ongkir' WHERE id_inv_ppn = '$id_inv'");
+    header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
 }

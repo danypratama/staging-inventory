@@ -135,7 +135,7 @@ include "akses.php";
                                 FROM inv_nonppn AS nonppn
                                 LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
                             $query_inv = mysqli_query($connect, $sql_inv);
                             $total_inv_nonppn = mysqli_num_rows($query_inv);
                             ?>
@@ -144,12 +144,12 @@ include "akses.php";
                                 FROM inv_ppn AS ppn
                                 LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
                             $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
                             $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
                             $hasil = $total_inv_nonppn + $total_inv_ppn;
                             ?>
-                            <a class="nav-link active">
+                            <a class="nav-link" href="invoice-reguler.php?sort=baru">
                                 Invoice Sudah Dicetak &nbsp;
                                 <?php if ($hasil != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $hasil . '</span>';
@@ -157,7 +157,7 @@ include "akses.php";
                                 ?>
                             </a>
                         </li>
-                        <li class="nav-item flex-fill" role="presentation">
+                        <li class=" nav-item flex-fill" role="presentation">
                             <?php
                             $sql_inv_dikirim = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
                                 FROM inv_nonppn AS nonppn
@@ -177,13 +177,16 @@ include "akses.php";
                             $total_inv_ppn_dikirim = mysqli_num_rows($query_inv_ppn_dikirim);
                             $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim;
                             ?>
-                            <a class="nav-link" href="invoice-reguler-dikirim.php?sort=baru">
+                            <a class="nav-link active" href="#">
                                 Dikirim &nbsp;
                                 <?php if ($hasil_dikirim != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $hasil_dikirim . '</span>';
                                 }
                                 ?>
                             </a>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="diterima-tab" data-bs-toggle="tab" data-bs-target="#diterima-tab-pane" type="button" role="tab" aria-controls="diterima-tab-pane" aria-selected="false">Diterima</button>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
                             <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
@@ -253,7 +256,7 @@ include "akses.php";
                                                             FROM inv_nonppn AS nonppn
                                                             LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'Dikirim' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -266,7 +269,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-nonppn-dikirim.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -296,7 +299,7 @@ include "akses.php";
                                     </div>
                                     <table class="table table-bordered table-striped" id="tableppn">
                                         <thead>
-                                            <tr class="text-white text-nowrap" style="background-color: navy;">
+                                            <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
@@ -323,7 +326,7 @@ include "akses.php";
                                                             FROM inv_ppn AS ppn
                                                             LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'Dikirim' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>

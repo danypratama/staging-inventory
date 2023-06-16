@@ -75,54 +75,63 @@ include "akses.php";
                         $urutkan++;
                         $no_inv = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
                         ?>
-                        <div class="row g-3 p-3">
-                            <input type="hidden" name="id_inv_ppn" value="PPN-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
-                            <div class="col-sm-2">
-                                <label><strong>No Invoice Ppn</strong></label>
-                                <input type="text" class="form-control" name="no_inv_ppn" value="<?php echo $no_inv ?>" required>
+                        <div class="card-body">
+                            <div class="row mt-3">
+                                <div class="col-sm-6">
+                                    <div class="card-body">
+                                        <input type="hidden" name="id_inv_ppn" value="PPN-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+                                        <div class="mt-3">
+                                            <label><strong>No Invoice PPN</strong></label>
+                                            <input type="text" class="form-control" name="no_inv_ppn" value="<?php echo $no_inv ?>" required>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label><strong>Tanggal Invoice</strong></label>
+                                            <input type="text" id="date" class="form-control" name="tgl_inv" required>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label><strong>Tanggal Tempo</strong></label>
+                                            <input type="text" id="tempo" class="form-control" name="tgl_tempo" required>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label><strong>Jenis Invoice</strong></label>
+                                            <select name="jenis_inv" id="select" class="form-select" onchange="enabled()">
+                                                <option value="Reguler">Reguler</option>
+                                                <option value="Diskon">Diskon</option>
+                                                <option value="Spesial Diskon">Spesial Diskon</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label><strong>Spesial Diskon</strong></label>
+                                            <input type="text" id="sp_disc" name="sp_disc" value="0" class="form-control bg-light" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="card-body">
+                                        <div class="mt-3">
+                                            <label><strong>Pelanggan</strong></label>
+                                            <input type="text" class="form-control bg-light" name="cs" value="<?php echo $data_spk['nama_cs']; ?>" required>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label><strong>Pelanggan Invoice</strong></label>
+                                            <input type="text" class="form-control" name="cs_inv" value="<?php echo $data_spk['nama_cs']; ?>" required>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label><strong>Ongkir</strong></label>
+                                            <input type="text" class="form-control" name="ongkir" required>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label><strong>Note Invoice</strong></label>
+                                            <textarea type="text" class="form-control" style="height: 100px;" name="note_inv"></textarea>
+                                        </div>
+                                        <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
+                                    </div>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <button type="submit" class="btn btn-primary btn-md" name="simpan-inv">Simpan Data</button>
+                                    <a href="spk-siap-kirim.php?sort=baru" class="btn btn-secondary">Batal</a>
+                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label><strong>Pelanggan</strong></label>
-                                <input type="text" class="form-control bg-light" name="cs" value="<?php echo $data_spk['nama_cs']; ?>" required>
-                            </div>
-                            <div class="col-sm-4">
-                                <label><strong>Pelanggan Invoice</strong></label>
-                                <input type="text" class="form-control" name="cs_inv" value="<?php echo $data_spk['nama_cs']; ?>" required>
-                            </div>
-                            <div class="col-sm-2">
-                                <label><strong>Jenis Invoice</strong></label>
-                                <select name="jenis_inv" id="select" class="form-select" onchange="enabled()">
-                                    <option value="Reguler">Reguler</option>
-                                    <option value="Diskon">Diskon</option>
-                                    <option value="Spesial Diskon">Spesial Diskon</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row g-3 p-3">
-                            <div class="col">
-                                <label><strong>Tanggal Invoice</strong></label>
-                                <input type="text" id="date" class="form-control" name="tgl_inv" required>
-                            </div>
-                            <div class="col">
-                                <label><strong>Tanggal Tempo</strong></label>
-                                <input type="text" id="tempo" class="form-control" name="tgl_tempo" required>
-                            </div>
-                            <div class="col">
-                                <labe><strong>Spesial Diskon</strong></label>
-                                    <input type="text" id="sp_disc" name="sp_disc" value="0" class="form-control bg-light" readonly>
-                            </div>
-                            <div class="col">
-                                <label><strong>Ongkir</strong></label>
-                                <input type="text" class="form-control" name="ongkir" required>
-                            </div>
-                            <div class="col">
-                                <label><strong>Note Invoice</strong></label>
-                                <input type="text" class="form-control" name="note_inv">
-                            </div>
-                        </div>
-                        <div class="text-center mt-2">
-                            <button type="submit" class="btn btn-primary btn-md" name="simpan-inv">Simpan Data</button>
-                            <a href="spk-siap-kirim.php?sort=baru" class="btn btn-secondary">Batal</a>
                         </div>
                     </form>
                 </div>

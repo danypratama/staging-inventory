@@ -382,7 +382,7 @@
                     ?>
 
                     <?php
-                    if ($kat_inv == 'Spesial Diskon') {
+                    if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
                         echo 'Spesial Diskon :';
                         echo "<br>";
                     }
@@ -399,7 +399,7 @@
                     ?>
 
                     <?php
-                    if ($kat_inv == 'Spesial Diskon') {
+                    if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
                         echo $data_inv['sp_disc'] . '(%)';
                         echo "<br>";
                     }
