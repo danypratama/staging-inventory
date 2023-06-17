@@ -69,29 +69,29 @@ include "akses.php";
                     <div class="col-sm-6">
                         <div class="card-body p-3 border">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">No. SPK</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['no_spk'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Tgl. SPK</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['tgl_spk'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">No. PO</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php
                                     if ($data['no_po'] != '') {
                                         echo $data['no_po'];
@@ -102,20 +102,20 @@ include "akses.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Tgl. Pesanan</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['tgl_pesanan'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Order Via</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['order_by'] ?>
                                 </div>
                             </div>
@@ -124,38 +124,38 @@ include "akses.php";
                     <div class="col-sm-6">
                         <div class="card-body p-3 border" style="min-height: 234px;">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Sales</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['nama_sales'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Pelanggan</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['nama_cs'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Alamat</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['alamat'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Note</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php
                                     if ($data['note'] != '') {
                                         echo $data['note'];
@@ -178,14 +178,14 @@ include "akses.php";
                     <div class="table-responsive">
                         <form action="proses/proses-produk-spk-reg.php" method="POST">
                             <div class="text-start mb-3">
-                                <a href="spk-dalam-proses.php?sort=baru" class="btn btn-warning btn-detail">
+                                <a href="spk-dalam-proses.php?sort=baru" class="btn btn-warning btn-detail mb-3">
                                     <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                 </a>
                                 <?php
                                 $id_spk = base64_decode($_GET['id']);
                                 ?>
                                 <input type="hidden" name="id_spk_reg" value="<?php echo $id_spk ?>">
-                                <button type="submit" class="btn btn-secondary" name="siap-kirim"><i class="bi bi-send"></i> Siap Kirim</button>
+                                <button type="submit" class="btn btn-secondary mb-3" name="siap-kirim"><i class="bi bi-send"></i> Siap Kirim</button>
                             </div>
                             <table class="table table-striped table-bordered">
                                 <thead>

@@ -160,9 +160,12 @@ if (isset($_POST['simpan-inv'])) {
     $spdisc = $_POST['spdisc'];
     mysqli_query($connect, "UPDATE inv_ppn SET sp_disc = '$spdisc' WHERE id_inv_ppn = '$id_inv'");
     header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
+
+    // Proses add SPK
 } else if (isset($_POST['add-spk'])) {
     $id_spk = $_POST['id_spk'];
     $id_inv = $_POST['id_inv'];
+    $id_inv_encode = base64_encode($id_inv);
     $status_spk = 'Invoice Sudah Diterbitkan';
 
     for ($i = 0; $i < count($id_spk); $i++) {
@@ -170,6 +173,7 @@ if (isset($_POST['simpan-inv'])) {
 
         mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv', status_spk = '$status_spk'  WHERE id_spk_reg = '$id_spk_array'");
         mysqli_query($connect, "UPDATE transaksi_produk_reg SET status_trx = '1'  WHERE id_spk = '$id_spk_array'");
+        header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
     }
 } else if (isset($_POST['ubah-dikirim'])) {
     $id_inv = $_POST['id_inv'];

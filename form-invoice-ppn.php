@@ -180,6 +180,20 @@ include "akses.php";
     flatpickr("#tempo", {
         dateFormat: "d/m/Y",
     });
+
+    // untuk menampilkan tanggal hari ini
+    var dateInput = document.getElementById('date');
+
+    // Membuat objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
+    var day = String(today.getDate()).padStart(2, '0');
+    var month = String(today.getMonth() + 1).padStart(2, '0');
+    var year = today.getFullYear();
+
+    // Mengatur nilai default input dengan format yang diinginkan
+    dateInput.value = day + '/' + month + '/' + year;
 </script>
 <!-- end date picker -->
 <!-- Generate UUID -->

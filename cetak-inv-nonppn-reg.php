@@ -309,26 +309,47 @@
                     $grand_total = 0;
                     $sub_total_spdisc = 0;
                     $sql_trx = "SELECT
-                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc, nonppn.note_inv, nonppn.total_inv,
-                    sr.id_inv, sr.no_spk,
-                    trx.*,
-                    spr.stock,
-                    tpr.nama_produk,
-                    tpr.harga_produk, mr.*
-                    FROM inv_nonppn AS nonppn
-                    JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                    JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                    JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' ORDER BY no_spk ASC";
+                                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc, nonppn.note_inv, nonppn.total_inv,
+                                    sr.id_inv, sr.no_spk,
+                                    SUM(trx.qty) AS total_qty,
+                                    trx.*,
+                                    spr.stock,
+                                    tpr.nama_produk,
+                                    tpr.harga_produk, mr.*
+                                FROM inv_nonppn AS nonppn
+                                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND disc = '0'
+                                GROUP BY id_produk
+                            
+                                UNION ALL
+                            
+                                SELECT
+                                    nonppn.id_inv_nonppn, nonppn.kategori_inv, nonppn.sp_disc, nonppn.note_inv, nonppn.total_inv,
+                                    sr.id_inv, sr.no_spk,
+                                    trx.qty AS total_qty,
+                                    trx.*,
+                                    spr.stock,
+                                    tpr.nama_produk,
+                                    tpr.harga_produk, mr.*
+                                FROM inv_nonppn AS nonppn
+                                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND disc != '0'
+                                ORDER BY no_spk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_nonppn'];
                         $total_inv = $data_trx['total_inv'];
                         $note_inv = $data_trx['note_inv'];
                         $kat_inv = $data_trx['kategori_inv'];
-                        $qty = $data_trx['qty'];
+                        $qty = $data_trx['total_qty'];
                         $harga = $data_trx['harga_produk'];
                         $disc = $data_trx['disc'] / 100;
                         $tampil_disc = $data_trx['disc'];
@@ -342,7 +363,7 @@
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
                             <td><?php echo $data_trx['nama_produk'] ?></td>
-                            <td align="right"><?php echo number_format($data_trx['qty'], 0, '.', '.') ?></td>
+                            <td align="right"><?php echo number_format($data_trx['total_qty'], 0, '.', '.') ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga_produk'], 0, '.', '.') ?></td>
                             <?php
                             if ($data_trx['kategori_inv'] == 'Diskon') {
@@ -374,12 +395,6 @@
             <div class="col-payment-2">
                 <!-- Kolom kedua -->
                 <div class="grand-total">
-                    <?php
-                    if ($ongkir != 0) {
-                        echo "Ongkir (Rp):";
-                        echo "<br>";
-                    }
-                    ?>
 
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
@@ -388,15 +403,16 @@
                     }
                     ?>
 
-                    Grand total (Rp):
-                </div>
-                <div class="amount">
                     <?php
                     if ($ongkir != 0) {
-                        echo number_format($ongkir, 0, '.', '.');
+                        echo "Ongkir (Rp):";
                         echo "<br>";
                     }
                     ?>
+
+                    Grand total (Rp):
+                </div>
+                <div class="amount">
 
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
@@ -404,6 +420,14 @@
                         echo "<br>";
                     }
                     ?>
+
+                    <?php
+                    if ($ongkir != 0) {
+                        echo number_format($ongkir, 0, '.', '.');
+                        echo "<br>";
+                    }
+                    ?>
+
                     <?php echo number_format($grand_total_fix, 0, '.', '.') ?>
                 </div>
             </div>

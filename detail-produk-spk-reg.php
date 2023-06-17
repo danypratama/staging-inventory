@@ -72,29 +72,29 @@ include "akses.php";
                     <div class="col-sm-6">
                         <div class="card-body p-3 border">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">No. SPK</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['no_spk'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Tgl. SPK</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['tgl_spk'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">No. PO</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php
                                     if ($data['no_po'] != '') {
                                         echo $data['no_po'];
@@ -105,20 +105,20 @@ include "akses.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Tgl. Pesanan</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['tgl_pesanan'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Order Via</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['order_by'] ?>
                                 </div>
                             </div>
@@ -127,38 +127,38 @@ include "akses.php";
                     <div class="col-sm-6">
                         <div class="card-body p-3 border" style="min-height: 234px;">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Sales</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['nama_sales'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Pelanggan</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['nama_cs'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Alamat</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php echo $data['alamat'] ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <p style="float: left;">Note</p>
                                     <p style="float: right;">:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-7">
                                     <?php
                                     if ($data['note'] != '') {
                                         echo $data['note'];
@@ -347,7 +347,7 @@ include "akses.php";
                                 $isEmpty = false; // Setel variabel pengecekan menjadi false jika ada data
                             ?>
                                 <div class="card-body border p-2">
-                                    <div class="row">
+                                    <div class="row p-4">
                                         <div class="col-sm-1 mb-2">
                                             <input type="text" class="form-control text-center bg-light mobile" value="<?php echo $no; ?>" readonly>
                                             <?php $no++ ?>
@@ -414,7 +414,7 @@ include "akses.php";
                     </div>
                     <div class="modal-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered" id="table2">
+                            <table class="table table-striped table-bordered" id="table3">
                                 <thead>
                                     <tr class="text-white" style="background-color: #051683;">
                                         <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>

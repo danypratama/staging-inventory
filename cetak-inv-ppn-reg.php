@@ -327,26 +327,47 @@
                     $grand_total = 0;
                     $sub_total_spdisc = 0;
                     $sql_trx = "SELECT
-                    ppn.id_inv_ppn, ppn.kategori_inv, ppn.sp_disc, ppn.note_inv, ppn.total_inv,
-                    sr.id_inv, sr.no_spk,
-                    trx.*,
-                    spr.stock,
-                    tpr.nama_produk,
-                    tpr.harga_produk, mr.*
-                    FROM inv_ppn AS ppn
-                    JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                    JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                    JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                    WHERE ppn.id_inv_ppn = '$id_ppn_decode' ORDER BY no_spk ASC";
+                                    ppn.id_inv_ppn, ppn.kategori_inv, ppn.sp_disc, ppn.note_inv, ppn.total_inv,
+                                    sr.id_inv, sr.no_spk,
+                                    SUM(trx.qty) AS total_qty,
+                                    trx.*,
+                                    spr.stock,
+                                    tpr.nama_produk,
+                                    tpr.harga_produk, mr.*
+                                FROM inv_ppn AS ppn
+                                JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND disc = '0'
+                                GROUP BY id_produk
+                            
+                                UNION ALL
+                            
+                                SELECT
+                                    ppn.id_inv_ppn, ppn.kategori_inv, ppn.sp_disc, ppn.note_inv, ppn.total_inv,
+                                    sr.id_inv, sr.no_spk,
+                                    trx.qty AS total_qty,
+                                    trx.*,
+                                    spr.stock,
+                                    tpr.nama_produk,
+                                    tpr.harga_produk, mr.*
+                                FROM inv_ppn AS ppn
+                                JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND disc != '0'
+                                ORDER BY no_spk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
                         $total_inv = $data_trx['total_inv'];
                         $note_inv = $data_trx['note_inv'];
                         $kat_inv = $data_trx['kategori_inv'];
-                        $qty = $data_trx['qty'];
+                        $qty = $data_trx['total_qty'];
                         $harga = $data_trx['harga_produk'];
                         $disc = $data_trx['disc'] / 100;
                         $tampil_disc = $data_trx['disc'];

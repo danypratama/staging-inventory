@@ -31,6 +31,13 @@ $(document).ready(function() {
   });
 });
 
+$(document).ready(function() {
+  var table = $('#table4').DataTable({
+      "lengthChange": false,
+      "ordering": false,
+      "autoWidth": false
+  });
+});
 
 $(function () {
   $("#table4").DataTable({

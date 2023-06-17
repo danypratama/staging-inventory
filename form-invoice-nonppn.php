@@ -32,7 +32,7 @@ include "akses.php";
           <h5>Form Invoice Nonppn</h5>
         </div>
         <div class="card-body">
-          <form action="proses/proses-invoice-nonppn.php" method="POST">
+          <form action="proses/proses-invoice-nonppn.php" method="POST" id="myForm">
             <?php
             // Mendapatkan data dari form sebelumnya
 
@@ -62,7 +62,7 @@ include "akses.php";
 
             include "koneksi.php";
             $thn  = date('Y');
-            $sql  = mysqli_query($connect, "SELECT max(no_inv) as maxID, STR_TO_DATE(tgl_inv, '%d/%m/%Y') AS tgl FROM inv_nonppn WHERE YEAR(STR_TO_DATE(tgl_inv, '%d/%m/%Y')) = '$thn'");
+            $sql  = mysqli_query($connect, "SELECT max(no_inv) as maxID, STR_TO_DATE(tgl_inv, '%d/%m/%Y') AS tgl FROM inv_nonppn WHERE YEAR(STR_TO_DATE(tgl_inv, '%d/%m/%Y')) = '$thn' ORDER BY no_inv ASC");
             $data = mysqli_fetch_array($sql);
 
             $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
@@ -180,6 +180,20 @@ include "akses.php";
   flatpickr("#tempo", {
     dateFormat: "d/m/Y",
   });
+
+  // untuk menampilkan tanggal hari ini
+  var dateInput = document.getElementById('date');
+
+  // Membuat objek tanggal hari ini
+  var today = new Date();
+
+  // Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
+  var day = String(today.getDate()).padStart(2, '0');
+  var month = String(today.getMonth() + 1).padStart(2, '0');
+  var year = today.getFullYear();
+
+  // Mengatur nilai default input dengan format yang diinginkan
+  dateInput.value = day + '/' + month + '/' + year;
 </script>
 <!-- end date picker -->
 <!-- Generate UUID -->
@@ -224,5 +238,21 @@ function generate_uuid()
   // Fungsi untuk memformat angka dengan pemisah ribuan
   function numberFormat(number) {
     return new Intl.NumberFormat('en-US').format(number);
+  }
+</script>
+
+<script>
+  function submitForm(event) {
+    event.preventDefault(); // Mencegah pengiriman form secara otomatis
+
+    var dateInput = document.getElementById('date');
+
+    if (dateInput.value.trim() === '') {
+      alert('Tanggal Invoice harus diisi!');
+      return;
+    }
+
+    // Lanjutkan dengan mengirimkan form
+    document.getElementById('myForm').submit();
   }
 </script>
