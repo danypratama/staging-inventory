@@ -58,7 +58,7 @@ include "akses.php";
                     </form>
                 </div>
             </div>
-            <table class="table table-bordered table-striped" id="tableppn">
+            <table class="table table-bordered table-striped" id="table6">
                 <thead>
                     <tr class="text-white" style="background-color: navy;">
                         <th class="text-center p-3" style="width: 30px">No</th>
@@ -115,10 +115,33 @@ include "akses.php";
 </html>
 <script>
     $(document).ready(function() {
-        var table = $('#tableppn').DataTable({
+        // Inisialisasi DataTable
+        var table = $('#table6').DataTable({
             "lengthChange": false,
             "ordering": false,
             "autoWidth": false
         });
     });
+
+    // Fungsi untuk mengirim permintaan AJAX
+    function filterData() {
+        var sortValue = document.getElementById('select').value;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById('filteredData').innerHTML = this.responseText;
+
+                // Inisialisasi ulang DataTable setelah mengganti isi tabel
+                $('#table6').DataTable({
+                    "lengthChange": false,
+                    "ordering": false,
+                    "autoWidth": false
+                });
+            }
+        };
+
+        xhttp.open('GET', 'filter-data-nonppn.php?sort=' + sortValue, true);
+        xhttp.send();
+    }
 </script>

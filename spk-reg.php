@@ -315,58 +315,6 @@ include "akses.php";
 
 <script>
   $(document).ready(function() {
-    var table = $('#tableA').DataTable({
-      "lengthChange": false,
-      "ordering": false,
-      "autoWidth": false
-    });
-  });
-  $(document).ready(function() {
-    var table = $('#tableB').DataTable({
-      "lengthChange": false,
-      "ordering": false,
-      "autoWidth": false
-    });
-  });
-  $(document).ready(function() {
-    var table = $('#tableC').DataTable({
-      "lengthChange": false,
-      "ordering": false,
-      "autoWidth": false
-    });
-  });
-  $(document).ready(function() {
-    var table = $('#tableD').DataTable({
-      "lengthChange": false,
-      "ordering": false,
-      "autoWidth": false
-    });
-  });
-  $(document).ready(function() {
-    var table = $('#tableE').DataTable({
-      "lengthChange": false,
-      "ordering": false,
-      "autoWidth": false
-    });
-  });
-  $(document).ready(function() {
-    var table = $('#tableF').DataTable({
-      "lengthChange": false,
-      "ordering": false,
-      "autoWidth": false
-    });
-  });
-  $(document).ready(function() {
-    var table = $('#tableG').DataTable({
-      "lengthChange": false,
-      "ordering": false,
-      "autoWidth": false
-    });
-  });
-</script>
-
-<script>
-  $(document).ready(function() {
     $("#select").change(function() {
       var open = $(this).data("isopen");
       if (open) {

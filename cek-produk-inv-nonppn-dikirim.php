@@ -252,25 +252,83 @@ include "akses.php";
                                     <i class="bi bi-send"></i> Diterima
                                 </button>
                                 <!-- Modal Add SPK-->
-                                <div class="modal fade" id="Diterima" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
+                                            <style>
+                                                video {
+                                                    width: 100%;
+                                                    height: auto;
+                                                }
+                                            </style>
                                             <div class="modal-body">
-                                                <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                                    <div class="mb-3">
-                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                        <label>Diterima Oleh</label>
-                                                        <input type="text" class="form-control" name="diterima" required>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-primary" name="diterima"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                                                        <button class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</button>
-                                                    </div>
-                                                </form>
+                                                <div class="card-body">
+                                                    <form action="proses/proses-invoice-nonppn.php" method="POST">
+                                                        <div class="mb-3">
+                                                            <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                                            <label>Diterima Oleh</label>
+                                                            <input type="text" class="form-control" name="diterima">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Bukti Terima 1</label>
+                                                            <form action="" method="post" enctype="multipart/form-data">
+                                                                <input type="file" name="fileku" id="fileku" style="display: none;">
+                                                                <button type="button" onclick="pilihData()">Pilih Data</button>
+                                                                <br>
+                                                                <h2>Ambil Foto dari Kamera</h2>
+                                                                <div id="camera_output"></div>
+                                                                <button type="button" id="camera_button">Ambil Foto</button>
+                                                                <br>
+                                                            </form>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Bukti Terima 2</label>
+                                                            <input type="file" name="fileku">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Bukti Terima 3</label>
+                                                            <input type="file" name="fileku">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-primary" name="diterima"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                                            <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
+                                                        </div>
+                                                    </form>
+                                                    <script>
+                                                        // Mengambil foto dari kamera menggunakan API MediaDevices
+                                                        var cameraOutput = document.getElementById('camera_output');
+                                                        var cameraImageInput = document.getElementById('camera_image');
+                                                        var cameraButton = document.getElementById('camera_button');
+
+                                                        cameraButton.addEventListener('click', function() {
+                                                            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                                                                navigator.mediaDevices.getUserMedia({
+                                                                    video: true
+                                                                }).then(function(stream) {
+                                                                    var video = document.createElement('video');
+                                                                    video.srcObject = stream;
+                                                                    video.play();
+
+                                                                    var canvas = document.createElement('canvas');
+                                                                    canvas.width = video.videoWidth;
+                                                                    canvas.height = video.videoHeight;
+                                                                    setInterval(function() {
+                                                                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                                                                        var imageData = canvas.toDataURL('image/jpeg');
+                                                                        cameraOutput.innerHTML = '<img src="' + imageData + '" width="300">';
+                                                                        cameraImageInput.value = imageData;
+                                                                    }, 100);
+                                                                }).catch(function(error) {
+                                                                    console.error('Kamera tidak tersedia', error);
+                                                                });
+                                                            }
+                                                        });
+                                                    </script>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

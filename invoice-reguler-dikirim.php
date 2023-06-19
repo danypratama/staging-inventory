@@ -135,7 +135,7 @@ include "akses.php";
                                 FROM inv_nonppn AS nonppn
                                 LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
                             $query_inv = mysqli_query($connect, $sql_inv);
                             $total_inv_nonppn = mysqli_num_rows($query_inv);
                             ?>
@@ -144,7 +144,7 @@ include "akses.php";
                                 FROM inv_ppn AS ppn
                                 LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
                                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
                             $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
                             $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
                             $hasil = $total_inv_nonppn + $total_inv_ppn;
@@ -199,14 +199,14 @@ include "akses.php";
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'nonppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#nonppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice Non PPN &nbsp;
                             <?php if ($total_inv_nonppn != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn . '</span>';
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn_dikirim . '</span>';
                             } ?>
                         </a>
 
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'ppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#ppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice PPN &nbsp;
                             <?php if ($total_inv_ppn != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_ppn . '</span>';
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_ppn_dikirim . '</span>';
                             } ?>
                         </a>
                         <div class="collapse <?php if ($activeButton == 'nonppn') echo 'show'; ?>" id="nonppn" data-bs-parent="#accordion">
@@ -364,11 +364,17 @@ include "akses.php";
                                     if (this.readyState == 4 && this.status == 200) {
                                         // Update elemen filteredData dengan hasil filter yang diterima dari server
                                         document.getElementById('filteredData').innerHTML = this.responseText;
+                                        // Inisialisasi ulang DataTable setelah mengganti isi tabel
+                                        $('#table5').DataTable({
+                                            "lengthChange": false,
+                                            "ordering": false,
+                                            "autoWidth": false
+                                        });
                                     }
                                 };
 
                                 // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-nonppn.php?sort=' + sortValue, true);
+                                xhttp.open('GET', 'filter-data-nonppn-dikirim.php?sort=' + sortValue, true);
                                 xhttp.send();
                             }
 
@@ -386,11 +392,18 @@ include "akses.php";
                                     if (this.readyState == 4 && this.status == 200) {
                                         // Update elemen filteredData dengan hasil filter yang diterima dari server
                                         document.getElementById('filteredDataPpn').innerHTML = this.responseText;
+
+                                        // Inisialisasi ulang DataTable setelah mengganti isi tabel
+                                        $('#table6').DataTable({
+                                            "lengthChange": false,
+                                            "ordering": false,
+                                            "autoWidth": false
+                                        });
                                     }
                                 };
 
                                 // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-ppn.php?sort=' + sortValue, true);
+                                xhttp.open('GET', 'filter-data-ppn-dikirim.php?sort=' + sortValue, true);
                                 xhttp.send();
                             }
                         </script>

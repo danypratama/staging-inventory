@@ -186,6 +186,9 @@ include "akses.php";
                             </a>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="diterima-tab" data-bs-toggle="tab" data-bs-target="#diterima-tab-pane" type="button" role="tab" aria-controls="diterima-tab-pane" aria-selected="false">Diterima</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
                             <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
@@ -220,7 +223,6 @@ include "akses.php";
                                                                                 echo "selected";
                                                                             } ?>>Paling Lama</option>
                                                 </select>
-
                                             </form>
                                         </div>
                                     </div>
@@ -361,6 +363,12 @@ include "akses.php";
                                     if (this.readyState == 4 && this.status == 200) {
                                         // Update elemen filteredData dengan hasil filter yang diterima dari server
                                         document.getElementById('filteredData').innerHTML = this.responseText;
+                                        // Inisialisasi ulang DataTable setelah mengganti isi tabel
+                                        $('#table5').DataTable({
+                                            "lengthChange": false,
+                                            "ordering": false,
+                                            "autoWidth": false
+                                        });
                                     }
                                 };
 
@@ -383,6 +391,11 @@ include "akses.php";
                                     if (this.readyState == 4 && this.status == 200) {
                                         // Update elemen filteredData dengan hasil filter yang diterima dari server
                                         document.getElementById('filteredDataPpn').innerHTML = this.responseText;
+                                        $('#table6').DataTable({
+                                            "lengthChange": false,
+                                            "ordering": false,
+                                            "autoWidth": false
+                                        });
                                     }
                                 };
 

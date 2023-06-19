@@ -38,7 +38,8 @@ include "akses.php";
         <div class="row mb-3 mt-4">
             <div class="col-md-2">
                 <form action="" method="GET">
-                    <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange="filterData()">
+
+                    <select name="sort" class="form-select" id="select_ppn" aria-label="Default select example" onchange="filterDataPpn()">
                         <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
                                                     echo "selected";
                                                 } ?>>Paling Baru</option>
@@ -50,17 +51,17 @@ include "akses.php";
                 </form>
             </div>
         </div>
-        <table class="table table-bordered table-striped" id="table5">
+        <table class="table table-bordered table-striped" id="table6">
             <thead>
                 <tr class="text-white" style="background-color: navy;">
-                    <th class="text-center p-3" style="width: 30px">No</th>
-                    <th class="text-center p-3" style="width: 150px">No. Invoice</th>
-                    <th class="text-center p-3" style="width: 150px">Tgl. Invoice</th>
-                    <th class="text-center p-3" style="width: 150px">No. PO</th>
-                    <th class="text-center p-3" style="width: 250px">Nama Customer</th>
-                    <th class="text-center p-3" style="width: 100px">Kat. Inv</th>
-                    <th class="text-center p-3" style="width: 100px">Note</th>
-                    <th class="text-center p-3" style="width: 80px">Aksi</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -75,24 +76,24 @@ include "akses.php";
                         $filter = "ORDER BY tgl_inv ASC";
                     }
                 }
-                $sql = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
-                            FROM inv_nonppn AS nonppn
-                            LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
-                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                            WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
+                $sql = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                                            FROM inv_ppn AS ppn
+                                                            LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
+                                                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                            WHERE status_transaksi = 'Dikirim' GROUP BY no_inv  $filter";
                 $query = mysqli_query($connect, $sql);
                 while ($data = mysqli_fetch_array($query)) {
                 ?>
                     <tr>
-                        <td class="text-center"><?php echo $no; ?></td>
-                        <td><?php echo $data['no_inv'] ?></td>
-                        <td><?php echo $data['tgl_inv'] ?></td>
-                        <td><?php echo $data['no_po'] ?></td>
-                        <td><?php echo $data['nama_cs'] ?></td>
-                        <td><?php echo $data['kategori_inv'] ?></td>
-                        <td><?php echo $data['note_inv'] ?></td>
-                        <td class="text-center">
-                            <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                        <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                        <td class="text-nowrap"><?php echo $data['no_inv'] ?></td>
+                        <td class="text-nowrap"><?php echo $data['tgl_inv'] ?></td>
+                        <td class="text-nowrap"><?php echo $data['no_po'] ?></td>
+                        <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
+                        <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
+                        <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
+                        <td class="text-center text-nowrap">
+                            <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                         </td>
                     </tr>
                     <?php $no++ ?>
@@ -104,7 +105,7 @@ include "akses.php";
     <script>
         $(document).ready(function() {
             // Inisialisasi DataTable
-            var table = $('#table5').DataTable({
+            var table = $('#table6').DataTable({
                 "lengthChange": false,
                 "ordering": false,
                 "autoWidth": false
@@ -113,15 +114,15 @@ include "akses.php";
 
         // Fungsi untuk mengirim permintaan AJAX
         function filterData() {
-            var sortValue = document.getElementById('select').value;
+            var sortValue = document.getElementById('select_ppn').value;
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('filteredData').innerHTML = this.responseText;
+                    document.getElementById('filteredDataPpn').innerHTML = this.responseText;
 
                     // Inisialisasi ulang DataTable setelah mengganti isi tabel
-                    $('#table5').DataTable({
+                    $('#table6').DataTable({
                         "lengthChange": false,
                         "ordering": false,
                         "autoWidth": false
@@ -129,7 +130,7 @@ include "akses.php";
                 }
             };
 
-            xhttp.open('GET', 'filter-data-nonppn.php?sort=' + sortValue, true);
+            xhttp.open('GET', 'filter-data-ppn-dikirim.php?sort=' + sortValue, true);
             xhttp.send();
         }
     </script>

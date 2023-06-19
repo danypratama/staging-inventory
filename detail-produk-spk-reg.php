@@ -278,30 +278,34 @@ include "akses.php";
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body p-2">
-                                                            <form action="proses/proses-produk-spk-reg.php" method="POST">
-                                                                <input type="hidden" id="idTmpValue" name="id_tmp" class="form-control">
-                                                                <input type="hidden" id="spkTmpValue" name="id_spk" class="form-control">
-                                                                <div class="mb-3">
-                                                                    <label class="text-start">Nama Produk</label>
-                                                                    <input type="text" id="namaTmpValue" class="form-control bg-light" readonly>
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <form action="proses/proses-produk-spk-reg.php" method="POST">
+                                                                        <input type="hidden" id="idTmpValue" name="id_tmp" class="form-control">
+                                                                        <input type="hidden" id="spkTmpValue" name="id_spk" class="form-control">
+                                                                        <div class="mb-3">
+                                                                            <label class="text-start">Nama Produk</label>
+                                                                            <input type="text" id="namaTmpValue" class="form-control bg-light" readonly>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label class="text-start">Merk Produk</label>
+                                                                            <input type="text" id="merkTmpValue" class="form-control bg-light" readonly>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label class="text-start">Stock Tersedia</label>
+                                                                            <input type="text" id="stockTmpValue" class="form-control bg-light" readonly>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label class="text-start">Qty Order</label>
+                                                                            <input type="text" id="qtyTmpValue" name="qty_edit" class="form-control">
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                                            <button type="submit" class="btn btn-primary" id="edit" name="edit" disabled>Simpan Perubahan</button>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
-                                                                <div class="mb-3">
-                                                                    <label class="text-start">Merk Produk</label>
-                                                                    <input type="text" id="merkTmpValue" class="form-control bg-light" readonly>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="text-start">Stock Tersedia</label>
-                                                                    <input type="text" id="stockTmpValue" class="form-control bg-light" readonly>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="text-start">Qty Order</label>
-                                                                    <input type="text" id="qtyTmpValue" name="qty_edit" class="form-control">
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                                                    <button type="submit" class="btn btn-primary" id="edit" name="edit" disabled>Simpan Perubahan</button>
-                                                                </div>
-                                                            </form>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
