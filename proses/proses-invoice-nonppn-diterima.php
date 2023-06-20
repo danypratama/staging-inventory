@@ -2,45 +2,63 @@
 session_start();
 include "../koneksi.php";
 
-if (isset($_POST['diterima'])) {
-    $uuid = generate_uuid();
-    $year = date('y');
-    $day = date('d');
-    $month = date('m');
-    $id_inv_penerima = "PNMR" . $year . " " . $uuid . " " . $day;
-    $id_inv = $_POST['id_inv'];
-    $alamat = $_POST['alamat'];
-    $diterima = $_POST['diterima'];
+// Memulai transaksi
+$connect->begin_transaction();
 
-    // // Mendapatkan informasi file bukti terima 1
-    $nama_file = $_FILES["fileku"]["name"];
-    $tipe_file = $_FILES["fileku"]["type"];
-    $ukuran_file = $_FILES["fileku"]["size"];
-    $tmp_file = $_FILES["fileku"]["tmp_name"];
+try {
+    if (isset($_POST['diterima'])) {
+        $uuid = generate_uuid();
+        $year = date('y');
+        $day = date('d');
+        $month = date('m');
+        $id_inv_penerima = "BKTI" . $year . "" . $uuid . "" . $day;
+        $id_inv_penerima2 = "PNMR" . $year . "" . $uuid . "" . $day;
+        $id_inv = $_POST['id_inv'];
+        $alamat = $_POST['alamat'];
+        $diterima_oleh = $_POST['diterima_oleh'];
 
-    echo $nama_file;
+        // Mendapatkan informasi file bukti terima 1
+        $file1_name = $_FILES['fileku1']['name'];
+        $file1_tmp = $_FILES['fileku1']['tmp_name'];
+        $file1_destination = "../gambar/bukti1/" . $file1_name;
 
-    // // Mendapatkan informasi file bukti terima 2
-    // $file2_name = $_FILES['fileku2']['name'];
-    // $file2_tmp = $_FILES['fileku2']['tmp_name'];
-    // $file2_destination = "../gambar/bukti1" . $file2_name;
+        // Mendapatkan informasi file bukti terima 2
+        $file2_name = $_FILES['fileku2']['name'];
+        $file2_tmp = $_FILES['fileku2']['tmp_name'];
+        $file2_destination = "../gambar/bukti2/" . $file2_name;
 
-    // // Mendapatkan informasi file bukti terima 3
-    // $file3_name = $_FILES['fileku3']['name'];
-    // $file3_tmp = $_FILES['fileku3']['tmp_name'];
-    // $file3_destination = "../gambar/bukti1" . $file3_name;
+        // Mendapatkan informasi file bukti terima 3
+        $file3_name = $_FILES['fileku3']['name'];
+        $file3_tmp = $_FILES['fileku3']['tmp_name'];
+        $file3_destination = "../gambar/bukti3/" . $file3_name;
 
-    // // Pindahkan file bukti terima ke lokasi tujuan
-    // move_uploaded_file($file1_tmp, $file1_destination);
-    // move_uploaded_file($file2_tmp, $file2_destination);
-    // move_uploaded_file($file3_tmp, $file3_destination);
+        // Pindahkan file bukti terima ke lokasi tujuan
+        move_uploaded_file($file1_tmp, $file1_destination);
+        move_uploaded_file($file2_tmp, $file2_destination);
+        move_uploaded_file($file3_tmp, $file3_destination);
 
-    // $query1 = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv', $fileName1, $fileName2, $fileName3)");
+        // Query-insert pertama
+        $query1 = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$file1_name', '$file2_name', '$file3_name')");
 
-    // $query2 = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$diterima_oleh', '$alamat')");
+        // Query-insert kedua
+        $query2 = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima2', '$id_inv', '$diterima_oleh', '$alamat')");
 
-    // $query3 = mysqli_query($connect, "UPDATE INTO inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
+        // Query-update
+        $query3 = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
+
+        // Commit transaksi
+        $connect->commit();
+
+        echo "Transaksi berhasil di-commit.";
+    }
+} catch (Exception $e) {
+    // Rollback transaksi jika terjadi exception
+    $connect->rollback();
+    echo "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
 }
+
+// Tutup koneksi database
+$connect->close();
 ?>
 
 

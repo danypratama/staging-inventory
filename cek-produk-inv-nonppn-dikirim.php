@@ -266,12 +266,12 @@ include "akses.php";
                                             </style>
                                             <div class="modal-body">
                                                 <div class="card-body">
-                                                    <form action="proses/proses-invoice-nonppn-diterima.php" method="POST">
-                                                        <input type="text" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
-                                                        <input type="text" name="alamat" value="<?php echo $data['alamat']; ?>">
+                                                    <form action="proses/proses-invoice-nonppn-diterima.php" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
+                                                        <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
                                                         <div class="mb-3">
                                                             <label><strong>Diterima Oleh </strong></label>
-                                                            <input type="text" class="form-control" name="diterima">
+                                                            <input type="text" class="form-control" name="diterima_oleh" required>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label>Bukti Terima 1</label>

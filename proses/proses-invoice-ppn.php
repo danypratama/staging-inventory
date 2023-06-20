@@ -96,13 +96,11 @@ if (isset($_POST['simpan-inv'])) {
         }
 
         // Commit transaction jika semua query berhasil
-        mysqli_commit($connect);
-        $_SESSION['info'] = 'Diupdate';
+        mysqli_commit($connect);;
         header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     } catch (Exception $e) {
         // Rollback transaction jika terjadi kesalahan
         mysqli_rollback($connect);
-        $_SESSION['info'] = 'Silahkan Ulangi Kembali';
         header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     }
 } else if (isset($_POST['update-harga'])) {
@@ -117,7 +115,6 @@ if (isset($_POST['simpan-inv'])) {
     $total = $hrg * $qty;
 
     $update_data = mysqli_query($connect, "UPDATE transaksi_produk_reg SET harga = '$hrg', total_harga = '$total' WHERE id_transaksi = '$id_trx'");
-    $_SESSION['info'] = 'Diupdate';
     header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     // =======================================
 } else if (isset($_POST['update-harga-diskon'])) {
@@ -182,7 +179,6 @@ if (isset($_POST['simpan-inv'])) {
     $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim', dikirim_oleh = '$pengirim' WHERE id_inv_ppn = '$id_inv'");
 
     if ($ubah_status) {
-        $_SESSION['info'] = 'Diupdate';
         header("Location:../invoice-reguler.php?sort=baru");
     }
 } else if (isset($_POST['update-ongkir'])) {

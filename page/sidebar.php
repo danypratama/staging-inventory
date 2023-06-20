@@ -270,6 +270,28 @@
         </li>
       </ul>
     </li><!-- End Charts Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link <?php if ($page == 'inv') {
+                            echo 'active-link';
+                          } ?>" data-bs-target="#driver" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-clipboard-pulse"></i><span>Invoice</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="driver" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a class="<?php if ($page2 == 'list-inv') {
+                      echo 'active';
+                    } ?>" href="list-invoice.php">
+            <i class="bi bi-circle"></i><span>List Invoice</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="bi bi-circle"></i><span>History Invoice</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Charts Nav -->
     <?php
     include "koneksi.php";
     $id_role = $_SESSION['tiket_role'];

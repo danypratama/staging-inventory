@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2023 at 03:15 PM
+-- Generation Time: Jun 20, 2023 at 11:22 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -201,6 +201,33 @@ INSERT INTO `inv_br_in_lokal` (`id_inv_br_in_lokal`, `id_user`, `id_sp`, `no_inv
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `inv_bukti_terima`
+--
+
+CREATE TABLE `inv_bukti_terima` (
+  `id_bukti_terima` varchar(50) NOT NULL,
+  `id_inv` varchar(50) NOT NULL,
+  `bukti_satu` varchar(50) NOT NULL,
+  `bukti_dua` varchar(50) NOT NULL,
+  `bukti_tiga` varchar(50) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `inv_bukti_terima`
+--
+
+INSERT INTO `inv_bukti_terima` (`id_bukti_terima`, `id_inv`, `bukti_satu`, `bukti_dua`, `bukti_tiga`, `created_date`) VALUES
+(' BKTI2337c95431e76020', 'NONPPN-23060960fe2b312415', '1640043.jpg', '', '', '2023-06-20 09:23:23'),
+(' BKTI234db203c9172420', 'NONPPN-2306095459a68d0d19', '1640043.jpg', '', '', '2023-06-20 09:22:13'),
+(' BKTI239bb935bacde220', 'NONPPN-2306095459a68d0d19', '1640043.jpg', '', '', '2023-06-20 09:21:52'),
+(' BKTI23a7626e39c59520', 'NONPPN-2306232f0d61c24715', '1640043.jpg', 'eye.png', '', '2023-06-20 09:31:00'),
+(' BKTI23b4cdf333ba9c20', 'NONPPN-2306095459a68d0d19', '1640043.jpg', '', '', '2023-06-20 09:21:18'),
+('BKTI234876115ec21a20', 'NONPPN-2306b9a7fc02475113', '1640043.jpg', 'eye-magnet.jpg', 'eye.png', '2023-06-20 09:46:12');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `inv_nonppn`
 --
 
@@ -214,9 +241,10 @@ CREATE TABLE `inv_nonppn` (
   `note_inv` text NOT NULL,
   `kategori_inv` varchar(20) NOT NULL,
   `ongkir` int(11) NOT NULL,
-  `total_harga` int(11) NOT NULL,
+  `total_inv` int(11) NOT NULL,
   `status_transaksi` varchar(30) NOT NULL,
   `dikirim_oleh` varchar(30) NOT NULL,
+  `diterima_oleh` varchar(35) NOT NULL,
   `user_created` varchar(30) NOT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `user_updated` varchar(20) NOT NULL,
@@ -227,8 +255,85 @@ CREATE TABLE `inv_nonppn` (
 -- Dumping data for table `inv_nonppn`
 --
 
-INSERT INTO `inv_nonppn` (`id_inv_nonppn`, `no_inv`, `tgl_inv`, `cs_inv`, `tgl_tempo`, `sp_disc`, `note_inv`, `kategori_inv`, `ongkir`, `total_harga`, `status_transaksi`, `dikirim_oleh`, `user_created`, `created_date`, `user_updated`, `updated_date`) VALUES
-('NONPPN-2306b9a7fc02475113', '001/KM/VI/2023', '13/06/2023', 'PT. Dhyas Mitra Usaha', '13/07/2023', 10.0, 'Kirim Gosend', 'Spesial Diskon', 0, 0, 'Belum Dikirim', '', 'Dany Pratama Saputro', '2023-06-13 19:17:55', '', '');
+INSERT INTO `inv_nonppn` (`id_inv_nonppn`, `no_inv`, `tgl_inv`, `cs_inv`, `tgl_tempo`, `sp_disc`, `note_inv`, `kategori_inv`, `ongkir`, `total_inv`, `status_transaksi`, `dikirim_oleh`, `diterima_oleh`, `user_created`, `created_date`, `user_updated`, `updated_date`) VALUES
+('NONPPN-2306095459a68d0d19', '010/KM/VI/2023', '19/06/2023', 'PT. Carmella Gustavindo', '19/06/2023', 50.0, '', 'Spesial Diskon', 100000, 137500, 'Diterima', 'Teguh', '', 'Dany Pratama Saputro', '2023-06-19 11:00:09', '', ''),
+('NONPPN-23060960fe2b312415', '004/KM/VI/2023', '16/06/2023', 'Bapak Ferry', '15/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Diterima', 'Teguh', '', 'Dany Pratama Saputro', '2023-06-15 19:19:54', '', ''),
+('NONPPN-230609f6651e0e5216', '007/KM/VI/2023', '15/06/2023', 'PT. Sekarguna Medika', '', 0.0, '', 'Reguler', 1000000, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '2023-06-16 20:03:29', '', ''),
+('NONPPN-2306232f0d61c24715', '002/KM/VI/2023', '15/06/2023', 'PT. Carmella Gustavindo', '15/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Diterima', 'nata B', '', 'Dany Pratama Saputro', '2023-06-15 14:43:15', '', ''),
+('NONPPN-230625a50ae38c2b15', '005/KM/VI/2023', '16/06/2023', 'PT. Dhyas Mitra Usaha', '16/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 100000, 3010000, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '2023-06-15 19:21:26', '', ''),
+('NONPPN-23064d796f880fe115', '003/KM/VI/2023', '15/06/2023', 'Manchester Medika', '15/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '2023-06-15 15:00:34', '', ''),
+('NONPPN-2306aca3ffc732bd17', '009/KM/VI/2023', '17/06/2023', 'PT. Carmella Gustavindo', '17/06/2023', 50.0, '', 'Spesial Diskon', 10000, 4510000, 'Dikirim', 'Teguh', '', 'Dany Pratama Saputro', '2023-06-17 10:25:34', '', ''),
+('NONPPN-2306b9a7fc02475113', '001/KM/VI/2023', '13/06/2023', 'PT. Dhyas Mitra Usaha', '13/07/2023', 20.0, 'Kirim Gosend', 'Spesial Diskon', 10000, 25810000, 'Diterima', 'Teguh', '', 'Dany Pratama Saputro', '2023-06-13 19:17:55', '', ''),
+('NONPPN-2306bb2089c9f7dc17', '008/KM/VI/2023', '17/06/2023', 'PT. Dhyas Mitra Usaha', '17/06/2023', 0.0, '', 'Diskon', 10000, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '2023-06-17 09:30:24', '', ''),
+('NONPPN-2306df7ccccbc47816', '006/KM/VI/2023', '16/06/2023', 'PT. Dhyas Mitra Usaha', '16/06/2023', 0.0, '', 'Reguler', 100000, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '2023-06-16 19:57:49', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inv_penerima`
+--
+
+CREATE TABLE `inv_penerima` (
+  `id_inv_penerima` varchar(50) NOT NULL,
+  `id_inv` varchar(50) NOT NULL,
+  `nama_penerima` varchar(50) NOT NULL,
+  `alamat` varchar(100) NOT NULL,
+  `tgl_terima` date NOT NULL DEFAULT current_timestamp(),
+  `created_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `inv_penerima`
+--
+
+INSERT INTO `inv_penerima` (`id_inv_penerima`, `id_inv`, `nama_penerima`, `alamat`, `tgl_terima`, `created_date`) VALUES
+('PNMR2337c95431e76020', 'NONPPN-23060960fe2b312415', '', 'Jakarta', '2023-06-20', '2023-06-20 09:23:23'),
+('PNMR234876115ec21a20', 'NONPPN-2306b9a7fc02475113', 'Agung', 'Komplek Ruko Kirana Mas No.3 A, Jl. Letda Nasir Bojong Kulur Gunung Putri Bogor', '2023-06-20', '2023-06-20 09:46:13'),
+('PNMR234db203c9172420', 'NONPPN-2306095459a68d0d19', '', 'Jl. Lawanggada no. 39 Cirebon', '2023-06-20', '2023-06-20 09:22:13'),
+('PNMR239bb935bacde220', 'NONPPN-2306095459a68d0d19', '', 'Jl. Lawanggada no. 39 Cirebon', '2023-06-20', '2023-06-20 09:21:52'),
+('PNMR23a7626e39c59520', 'NONPPN-2306232f0d61c24715', 'Agung', 'Jl. Lawanggada no. 39 Cirebon', '2023-06-20', '2023-06-20 09:31:00'),
+('PNMR23b4cdf333ba9c20', 'NONPPN-2306095459a68d0d19', '', 'Jl. Lawanggada no. 39 Cirebon', '2023-06-20', '2023-06-20 09:21:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inv_ppn`
+--
+
+CREATE TABLE `inv_ppn` (
+  `id_inv_ppn` varchar(50) NOT NULL,
+  `no_inv` varchar(50) NOT NULL,
+  `tgl_inv` varchar(30) NOT NULL,
+  `cs_inv` varchar(50) NOT NULL,
+  `tgl_tempo` varchar(30) NOT NULL,
+  `sp_disc` decimal(4,1) NOT NULL,
+  `note_inv` text NOT NULL,
+  `kategori_inv` varchar(20) NOT NULL,
+  `ongkir` int(11) NOT NULL,
+  `total_inv` int(11) NOT NULL,
+  `status_transaksi` varchar(30) NOT NULL,
+  `dikirim_oleh` varchar(30) NOT NULL,
+  `diterima_oleh` varchar(35) NOT NULL,
+  `user_created` varchar(30) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `user_updated` varchar(30) NOT NULL,
+  `updated_date` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `inv_ppn`
+--
+
+INSERT INTO `inv_ppn` (`id_inv_ppn`, `no_inv`, `tgl_inv`, `cs_inv`, `tgl_tempo`, `sp_disc`, `note_inv`, `kategori_inv`, `ongkir`, `total_inv`, `status_transaksi`, `dikirim_oleh`, `diterima_oleh`, `user_created`, `created_date`, `user_updated`, `updated_date`) VALUES
+('PPN-2306216411371ae516', '006/KMA/VI/2023', '16/06/2023', 'PT. Dhyas Mitra Usaha', '16/06/2023', 0.0, '', 'Reguler', 100000, 12598500, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '0000-00-00 00:00:00', '', ''),
+('PPN-230645c144edd9de16', '005/KMA/VI/2023', '16/06/2023', 'Bapak Ferry', '16/06/2023', 0.0, '', 'Reguler', 10000, 11666100, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '0000-00-00 00:00:00', '', ''),
+('PPN-230655d84cdf3d5116', '004/KMA/VI/2023', '16/06/2023', 'IBU  ISNAINI', '16/06/2023', 0.0, '', 'Reguler', 100000, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '0000-00-00 00:00:00', '', ''),
+('PPN-230664bcc16ebd9d16', '008/KMA/VI/2023', '16/06/2023', 'PT. Dhyas Mitra Usaha', '16/06/2023', 0.0, '', 'Reguler', 1000000, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '2023-06-16 20:05:03', '', ''),
+('PPN-23067ed3bd4438b615', '002/KMA/VI/2023', '16/06/2023', 'PT. Dhyas Mitra Usaha', '16/06/2023', 0.0, 'Kirim JNE', 'Spesial Diskon', 100000, 9823500, 'Dikirim', 'Teguh', '', 'Dany Pratama Saputro', '0000-00-00 00:00:00', '', ''),
+('PPN-2306d85764809cae15', '001/KMA/VI/2023', '15/06/2023', 'PT. Carmella Gustavindo', '15/06/2023', 0.0, 'Kirim Gojek', 'Reguler', 0, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '0000-00-00 00:00:00', '', ''),
+('PPN-2306dacb4b52a85d19', '009/KMA/VI/2023', '19/06/2023', 'Manchester Medika', '19/07/2023', 0.0, 'Kirim Gojek', 'Reguler', 100000, 527250, 'Dikirim', 'Teguh', '', 'Dany Pratama Saputro', '2023-06-19 09:00:06', '', ''),
+('PPN-2306f3ceba8dd4ed16', '003/KMA/VI/2023', '16/06/2023', 'PT. Dhyas Mitra Usaha', '16/06/2023', 50.0, 'Kirim Gojek', 'Spesial Diskon', 100000, 8436000, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '0000-00-00 00:00:00', '', ''),
+('PPN-2306f7462851f03116', '007/KMA/VI/2023', '16/06/2023', 'PT. Dhyas Mitra Usaha', '16/06/2023', 0.0, '', 'Reguler', 100000, 0, 'Belum Dikirim', '', '', 'Dany Pratama Saputro', '0000-00-00 00:00:00', '', '');
 
 -- --------------------------------------------------------
 
@@ -518,8 +623,48 @@ CREATE TABLE `spk_reg` (
 --
 
 INSERT INTO `spk_reg` (`id_spk_reg`, `id_user`, `id_customer`, `id_inv`, `id_sales`, `id_orderby`, `status_spk`, `no_spk`, `no_po`, `tgl_spk`, `tgl_pesanan`, `note`, `menu_cancel`, `created_date`, `user_updated`, `updated_date`, `user_cancel`, `date_cancel`) VALUES
-('SPKREG-230630b015fb6abf13', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306b9a7fc02475113', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '002/SPK/VI/2023', '002', '13/06/2023, 19:09', '13/06/2023', '', '', '13/06/2023, 19:09', '', '', '', ''),
-('SPKREG-2306b032a045519513', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306b9a7fc02475113', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '001/SPK/VI/2023', '001', '13/06/2023, 19:07', '13/06/2023', '', '', '13/06/2023, 19:07', '', '', '', '');
+('SPKREG-23061b191abd27b116', 'USER03595a8447ab', 'CS01dae1cd848c', 'PPN-2306216411371ae516', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '015/SPK/VI/2023', '003', '16/06/2023, 19:58', '16/06/2023', '', '', '16/06/2023, 19:58', '', '', '', ''),
+('SPKREG-23061c11acf7420014', 'USER03595a8447ab', 'CS018b7ca30d99', 'NONPPN-2306232f0d61c24715', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '006/SPK/VI/2023', '003', '14/06/2023, 16:35', '14/06/2023', '', '', '14/06/2023, 16:35', '', '', '', ''),
+('SPKREG-23062c848f051f2517', 'USER03595a8447ab', 'CS018b7ca30d99', 'NONPPN-2306aca3ffc732bd17', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '020/SPK/VI/2023', '003', '17/06/2023, 9:31', '17/06/2023', '', '', '17/06/2023, 9:31', '', '', '', ''),
+('SPKREG-230630b015fb6abf13', 'USER03595a8447ab', 'CS01dae1cd848c', 'PPN-2306f3ceba8dd4ed16', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '002/SPK/VI/2023', '002', '13/06/2023, 19:09', '13/06/2023', '', '', '13/06/2023, 19:09', '', '', '', ''),
+('SPKREG-23063f0be3c564ab14', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-230625a50ae38c2b15', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '009/SPK/VI/2023', '003', '14/06/2023, 16:38', '14/06/2023', '', '', '14/06/2023, 16:38', '', '', '', ''),
+('SPKREG-230656bf8f42bad414', 'USER03595a8447ab', 'CS01dae1cd848c', 'PPN-23067ed3bd4438b615', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '003/SPK/VI/2023', '003', '14/06/2023, 10:30', '14/06/2023', '', '', '14/06/2023, 10:30', '', '', '', ''),
+('SPKREG-23066d48051a15ad15', 'USER03595a8447ab', 'CS05fd2b75a6bf', 'PPN-230655d84cdf3d5116', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '011/SPK/VI/2023', '001', '15/06/2023, 15:44', '15/06/2023', '', '', '15/06/2023, 15:44', '', '', '', ''),
+('SPKREG-230676853013c94916', 'USER03595a8447ab', 'CS03492a42198f', 'NONPPN-230609f6651e0e5216', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '017/SPK/VI/2023', '002', '16/06/2023, 20:02', '16/06/2023', '', '', '16/06/2023, 20:02', '', '', '', ''),
+('SPKREG-23067dacc1ec2bad16', 'USER03595a8447ab', 'CS01dae1cd848c', 'PPN-230664bcc16ebd9d16', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '018/SPK/VI/2023', '', '16/06/2023, 20:04', '16/06/2023', '', '', '16/06/2023, 20:04', '', '', '', ''),
+('SPKREG-23067f523849771216', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-23066471dfcf297a16', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '012/SPK/VI/2023', '003', '16/06/2023, 16:25', '16/06/2023', '', '', '16/06/2023, 16:25', '', '', '', ''),
+('SPKREG-23068c30fcd0ed7417', 'USER03595a8447ab', 'CS01dae1cd848c', '', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Belum Diproses', '023/SPK/VI/2023', '003', '17/06/2023, 13:22', '17/06/2023', '', '', '17/06/2023, 13:22', '', '', '', ''),
+('SPKREG-230692ed20b5161a14', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306b9a7fc02475113', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '008/SPK/VI/2023', '003', '14/06/2023, 16:37', '14/06/2023', '', '', '14/06/2023, 16:37', '', '', '', ''),
+('SPKREG-230695e69cc62f6019', 'USER03595a8447ab', 'CS018b7ca30d99', 'NONPPN-2306095459a68d0d19', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '027/SPK/VI/2023', '', '19/06/2023, 10:59', '19/06/2023', '', '', '19/06/2023, 10:59', '', '', '', ''),
+('SPKREG-23069710e0de7edb14', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306b9a7fc02475113', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '005/SPK/VI/2023', '004', '14/06/2023, 11:22', '14/06/2023', '', '', '14/06/2023, 11:22', '', '', '', ''),
+('SPKREG-23069b3c51e950d416', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306bb2089c9f7dc17', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '019/SPK/VI/2023', '', '16/06/2023, 20:05', '16/06/2023', '', '', '16/06/2023, 20:05', '', '', '', ''),
+('SPKREG-2306b032a045519513', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306b9a7fc02475113', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '001/SPK/VI/2023', '001', '13/06/2023, 19:07', '13/06/2023', '', '', '13/06/2023, 19:07', '', '', '', ''),
+('SPKREG-2306b361bdb1958c16', 'USER03595a8447ab', 'CS015858a52568', 'PPN-230645c144edd9de16', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '014/SPK/VI/2023', '003', '16/06/2023, 19:50', '16/06/2023', '', '', '16/06/2023, 19:50', '', '', '', ''),
+('SPKREG-2306b6df28c59f7f17', 'USER03595a8447ab', 'CS018b7ca30d99', 'NONPPN-2306aca3ffc732bd17', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '026/SPK/VI/2023', '003', '17/06/2023, 15:43', '17/06/2023', '', '', '17/06/2023, 15:43', '', '', '', ''),
+('SPKREG-2306c0936daf283517', 'USER03595a8447ab', 'CS01dae1cd848c', 'PPN-2306216411371ae516', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '021/SPK/VI/2023', '004', '17/06/2023, 9:59', '10/06/2023', '', '', '17/06/2023, 9:59', '', '', '', ''),
+('SPKREG-2306c0cc2815e51815', 'USER03595a8447ab', 'CS015858a52568', 'NONPPN-23060960fe2b312415', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '010/SPK/VI/2023', '', '15/06/2023, 14:16', '15/06/2023', '', '', '15/06/2023, 14:16', '', '', '', ''),
+('SPKREG-2306c68a5710238117', 'USER03595a8447ab', 'CS0087ea6067d9', 'PPN-2306dacb4b52a85d19', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '024/SPK/VI/2023', '', '17/06/2023, 14:01', '17/06/2023', '', '', '17/06/2023, 14:01', '', '', '', ''),
+('SPKREG-2306c839956d5e2d14', 'USER03595a8447ab', 'CS018b7ca30d99', 'PPN-2306d85764809cae15', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '007/SPK/VI/2023', '003', '14/06/2023, 16:36', '14/06/2023', '', '', '14/06/2023, 16:36', '', '', '', ''),
+('SPKREG-2306c9316a370ca916', 'USER03595a8447ab', 'CS01dae1cd848c', 'NONPPN-2306df7ccccbc47816', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '013/SPK/VI/2023', '', '16/06/2023, 19:37', '16/06/2023', '', '', '16/06/2023, 19:37', '', '', '', ''),
+('SPKREG-2306ca3c8f923b6d17', 'USER03595a8447ab', 'CS018b7ca30d99', 'NONPPN-2306aca3ffc732bd17', 'SL1bb8c1f9e592', 'ORDERe51d8b7e2db9', 'Invoice Sudah Diterbitkan', '025/SPK/VI/2023', '', '17/06/2023, 14:03', '17/06/2023', '', '', '17/06/2023, 14:03', '', '', '', ''),
+('SPKREG-2306ca5f5a73c7b017', 'USER03595a8447ab', 'CS018b7ca30d99', 'NONPPN-2306aca3ffc732bd17', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '022/SPK/VI/2023', '', '17/06/2023, 11:43', '17/06/2023', '', '', '17/06/2023, 11:43', '', '', '', ''),
+('SPKREG-2306dff1094c0e6314', 'USER03595a8447ab', 'CS0087ea6067d9', 'NONPPN-23064d796f880fe115', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '004/SPK/VI/2023', '004', '14/06/2023, 10:38', '14/06/2023', '', '', '14/06/2023, 10:38', '', '', '', ''),
+('SPKREG-2306e1c926988cbe16', 'USER03595a8447ab', 'CS01dae1cd848c', 'PPN-2306f7462851f03116', 'SL1bb8c1f9e592', 'ORDERa55599e088ce', 'Invoice Sudah Diterbitkan', '016/SPK/VI/2023', '004', '16/06/2023, 19:59', '16/06/2023', '', '', '16/06/2023, 19:59', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `status_kirim`
+--
+
+CREATE TABLE `status_kirim` (
+  `id_status_kirim` varchar(50) NOT NULL,
+  `id_inv` varchar(50) NOT NULL,
+  `dikirim_oleh` varchar(50) NOT NULL,
+  `no_resi` varchar(50) NOT NULL,
+  `tgl_kirim` varchar(20) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -540,9 +685,9 @@ CREATE TABLE `stock_produk_reguler` (
 --
 
 INSERT INTO `stock_produk_reguler` (`id_stock_prod_reg`, `id_user`, `id_produk_reg`, `stock`, `created_date`) VALUES
-('STOCKREG55e46f5fa230', 'USER03595a8447ab', 'BR-REG835084308577', 4500, '13/06/2023, 19:14'),
-('STOCKREG8e323a72e891', 'USER03595a8447ab', 'BR-REG9b682f3c5838', 1500, '13/06/2023, 19:14'),
-('STOCKREGff8ea8359574', 'USER03595a8447ab', 'BR-REG5036d872cb87', 7500, '13/06/2023, 19:14');
+('STOCKREG55e46f5fa230', 'USER03595a8447ab', 'BR-REG835084308577', 0, '13/06/2023, 19:14'),
+('STOCKREG8e323a72e891', 'USER03595a8447ab', 'BR-REG9b682f3c5838', 0, '13/06/2023, 19:14'),
+('STOCKREGff8ea8359574', 'USER03595a8447ab', 'BR-REG5036d872cb87', 40, '13/06/2023, 19:14');
 
 -- --------------------------------------------------------
 
@@ -555,7 +700,7 @@ CREATE TABLE `tb_customer` (
   `id_user` varchar(50) NOT NULL,
   `nama_cs` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `no_telp` varchar(50) NOT NULL,
+  `no_telp` varchar(15) NOT NULL,
   `alamat` varchar(300) NOT NULL,
   `created_date` varchar(25) NOT NULL,
   `updated_date` varchar(50) NOT NULL,
@@ -699,6 +844,7 @@ INSERT INTO `tb_customer` (`id_cs`, `id_user`, `nama_cs`, `email`, `no_telp`, `a
 ('CS8904ba9c35b0', '', 'Bapak Budi Alex', '', '08xx', 'Jakarta', '', '', ''),
 ('CS890e7e56585b', '', 'Hafidz Medika', '', '08xx', 'Jakarta', '', '', ''),
 ('CS89dd8a6e2e9c', '', 'BPK SUJATI', '', '08xx', 'BALI', '', '', ''),
+('CS8de0cecc37e9', '', 'Dany Pratama', 'nay9260@gmail.com', '085xxx', 'JL.Da\'rul a\'an no 13', '15/06/2023, 19:42', '', ''),
 ('CS8e0b1516feb9', '', 'Bapak Dede', '', '08xx', 'Jakarta', '', '', ''),
 ('CS8f05bd466567', '', 'Bapak Sinung Nugroho', '', '08xx', 'Yogyakarta', '', '', ''),
 ('CS913d8765a530', '', 'IPUL MEDIKA', '', '08xx', 'JAKARTA', '', '', ''),
@@ -781,6 +927,29 @@ INSERT INTO `tb_customer` (`id_cs`, `id_user`, `nama_cs`, `email`, `no_telp`, `a
 ('CSfe5c0ef98ad5', '', 'PT. Amora Luhur Kumari', '', '08xx', 'Jl. Pramuka No 12 A RT 011 RW 001 Palmerah Matraman Jakarta Timur', '', '', ''),
 ('CSfea5191fe2e1', '', 'Toko Alkes', '', '08xx', 'Mojokerto', '', '', ''),
 ('CSff4e1a9f38c2', '', 'PT. Arnetha', '', '08xx', 'Kawasan Ruko Patra Park Blok C No. 10 Jl. Tuparev Sutiwinagin Kedawung Kab. Cirebon Jawa barat', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_driver`
+--
+
+CREATE TABLE `tb_driver` (
+  `id_driver` varchar(50) NOT NULL,
+  `id_user` varchar(50) NOT NULL,
+  `nama_pengirim` varchar(50) NOT NULL,
+  `no_telp` varchar(15) NOT NULL,
+  `created_date` varchar(50) NOT NULL,
+  `updated_date` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_driver`
+--
+
+INSERT INTO `tb_driver` (`id_driver`, `id_user`, `nama_pengirim`, `no_telp`, `created_date`, `updated_date`) VALUES
+('DRIVER206c6bf24379', 'USER03595a8447ab', 'Teguh', '08xxx', '15/06/2023, 10:38', ''),
+('DRIVERe5e748ac3bb0', 'USER03595a8447ab', 'nata B', '08xx', '15/06/2023, 13:28', '');
 
 -- --------------------------------------------------------
 
@@ -1046,6 +1215,13 @@ CREATE TABLE `tmp_produk_spk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `tmp_produk_spk`
+--
+
+INSERT INTO `tmp_produk_spk` (`id_tmp`, `id_spk`, `id_produk`, `qty`, `status_tmp`) VALUES
+('2023cd8219b64c5906', 'SPKREG-23068c30fcd0ed7417', 'BR-REG5036d872cb87', 100, 1);
+
+--
 -- Triggers `tmp_produk_spk`
 --
 DELIMITER $$
@@ -1096,10 +1272,44 @@ CREATE TABLE `transaksi_produk_reg` (
 --
 
 INSERT INTO `transaksi_produk_reg` (`id_transaksi`, `id_spk`, `id_produk`, `harga`, `qty`, `disc`, `total_harga`, `status_trx`, `created_date`) VALUES
+('TRX-23060d00bc8b7e0014', 'SPKREG-230692ed20b5161a14', 'BR-REG5036d872cb87', 7500, 100, 0.0, 750000, 1, '2023-06-14 16:37:45'),
+('TRX-23061566c6a3949d17', 'SPKREG-2306c0936daf283517', 'BR-REG5036d872cb87', 7500, 500, 0.0, 3750000, 1, '2023-06-17 10:59:30'),
+('TRX-23061cbd0017e05d14', 'SPKREG-23061c11acf7420014', 'BR-REG5036d872cb87', 7500, 500, 0.0, 3750000, 1, '2023-06-14 16:36:57'),
+('TRX-23062414a805b2be14', 'SPKREG-230656bf8f42bad414', 'BR-REG5036d872cb87', 7500, 500, 0.0, 3750000, 1, '2023-06-14 10:30:33'),
 ('TRX-23062994f3abf94213', 'SPKREG-2306b032a045519513', 'BR-REG9b682f3c5838', 10000, 500, 0.0, 5000000, 1, '2023-06-13 19:15:58'),
+('TRX-23062c2d6bca326717', 'SPKREG-23062c848f051f2517', 'BR-REG5036d872cb87', 7500, 1000, 0.0, 7500000, 1, '2023-06-17 09:44:39'),
 ('TRX-2306335937bbd7ee13', 'SPKREG-230630b015fb6abf13', 'BR-REG835084308577', 15000, 500, 0.0, 7500000, 1, '2023-06-13 19:15:34'),
+('TRX-230635168deaebbf16', 'SPKREG-23067f523849771216', 'BR-REG5036d872cb87', 7500, 1000, 0.0, 7500000, 0, '2023-06-16 19:29:12'),
 ('TRX-230642753b1bd27c13', 'SPKREG-2306b032a045519513', 'BR-REG5036d872cb87', 7500, 1500, 0.0, 11250000, 1, '2023-06-13 19:15:58'),
-('TRX-2306fe597b0ba1a413', 'SPKREG-230630b015fb6abf13', 'BR-REG5036d872cb87', 7500, 1000, 0.0, 7500000, 1, '2023-06-13 19:15:34');
+('TRX-230644083a365c8b17', 'SPKREG-2306ca5f5a73c7b017', 'BR-REG5036d872cb87', 7500, 100, 0.0, 750000, 1, '2023-06-17 11:46:51'),
+('TRX-230647f90a1678aa16', 'SPKREG-23066d48051a15ad15', 'BR-REG835084308577', 0, 100, 0.0, 0, 1, '2023-06-16 16:09:54'),
+('TRX-23064b21d848d82616', 'SPKREG-23067dacc1ec2bad16', 'BR-REG5036d872cb87', 0, 500, 0.0, 0, 1, '2023-06-16 20:04:23'),
+('TRX-23064f222d4ded6416', 'SPKREG-2306b361bdb1958c16', 'BR-REG5036d872cb87', 0, 400, 0.0, 0, 1, '2023-06-16 19:50:18'),
+('TRX-230652a2e5cc684b16', 'SPKREG-23067f523849771216', 'BR-REG835084308577', 15000, 600, 0.0, 9000000, 0, '2023-06-16 19:29:12'),
+('TRX-230657b1fab654c514', 'SPKREG-230692ed20b5161a14', 'BR-REG835084308577', 15000, 100, 0.0, 1500000, 1, '2023-06-14 16:37:45'),
+('TRX-23065c2314f71f0e17', 'SPKREG-2306b6df28c59f7f17', 'BR-REG5036d872cb87', 7500, 50, 0.0, 375000, 1, '2023-06-17 15:43:32'),
+('TRX-23066ae379485b3c14', 'SPKREG-2306dff1094c0e6314', 'BR-REG9b682f3c5838', 10000, 500, 0.0, 5000000, 1, '2023-06-14 10:38:35'),
+('TRX-23067307200a4caf14', 'SPKREG-23069710e0de7edb14', 'BR-REG9b682f3c5838', 10000, 500, 0.0, 5000000, 1, '2023-06-14 11:22:53'),
+('TRX-23067664540c72d916', 'SPKREG-23069b3c51e950d416', 'BR-REG835084308577', 15000, 1000, 0.0, 15000000, 1, '2023-06-16 20:06:21'),
+('TRX-23067726d8cf876014', 'SPKREG-23063f0be3c564ab14', 'BR-REG5036d872cb87', 7500, 200, 0.0, 1500000, 1, '2023-06-14 16:38:13'),
+('TRX-23067b4895928b5e16', 'SPKREG-23069b3c51e950d416', 'BR-REG5036d872cb87', 7500, 100, 0.0, 750000, 1, '2023-06-16 20:06:21'),
+('TRX-230680ce857ec38714', 'SPKREG-230656bf8f42bad414', 'BR-REG9b682f3c5838', 15000, 500, 0.0, 7500000, 1, '2023-06-14 10:30:33'),
+('TRX-230680fea1bfa0d316', 'SPKREG-23066d48051a15ad15', 'BR-REG5036d872cb87', 0, 20, 0.0, 0, 1, '2023-06-16 16:09:54'),
+('TRX-2306876aa969642d14', 'SPKREG-23063f0be3c564ab14', 'BR-REG835084308577', 15000, 100, 0.0, 1500000, 1, '2023-06-14 16:38:13'),
+('TRX-23068b975a0e232614', 'SPKREG-2306c839956d5e2d14', 'BR-REG835084308577', 0, 100, 0.0, 0, 1, '2023-06-14 16:36:45'),
+('TRX-23068b9766b73e7017', 'SPKREG-2306ca3c8f923b6d17', 'BR-REG5036d872cb87', 7500, 50, 0.0, 375000, 1, '2023-06-17 14:03:54'),
+('TRX-230693c925d84f0016', 'SPKREG-2306b361bdb1958c16', 'BR-REG835084308577', 0, 500, 0.0, 0, 1, '2023-06-16 19:50:18'),
+('TRX-230699b2254572de15', 'SPKREG-2306c0cc2815e51815', 'BR-REG5036d872cb87', 7500, 700, 0.0, 5250000, 1, '2023-06-15 14:23:01'),
+('TRX-23069c3b1faf772617', 'SPKREG-2306c68a5710238117', 'BR-REG5036d872cb87', 0, 50, 0.0, 0, 1, '2023-06-17 14:02:09'),
+('TRX-2306a810cc044bc616', 'SPKREG-2306c9316a370ca916', 'BR-REG5036d872cb87', 7500, 80, 0.0, 600000, 1, '2023-06-16 19:52:45'),
+('TRX-2306b5ec0c7cd37619', 'SPKREG-230695e69cc62f6019', 'BR-REG5036d872cb87', 7500, 10, 0.0, 75000, 1, '2023-06-19 10:59:39'),
+('TRX-2306c9ced0b414a816', 'SPKREG-230676853013c94916', 'BR-REG5036d872cb87', 7500, 500, 0.0, 3750000, 1, '2023-06-16 20:02:22'),
+('TRX-2306cd8cd04a2d9716', 'SPKREG-23061b191abd27b116', 'BR-REG835084308577', 15000, 500, 0.0, 7500000, 1, '2023-06-16 19:58:33'),
+('TRX-2306e4acfd2137ac14', 'SPKREG-23061c11acf7420014', 'BR-REG835084308577', 15000, 500, 0.0, 7500000, 1, '2023-06-14 16:36:57'),
+('TRX-2306ed8b54ff53c216', 'SPKREG-2306c9316a370ca916', 'BR-REG835084308577', 15000, 1000, 0.0, 15000000, 1, '2023-06-16 19:52:45'),
+('TRX-2306f069152f1bef16', 'SPKREG-2306e1c926988cbe16', 'BR-REG5036d872cb87', 0, 500, 0.0, 0, 1, '2023-06-16 20:00:11'),
+('TRX-2306fe597b0ba1a413', 'SPKREG-230630b015fb6abf13', 'BR-REG5036d872cb87', 7500, 1000, 0.0, 7500000, 1, '2023-06-13 19:15:34'),
+('TRX-2306ff96c3e3f56e14', 'SPKREG-2306c839956d5e2d14', 'BR-REG5036d872cb87', 0, 500, 0.0, 0, 1, '2023-06-14 16:36:45');
 
 --
 -- Triggers `transaksi_produk_reg`
@@ -1255,6 +1465,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id_user`, `id_user_role`, `nama_user`, `jenkel`, `email`, `username`, `password`, `created_date`) VALUES
 ('USER03595a8447ab', 'RL98cb89863ece', 'Dany Pratama Saputro', 'Laki-Laki', 'pratamadany87@gmail.com', 'dany_pratama', '$2y$10$2SooH9kLwLo.fcVq9yXOAOljSTfX2zFG4eUs7IKMPBhv.2Ec/jYEm', '07/03/2023, 9:32'),
 ('USER34e2f73c9751', 'RL98cb89863ece', 'Abidah', 'Perempuan', 'abidah@gmail.com', 'Abidah', '$2y$10$BtF3UJG/S.HBJ1W.TaPy8OwxO3ry15ctjzaPhipHVK8eQv8lr0DTO', '23/05/2023, 17:27'),
+('USER388732b31872', 'RLe89c2734a09d', 'Teguh Pambudi', 'Laki-Laki', 'driverkma@gmail.com', 'Teguh', '$2y$10$.HfaVqdg5zUOohlqVm1YKerAL.pKKQ5UXbelX3z0kMSCWaZ77/PS6', '20/06/2023, 11:20'),
 ('USER47100114a730', 'RLf278f224eb37', 'Paijo', 'Laki-Laki', 'firmansyahas@hotmail.com', 'Firmansyah13', '$2y$10$GdptgMT/.caxIDdPzmCltuSXcg43nQweyPuJELUaW7dooM.pD/JxG', '07/03/2023, 9:36');
 
 -- --------------------------------------------------------
@@ -1287,20 +1498,28 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HIS0be4dcae2c22', 'USER47100114a730', '23/05/2023 11:20:45', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS0d3b834789c6', 'USER47100114a730', '02/06/2023 17:32:03', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
 ('HIS0d3b8ac4f214', 'USER03595a8447ab', '10/06/2023 13:06:59', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HIS0ef8b904614c', 'USER03595a8447ab', '17/06/2023 9:26:13', '2023/06/17 10:58:55', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS11c23651892a', 'USER03595a8447ab', '12/06/2023 10:24:20', '2023/06/12 10:27:46', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS130abc404849', 'USER34e2f73c9751', '26/05/2023 9:35:24', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS1433744e3f20', 'USER47100114a730', '23/05/2023 10:14:26', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS18a9956e557e', 'USER03595a8447ab', '07/06/2023 8:36:27', '2023/06/07 9:24:46', '125.160.234.251', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Offline'),
 ('HIS197edeca5663', 'USER47100114a730', '25/05/2023 9:00:48', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS1b59ca0e9407', 'USER03595a8447ab', '16/06/2023 19:04:55', '2023/06/16 20:11:51', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS1f982dd2f54d', 'USER47100114a730', '06/06/2023 17:51:52', '', '110.138.89.254', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS26c340adec2a', 'USER47100114a730', '25/05/2023 13:06:02', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS28d3de1dc028', 'USER03595a8447ab', '23/05/2023 17:05:40', '', '180.244.166.20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS2b8ff841f392', 'USER03595a8447ab', '17/06/2023 11:33:11', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HIS2cdfddbfb83f', 'USER03595a8447ab', '19/06/2023 15:11:46', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HIS3117a0654f8c', 'USER03595a8447ab', '19/06/2023 8:06:00', '2023/06/19 13:08:55', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
+('HIS34707e86ee7c', 'USER03595a8447ab', '15/06/2023 8:32:10', '2023/06/15 10:13:44', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS3801f3a1f2f0', 'USER03595a8447ab', '13/06/2023 18:57:46', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS39a99f93e968', 'USER03595a8447ab', '29/05/2023 9:10:29', '', '110.138.93.247', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS3d085f572541', 'USER03595a8447ab', '31/05/2023 15:59:35', '', '110.138.94.146', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS4336312cc383', 'USER03595a8447ab', '23/05/2023 14:52:26', '', '110.138.80.148', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS448965bcd4d7', 'USER03595a8447ab', '02/06/2023 19:13:23', '', '103.155.168.17', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36', 'Mobile', 'Karawang,Indonesia\n', 'Online'),
+('HIS4a90d26033a6', 'USER03595a8447ab', '16/06/2023 8:20:08', '2023/06/16 12:27:26', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS4a91337fde93', 'USER34e2f73c9751', '29/05/2023 13:39:29', '', '110.138.89.200', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS4b721ab79c37', 'USER03595a8447ab', '19/06/2023 13:09:19', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS52c2e349c7f5', 'USER03595a8447ab', '13/06/2023 12:14:35', '2023/06/13 13:07:36', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS5e58834b05d2', 'USER47100114a730', '23/05/2023 14:57:02', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS5e90966c60da', 'USER34e2f73c9751', '29/05/2023 9:19:37', '', '110.138.89.108', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
@@ -1309,19 +1528,27 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HIS6ca5203a7330', 'USER03595a8447ab', '24/05/2023 16:43:23', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS7846a686d478', 'USER47100114a730', '23/05/2023 10:37:46', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HIS7bdd837926d1', 'USER03595a8447ab', '26/05/2023 8:41:51', '', '110.138.87.166', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS7df59f4c7f75', 'USER03595a8447ab', '19/06/2023 13:09:20', '2023/06/19 14:56:11', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
+('HIS7fd57405e811', 'USER03595a8447ab', '15/06/2023 19:02:42', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS851318d62c2a', 'USER03595a8447ab', '09/06/2023 13:08:49', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS85a5ddfd7a2f', 'USER47100114a730', '24/05/2023 16:52:13', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS8655420cc25c', 'USER03595a8447ab', '17/06/2023 10:58:58', '2023/06/17 11:33:09', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS876cd0b32b8b', 'USER47100114a730', '25/05/2023 13:06:01', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HIS89af8a3edf6f', 'USER03595a8447ab', '20/06/2023 13:32:10', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HIS8ac3abfbc90a', 'USER03595a8447ab', '17/06/2023 13:14:35', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS8dd4eaf0fb8f', 'USER47100114a730', '03/06/2023 8:41:31', '', '112.215.235.250', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
+('HIS91d4240ce6ff', 'USER03595a8447ab', '20/06/2023 10:33:33', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIS9205fec2f23f', 'USER03595a8447ab', '12/06/2023 8:06:06', '2023/06/12 8:45:01', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS93614e089ff2', 'USER03595a8447ab', '09/06/2023 8:21:51', '2023/06/09 8:54:04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS99c4fc383d9f', 'USER03595a8447ab', '13/06/2023 17:32:31', '2023/06/13 17:38:42', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HIS9e2d8d0ae92e', 'USER34e2f73c9751', '26/05/2023 15:44:49', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISa2e6b85fe592', 'USER03595a8447ab', '23/05/2023 17:28:14', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISa4926b2dce45', 'USER03595a8447ab', '19/06/2023 13:09:19', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HISa968ef15a554', 'USER34e2f73c9751', '24/05/2023 16:55:05', '', '114.79.3.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISaa49f46a5c35', 'USER34e2f73c9751', '29/05/2023 9:50:45', '', '110.138.89.108', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISadbf8aeae159', 'USER03595a8447ab', '12/06/2023 10:28:29', '2023/06/12 15:46:21', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISb00ba4b820bf', 'USER03595a8447ab', '25/05/2023 12:00:43', '2023/05/25 12:02:22', '180.242.71.136', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Offline'),
+('HISb1305be4f268', 'USER03595a8447ab', '20/06/2023 10:33:33', '2023/06/20 10:56:35', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISb56f6e52db24', 'USER34e2f73c9751', '26/05/2023 8:28:28', '', '110.138.92.44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISb89ed5fb6c5b', 'USER47100114a730', '06/06/2023 9:49:44', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/113.0.5672.121 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
 ('HISba0fbd8f2b31', 'USER03595a8447ab', '12/06/2023 8:45:47', '2023/06/12 9:39:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
@@ -1329,27 +1556,40 @@ INSERT INTO `user_history` (`id_history`, `id_user`, `login_time`, `logout_time`
 ('HISbf5f0217d558', 'USER03595a8447ab', '09/06/2023 8:54:10', '2023/06/09 13:08:39', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISc02b5b55aeb6', 'USER03595a8447ab', '23/05/2023 11:42:32', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISc2120c6d1560', 'USER03595a8447ab', '13/06/2023 17:38:58', '2023/06/13 18:57:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
+('HISc3b54d76d98b', 'USER03595a8447ab', '17/06/2023 11:33:12', '2023/06/17 13:14:29', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISc56e0c456135', 'USER34e2f73c9751', '24/05/2023 16:14:52', '', '114.79.3.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISc6fbc3189b82', 'USER47100114a730', '05/06/2023 15:05:40', '', '110.138.87.78', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISc977ce8cf239', 'USER03595a8447ab', '16/06/2023 12:27:31', '2023/06/16 19:04:52', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISc9b0b7f90486', 'USER03595a8447ab', '13/06/2023 13:08:48', '2023/06/13 16:50:35', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
+('HIScb0d2c98acc2', 'USER03595a8447ab', '19/06/2023 13:09:19', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HIScf6427638413', 'USER34e2f73c9751', '25/05/2023 9:14:32', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISd14332f8e704', 'USER03595a8447ab', '13/06/2023 16:50:40', '2023/06/13 17:32:27', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISd301cefd97d8', 'USER47100114a730', '07/06/2023 8:13:12', '', '111.95.61.0', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/114.0.5735.99 Mobile/15E148 Safari/604.1', 'Mobile', 'Bekasi,Indonesia\n', 'Online'),
 ('HISd45648941fe5', 'USER03595a8447ab', '08/06/2023 15:12:18', '2023/06/08 15:43:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISd673d360fc81', 'USER03595a8447ab', '05/06/2023 16:44:15', '', '125.160.230.98', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISda13dbd24976', 'USER03595a8447ab', '13/06/2023 8:08:52', '2023/06/13 12:14:28', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
+('HISdaa3cc2cc19d', 'USER03595a8447ab', '20/06/2023 11:21:42', '2023/06/20 13:06:08', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISde56ba9d3cff', 'USER47100114a730', '25/05/2023 10:30:40', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISdff99c03f5db', 'USER03595a8447ab', '15/06/2023 13:07:03', '2023/06/15 19:02:36', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISe216e588033b', 'USER03595a8447ab', '06/06/2023 10:08:13', '', '110.138.81.127', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36', 'Mobile', 'Jakarta,Indonesia\n', 'Online'),
+('HISe4cdb4007366', 'USER03595a8447ab', '20/06/2023 13:32:11', '2023/06/20 16:21:10', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISe65dcb283b5b', 'USER03595a8447ab', '10/06/2023 8:40:35', '2023/06/10 13:06:53', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISe6bdfb3d29d4', 'USER47100114a730', '24/05/2023 16:23:17', '', '110.138.85.228', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISecc1060510da', 'USER34e2f73c9751', '25/05/2023 14:39:16', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
 ('HISf10d251d0941', 'USER03595a8447ab', '12/06/2023 9:39:53', '2023/06/12 9:47:16', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISf21ec41fa931', 'USER03595a8447ab', '24/05/2023 8:26:10', '', '125.160.230.41', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf25100f7b35d', 'USER03595a8447ab', '20/06/2023 16:21:12', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HISf3bdae1528d5', 'USER03595a8447ab', '15/06/2023 10:13:51', '2023/06/15 13:06:56', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISf5eebd16a65e', 'USER03595a8447ab', '12/06/2023 9:39:07', '2023/06/12 9:39:41', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISf69d5157c157', 'USER03595a8447ab', '23/05/2023 16:35:16', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISf9bc0cab4438', 'USER388732b31872', '20/06/2023 11:21:32', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HISf9c69bb3ce70', 'USER03595a8447ab', '20/06/2023 13:06:12', '2023/06/20 13:32:08', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline'),
 ('HISf9ee9e35dba2', 'USER47100114a730', '25/05/2023 9:12:21', '', '110.138.89.28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISfa4014c3d946', 'USER03595a8447ab', '20/06/2023 10:56:37', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
 ('HISfdcc159257d5', 'USER03595a8447ab', '06/06/2023 17:35:49', '', '110.138.93.104', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
-('HISfe52bb262bf2', 'USER03595a8447ab', '23/05/2023 15:01:39', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online');
+('HISfde2cc8069be', 'USER03595a8447ab', '17/06/2023 10:58:57', '', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Online'),
+('HISfe52bb262bf2', 'USER03595a8447ab', '23/05/2023 15:01:39', '', '125.160.225.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Desktop', 'Jakarta,Indonesia\n', 'Online'),
+('HISff300b0c9966', 'USER03595a8447ab', '20/06/2023 8:24:55', '2023/06/20 10:33:20', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'Desktop', ',\r\n', 'Offline');
 
 -- --------------------------------------------------------
 
@@ -1370,6 +1610,7 @@ CREATE TABLE `user_role` (
 INSERT INTO `user_role` (`id_user_role`, `role`, `created_date`) VALUES
 ('RL3375d09e45b3', 'Admin Gudang', '06/03/2023, 13:52'),
 ('RL98cb89863ece', 'Super Admin', '04/03/2023, 9:35'),
+('RLe89c2734a09d', 'Driver', '20/06/2023, 11:20'),
 ('RLf278f224eb37', 'Manager Gudang', '06/03/2023, 13:52');
 
 --
@@ -1407,11 +1648,31 @@ ALTER TABLE `inv_br_in_lokal`
   ADD PRIMARY KEY (`id_inv_br_in_lokal`);
 
 --
+-- Indexes for table `inv_bukti_terima`
+--
+ALTER TABLE `inv_bukti_terima`
+  ADD PRIMARY KEY (`id_bukti_terima`);
+
+--
 -- Indexes for table `inv_nonppn`
 --
 ALTER TABLE `inv_nonppn`
   ADD PRIMARY KEY (`id_inv_nonppn`),
   ADD UNIQUE KEY `no_inv` (`no_inv`);
+
+--
+-- Indexes for table `inv_penerima`
+--
+ALTER TABLE `inv_penerima`
+  ADD PRIMARY KEY (`id_inv_penerima`);
+
+--
+-- Indexes for table `inv_ppn`
+--
+ALTER TABLE `inv_ppn`
+  ADD PRIMARY KEY (`id_inv_ppn`),
+  ADD UNIQUE KEY `no_inv` (`no_inv`),
+  ADD KEY `id_inv_ppn` (`id_inv_ppn`);
 
 --
 -- Indexes for table `isi_br_out_reg`
@@ -1479,6 +1740,12 @@ ALTER TABLE `stock_produk_reguler`
 --
 ALTER TABLE `tb_customer`
   ADD PRIMARY KEY (`id_cs`);
+
+--
+-- Indexes for table `tb_driver`
+--
+ALTER TABLE `tb_driver`
+  ADD PRIMARY KEY (`id_driver`);
 
 --
 -- Indexes for table `tb_kat_penjualan`
