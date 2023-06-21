@@ -400,7 +400,6 @@ include "akses.php";
                                     ?>
                                 <?php } ?>
 
-
                                 <!-- Modal Dikirim-->
                                 <div class="modal fade" id="Dikirim" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
@@ -410,20 +409,51 @@ include "akses.php";
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <?php
+                                                $uuid = generate_uuid();
+                                                $year = date('y');
+                                                $day = date('d');
+                                                $month = date('m');
+                                                ?>
                                                 <form action="proses/proses-invoice-nonppn.php" method="POST">
+                                                    <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+                                                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
                                                     <div class="mb-3">
-                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                                        <label>Jenis Pengiriman</label>
+                                                        <select id="jenis-pengiriman" name="jenis_pengiriman" class="form-select">
+                                                            <option value="">Pilih...</option>
+                                                            <option value="Driver">Driver</option>
+                                                            <option value="Ekspedisi">Ekspedisi</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
                                                         <label>Dikirim Oleh</label>
-                                                        <select name="pengirim" class="form-select">
+                                                        <select id="pengirim" name="pengirim" class="form-select" disabled>
                                                             <option value="">Pilih...</option>
                                                             <?php
                                                             include "koneksi.php";
                                                             $sql_driver = mysqli_query($connect, "SELECT * FROM tb_driver");
                                                             while ($data_driver = mysqli_fetch_array($sql_driver)) {
                                                             ?>
-                                                                <option value="<?php echo $data_driver['nama_pengirim'] ?>"><?php echo $data_driver['nama_pengirim'] ?></option>
+                                                                <option value="<?php echo $data_driver['id_driver'] ?>"><?php echo $data_driver['nama_pengirim'] ?></option>
                                                             <?php } ?>
                                                         </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label>Dikirim Ekspedisi</label>
+                                                        <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
+                                                            <option value="">Pilih...</option>
+                                                            <option value="JNE">JNE</option>
+                                                            <option value="JNT">JNT</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label>No. Resi</label>
+                                                        <input type="text" class="form-control" name="resi" id="resi" disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Tanggal</label>
+                                                        <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" readonly>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
@@ -434,6 +464,42 @@ include "akses.php";
                                         </div>
                                     </div>
                                 </div>
+
+                                <script>
+                                    const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
+                                    const pengirimSelect = document.getElementById('pengirim');
+                                    const ekspedisiSelect = document.getElementById('ekspedisi');
+                                    const resiSelect = document.getElementById('resi');
+
+                                    let isModalShown = false;
+
+
+                                    jenisPengirimanSelect.addEventListener('change', function() {
+                                        if (this.value === 'Driver') {
+                                            pengirimSelect.disabled = false;
+                                            pengirimSelect.setAttribute('required', 'true');
+                                            ekspedisiSelect.disabled = true;
+                                            resiSelect.disabled = true;
+                                            ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                                            resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                                        } else if (this.value === 'Ekspedisi') {
+                                            pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                                            pengirimSelect.disabled = true;
+                                            pengirimSelect.removeAttribute('required');
+                                            ekspedisiSelect.disabled = false;
+                                            ekspedisiSelect.setAttribute('required', 'true');
+                                            resiSelect.disabled = false;
+                                            resiSelect.setAttribute('required', 'true');
+                                        }
+                                        // Refresh halaman modal
+                                        if (isModalShown) {
+                                            $('#Dikirim').modal('hide'); // Menyembunyikan modal
+                                            location.reload(); // Melakukan refresh halaman
+                                            $('#Dikirim').modal('show'); // Menampilkan modal kembali
+                                        }
+                                    });
+                                </script>
+
                             </div>
                             <!-- End Modal Add SPK -->
                             <!-- Modal Add Ongkir-->
@@ -824,6 +890,32 @@ function generate_uuid()
 }
 ?>
 <!-- End Generate UUID -->
+
+<!-- date picker with flatpick -->
+<script type="text/javascript">
+    flatpickr("#date", {
+        dateFormat: "d/m/Y",
+    });
+
+    flatpickr("#tempo", {
+        dateFormat: "d/m/Y",
+    });
+
+    // untuk menampilkan tanggal hari ini
+    var dateInput = document.getElementById('date');
+
+    // Membuat objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
+    var day = String(today.getDate()).padStart(2, '0');
+    var month = String(today.getMonth() + 1).padStart(2, '0');
+    var year = today.getFullYear();
+
+    // Mengatur nilai default input dengan format yang diinginkan
+    dateInput.value = day + '/' + month + '/' + year;
+</script>
+<!-- end date picker -->
 
 <script>
     function refreshPage() {

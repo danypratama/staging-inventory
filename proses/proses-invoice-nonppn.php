@@ -171,13 +171,29 @@ if (isset($_POST['simpan-inv'])) {
         header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_encode'");
     }
 } else if (isset($_POST['ubah-dikirim'])) {
+    $id_status = $_POST['id_status'];
     $id_inv = $_POST['id_inv'];
-    $pengirim = $_POST['pengirim'];
+    $jenis_pengiriman = $_POST['jenis_pengiriman'];
+    $tgl = $_POST['tgl'];
 
-    $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim', dikirim_oleh = '$pengirim' WHERE id_inv_nonppn = '$id_inv'");
+    if ($jenis_pengiriman == 'Driver') {
+        $pengirim = $_POST['pengirim'];
+        $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
 
+        $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
+                                                (id_status_kirim, id_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
+                                                VALUES 
+                                                ('$id_status', '$id_inv', '$jenis_pengiriman', '$pengirim', '$ekspedisi', '$tgl')");
+        header("Location:../invoice-reguler.php?sort=baru");
+    } else {
+        $ekspedisi = $_POST['ekspedisi'];
+        $resi = $_POST['resi'];
+        $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
 
-    if ($ubah_status) {
+        $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
+                                                (id_status_kirim, id_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                VALUES 
+                                                ('$id_status', '$id_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
         header("Location:../invoice-reguler.php?sort=baru");
     }
 } else if (isset($_POST['update-ongkir'])) {
