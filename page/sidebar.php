@@ -11,7 +11,7 @@
       <a class="nav-link <?php if ($page == 'data') {
                             echo 'active-link';
                           } ?>" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>Data</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-menu-button-wide"></i><span>Data Reguler</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="components-nav" class="nav-content active collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -123,10 +123,37 @@
           </a>
         </li>
         <li>
-          <a class="<?php if ($page2 == 'data-driver') {
+          <a class="<?php if ($page2 == 'ekspedisi') {
                       echo 'active';
-                    } ?>" href="driver.php">
-            <i class="bi bi-circle"></i><span>Pengirim</span>
+                    } ?>" href="data-ekspedisi.php">
+            <i class="bi bi-circle"></i><span>Ekspedisi</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Data Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link <?php if ($page == 'data-ecat') {
+                            echo 'active-link';
+                          } ?>" data-bs-target="#components-ecat" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>Data E-Catalog</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="components-ecat" class="nav-content active collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="#">
+            <i class="bi bi-circle"></i><span>Produk E-Cat</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'data-stock-reg') {
+                      echo 'active';
+                    } ?>" href="stock-produk-ecat.php">
+            <i class="bi bi-circle"></i><span>Stock Produk Ecat</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="bi bi-circle"></i><span>Set Produk E-Cat</span>
           </a>
         </li>
       </ul>

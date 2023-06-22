@@ -52,12 +52,40 @@ if (isset($_POST['simpan-inv'])) {
         } else {
             // Rollback jika terjadi kesalahan
             mysqli_rollback($connect);
-            echo "Error: Query gagal. Transaksi dibatalkan.";
+            $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+            echo <<<HTML
+                <!-- Sweet Alert -->
+                <link rel="stylesheet" href="assets/sweet-alert/dist/sweetalert2.min.css">
+                <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                <script>
+                    swal({
+                        title: "Error!",
+                        text: "{$error_message}",
+                        icon: "error",
+                    }).then(function() {
+                        window.location.href = "../cek-produk-inv-ppn.php?id='$id_inv_ppn_encode'";
+                    });
+                </script>
+            HTML;
         }
     } catch (Exception $e) {
         // Rollback jika terjadi kesalahan atau pengecualian
         mysqli_rollback($connect);
-        echo "Error: " . $e->getMessage();
+        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+        echo <<<HTML
+            <!-- Sweet Alert -->
+            <link rel="stylesheet" href="assets/sweet-alert/dist/sweetalert2.min.css">
+            <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+            <script>
+                swal({
+                    title: "Error!",
+                    text: "{$error_message}",
+                    icon: "error",
+                }).then(function() {
+                    window.location.href = "../cek-produk-inv-ppn.php?id='$id_inv_ppn_encode'";
+                });
+            </script>
+        HTML;
     }
 } else if (isset($_POST['simpan-cek-harga'])) {
     $id_inv = base64_encode($_POST['id_inv']);
@@ -101,7 +129,21 @@ if (isset($_POST['simpan-inv'])) {
     } catch (Exception $e) {
         // Rollback transaction jika terjadi kesalahan
         mysqli_rollback($connect);
-        header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
+        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+        echo <<<HTML
+            <!-- Sweet Alert -->
+            <link rel="stylesheet" href="assets/sweet-alert/dist/sweetalert2.min.css">
+            <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+            <script>
+                swal({
+                    title: "Error!",
+                    text: "{$error_message}",
+                    icon: "error",
+                }).then(function() {
+                    window.location.href = "../cek-produk-inv-ppn.php?id='$id_inv'";
+                });
+            </script>
+        HTML;
     }
 } else if (isset($_POST['update-harga'])) {
     $id_trx = $_POST['id_trx'];
@@ -173,12 +215,29 @@ if (isset($_POST['simpan-inv'])) {
         header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
     }
 } else if (isset($_POST['ubah-dikirim'])) {
+    $id_status = $_POST['id_status'];
     $id_inv = $_POST['id_inv'];
-    $pengirim = $_POST['pengirim'];
+    $jenis_pengiriman = $_POST['jenis_pengiriman'];
+    $tgl = $_POST['tgl'];
 
-    $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim', dikirim_oleh = '$pengirim' WHERE id_inv_ppn = '$id_inv'");
+    if ($jenis_pengiriman == 'Driver') {
+        $pengirim = $_POST['pengirim'];
+        $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim' WHERE id_inv_ppn = '$id_inv'");
 
-    if ($ubah_status) {
+        $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
+                                                (id_status_kirim, id_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
+                                                VALUES 
+                                                ('$id_status', '$id_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
+        header("Location:../invoice-reguler.php?sort=baru");
+    } else {
+        $ekspedisi = $_POST['ekspedisi'];
+        $resi = $_POST['resi'];
+        $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim' WHERE id_inv_ppn = '$id_inv'");
+
+        $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
+                                                (id_status_kirim, id_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                VALUES 
+                                                ('$id_status', '$id_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
         header("Location:../invoice-reguler.php?sort=baru");
     }
 } else if (isset($_POST['update-ongkir'])) {

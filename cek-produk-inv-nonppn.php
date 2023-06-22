@@ -432,10 +432,10 @@ include "akses.php";
                                                             <option value="">Pilih...</option>
                                                             <?php
                                                             include "koneksi.php";
-                                                            $sql_driver = mysqli_query($connect, "SELECT * FROM tb_driver");
+                                                            $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
                                                             while ($data_driver = mysqli_fetch_array($sql_driver)) {
                                                             ?>
-                                                                <option value="<?php echo $data_driver['id_driver'] ?>"><?php echo $data_driver['nama_pengirim'] ?></option>
+                                                                <option value="<?php echo $data_driver['id_user_role'] ?>"><?php echo $data_driver['nama_user'] ?></option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>
@@ -443,8 +443,13 @@ include "akses.php";
                                                         <label>Dikirim Ekspedisi</label>
                                                         <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
                                                             <option value="">Pilih...</option>
-                                                            <option value="JNE">JNE</option>
-                                                            <option value="JNT">JNT</option>
+                                                            <?php
+                                                            include "koneksi.php";
+                                                            $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
+                                                            while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
+                                                            ?>
+                                                                <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>"><?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
+                                                            <?php } ?>
                                                         </select>
                                                     </div>
                                                     <div class="mb-3">
@@ -464,7 +469,8 @@ include "akses.php";
                                         </div>
                                     </div>
                                 </div>
-
+                                <!-- End Modal Add SPK -->
+                                <!-- kode JS Dikirim -->
                                 <script>
                                     const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
                                     const pengirimSelect = document.getElementById('pengirim');
@@ -499,9 +505,9 @@ include "akses.php";
                                         }
                                     });
                                 </script>
-
+                                <!-- End JS Dikirim -->
                             </div>
-                            <!-- End Modal Add SPK -->
+                            <!-- End Dikirim -->
                             <!-- Modal Add Ongkir-->
                             <div class="modal fade" id="ongkir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -527,7 +533,6 @@ include "akses.php";
                                 </div>
                             </div>
                         </div>
-                        <!-- End Modal Add SPK -->
                     </div>
                     <!-- Modal Input SPdisc Inv -->
                     <div class="modal fade" id="inputSpdisc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -152,7 +152,16 @@ include "akses.php";
                                 WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
                             $query_inv_ppn = mysqli_query($connect, $sql_inv_ppn);
                             $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
-                            $hasil = $total_inv_nonppn + $total_inv_ppn;
+                            ?>
+                            <?php
+                            $sql_inv_bum = "SELECT bum.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_bum AS bum
+                                LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+                            $query_inv_bum = mysqli_query($connect, $sql_inv_bum);
+                            $total_inv_bum = mysqli_num_rows($query_inv_bum);
+                            $hasil = $total_inv_nonppn + $total_inv_ppn + $total_inv_bum;
                             ?>
                             <a class="nav-link" href="invoice-reguler.php?sort=baru">
                                 Invoice Sudah Dicetak &nbsp;
@@ -180,7 +189,16 @@ include "akses.php";
                                 WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
                             $query_inv_ppn_dikirim = mysqli_query($connect, $sql_inv_ppn_dikirim);
                             $total_inv_ppn_dikirim = mysqli_num_rows($query_inv_ppn_dikirim);
-                            $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim;
+                            ?>
+                            <?php
+                            $sql_inv_bum_dikirim = "SELECT bum.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_bum AS bum
+                                LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
+                            $query_inv_bum_dikirim = mysqli_query($connect, $sql_inv_bum_dikirim);
+                            $total_inv_bum_dikirim = mysqli_num_rows($query_inv_bum_dikirim);
+                            $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim +  $total_inv_bum_dikirim;
                             ?>
                             <a class="nav-link" href="invoice-reguler-dikirim.php?sort=baru">
                                 Dikirim &nbsp;
@@ -224,8 +242,11 @@ include "akses.php";
                                                         <div class="mb-3" style="width: 220px;">
                                                             <input id="nonPpnButton" type="button" name="inv-nonppn" class="btn btn-primary btn-md" value="Buat Invoice Non PPN" onclick="submitForm('form-invoice-nonppn.php')">
                                                         </div>
-                                                        <div class="mb-3" style="width: 220px;">
+                                                        <div class="mb-3" style="width: 190px;">
                                                             <input id="ppnButton" type="button" class="btn btn-secondary btn-md" value="Buat Invoice PPN" onclick="submitForm('form-invoice-ppn.php')">
+                                                        </div>
+                                                        <div class="mb-3" style="width: 200px;">
+                                                            <input id="bumButton" type="button" class="btn btn-warning btn-md" value="Buat Invoice BUM" onclick="submitForm('form-invoice-bum.php')">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -321,6 +342,7 @@ include "akses.php";
     const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="spk"]');
     const nonPpnButton = document.getElementById("nonPpnButton");
     const ppnButton = document.getElementById("ppnButton");
+    const bumButton = document.getElementById("bumButton");
 
     form.addEventListener("submit", function(event) {
         event.preventDefault();
@@ -355,14 +377,17 @@ include "akses.php";
 
                 nonPpnButton.disabled = false;
                 ppnButton.disabled = false;
+                bumButton.disabled = false;
             } else {
                 nonPpnButton.disabled = true;
                 ppnButton.disabled = true;
+                bumButton.disabled = true;
             }
         } else {
             // Jika jumlah data yang dicentang melebihi 5, nonaktifkan tombol dan tampilkan peringatan
             nonPpnButton.disabled = true;
             ppnButton.disabled = true;
+            bumButton.disabled = true;
 
             Swal.fire({
                 title: '<strong>HTML <u>example</u></strong>',

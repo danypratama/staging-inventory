@@ -154,6 +154,16 @@ include "akses.php";
               $total_inv_ppn = mysqli_num_rows($query_inv_ppn);
               $hasil = $total_inv_nonppn + $total_inv_ppn;
               ?>
+              <?php
+              $sql_inv_bum = "SELECT bum.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_bum AS bum
+                                LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv";
+              $query_inv_bum = mysqli_query($connect, $sql_inv_bum);
+              $total_inv_bum = mysqli_num_rows($query_inv_bum);
+              $hasil = $total_inv_nonppn + $total_inv_ppn + $total_inv_bum;
+              ?>
               <a class="nav-link" href="invoice-reguler.php?sort=baru">
                 Invoice Sudah Dicetak &nbsp;
                 <?php if ($hasil != 0) {
@@ -180,7 +190,16 @@ include "akses.php";
                                 WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
               $query_inv_ppn_dikirim = mysqli_query($connect, $sql_inv_ppn_dikirim);
               $total_inv_ppn_dikirim = mysqli_num_rows($query_inv_ppn_dikirim);
-              $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim;
+              ?>
+              <?php
+              $sql_inv_bum_dikirim = "SELECT bum.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_bum AS bum
+                                LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
+              $query_inv_bum_dikirim = mysqli_query($connect, $sql_inv_bum_dikirim);
+              $total_inv_bum_dikirim = mysqli_num_rows($query_inv_bum_dikirim);
+              $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim + $total_inv_bum_dikirim;
               ?>
               <a class="nav-link" href="invoice-reguler-dikirim.php?sort=baru">
                 Dikirim &nbsp;

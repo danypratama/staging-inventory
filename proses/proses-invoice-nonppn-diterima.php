@@ -46,15 +46,30 @@ try {
         // Query-update
         $query3 = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
-        // Commit transaksi
-        $connect->commit();
-
-        echo "Transaksi berhasil di-commit.";
+        if ($query1 && $query2 && $query3) {
+            // Commit transaksi
+            $connect->commit();
+            header("Location:../invoice-reguler.php?sort=baru");
+        }
     }
 } catch (Exception $e) {
     // Rollback transaksi jika terjadi exception
     $connect->rollback();
-    echo "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+    $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+    echo <<<HTML
+        <!-- Sweet Alert -->
+        <link rel="stylesheet" href="assets/sweet-alert/dist/sweetalert2.min.css">
+        <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+        <script>
+            swal({
+                title: "Error!",
+                text: "{$error_message}",
+                icon: "error",
+            }).then(function() {
+                window.location.href = "../invoice-reguler.php?sort=baru";
+            });
+        </script>
+    HTML;
 }
 
 // Tutup koneksi database
