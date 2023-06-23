@@ -63,7 +63,8 @@ include "akses.php";
                                     <tr class="text-white" style="background-color: #051683;">
                                         <td class="text-center p-3 col-1 text-nowrap">No</td>
                                         <td class="text-center p-3 col-2 text-nowrap">No Invoice</td>
-                                        <td class="text-center p-3 col-4 text-nowrap">Nama Customer</td>
+                                        <td class="text-center p-3 col-2 text-nowrap">Nama Customer</td>
+                                        <td class="text-center p-3 col-5 text-nowrap">Alamat</td>
                                         <td class="text-center p-3 col-2 text-nowrap">Aksi</td>
                                     </tr>
                                 </thead>
@@ -77,7 +78,7 @@ include "akses.php";
                                             inv_ppn.no_inv AS no_inv_ppn, 
                                             inv_bum.no_inv AS no_inv_bum,
                                             spk_reg.id_inv, spk_reg.id_customer,
-                                            tb_customer.nama_cs,
+                                            tb_customer.nama_cs, tb_customer.alamat,
                                             user.nama_user
                                             FROM 
                                             status_kirim 
@@ -105,6 +106,7 @@ include "akses.php";
                                                 ?>
                                             </td>
                                             <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
+                                            <td class="text-nowrap"><?php echo $data['alamat'] ?></td>
                                             <td class="text-center text-nowrap">
                                                 <?php
                                                 if ($data['jenis_inv'] == 'nonppn') {
