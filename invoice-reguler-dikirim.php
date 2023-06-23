@@ -216,26 +216,26 @@ include "akses.php";
                     <div class="card-body bg-body rounded mt-3">
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'nonppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#nonppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice Non PPN &nbsp;
-                            <?php if ($total_inv_nonppn != 0) {
+                            <?php if ($total_inv_nonppn_dikirim != 0) {
                                 echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn_dikirim . '</span>';
                             } ?>
                         </a>
 
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'ppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#ppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice PPN &nbsp;
-                            <?php if ($total_inv_ppn != 0) {
+                            <?php if ($total_inv_ppn_dikirim != 0) {
                                 echo '<span class="badge text-bg-secondary">' . $total_inv_ppn_dikirim . '</span>';
                             } ?>
                         </a>
 
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'bum') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#bum" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice BUM &nbsp;
-                            <?php if ($total_inv_bum != 0) {
+                            <?php if ($total_inv_bum_dikirim != 0) {
                                 echo '<span class="badge text-bg-secondary">' . $total_inv_bum_dikirim . '</span>';
                             } ?>
                         </a>
                         <div class="collapse <?php if ($activeButton == 'nonppn') echo 'show'; ?>" id="nonppn" data-bs-parent="#accordion">
-                            <div class="table-responsive" id="filteredData">
+                            <div class="table-responsive m-2" id="filteredData">
                                 <form id="invoiceForm" name="proses" method="POST">
                                     <div class="row mb-3 mt-4">
                                         <div class="col-md-2">
@@ -305,7 +305,7 @@ include "akses.php";
                             </div>
                         </div>
                         <div class="collapse <?php if ($activeButton == 'ppn') echo 'show'; ?>" id="ppn" data-bs-parent="#accordion">
-                            <div class="table-responsive" id="filteredDataPpn">
+                            <div class="table-responsive m-2" id="filteredDataPpn">
                                 <form id="invoiceForm" name="proses" method="POST">
                                     <div class="row mb-3 mt-4">
                                         <div class="col-md-2">
@@ -364,7 +364,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-ppn-dikirim.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -375,7 +375,7 @@ include "akses.php";
                             </div>
                         </div>
                         <div class="collapse <?php if ($activeButton == 'bum') echo 'show'; ?>" id="bum" data-bs-parent="#accordion">
-                            <div class="table-responsive" id="filteredDataBum">
+                            <div class="table-responsive m-2" id="filteredDataBum">
                                 <form id="invoiceForm" name="proses" method="POST">
                                     <div class="row mb-3 mt-4">
                                         <div class="col-md-2">
@@ -434,7 +434,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-bum.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-bum-dikirim.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -574,6 +574,13 @@ include "akses.php";
 <script>
     $(document).ready(function() {
         var table = $('#tableppn').DataTable({
+            "lengthChange": false,
+            "ordering": false,
+            "autoWidth": false
+        });
+    });
+    $(document).ready(function() {
+        var table = $('#tablebum').DataTable({
             "lengthChange": false,
             "ordering": false,
             "autoWidth": false

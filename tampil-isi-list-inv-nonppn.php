@@ -43,7 +43,7 @@ include "akses.php";
                 </div>
                 <?php
                 include "koneksi.php";
-                $id_inv = $_GET['id'];
+                $id_inv = base64_decode($_GET['id']);
                 $sql = "SELECT 
                             nonppn.*, 
                             sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
@@ -77,7 +77,7 @@ include "akses.php";
                                 <div class="col-7">
                                     <?php
                                     include "koneksi.php";
-                                    $id_inv = $_GET['id'];
+                                    $id_inv = base64_decode($_GET['id']);
                                     $no = 1;
                                     $sql = "SELECT 
                                                     nonppn.*,

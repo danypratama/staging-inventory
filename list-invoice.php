@@ -28,11 +28,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <!-- <div class="loader loader">
+        <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div> -->
+        </div>
         <!-- ENd Loading -->
         <div class="pagetitle">
             <h1>List Invoice</h1>
@@ -48,7 +48,13 @@ include "akses.php";
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body p-3">
-                        <p><b>Nama Driver : <?php $_SESSION['tiket_nama'] ?></b></p>
+                        <?php
+                        date_default_timezone_set('Asia/Jakarta');
+                        $nama_user = $_SESSION['tiket_nama'];
+                        $date = date('d-m-Y');
+                        ?>
+                        <p><b>Nama Driver : <?php echo $_SESSION['tiket_nama'] ?></b></p>
+                        <p><b>Tanggal : <?php echo $date; ?></b></p>
                     </div>
                     <div class="card-body p-3">
                         <div class="table-responsive mt-3">
@@ -71,14 +77,17 @@ include "akses.php";
                                             inv_ppn.no_inv AS no_inv_ppn, 
                                             inv_bum.no_inv AS no_inv_bum,
                                             spk_reg.id_inv, spk_reg.id_customer,
-                                            tb_customer.nama_cs
+                                            tb_customer.nama_cs,
+                                            user.nama_user
                                             FROM 
                                             status_kirim 
                                             LEFT JOIN inv_nonppn ON status_kirim.id_inv = inv_nonppn.id_inv_nonppn 
                                             LEFT JOIN inv_ppn ON status_kirim.id_inv = inv_ppn.id_inv_ppn 
                                             LEFT JOIN inv_bum ON status_kirim.id_inv = inv_bum.id_inv_bum
                                             LEFT JOIN spk_reg ON status_kirim.id_inv = spk_reg.id_inv
-                                            LEFT JOIN tb_customer ON spk_reg.id_customer = tb_customer.id_cs";
+                                            LEFT JOIN tb_customer ON spk_reg.id_customer = tb_customer.id_cs
+                                            LEFT JOIN user ON status_kirim.dikirim_driver = user.id_user
+                                            WHERE user.nama_user = '$nama_user'";
                                     $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
@@ -99,11 +108,11 @@ include "akses.php";
                                             <td class="text-center text-nowrap">
                                                 <?php
                                                 if ($data['jenis_inv'] == 'nonppn') {
-                                                    echo '<a href="tampil-isi-list-inv-nonppn.php?id=' . $data['id_inv'] . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
+                                                    echo '<a href="tampil-isi-list-inv-nonppn.php?id=' . base64_encode($data['id_inv']) . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
                                                 } elseif ($data['jenis_inv'] == 'ppn') {
-                                                    echo '<a href="tampil-isi-list-inv-ppn.php?id=' . $data['id_inv'] . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
+                                                    echo '<a href="tampil-isi-list-inv-ppn.php?id=' . base64_encode($data['id_inv']) . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
                                                 } elseif ($data['jenis_inv'] == 'bum') {
-                                                    echo '<a href="tampil-isi-list-inv-bum.php?id=' . $data['id_inv'] . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
+                                                    echo '<a href="tampil-isi-list-inv-bum.php?id=' . base64_encode($data['id_inv']) . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
                                                 }
                                                 ?>
                                             </td>
