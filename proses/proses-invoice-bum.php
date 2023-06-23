@@ -175,15 +175,16 @@ if (isset($_POST['simpan-inv'])) {
     $id_inv = $_POST['id_inv'];
     $jenis_pengiriman = $_POST['jenis_pengiriman'];
     $tgl = $_POST['tgl'];
+    $jenis_inv = "bum";
 
     if ($jenis_pengiriman == 'Driver') {
         $pengirim = $_POST['pengirim'];
         $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
 
         $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                (id_status_kirim, id_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
+                                                (id_status_kirim, id_inv, jenis_inv jenis_pengiriman, dikirim_driver, tgl_kirim)
                                                 VALUES 
-                                                ('$id_status', '$id_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
+                                                ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
         header("Location:../invoice-reguler.php?sort=baru");
     } else {
         $ekspedisi = $_POST['ekspedisi'];
@@ -191,9 +192,9 @@ if (isset($_POST['simpan-inv'])) {
         $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
 
         $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                (id_status_kirim, id_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
                                                 VALUES 
-                                                ('$id_status', '$id_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
+                                                ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
         header("Location:../invoice-reguler.php?sort=baru");
     }
 } else if (isset($_POST['update-ongkir'])) {

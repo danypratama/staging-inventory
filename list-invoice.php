@@ -56,9 +56,8 @@ include "akses.php";
                                 <thead>
                                     <tr class="text-white" style="background-color: #051683;">
                                         <td class="text-center p-3 col-1 text-nowrap">No</td>
-                                        <td class="text-center p-3 col-3 text-nowrap">No Invoice</td>
-                                        <td class="text-center p-3 col-5 text-nowrap">Nama Customer</td>
-                                        <td class="text-center p-3 col-2 text-nowrap">Status</td>
+                                        <td class="text-center p-3 col-2 text-nowrap">No Invoice</td>
+                                        <td class="text-center p-3 col-4 text-nowrap">Nama Customer</td>
                                         <td class="text-center p-3 col-2 text-nowrap">Aksi</td>
                                     </tr>
                                 </thead>
@@ -67,23 +66,46 @@ include "akses.php";
                                     date_default_timezone_set('Asia/Jakarta');
                                     include "koneksi.php";
                                     $no = 1;
-                                    $sql = "SELECT 
-                                            
-                                            FROM tb_supplier ORDER BY nama_sp ASC";
+                                    $sql = "SELECT status_kirim.*,
+                                            inv_nonppn.no_inv AS no_inv_nonppn,
+                                            inv_ppn.no_inv AS no_inv_ppn, 
+                                            inv_bum.no_inv AS no_inv_bum,
+                                            spk_reg.id_inv, spk_reg.id_customer,
+                                            tb_customer.nama_cs
+                                            FROM 
+                                            status_kirim 
+                                            LEFT JOIN inv_nonppn ON status_kirim.id_inv = inv_nonppn.id_inv_nonppn 
+                                            LEFT JOIN inv_ppn ON status_kirim.id_inv = inv_ppn.id_inv_ppn 
+                                            LEFT JOIN inv_bum ON status_kirim.id_inv = inv_bum.id_inv_bum
+                                            LEFT JOIN spk_reg ON status_kirim.id_inv = spk_reg.id_inv
+                                            LEFT JOIN tb_customer ON spk_reg.id_customer = tb_customer.id_cs";
                                     $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
                                     while ($data = mysqli_fetch_array($query)) {
-                                        $id_sp = base64_encode($data['id_sp']);
                                     ?>
                                         <tr>
                                             <td class="text-center text-nowrap"><?php echo $no ?></td>
-                                            <td class="text-nowrap"><?php echo $data['nama_sp']; ?></td>
-                                            <td class="text-nowrap"><?php echo $data['alamat']; ?></td>
-                                            <td class="text-nowrap"><?php echo $data['no_telp']; ?></td>
+                                            <td class="text-nowrap">
+                                                <?php
+                                                if (!empty($data['no_inv_nonppn'])) {
+                                                    echo $data['no_inv_nonppn'];
+                                                } elseif (!empty($data['no_inv_ppn'])) {
+                                                    echo $data['no_inv_ppn'];
+                                                } elseif (!empty($data['no_inv_bum'])) {
+                                                    echo $data['no_inv_bum'];
+                                                }
+                                                ?>
+                                            </td>
+                                            <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                                             <td class="text-center text-nowrap">
-                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_sp']; ?>" data-nama="<?php echo $data['nama_sp']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-telp="<?php echo $data['no_telp']; ?>">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <a href="proses/proses-sp.php?hapus-sp=<?php echo $id_sp ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                <?php
+                                                if ($data['jenis_inv'] == 'nonppn') {
+                                                    echo '<a href="tampil-isi-list-inv-nonppn.php?id=' . $data['id_inv'] . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
+                                                } elseif ($data['jenis_inv'] == 'ppn') {
+                                                    echo '<a href="tampil-isi-list-inv-ppn.php?id=' . $data['id_inv'] . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
+                                                } elseif ($data['jenis_inv'] == 'bum') {
+                                                    echo '<a href="tampil-isi-list-inv-bum.php?id=' . $data['id_inv'] . '" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> Lihat Data</a>';
+                                                }
+                                                ?>
                                             </td>
                                             <?php $no++; ?>
                                         <?php } ?>
