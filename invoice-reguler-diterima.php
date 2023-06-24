@@ -250,22 +250,22 @@ include "akses.php";
                     <div class="card-body bg-body rounded mt-3">
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'nonppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#nonppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice Non PPN &nbsp;
-                            <?php if ($total_inv_nonppn_dikirim != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn_dikirim . '</span>';
+                            <?php if ($total_inv_nonppn_diterima != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn_diterima . '</span>';
                             } ?>
                         </a>
 
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'ppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#ppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice PPN &nbsp;
-                            <?php if ($total_inv_ppn_dikirim != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_ppn_dikirim . '</span>';
+                            <?php if ($total_inv_ppn_diterima != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_ppn_diterima . '</span>';
                             } ?>
                         </a>
 
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'bum') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#bum" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice BUM &nbsp;
-                            <?php if ($total_inv_bum_dikirim != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_bum_dikirim . '</span>';
+                            <?php if ($total_inv_bum_diterima != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_bum_diterima . '</span>';
                             } ?>
                         </a>
                         <div class="collapse <?php if ($activeButton == 'nonppn') echo 'show'; ?>" id="nonppn" data-bs-parent="#accordion">
