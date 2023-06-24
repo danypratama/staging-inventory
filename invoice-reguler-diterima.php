@@ -195,7 +195,7 @@ include "akses.php";
                             $total_inv_bum_dikirim = mysqli_num_rows($query_inv_bum_dikirim);
                             $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim +  $total_inv_bum_dikirim;
                             ?>
-                            <a class="nav-link active" href="#">
+                            <a class="nav-link" href="invoice-reguler-dikirim.php">
                                 Dikirim &nbsp;
                                 <?php if ($hasil_dikirim != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $hasil_dikirim . '</span>';
@@ -232,7 +232,7 @@ include "akses.php";
                             $total_inv_bum_diterima = mysqli_num_rows($query_inv_bum_diterima);
                             $hasil_diterima = $total_inv_nonppn_diterima + $total_inv_ppn_diterima + $total_inv_bum_diterima;
                             ?>
-                            <a class="nav-link" href="invoice-reguler-diterima.php?sort=baru">
+                            <a class="nav-link active" href="#">
                                 Diterima &nbsp;
                                 <?php if ($hasil_diterima != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $hasil_diterima . '</span>';
@@ -315,7 +315,7 @@ include "akses.php";
                                                             FROM inv_nonppn AS nonppn
                                                             LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'diterima' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -328,7 +328,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-nonppn-dikirim.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-nonppn-diterima.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -385,7 +385,7 @@ include "akses.php";
                                                             FROM inv_ppn AS ppn
                                                             LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'diterima' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -398,7 +398,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-ppn-dikirim.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-ppn-diterima.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -455,7 +455,7 @@ include "akses.php";
                                                             FROM inv_bum AS bum
                                                             LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'diterima' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -468,7 +468,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-bum-dikirim.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-bum-diterima.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -503,7 +503,7 @@ include "akses.php";
                                 };
 
                                 // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-nonppn-dikirim.php?sort=' + sortValue, true);
+                                xhttp.open('GET', 'filter-data-nonppn-diterima.php?sort=' + sortValue, true);
                                 xhttp.send();
                             }
 
@@ -532,7 +532,7 @@ include "akses.php";
                                 };
 
                                 // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-bum-dikirim.php?sort=' + sortValue, true);
+                                xhttp.open('GET', 'filter-data-bum-diterima.php?sort=' + sortValue, true);
                                 xhttp.send();
                             }
                         </script>

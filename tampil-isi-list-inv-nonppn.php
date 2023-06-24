@@ -212,13 +212,123 @@ include "akses.php";
                                         </div>';
                             }
                             ?>
-
                         </div>
                     </div>
                 </div>
-
             </div>
-            <!-- Tampil data -->
+            <!-- Tampil Produk -->
+            <div class="card shadow">
+                <div class="card-body p-3">
+                    <div class="table-responsive">
+                        <div class="text-start mb-3">
+                            <a href="list-invoice.php?sort=baru" class="btn btn-warning btn-detail">
+                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                            </a>
+                            <?php
+                            $id_inv_nonppn = base64_decode($_GET['id']);
+                            $sql_cek = "SELECT 
+                                        nonppn.id_inv_nonppn, kategori_inv,
+                                        sr.id_inv, sr.no_spk,
+                                        trx.*, 
+                                        spr.stock, 
+                                        tpr.nama_produk, 
+                                        tpr.harga_produk, mr.* 
+                                        FROM inv_nonppn AS nonppn
+                                        JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn' AND status_trx = '1' ORDER BY no_spk ASC";
+                            $query_cek = mysqli_query($connect, $sql_cek);
+                            $data_cek = mysqli_fetch_array($query_cek);
+                            $total_data = mysqli_num_rows($query_cek);
+                            ?>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered">
+                        <?php
+                        if ($total_data != 0) {
+                            if ($data_cek['kategori_inv'] != 'Diskon') {
+                                echo '
+                                        <thead>
+                                            <tr class="text-white" style="background-color: #051683;">
+                                                <th class="text-center p-3" style="width:20px">No</th>
+                                                <th class="text-center p-3" style="width:80px">No. SPK</th>
+                                                <th class="text-center p-3" style="width:200px">Nama Produk</th>
+                                                <th class="text-center p-3" style="width:100px">Merk</th>
+                                                <th class="text-center p-3" style="width:100px">Harga</th>
+                                                <th class="text-center p-3" style="width:80px">Qty Order</th>
+                                                <th class="text-center p-3" style="width:80px">Total</th>
+                                            </tr>
+                                        </thead>';
+                            } else {
+                                echo '
+                                        <thead>
+                                            <tr class="text-white" style="background-color: #051683;">
+                                                <th class="text-center p-3" style="width:20px">No</th>
+                                                <th class="text-center p-3" style="width:100px">No. SPK</th>
+                                                <th class="text-center p-3" style="width:200px">Nama Produk</th>
+                                                <th class="text-center p-3" style="width:100px">Merk</th>
+                                                <th class="text-center p-3" style="width:100px">Harga</th>
+                                                <th class="text-center p-3" style="width:100px">Diskon</th>
+                                                <th class="text-center p-3" style="width:80px">Qty Order</th>
+                                                <th class="text-center p-3" style="width:80px">Total</th>
+                                            </tr>
+                                        </thead>';
+                            }
+                        }
+                        ?>
+                        <tbody>
+                            <?php
+                            include "koneksi.php";
+                            $year = date('y');
+                            $day = date('d');
+                            $month = date('m');
+                            $id_nonppn_decode = base64_decode($_GET['id']);
+                            $no = 1;
+                            $sql_trx = "SELECT 
+                                        nonppn.id_inv_nonppn,
+                                        sr.id_inv, sr.no_spk,
+                                        trx.*, 
+                                        spr.stock, 
+                                        tpr.nama_produk, 
+                                        tpr.harga_produk, mr.* 
+                                        FROM inv_nonppn AS nonppn
+                                        JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '1' ORDER BY no_spk ASC";
+                            $trx_produk_reg = mysqli_query($connect, $sql_trx);
+                            while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                $disc = $data_trx['disc'];
+                                $id_spk = $data_trx['id_spk'];
+                            ?>
+                                <tr>
+                                    <td class="text-center"><?php echo $no; ?></td>
+                                    <td class="text-center"><?php echo $data_trx['no_spk']; ?></td>
+                                    <td><?php echo $data_trx['nama_produk'] ?></td>
+                                    <td class="text-center"><?php echo $data_trx['nama_merk'] ?></td>
+                                    <td class="text-end"><?php echo number_format($data_trx['harga']) ?></td>
+                                    <?php
+                                    if ($total_data != 0) {
+                                        if ($data_cek['kategori_inv'] == 'Diskon') {
+                                            echo "<td class='text-end'>" . $disc . "</td>";
+                                        }
+                                    }
+                                    ?>
+                                    <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
+                                    <td class="text-end"><?php echo number_format($data_trx['total_harga']) ?></td>
+                                </tr>
+                                <?php $no++; ?>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Tampil Produk -->
         </section>
     </main><!-- End #main -->
 

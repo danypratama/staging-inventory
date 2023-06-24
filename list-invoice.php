@@ -14,6 +14,25 @@ include "akses.php";
     <meta content="" name="description">
     <meta content="" name="keywords">
     <?php include "page/head.php"; ?>
+    <style>
+        .text-nowrap-mobile {
+            /* Gaya untuk tampilan mobile */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .text-nowrap-mobile {
+                /* Gaya untuk tampilan desktop */
+                white-space: normal;
+                overflow: visible;
+                text-overflow: inherit;
+                max-width: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -47,7 +66,7 @@ include "akses.php";
         <section>
             <div class="container-fluid">
                 <div class="card">
-                    <div class="card-body p-3">
+                    <div class="card-body mt-5">
                         <?php
                         date_default_timezone_set('Asia/Jakarta');
                         $nama_user = $_SESSION['tiket_nama'];
@@ -63,8 +82,9 @@ include "akses.php";
                                     <tr class="text-white" style="background-color: #051683;">
                                         <td class="text-center p-3 col-1 text-nowrap">No</td>
                                         <td class="text-center p-3 col-2 text-nowrap">No Invoice</td>
+                                        <td class="text-center p-3 col-2 text-nowrap">Tgl. Order</td>
                                         <td class="text-center p-3 col-2 text-nowrap">Nama Customer</td>
-                                        <td class="text-center p-3 col-5 text-nowrap">Alamat</td>
+                                        <td class="text-center p-3 col-3 text-nowrap">Alamat</td>
                                         <td class="text-center p-3 col-2 text-nowrap">Aksi</td>
                                     </tr>
                                 </thead>
@@ -77,7 +97,7 @@ include "akses.php";
                                             inv_nonppn.no_inv AS no_inv_nonppn,
                                             inv_ppn.no_inv AS no_inv_ppn, 
                                             inv_bum.no_inv AS no_inv_bum,
-                                            spk_reg.id_inv, spk_reg.id_customer,
+                                            spk_reg.id_inv, spk_reg.id_customer, spk_reg.tgl_pesanan,
                                             tb_customer.nama_cs, tb_customer.alamat,
                                             user.nama_user
                                             FROM 
@@ -94,7 +114,7 @@ include "akses.php";
                                     ?>
                                         <tr>
                                             <td class="text-center text-nowrap"><?php echo $no ?></td>
-                                            <td class="text-nowrap">
+                                            <td class="text-nowrap text-center">
                                                 <?php
                                                 if (!empty($data['no_inv_nonppn'])) {
                                                     echo $data['no_inv_nonppn'];
@@ -105,8 +125,9 @@ include "akses.php";
                                                 }
                                                 ?>
                                             </td>
+                                            <td class="text-nowrap text-center"><?php echo $data['tgl_pesanan'] ?></td>
                                             <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
-                                            <td class="text-nowrap"><?php echo $data['alamat'] ?></td>
+                                            <td class="text-nowrap-mobille"><?php echo $data['alamat'] ?></td>
                                             <td class="text-center text-nowrap">
                                                 <?php
                                                 if ($data['jenis_inv'] == 'nonppn') {

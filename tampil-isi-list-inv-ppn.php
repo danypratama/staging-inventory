@@ -216,6 +216,7 @@ include "akses.php";
                     </div>
                 </div>
             </div>
+            <!-- Tampil Produk -->
             <div class="card shadow">
                 <div class="card-body p-3">
                     <div class="table-responsive">
@@ -324,9 +325,10 @@ include "akses.php";
                                 <?php $no++; ?>
                             <?php } ?>
                         </tbody>
-                        <!-- Modal -->
                     </table>
                 </div>
+            </div>
+            <!-- End Tampil Produk -->
         </section>
     </main><!-- End #main -->
 
