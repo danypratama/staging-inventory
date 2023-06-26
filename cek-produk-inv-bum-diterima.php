@@ -18,7 +18,7 @@ include "akses.php";
     <style type="text/css">
         @media only screen and (max-width: 500px) {
             body {
-                font-size: 10px;
+                font-size: 15px;
             }
         }
     </style>
@@ -58,30 +58,29 @@ include "akses.php";
                     $query = mysqli_query($connect, $sql);
                     $data = mysqli_fetch_array($query);
                     ?>
-                    <div class="card-body">
-                        <div class="row mt-3">
-                            <div class="col-sm-6">
-                                <div class="card-body p-3 border">
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Tanggal Pesanan</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php echo $data['tgl_pesanan'] ?>
-                                        </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-6">
+                            <div class="card-body p-3 border">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Tanggal Pesanan</p>
+                                        <p style="float: right;">:</p>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">No. SPK</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php
-                                            include "koneksi.php";
-                                            $id_inv = base64_decode($_GET['id']);
-                                            $no = 1;
-                                            $sql = "SELECT 
+                                    <div class="col-9">
+                                        <?php echo $data['tgl_pesanan'] ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">No. SPK</p>
+                                        <p style="float: right;">:</p>
+                                    </div>
+                                    <div class="col-9">
+                                        <?php
+                                        include "koneksi.php";
+                                        $id_inv = base64_decode($_GET['id']);
+                                        $no = 1;
+                                        $sql = "SELECT 
                                                     bum.*, 
                                                     sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                                                     cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
@@ -91,49 +90,49 @@ include "akses.php";
                                                     JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                                                     JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
                                                     WHERE bum.id_inv_bum = '$id_inv'";
-                                            $query = mysqli_query($connect, $sql);
-                                            $totalData = mysqli_num_rows($query);
+                                        $query = mysqli_query($connect, $sql);
+                                        $totalData = mysqli_num_rows($query);
 
-                                            while ($data2 = mysqli_fetch_array($query)) {
-                                                $id_inv = $data2['id_inv_bum'];
-                                                $kat_inv = $data2['kategori_inv'];
-                                                $id_cs = $data2['id_customer'];
-                                            ?>
-                                                <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / (<?php echo $data2['no_po'] ?>) / (<?php echo $data2['no_spk'] ?>)</p>
-                                                <?php $no++; ?>
-                                            <?php } ?>
-                                        </div>
+                                        while ($data2 = mysqli_fetch_array($query)) {
+                                            $id_inv = $data2['id_inv_bum'];
+                                            $kat_inv = $data2['kategori_inv'];
+                                            $id_cs = $data2['id_customer'];
+                                        ?>
+                                            <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / (<?php echo $data2['no_po'] ?>) / (<?php echo $data2['no_spk'] ?>)</p>
+                                            <?php $no++; ?>
+                                        <?php } ?>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">No. Invoice</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php echo $data['no_inv'] ?>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">No. Invoice</p>
+                                        <p style="float: right;">:</p>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Tgl. Invoice</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php echo $data['tgl_inv'] ?>
-                                        </div>
+                                    <div class="col-9">
+                                        <?php echo $data['no_inv'] ?>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Jenis Invoice</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php echo $data['kategori_inv'] ?>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Tgl. Invoice</p>
+                                        <p style="float: right;">:</p>
                                     </div>
-                                    <?php
-                                    if ($data['kategori_inv'] == 'Spesial Diskon') {
-                                        echo '<div class="row">
+                                    <div class="col-9">
+                                        <?php echo $data['tgl_inv'] ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Jenis Invoice</p>
+                                        <p style="float: right;">:</p>
+                                    </div>
+                                    <div class="col-9">
+                                        <?php echo $data['kategori_inv'] ?>
+                                    </div>
+                                </div>
+                                <?php
+                                if ($data['kategori_inv'] == 'Spesial Diskon') {
+                                    echo '<div class="row">
                                                 <div class="col-3">
                                                     <p style="float: left;">Spesial Diskon</p>
                                                     <p style="float: right;">:</p>
@@ -142,68 +141,68 @@ include "akses.php";
                                                     ' . $data['sp_disc'] . ' %
                                                 </div>
                                             </div>';
-                                    }
-                                    ?>
+                                }
+                                ?>
 
-                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="card-body p-3 border" style="min-height: 234px;">
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Order Via</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-7">
-                                            <?php echo $data['order_by'] ?>
-                                        </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="card-body p-3 border" style="min-height: 234px;">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Order Via</p>
+                                        <p style="float: right;">:</p>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Sales</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php echo $data['nama_sales'] ?>
-                                        </div>
+                                    <div class="col-7">
+                                        <?php echo $data['order_by'] ?>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Pelanggan</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php echo $data['nama_cs'] ?>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Sales</p>
+                                        <p style="float: right;">:</p>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Alamat</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php echo $data['alamat'] ?>
-                                        </div>
+                                    <div class="col-9">
+                                        <?php echo $data['nama_sales'] ?>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <p style="float: left;">Note</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-9">
-                                            <?php
-                                            if ($data['note_inv'] != '') {
-                                                echo $data['note_inv'];
-                                            } else {
-                                                echo '-';
-                                            }
-                                            ?>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Pelanggan</p>
+                                        <p style="float: right;">:</p>
                                     </div>
-                                    <div class="row">
+                                    <div class="col-9">
+                                        <?php echo $data['nama_cs'] ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Alamat</p>
+                                        <p style="float: right;">:</p>
+                                    </div>
+                                    <div class="col-9">
+                                        <?php echo $data['alamat'] ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p style="float: left;">Note</p>
+                                        <p style="float: right;">:</p>
+                                    </div>
+                                    <div class="col-9">
                                         <?php
-                                        if ($data['ongkir'] != 0) {
-                                            echo '<div class="row">
+                                        if ($data['note_inv'] != '') {
+                                            echo $data['note_inv'];
+                                        } else {
+                                            echo '-';
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <?php
+                                    if ($data['ongkir'] != 0) {
+                                        echo '<div class="row">
                                                 <div class="col-3">
                                                     <p style="float: left;">Ongkir</p>
                                                     <p style="float: right;">:</p>
@@ -212,128 +211,42 @@ include "akses.php";
                                                     ' . number_format($data['ongkir']) . '
                                                 </div>
                                             </div>';
-                                        }
-                                        ?>
-                                    </div>
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <!-- Tampil data -->
                 <div class="card shadow">
                     <div class="card-body p-3">
                         <div class="table-responsive">
                             <div class="text-start mb-3">
-                                <a href="invoice-reguler-dikirim.php?sort=baru" class="btn btn-warning btn-detail">
+                                <a href="invoice-reguler-diterima.php" class="btn btn-warning btn-detail">
                                     <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                 </a>
                                 <?php
                                 $id_inv_bum = base64_decode($_GET['id']);
                                 $sql_cek = "SELECT 
-                                            bum.id_inv_bum, kategori_inv,
-                                            sr.id_inv, sr.no_spk,
-                                            trx.*, 
-                                            spr.stock, 
-                                            tpr.nama_produk, 
-                                            tpr.harga_produk, mr.* 
-                                            FROM inv_bum AS bum
-                                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
-                                            JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                            JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                            JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                            JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                            WHERE bum.id_inv_bum = '$id_inv_bum' AND status_trx = '1' ORDER BY no_spk ASC";
+                                        bum.id_inv_bum, kategori_inv,
+                                        sr.id_inv, sr.no_spk,
+                                        trx.*, 
+                                        spr.stock, 
+                                        tpr.nama_produk, 
+                                        tpr.harga_produk, mr.* 
+                                        FROM inv_bum AS bum
+                                        JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
+                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE bum.id_inv_bum = '$id_inv_bum' AND status_trx = '1' ORDER BY no_spk ASC";
                                 $query_cek = mysqli_query($connect, $sql_cek);
                                 $data_cek = mysqli_fetch_array($query_cek);
                                 $total_data = mysqli_num_rows($query_cek);
                                 ?>
-                                <button class="btn btn-secondary btn-detail" data-bs-toggle="modal" data-bs-target="#Diterima">
-                                    <i class="bi bi-send"></i> Diterima
-                                </button>
-                                <!-- Modal Diterima SPK-->
-                                <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <style>
-                                                video {
-                                                    width: 100%;
-                                                    height: auto;
-                                                }
-                                            </style>
-                                            <div class="modal-body">
-                                                <div class="card-body">
-                                                    <form action="proses/proses-invoice-bum-diterima.php" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
-                                                        <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
-                                                        <div class="mb-3">
-                                                            <label><strong>Diterima Oleh </strong></label>
-                                                            <input type="text" class="form-control" name="diterima_oleh" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Bukti Terima 1</label>
-                                                            <input type="file" name="fileku1" id="fileku1" onchange="compressAndPreviewImage(event)" required>
-                                                        </div>
-                                                        <div class="mb-3" id="imagePreview"></div>
-
-                                                        <div class="mb-3">
-                                                            <label>Bukti Terima 2</label>
-                                                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)">
-                                                        </div>
-                                                        <div class="mb-3" id="imagePreview2"></div>
-                                                        <div class="mb-3">
-                                                            <label for="fileku">Bukti Terima 3</label>
-                                                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)">
-                                                        </div>
-                                                        <div class="mb-3" id="imagePreview3"></div>
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary" name="diterima" onclick="checkFileName()"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                                                            <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
-                                                        </div>
-                                                    </form>
-                                                    <?php include "page/upload-img.php";  ?>
-                                                    <script>
-                                                        function checkFileName() {
-                                                            var file1 = document.getElementById('fileku1').value;
-                                                            var file2 = document.getElementById('fileku2').value;
-                                                            var file3 = document.getElementById('fileku3').value;
-
-                                                            if (file1 === file2 && file2 !== "") {
-                                                                alert("Nama file ke 2 harus berbeda!");
-                                                                document.getElementById('fileku2').value = "";
-                                                                document.getElementById('imagePreview2').innerHTML = "";
-                                                            }
-
-                                                            if (file1 === file3 && file3 !== "") {
-                                                                alert("Nama file ke 3 harus berbeda!");
-                                                                document.getElementById('fileku3').value = "";
-                                                                document.getElementById('imagePreview3').innerHTML = "";
-                                                            }
-
-                                                            if (file2 === file3 && file3 !== "") {
-                                                                alert("Nama file ke 3 harus berbeda!");
-                                                                document.getElementById('fileku3').value = "";
-                                                                document.getElementById('imagePreview3').innerHTML = "";
-                                                            }
-                                                        }
-                                                    </script>
-                                                    <style>
-                                                        .preview-image {
-                                                            max-width: 100%;
-                                                            height: auto;
-                                                        }
-                                                    </style>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Modal Diterima SPK -->
                             </div>
                         </div>
                         <table class="table table-striped table-bordered">

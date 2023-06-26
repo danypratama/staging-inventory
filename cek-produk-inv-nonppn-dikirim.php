@@ -250,7 +250,7 @@ include "akses.php";
                                 <button class="btn btn-secondary btn-detail" data-bs-toggle="modal" data-bs-target="#Diterima">
                                     <i class="bi bi-send"></i> Diterima
                                 </button>
-                                <!-- Modal Add SPK-->
+                                <!-- Modal Diterima SPK-->
                                 <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-lg">
                                         <div class="modal-content">
@@ -332,8 +332,7 @@ include "akses.php";
                                         </div>
                                     </div>
                                 </div>
-                                <!-- End Modal Add SPK -->
-
+                                <!-- End Modal Diterima SPK -->
                             </div>
                         </div>
                         <table class="table table-striped table-bordered">

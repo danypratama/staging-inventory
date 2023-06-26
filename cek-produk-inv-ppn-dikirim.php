@@ -231,19 +231,19 @@ include "akses.php";
                                 <?php
                                 $id_inv_ppn = base64_decode($_GET['id']);
                                 $sql_cek = "SELECT 
-                                        ppn.id_inv_ppn, kategori_inv,
-                                        sr.id_inv, sr.no_spk,
-                                        trx.*, 
-                                        spr.stock, 
-                                        tpr.nama_produk, 
-                                        tpr.harga_produk, mr.* 
-                                        FROM inv_ppn AS ppn
-                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                        WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
+                                            ppn.id_inv_ppn, kategori_inv,
+                                            sr.id_inv, sr.no_spk,
+                                            trx.*, 
+                                            spr.stock, 
+                                            tpr.nama_produk, 
+                                            tpr.harga_produk, mr.* 
+                                            FROM inv_ppn AS ppn
+                                            JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                            JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                            JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                            JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                            JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                            WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
                                 $query_cek = mysqli_query($connect, $sql_cek);
                                 $data_cek = mysqli_fetch_array($query_cek);
                                 $total_data = mysqli_num_rows($query_cek);
@@ -251,32 +251,89 @@ include "akses.php";
                                 <button class="btn btn-secondary btn-detail" data-bs-toggle="modal" data-bs-target="#Diterima">
                                     <i class="bi bi-send"></i> Diterima
                                 </button>
-                                <!-- Modal Add SPK-->
-                                <div class="modal fade" id="Diterima" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
+                                <!-- Modal Diterima SPK-->
+                                <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
+                                            <style>
+                                                video {
+                                                    width: 100%;
+                                                    height: auto;
+                                                }
+                                            </style>
                                             <div class="modal-body">
-                                                <form action="proses/proses-invoice-ppn.php" method="POST">
-                                                    <div class="mb-3">
-                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                        <label>Diterima Oleh</label>
-                                                        <input type="text" class="form-control" name="diterima" required>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-primary" name="diterima"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                                                        <button class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</button>
-                                                    </div>
-                                                </form>
+                                                <div class="card-body">
+                                                    <form action="proses/proses-invoice-ppn-diterima.php" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
+                                                        <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
+                                                        <div class="mb-3">
+                                                            <label><strong>Diterima Oleh </strong></label>
+                                                            <input type="text" class="form-control" name="diterima_oleh" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Bukti Terima 1</label>
+                                                            <input type="file" name="fileku1" id="fileku1" onchange="compressAndPreviewImage(event)" required>
+                                                        </div>
+                                                        <div class="mb-3" id="imagePreview"></div>
+
+                                                        <div class="mb-3">
+                                                            <label>Bukti Terima 2</label>
+                                                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)">
+                                                        </div>
+                                                        <div class="mb-3" id="imagePreview2"></div>
+                                                        <div class="mb-3">
+                                                            <label for="fileku">Bukti Terima 3</label>
+                                                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)">
+                                                        </div>
+                                                        <div class="mb-3" id="imagePreview3"></div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary" name="diterima" onclick="checkFileName()"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                                            <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
+                                                        </div>
+                                                    </form>
+                                                    <?php include "page/upload-img.php";  ?>
+                                                    <script>
+                                                        function checkFileName() {
+                                                            var file1 = document.getElementById('fileku1').value;
+                                                            var file2 = document.getElementById('fileku2').value;
+                                                            var file3 = document.getElementById('fileku3').value;
+
+                                                            if (file1 === file2 && file2 !== "") {
+                                                                alert("Nama file ke 2 harus berbeda!");
+                                                                document.getElementById('fileku2').value = "";
+                                                                document.getElementById('imagePreview2').innerHTML = "";
+                                                            }
+
+                                                            if (file1 === file3 && file3 !== "") {
+                                                                alert("Nama file ke 3 harus berbeda!");
+                                                                document.getElementById('fileku3').value = "";
+                                                                document.getElementById('imagePreview3').innerHTML = "";
+                                                            }
+
+                                                            if (file2 === file3 && file3 !== "") {
+                                                                alert("Nama file ke 3 harus berbeda!");
+                                                                document.getElementById('fileku3').value = "";
+                                                                document.getElementById('imagePreview3').innerHTML = "";
+                                                            }
+                                                        }
+                                                    </script>
+                                                    <style>
+                                                        .preview-image {
+                                                            max-width: 100%;
+                                                            height: auto;
+                                                        }
+                                                    </style>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- End Modal Add SPK -->
-
+                                <!-- End Modal Diterima SPK -->
                             </div>
                         </div>
                         <table class="table table-striped table-bordered">

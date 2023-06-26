@@ -204,13 +204,7 @@
     $tgl_inv_format = $day . ' ' . $bulan[$month] . ' ' . $year;
 
     // Untuk tgl Tempo
-    $dateString = $data['tgl_tempo'];
-    $dateParts = explode('/', $dateString);
-    $day = $dateParts[0];
-    $month = $dateParts[1];
-    $year = $dateParts[2];
-
-    $tgl_tempo_format = $day . ' ' . $bulan[$month] . ' ' . $year;
+    $dateStringTempo = $data['tgl_tempo'];
 
     // kode untuk menampilkan jika ada data yang harus di tampilkan lebih dari 1
     // Tampilkan data lain jika ada
@@ -223,13 +217,27 @@
                 <div class="ket-in-1">
                     No. Invoice <br>
                     Tgl. Invoice <br>
-                    Tgl.Jatuh Tempo
+                    <?php
+                    if (!empty($dateStringTempo)) {
+                        echo "Tgl.Jatuh Tempo";
+                    }
+                    ?>
                 </div>
 
                 <div class="ket-in-2">
                     &nbsp;: <?php echo $data['no_inv'] ?> <br>
                     &nbsp;: <?php echo $tgl_inv_format ?> <br>
-                    &nbsp;: <?php echo $tgl_tempo_format ?>
+                    <?php
+                    if (!empty($dateStringTempo)) {
+                        $datePartsTempo = explode('/', $dateStringTempo);
+                        $dayTempo = $datePartsTempo[0];
+                        $monthTempo = $datePartsTempo[1];
+                        $yearTempo = $datePartsTempo[2];
+
+                        $tgl_tempo_format = $dayTempo . ' ' . $bulan[$monthTempo] . ' ' . $yearTempo;
+                        echo "&nbsp;:" . $tgl_tempo_format;
+                    }
+                    ?>
                 </div>
             </div>
             <div class="col-header-2">

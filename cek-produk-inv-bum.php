@@ -570,8 +570,8 @@ include "akses.php";
                         </div>
                     </div>
                     <!-- End Modal -->
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
+                    <div class="table-responsive p-3">
+                        <table class="table table-striped table-bordered" id="table3">
                             <?php
                             if ($total_data != 0) {
                                 if ($data_cek['kategori_inv'] != 'Diskon') {
@@ -615,19 +615,19 @@ include "akses.php";
                                 $id_bum_decode = base64_decode($_GET['id']);
                                 $no = 1;
                                 $sql_trx = "SELECT 
-                                                    bum.id_inv_bum,
-                                                    sr.id_inv, sr.no_spk,
-                                                    trx.*, 
-                                                    spr.stock, 
-                                                    tpr.nama_produk, 
-                                                    tpr.harga_produk, mr.* 
-                                                    FROM inv_bum AS bum
-                                                    JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
-                                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                    JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                                    JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                                    WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '1' ORDER BY no_spk ASC";
+                                            bum.id_inv_bum,
+                                            sr.id_inv, sr.no_spk,
+                                            trx.*, 
+                                            spr.stock, 
+                                            tpr.nama_produk, 
+                                            tpr.harga_produk, mr.* 
+                                            FROM inv_bum AS bum
+                                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
+                                            JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                            JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                            JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                            JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                            WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '1' ORDER BY no_spk ASC";
                                 $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                 while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                     $disc = $data_trx['disc'];

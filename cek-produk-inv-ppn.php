@@ -574,7 +574,7 @@ include "akses.php";
                             </div>
                         </div>
                         <!-- End Modal -->
-                        <div class="table-responsive">
+                        <div class="table-responsive p-3">
                             <table class="table table-striped table-bordered" id="table3">
                                 <?php
                                 if ($total_data != 0) {
