@@ -152,7 +152,7 @@ include "akses.php";
                                 if ($data['kategori_inv'] == 'Spesial Diskon') {
                                     echo '<div class="row">
                                                 <div class="col-5">
-                                                    <p style="float: left;">Spesial Diskon</p>
+                                                    <p style="float: left;">Sp. Diskon</p>
                                                     <p style="float: right;">:</p>
                                                 </div>
                                                 <div class="col-7">
@@ -841,12 +841,16 @@ include "akses.php";
                         </table>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
-                            <button type="submit" class="btn btn-primary" name="add-spk"><i class="bi bi-plus-circle"></i> Add SPK</button>
+                            <button type="submit" class="btn btn-primary" name="add-spk" id="add" disabled><i class="bi bi-plus-circle"></i> Add SPK</button>
                         </div>
                     </form>
                     <script>
                         // Mendapatkan checkbox SPK
                         const spkCheckboxes = document.querySelectorAll('input[name="id_spk[]"]');
+
+                        // Mendapatkan tombol
+                        const addButton = document.getElementById("add");
+
 
                         // Mendapatkan jumlah total checkbox yang dipilih
                         function getSelectedCheckboxCount() {
@@ -858,6 +862,20 @@ include "akses.php";
                             });
                             return count;
                         }
+
+                        // Fungsi untuk mengaktifkan/menonaktifkan tombol berdasarkan jumlah checkbox yang dipilih
+                        function toggleButton() {
+                            if (getSelectedCheckboxCount() > 0) {
+                                addButton.disabled = false;
+                            } else {
+                                addButton.disabled = true;
+                            }
+                        }
+
+                        // Event listener untuk setiap checkbox
+                        spkCheckboxes.forEach(function(checkbox) {
+                            checkbox.addEventListener('change', toggleButton);
+                        });
 
                         // Event listener untuk setiap checkbox
                         spkCheckboxes.forEach(function(checkbox) {
@@ -885,8 +903,6 @@ include "akses.php";
                             });
                         });
                     </script>
-
-
                 </div>
             </div>
         </div>

@@ -149,7 +149,7 @@ include "akses.php";
                             if ($data['kategori_inv'] == 'Spesial Diskon') {
                                 echo '<div class="row">
                                                 <div class="col-5">
-                                                    <p style="float: left;">Spesial Diskon</p>
+                                                    <p style="float: left;">Sp. Diskon</p>
                                                     <p style="float: right;">:</p>
                                                 </div>
                                                 <div class="col-7">
@@ -245,116 +245,6 @@ include "akses.php";
                             <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
                                 <i class="bi bi-plus-circle"></i> Tambah SPK
                             </a>
-                            <!-- Modal Add SPK-->
-                            <div class="modal fade" id="addSpk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-xl">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="table-responsive">
-                                                <?php
-                                                include "koneksi.php";
-                                                $id_inv = base64_decode($_GET['id']);
-                                                $no = 1;
-                                                $sql = "SELECT * FROM spk_reg WHERE id_inv = '$id_inv'";
-                                                $query = mysqli_query($connect, $sql);
-                                                $totalData = mysqli_num_rows($query);
-                                                ?>
-                                                <form action="proses/proses-invoice-ppn.php" method="POST">
-                                                    <table class="table table-bordered table-striped" id="table2">
-                                                        <thead>
-                                                            <tr class="text-white" style="background-color: navy;">
-                                                                <th class="text-center p-3" style="width: 20px">Pilih</th>
-                                                                <th class="text-center p-3" style="width: 30px">No</th>
-                                                                <th class="text-center p-3" style="width: 150px">No. SPK</th>
-                                                                <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
-                                                                <th class="text-center p-3" style="width: 150px">No. PO</th>
-                                                                <th class="text-center p-3" style="width: 200px">Nama Customer</th>
-                                                                <th class="text-center p-3" style="width: 150px">Note</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php
-                                                            include "koneksi.php";
-                                                            $no = 1;
-                                                            $sql_inv = "SELECT sr.*, cs.nama_cs, cs.alamat
-                                                                        FROM spk_reg AS sr
-                                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                                        WHERE status_spk = 'Siap Kirim' AND id_cs = '$id_cs'";
-                                                            $query_inv = mysqli_query($connect, $sql_inv);
-                                                            while ($data_inv = mysqli_fetch_array($query_inv)) {
-                                                            ?>
-                                                                <tr>
-                                                                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                                    <td class="text-center"><input type="checkbox" name="id_spk[]" value="<?php echo $data_inv['id_spk_reg'] ?>"></td>
-                                                                    <td class="text-center"><?php echo $no; ?></td>
-                                                                    <td><?php echo $data_inv['no_spk'] ?></td>
-                                                                    <td><?php echo $data_inv['tgl_spk'] ?></td>
-                                                                    <td><?php echo $data_inv['no_po'] ?></td>
-                                                                    <td><?php echo $data_inv['nama_cs'] ?></td>
-                                                                    <td><?php echo $data_inv['note'] ?></td>
-                                                                </tr>
-                                                                <?php $no++ ?>
-                                                            <?php } ?>
-                                                        </tbody>
-                                                    </table>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
-                                                        <button type="submit" class="btn btn-primary" name="add-spk"><i class="bi bi-plus-circle"></i> Add SPK</button>
-                                                    </div>
-                                                </form>
-                                                <script>
-                                                    // Mendapatkan checkbox SPK
-                                                    const spkCheckboxes = document.querySelectorAll('input[name="id_spk[]"]');
-
-                                                    // Mendapatkan jumlah total checkbox yang dipilih
-                                                    function getSelectedCheckboxCount() {
-                                                        let count = 0;
-                                                        spkCheckboxes.forEach(function(checkbox) {
-                                                            if (checkbox.checked) {
-                                                                count++;
-                                                            }
-                                                        });
-                                                        return count;
-                                                    }
-
-                                                    // Event listener untuk setiap checkbox
-                                                    spkCheckboxes.forEach(function(checkbox) {
-                                                        checkbox.addEventListener('change', function() {
-                                                            // console.log("Total Data: " + <?php echo $totalData; ?>);
-                                                            // console.log("Total Checkbox: " + getSelectedCheckboxCount());
-
-                                                            const totalData = <?php echo $totalData; ?>;
-                                                            const maxAllowed = 5;
-
-                                                            if (totalData + getSelectedCheckboxCount() > maxAllowed) {
-                                                                const message = "Data Anda saat ini: " + totalData + " Anda hanya bisa menambahkan " + (maxAllowed - totalData) + " data.";
-                                                                Swal.fire({
-                                                                    icon: 'error',
-                                                                    title: 'Data melebihi batasan maksimum',
-                                                                    text: message,
-                                                                    didOpen: () => {
-                                                                        // Mengatur ulang semua checkbox menjadi tidak dipilih
-                                                                        spkCheckboxes.forEach(function(checkbox) {
-                                                                            checkbox.checked = false;
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-                                                    });
-                                                </script>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Modal Add SPK -->
                             <?php
                             $id_inv_ppn = base64_decode($_GET['id']);
                             $sql_cek = "SELECT 
@@ -374,13 +264,6 @@ include "akses.php";
                             $query_cek = mysqli_query($connect, $sql_cek);
                             $data_cek = mysqli_fetch_array($query_cek);
                             $total_data = mysqli_num_rows($query_cek);
-                            ?>
-                            <?php
-                            if ($total_data != 0) {
-                                echo '
-                                        <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_ppn) . '">
-                                        <a href="cetak-inv-ppn-reg.php?id=' . base64_encode($id_inv_ppn) . '" class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>';
-                            }
                             ?>
                             <?php
                             if ($kat_inv == 'Spesial Diskon') {
@@ -419,139 +302,7 @@ include "akses.php";
                                 }
                                 ?>
                             <?php } ?>
-                            <!-- Modal Dikirim-->
-                            <div class="modal fade" id="Dikirim" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <?php
-                                            $uuid = generate_uuid();
-                                            $year = date('y');
-                                            $day = date('d');
-                                            $month = date('m');
-                                            ?>
-                                            <form action="proses/proses-invoice-ppn.php" method="POST">
-                                                <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
-                                                <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                <div class="mb-3">
-                                                    <label>Jenis Pengiriman</label>
-                                                    <select id="jenis-pengiriman" name="jenis_pengiriman" class="form-select">
-                                                        <option value="">Pilih...</option>
-                                                        <option value="Driver">Driver</option>
-                                                        <option value="Ekspedisi">Ekspedisi</option>
-                                                    </select>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label>Dikirim Oleh</label>
-                                                    <select id="pengirim" name="pengirim" class="form-select" disabled>
-                                                        <option value="">Pilih...</option>
-                                                        <?php
-                                                        include "koneksi.php";
-                                                        $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
-                                                        while ($data_driver = mysqli_fetch_array($sql_driver)) {
-                                                        ?>
-                                                            <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label>Dikirim Ekspedisi</label>
-                                                    <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
-                                                        <option value="">Pilih...</option>
-                                                        <?php
-                                                        include "koneksi.php";
-                                                        $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
-                                                        while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
-                                                        ?>
-                                                            <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>"><?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label>No. Resi</label>
-                                                    <input type="text" class="form-control" name="resi" id="resi" disabled>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Tanggal</label>
-                                                    <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" readonly>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"> Cancel</i></button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Modal Add SPK -->
-                            <!-- kode JS Dikirim -->
-                            <script>
-                                const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
-                                const pengirimSelect = document.getElementById('pengirim');
-                                const ekspedisiSelect = document.getElementById('ekspedisi');
-                                const resiSelect = document.getElementById('resi');
-
-                                let isModalShown = false;
-
-
-                                jenisPengirimanSelect.addEventListener('change', function() {
-                                    if (this.value === 'Driver') {
-                                        pengirimSelect.disabled = false;
-                                        pengirimSelect.setAttribute('required', 'true');
-                                        ekspedisiSelect.disabled = true;
-                                        resiSelect.disabled = true;
-                                        ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                        resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                    } else if (this.value === 'Ekspedisi') {
-                                        pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                        pengirimSelect.disabled = true;
-                                        pengirimSelect.removeAttribute('required');
-                                        ekspedisiSelect.disabled = false;
-                                        ekspedisiSelect.setAttribute('required', 'true');
-                                        resiSelect.disabled = false;
-                                        resiSelect.setAttribute('required', 'true');
-                                    }
-                                    // Refresh halaman modal
-                                    if (isModalShown) {
-                                        $('#Dikirim').modal('hide'); // Menyembunyikan modal
-                                        location.reload(); // Melakukan refresh halaman
-                                        $('#Dikirim').modal('show'); // Menampilkan modal kembali
-                                    }
-                                });
-                            </script>
-                            <!-- End JS Dikirim -->
-
-                            <!-- Modal Add Ongkir-->
-                            <div class="modal fade" id="ongkir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Biaya Ongkir</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="proses/proses-invoice-ppn.php" method="POST">
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                    <label>Masukkan Biaya Ongkir (Rp)</label>
-                                                    <input type="text" class="form-control harga_produk" name="ongkir" required>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
-                                                <button class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                        <!-- End Modal Add Ongkir -->
                     </div>
                     <!-- Modal Input SPdisc Inv -->
                     <div class="modal fade" id="inputSpdisc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -893,6 +644,264 @@ include "akses.php";
 </body>
 
 </html>
+<!-- Modal Add SPK-->
+<div class="modal fade" id="addSpk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <?php
+                    include "koneksi.php";
+                    $id_inv = base64_decode($_GET['id']);
+                    $no = 1;
+                    $sql = "SELECT * FROM spk_reg WHERE id_inv = '$id_inv'";
+                    $query = mysqli_query($connect, $sql);
+                    $totalData = mysqli_num_rows($query);
+                    ?>
+                    <form action="proses/proses-invoice-ppn.php" method="POST">
+                        <table class="table table-bordered table-striped" id="table2">
+                            <thead>
+                                <tr class="text-white" style="background-color: navy;">
+                                    <th class="text-center p-3" style="width: 20px">Pilih</th>
+                                    <th class="text-center p-3" style="width: 30px">No</th>
+                                    <th class="text-center p-3" style="width: 150px">No. SPK</th>
+                                    <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
+                                    <th class="text-center p-3" style="width: 150px">No. PO</th>
+                                    <th class="text-center p-3" style="width: 200px">Nama Customer</th>
+                                    <th class="text-center p-3" style="width: 150px">Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                include "koneksi.php";
+                                $no = 1;
+                                $sql_inv = "SELECT sr.*, cs.nama_cs, cs.alamat
+                                                                        FROM spk_reg AS sr
+                                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                                        WHERE status_spk = 'Siap Kirim' AND id_cs = '$id_cs'";
+                                $query_inv = mysqli_query($connect, $sql_inv);
+                                while ($data_inv = mysqli_fetch_array($query_inv)) {
+                                ?>
+                                    <tr>
+                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                        <td class="text-center"><input type="checkbox" name="id_spk[]" value="<?php echo $data_inv['id_spk_reg'] ?>"></td>
+                                        <td class="text-center"><?php echo $no; ?></td>
+                                        <td><?php echo $data_inv['no_spk'] ?></td>
+                                        <td><?php echo $data_inv['tgl_spk'] ?></td>
+                                        <td><?php echo $data_inv['no_po'] ?></td>
+                                        <td><?php echo $data_inv['nama_cs'] ?></td>
+                                        <td><?php echo $data_inv['note'] ?></td>
+                                    </tr>
+                                    <?php $no++ ?>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+                            <button type="submit" class="btn btn-primary" name="add-spk" id="add" disabled><i class="bi bi-plus-circle"></i> Add SPK</button>
+                        </div>
+                    </form>
+                    <script>
+                        // Mendapatkan checkbox SPK
+                        const spkCheckboxes = document.querySelectorAll('input[name="id_spk[]"]');
+
+                        // Mendapatkan tombol
+                        const addButton = document.getElementById("add");
+
+                        // Mendapatkan jumlah total checkbox yang dipilih
+                        function getSelectedCheckboxCount() {
+                            let count = 0;
+                            spkCheckboxes.forEach(function(checkbox) {
+                                if (checkbox.checked) {
+                                    count++;
+                                }
+                            });
+                            return count;
+                        }
+
+                        // Fungsi untuk mengaktifkan/menonaktifkan tombol berdasarkan jumlah checkbox yang dipilih
+                        function toggleButton() {
+                            if (getSelectedCheckboxCount() > 0) {
+                                addButton.disabled = false;
+                            } else {
+                                addButton.disabled = true;
+                            }
+                        }
+
+                        // Event listener untuk setiap checkbox
+                        spkCheckboxes.forEach(function(checkbox) {
+                            checkbox.addEventListener('change', toggleButton);
+                        });
+
+                        // Event listener untuk setiap checkbox
+                        spkCheckboxes.forEach(function(checkbox) {
+                            checkbox.addEventListener('change', function() {
+                                // console.log("Total Data: " + <?php echo $totalData; ?>);
+                                // console.log("Total Checkbox: " + getSelectedCheckboxCount());
+
+                                const totalData = <?php echo $totalData; ?>;
+                                const maxAllowed = 5;
+
+                                if (totalData + getSelectedCheckboxCount() > maxAllowed) {
+                                    const message = "Data Anda saat ini: " + totalData + " Anda hanya bisa menambahkan " + (maxAllowed - totalData) + " data.";
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Data melebihi batasan maksimum',
+                                        text: message,
+                                        didOpen: () => {
+                                            // Mengatur ulang semua checkbox menjadi tidak dipilih
+                                            spkCheckboxes.forEach(function(checkbox) {
+                                                checkbox.checked = false;
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Add SPK -->
+
+<!-- Modal Add Ongkir-->
+<div class="modal fade" id="ongkir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Biaya Ongkir</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="proses/proses-invoice-ppn.php" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                        <label>Masukkan Biaya Ongkir (Rp)</label>
+                        <input type="text" class="form-control harga_produk" name="ongkir" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
+                    <button class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal Add Ongkir -->
+
+<!-- Modal Dikirim-->
+<div class="modal fade" id="Dikirim" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php
+                $uuid = generate_uuid();
+                $year = date('y');
+                $day = date('d');
+                $month = date('m');
+                ?>
+                <form action="proses/proses-invoice-ppn.php" method="POST">
+                    <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                    <div class="mb-3">
+                        <label>Jenis Pengiriman</label>
+                        <select id="jenis-pengiriman" name="jenis_pengiriman" class="form-select" required>
+                            <option value="">Pilih...</option>
+                            <option value="Driver">Driver</option>
+                            <option value="Ekspedisi">Ekspedisi</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Dikirim Oleh</label>
+                        <select id="pengirim" name="pengirim" class="form-select" disabled>
+                            <option value="">Pilih...</option>
+                            <?php
+                            include "koneksi.php";
+                            $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
+                            while ($data_driver = mysqli_fetch_array($sql_driver)) {
+                            ?>
+                                <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Dikirim Ekspedisi</label>
+                        <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
+                            <option value="">Pilih...</option>
+                            <?php
+                            include "koneksi.php";
+                            $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
+                            while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
+                            ?>
+                                <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>"><?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>No. Resi</label>
+                        <input type="text" class="form-control" name="resi" id="resi" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal</label>
+                        <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"> Cancel</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Dikirim  -->
+<!-- kode JS Dikirim -->
+<script>
+    const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
+    const pengirimSelect = document.getElementById('pengirim');
+    const ekspedisiSelect = document.getElementById('ekspedisi');
+    const resiSelect = document.getElementById('resi');
+
+    let isModalShown = false;
+
+
+    jenisPengirimanSelect.addEventListener('change', function() {
+        if (this.value === 'Driver') {
+            pengirimSelect.disabled = false;
+            pengirimSelect.setAttribute('required', 'true');
+            ekspedisiSelect.disabled = true;
+            resiSelect.disabled = true;
+            ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+            resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+        } else if (this.value === 'Ekspedisi') {
+            pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+            pengirimSelect.disabled = true;
+            pengirimSelect.removeAttribute('required');
+            ekspedisiSelect.disabled = false;
+            ekspedisiSelect.setAttribute('required', 'true');
+            resiSelect.disabled = false;
+            resiSelect.setAttribute('required', 'true');
+        }
+        // Refresh halaman modal
+        if (isModalShown) {
+            $('#Dikirim').modal('hide'); // Menyembunyikan modal
+            location.reload(); // Melakukan refresh halaman
+            $('#Dikirim').modal('show'); // Menampilkan modal kembali
+        }
+    });
+</script>
+<!-- End JS Dikirim -->
 
 <!-- Generat UUID -->
 <?php
