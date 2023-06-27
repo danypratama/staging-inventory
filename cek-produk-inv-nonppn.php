@@ -307,138 +307,6 @@ include "akses.php";
                                     }
                                     ?>
                                 <?php } ?>
-
-                                <!-- Modal Dikirim-->
-                                <div class="modal fade" id="Dikirim" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <?php
-                                                $uuid = generate_uuid();
-                                                $year = date('y');
-                                                $day = date('d');
-                                                $month = date('m');
-                                                ?>
-                                                <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                                    <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
-                                                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                    <div class="mb-3">
-                                                        <label>Jenis Pengiriman</label>
-                                                        <select id="jenis-pengiriman" name="jenis_pengiriman" class="form-select">
-                                                            <option value="">Pilih...</option>
-                                                            <option value="Driver">Driver</option>
-                                                            <option value="Ekspedisi">Ekspedisi</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label>Dikirim Oleh</label>
-                                                        <select id="pengirim" name="pengirim" class="form-select" disabled>
-                                                            <option value="">Pilih...</option>
-                                                            <?php
-                                                            include "koneksi.php";
-                                                            $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
-                                                            while ($data_driver = mysqli_fetch_array($sql_driver)) {
-                                                            ?>
-                                                                <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label>Dikirim Ekspedisi</label>
-                                                        <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
-                                                            <option value="">Pilih...</option>
-                                                            <?php
-                                                            include "koneksi.php";
-                                                            $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
-                                                            while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
-                                                            ?>
-                                                                <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>"><?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label>No. Resi</label>
-                                                        <input type="text" class="form-control" name="resi" id="resi" disabled>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Tanggal</label>
-                                                        <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"> Cancel</i></button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Modal Add SPK -->
-                                <!-- kode JS Dikirim -->
-                                <script>
-                                    const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
-                                    const pengirimSelect = document.getElementById('pengirim');
-                                    const ekspedisiSelect = document.getElementById('ekspedisi');
-                                    const resiSelect = document.getElementById('resi');
-
-                                    let isModalShown = false;
-
-
-                                    jenisPengirimanSelect.addEventListener('change', function() {
-                                        if (this.value === 'Driver') {
-                                            pengirimSelect.disabled = false;
-                                            pengirimSelect.setAttribute('required', 'true');
-                                            ekspedisiSelect.disabled = true;
-                                            resiSelect.disabled = true;
-                                            ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                            resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                        } else if (this.value === 'Ekspedisi') {
-                                            pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                            pengirimSelect.disabled = true;
-                                            pengirimSelect.removeAttribute('required');
-                                            ekspedisiSelect.disabled = false;
-                                            ekspedisiSelect.setAttribute('required', 'true');
-                                            resiSelect.disabled = false;
-                                            resiSelect.setAttribute('required', 'true');
-                                        }
-                                        // Refresh halaman modal
-                                        if (isModalShown) {
-                                            $('#Dikirim').modal('hide'); // Menyembunyikan modal
-                                            location.reload(); // Melakukan refresh halaman
-                                            $('#Dikirim').modal('show'); // Menampilkan modal kembali
-                                        }
-                                    });
-                                </script>
-                                <!-- End JS Dikirim -->
-                            </div>
-                            <!-- End Dikirim -->
-                            <!-- Modal Add Ongkir-->
-                            <div class="modal fade" id="ongkir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Biaya Ongkir</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                    <label>Masukkan Biaya Ongkir (Rp)</label>
-                                                    <input type="text" class="form-control harga_produk" name="ongkir" required>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
-                                                <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -784,6 +652,136 @@ include "akses.php";
 </body>
 
 </html>
+<!-- Modal Add Ongkir-->
+<div class="modal fade" id="ongkir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Biaya Ongkir</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="proses/proses-invoice-nonppn.php" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                        <label>Masukkan Biaya Ongkir (Rp)</label>
+                        <input type="text" class="form-control harga_produk" name="ongkir" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Dikirim-->
+<div class="modal fade" id="Dikirim" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php
+                $uuid = generate_uuid();
+                $year = date('y');
+                $day = date('d');
+                $month = date('m');
+                ?>
+                <form action="proses/proses-invoice-nonppn.php" method="POST">
+                    <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                    <div class="mb-3">
+                        <label>Jenis Pengiriman</label>
+                        <select id="jenis-pengiriman" name="jenis_pengiriman" class="form-select">
+                            <option value="">Pilih...</option>
+                            <option value="Driver">Driver</option>
+                            <option value="Ekspedisi">Ekspedisi</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Dikirim Oleh</label>
+                        <select id="pengirim" name="pengirim" class="form-select" disabled>
+                            <option value="">Pilih...</option>
+                            <?php
+                            include "koneksi.php";
+                            $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
+                            while ($data_driver = mysqli_fetch_array($sql_driver)) {
+                            ?>
+                                <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Dikirim Ekspedisi</label>
+                        <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
+                            <option value="">Pilih...</option>
+                            <?php
+                            include "koneksi.php";
+                            $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
+                            while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
+                            ?>
+                                <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>"><?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>No. Resi</label>
+                        <input type="text" class="form-control" name="resi" id="resi" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal</label>
+                        <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"> Cancel</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- kode JS Dikirim -->
+<script>
+    const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
+    const pengirimSelect = document.getElementById('pengirim');
+    const ekspedisiSelect = document.getElementById('ekspedisi');
+    const resiSelect = document.getElementById('resi');
+
+    let isModalShown = false;
+
+
+    jenisPengirimanSelect.addEventListener('change', function() {
+        if (this.value === 'Driver') {
+            pengirimSelect.disabled = false;
+            pengirimSelect.setAttribute('required', 'true');
+            ekspedisiSelect.disabled = true;
+            resiSelect.disabled = true;
+            ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+            resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+        } else if (this.value === 'Ekspedisi') {
+            pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+            pengirimSelect.disabled = true;
+            pengirimSelect.removeAttribute('required');
+            ekspedisiSelect.disabled = false;
+            ekspedisiSelect.setAttribute('required', 'true');
+            resiSelect.disabled = false;
+            resiSelect.setAttribute('required', 'true');
+        }
+        // Refresh halaman modal
+        if (isModalShown) {
+            $('#Dikirim').modal('hide'); // Menyembunyikan modal
+            location.reload(); // Melakukan refresh halaman
+            $('#Dikirim').modal('show'); // Menampilkan modal kembali
+        }
+    });
+</script>
+<!-- End JS Dikirim -->
 
 <!-- Modal Add SPK-->
 <div class="modal fade" id="addSpk" tabindex="-1">
