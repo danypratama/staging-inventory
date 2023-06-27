@@ -250,116 +250,6 @@ include "akses.php";
                                 <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
                                     <i class="bi bi-plus-circle"></i> Tambah SPK
                                 </a>
-                                <!-- Modal Add SPK-->
-                                <div class="modal fade" id="addSpk" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered modal-xl">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="table-responsive">
-                                                    <?php
-                                                    include "koneksi.php";
-                                                    $id_inv = base64_decode($_GET['id']);
-                                                    $no = 1;
-                                                    $sql = "SELECT * FROM spk_reg WHERE id_inv = '$id_inv'";
-                                                    $query = mysqli_query($connect, $sql);
-                                                    $totalData = mysqli_num_rows($query);
-                                                    ?>
-                                                    <form action="proses/proses-invoice-nonppn.php" method="POST">
-                                                        <table class="table table-bordered table-striped" id="table2">
-                                                            <thead>
-                                                                <tr class="text-white" style="background-color: navy;">
-                                                                    <th class="text-center p-3" style="width: 20px">Pilih</th>
-                                                                    <th class="text-center p-3" style="width: 30px">No</th>
-                                                                    <th class="text-center p-3" style="width: 150px">No. SPK</th>
-                                                                    <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
-                                                                    <th class="text-center p-3" style="width: 150px">No. PO</th>
-                                                                    <th class="text-center p-3" style="width: 200px">Nama Customer</th>
-                                                                    <th class="text-center p-3" style="width: 150px">Note</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                include "koneksi.php";
-                                                                $no = 1;
-                                                                $sql_inv = "SELECT sr.*, cs.nama_cs, cs.alamat
-                                                                        FROM spk_reg AS sr
-                                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                                        WHERE status_spk = 'Siap Kirim' AND id_cs = '$id_cs'";
-                                                                $query_inv = mysqli_query($connect, $sql_inv);
-                                                                while ($data_inv = mysqli_fetch_array($query_inv)) {
-                                                                ?>
-                                                                    <tr>
-                                                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                                                                        <td class="text-center"><input type="checkbox" name="id_spk[]" value="<?php echo $data_inv['id_spk_reg'] ?>"></td>
-                                                                        <td class="text-center"><?php echo $no; ?></td>
-                                                                        <td><?php echo $data_inv['no_spk'] ?></td>
-                                                                        <td><?php echo $data_inv['tgl_spk'] ?></td>
-                                                                        <td><?php echo $data_inv['no_po'] ?></td>
-                                                                        <td><?php echo $data_inv['nama_cs'] ?></td>
-                                                                        <td><?php echo $data_inv['note'] ?></td>
-                                                                    </tr>
-                                                                    <?php $no++ ?>
-                                                                <?php } ?>
-                                                            </tbody>
-                                                        </table>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
-                                                            <button type="submit" class="btn btn-primary" name="add-spk"><i class="bi bi-plus-circle"></i> Add SPK</button>
-                                                        </div>
-                                                    </form>
-                                                    <script>
-                                                        // Mendapatkan checkbox SPK
-                                                        const spkCheckboxes = document.querySelectorAll('input[name="id_spk[]"]');
-
-                                                        // Mendapatkan jumlah total checkbox yang dipilih
-                                                        function getSelectedCheckboxCount() {
-                                                            let count = 0;
-                                                            spkCheckboxes.forEach(function(checkbox) {
-                                                                if (checkbox.checked) {
-                                                                    count++;
-                                                                }
-                                                            });
-                                                            return count;
-                                                        }
-
-                                                        // Event listener untuk setiap checkbox
-                                                        spkCheckboxes.forEach(function(checkbox) {
-                                                            checkbox.addEventListener('change', function() {
-                                                                // console.log("Total Data: " + <?php echo $totalData; ?>);
-                                                                // console.log("Total Checkbox: " + getSelectedCheckboxCount());
-
-                                                                const totalData = <?php echo $totalData; ?>;
-                                                                const maxAllowed = 5;
-
-                                                                if (totalData + getSelectedCheckboxCount() > maxAllowed) {
-                                                                    const message = "Data Anda saat ini: " + totalData + " Anda hanya bisa menambahkan " + (maxAllowed - totalData) + " data.";
-                                                                    Swal.fire({
-                                                                        icon: 'error',
-                                                                        title: 'Data melebihi batasan maksimum',
-                                                                        text: message,
-                                                                        didOpen: () => {
-                                                                            // Mengatur ulang semua checkbox menjadi tidak dipilih
-                                                                            spkCheckboxes.forEach(function(checkbox) {
-                                                                                checkbox.checked = false;
-                                                                            });
-                                                                        }
-                                                                    });
-                                                                }
-                                                            });
-                                                        });
-                                                    </script>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Modal Add SPK -->
                                 <?php
                                 $id_inv_nonppn = base64_decode($_GET['id']);
                                 $sql_cek = "SELECT 
@@ -894,6 +784,117 @@ include "akses.php";
 </body>
 
 </html>
+
+<!-- Modal Add SPK-->
+<div class="modal fade" id="addSpk" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <?php
+                    include "koneksi.php";
+                    $id_inv = base64_decode($_GET['id']);
+                    $no = 1;
+                    $sql = "SELECT * FROM spk_reg WHERE id_inv = '$id_inv'";
+                    $query = mysqli_query($connect, $sql);
+                    $totalData = mysqli_num_rows($query);
+                    ?>
+                    <form action="proses/proses-invoice-nonppn.php" method="POST">
+                        <table class="table table-bordered table-striped" id="table2">
+                            <thead>
+                                <tr class="text-white" style="background-color: navy;">
+                                    <th class="text-center p-3" style="width: 20px">Pilih</th>
+                                    <th class="text-center p-3" style="width: 30px">No</th>
+                                    <th class="text-center p-3" style="width: 150px">No. SPK</th>
+                                    <th class="text-center p-3" style="width: 150px">Tgl. SPK</th>
+                                    <th class="text-center p-3" style="width: 150px">No. PO</th>
+                                    <th class="text-center p-3" style="width: 200px">Nama Customer</th>
+                                    <th class="text-center p-3" style="width: 150px">Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                include "koneksi.php";
+                                $no = 1;
+                                $sql_inv = "SELECT sr.*, cs.nama_cs, cs.alamat
+                                                                        FROM spk_reg AS sr
+                                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                                        WHERE status_spk = 'Siap Kirim' AND id_cs = '$id_cs'";
+                                $query_inv = mysqli_query($connect, $sql_inv);
+                                while ($data_inv = mysqli_fetch_array($query_inv)) {
+                                ?>
+                                    <tr>
+                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                        <td class="text-center"><input type="checkbox" name="id_spk[]" value="<?php echo $data_inv['id_spk_reg'] ?>"></td>
+                                        <td class="text-center"><?php echo $no; ?></td>
+                                        <td><?php echo $data_inv['no_spk'] ?></td>
+                                        <td><?php echo $data_inv['tgl_spk'] ?></td>
+                                        <td><?php echo $data_inv['no_po'] ?></td>
+                                        <td><?php echo $data_inv['nama_cs'] ?></td>
+                                        <td><?php echo $data_inv['note'] ?></td>
+                                    </tr>
+                                    <?php $no++ ?>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+                            <button type="submit" class="btn btn-primary" name="add-spk"><i class="bi bi-plus-circle"></i> Add SPK</button>
+                        </div>
+                    </form>
+                    <script>
+                        // Mendapatkan checkbox SPK
+                        const spkCheckboxes = document.querySelectorAll('input[name="id_spk[]"]');
+
+                        // Mendapatkan jumlah total checkbox yang dipilih
+                        function getSelectedCheckboxCount() {
+                            let count = 0;
+                            spkCheckboxes.forEach(function(checkbox) {
+                                if (checkbox.checked) {
+                                    count++;
+                                }
+                            });
+                            return count;
+                        }
+
+                        // Event listener untuk setiap checkbox
+                        spkCheckboxes.forEach(function(checkbox) {
+                            checkbox.addEventListener('change', function() {
+                                // console.log("Total Data: " + <?php echo $totalData; ?>);
+                                // console.log("Total Checkbox: " + getSelectedCheckboxCount());
+
+                                const totalData = <?php echo $totalData; ?>;
+                                const maxAllowed = 5;
+
+                                if (totalData + getSelectedCheckboxCount() > maxAllowed) {
+                                    const message = "Data Anda saat ini: " + totalData + " Anda hanya bisa menambahkan " + (maxAllowed - totalData) + " data.";
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Data melebihi batasan maksimum',
+                                        text: message,
+                                        didOpen: () => {
+                                            // Mengatur ulang semua checkbox menjadi tidak dipilih
+                                            spkCheckboxes.forEach(function(checkbox) {
+                                                checkbox.checked = false;
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    </script>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Add SPK -->
 
 <!-- Generat UUID -->
 <?php
