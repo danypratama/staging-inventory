@@ -44,113 +44,112 @@ include "akses.php";
 
   <main id="main" class="main">
     <section>
-      <div class="container-fluid">
-        <div class="card shadow p-2">
-          <div class="card-header text-center">
-            <h5><strong>FORM SPK REGULER ORDER</strong></h5>
-          </div>
-          <form action="proses/proses-spk-reg.php" method="POST">
-            <?php
-            // UUID
-            $uuid = generate_uuid();
-            $year = date('y');
-            $day = date('d');
-            $month = date('m');
+      <div class="card shadow p-2">
+        <div class="card-header text-center">
+          <h5><strong>FORM SPK REGULER ORDER</strong></h5>
+        </div>
+        <form action="proses/proses-spk-reg.php" method="POST">
+          <?php
+          // UUID
+          $uuid = generate_uuid();
+          $year = date('y');
+          $day = date('d');
+          $month = date('m');
 
-            include "koneksi.php";
-            $thn  = date('Y');
-            $sql  = mysqli_query($connect, "SELECT max(no_spk) as maxID, STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl FROM spk_reg WHERE MONTH(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$month'");
-            $data = mysqli_fetch_array($sql);
+          include "koneksi.php";
+          $thn  = date('Y');
+          $sql  = mysqli_query($connect, "SELECT max(no_spk) as maxID, STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl FROM spk_reg WHERE MONTH(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$month'");
+          $data = mysqli_fetch_array($sql);
 
-            $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
-            $kode = $data['maxID'];
-            $ket1 = "/SPK/";
-            $bln = $array_bln[date('n')];
-            $ket2 = "/";
-            $ket3 = date("Y");
-            $urutkan = (int)substr($kode, 0, 3);
-            $urutkan++;
-            $no_spk = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
-            ?>
+          $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
+          $kode = $data['maxID'];
+          $ket1 = "/SPK/";
+          $bln = $array_bln[date('n')];
+          $ket2 = "/";
+          $ket3 = date("Y");
+          $urutkan = (int)substr($kode, 0, 3);
+          $urutkan++;
+          $no_spk = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
+          ?>
 
-            <div class="card-body">
-              <div class="row mt-3">
-                <div class="col-sm-6">
-                  <div class="card-body">
-                    <div class="mt-3">
-                      <label for="no_spk" class="form-label">No. SPK</label>
-                      <input type="hidden" name="id_spk_reg" value="SPKREG-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
-                      <input type="text" class="form-control" id="no_spk" name="no_spk" value="<?php echo $no_spk ?>" required>
-                    </div>
-                    <div class="mt-3">
-                      <label for="tgl_spk" class="form-label">Tanggal SPK</label>
-                      <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl_spk" id="datetime-input" readonly>
-                    </div>
-                    <div class="mt-3">
-                      <label for="no_po" class="form-label">NO. PO</label>
-                      <input type="text" class="form-control" id="no_po" name="no_po">
-                    </div>
-                    <div class="mt-3">
-                      <label for="tgl_pesan" class="form-label">Tanggal Pesanan</label>
-                      <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl_pesan" id="date" placeholder="dd/mm/yyyy" required>
-                    </div>
-                    <div class="mt-3">
-                      <label for="order_via" class="form-label">Order Via</label>
-                      <select class="selectize-js form-select" name="order_by" required>
-                        <option value="">Pilih...</option>
-                        <?php
-                        include "koneksi.php";
-                        $sql2 = "SELECT * FROM tb_orderby";
-                        $query2 = mysqli_query($connect, $sql2);
-                        while ($data2 = mysqli_fetch_array($query2)) {
-                        ?>
-                          <option value="<?php echo $data2['id_orderby'] ?>"><?php echo $data2['order_by'] ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
+          <div class="card-body">
+            <div class="row mt-3">
+              <div class="col-sm-6">
+                <div class="card-body">
+                  <div class="mt-3">
+                    <label for="no_spk" class="form-label">No. SPK</label>
+                    <input type="hidden" name="id_spk_reg" value="SPKREG-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+                    <input type="text" class="form-control" id="no_spk" name="no_spk" value="<?php echo $no_spk ?>" required>
                   </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="card-body">
-                    <div class="mt-3">
-                      <label for="sales" class="form-label">Sales</label>
-                      <select class="selectize-js form-select" name="sales" required>
-                        <option value="">Pilih...</option>
-                        <?php
-                        include "koneksi.php";
-                        $sql_sales = "SELECT * FROM tb_sales";
-                        $query_sales = mysqli_query($connect, $sql_sales);
-                        while ($data3 = mysqli_fetch_array($query_sales)) {
-                        ?>
-                          <option value="<?php echo $data3['id_sales'] ?>"><?php echo $data3['nama_sales'] ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                    <div class="mt-3">
-                      <label for="Pelanggan" class="form-label">Pelanggan</label>
-                      <input type="hidden" class="form-control" id="id" name="id_cs">
-                      <input type="text" class="form-control bg-white" id="cs" name="pelanggan" data-bs-toggle="modal" data-bs-target="#modalCs" readonly>
-                    </div>
-                    <div class="mt-3">
-                      <label for="alamat" class="form-label">Alamat</label>
-                      <textarea type="text" class="form-control bg-white" id="alamat" name="alamat" rows="3" readonly></textarea>
-                    </div>
-                    <div class="mt-3">
-                      <label for="note" class="form-label">Note</label>
-                      <textarea type="text" class="form-control" id="note" name="note"></textarea>
-                    </div>
-                    <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
+                  <div class="mt-3">
+                    <label for="tgl_spk" class="form-label">Tanggal SPK</label>
+                    <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl_spk" id="datetime-input" readonly>
                   </div>
-                </div>
-                <div class="text-center mt-3">
-                  <button type="submit" name="simpan" class="btn btn-primary btn-md m-2"><i class="bx bx-save"></i> Simpan Data</button>
-                  <a href="spk-reg.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Cancel</a>
+                  <div class="mt-3">
+                    <label for="no_po" class="form-label">NO. PO</label>
+                    <input type="text" class="form-control" id="no_po" name="no_po">
+                  </div>
+                  <div class="mt-3">
+                    <label for="tgl_pesan" class="form-label">Tanggal Pesanan</label>
+                    <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl_pesan" id="date" placeholder="dd/mm/yyyy" required>
+                  </div>
+                  <div class="mt-3">
+                    <label for="order_via" class="form-label">Order Via</label>
+                    <select class="selectize-js form-select" name="order_by" required>
+                      <option value="">Pilih...</option>
+                      <?php
+                      include "koneksi.php";
+                      $sql2 = "SELECT * FROM tb_orderby";
+                      $query2 = mysqli_query($connect, $sql2);
+                      while ($data2 = mysqli_fetch_array($query2)) {
+                      ?>
+                        <option value="<?php echo $data2['id_orderby'] ?>"><?php echo $data2['order_by'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
                 </div>
               </div>
+              <div class="col-sm-6">
+                <div class="card-body">
+                  <div class="mt-3">
+                    <label for="sales" class="form-label">Sales</label>
+                    <select class="selectize-js form-select" name="sales" required>
+                      <option value="">Pilih...</option>
+                      <?php
+                      include "koneksi.php";
+                      $sql_sales = "SELECT * FROM tb_sales";
+                      $query_sales = mysqli_query($connect, $sql_sales);
+                      while ($data3 = mysqli_fetch_array($query_sales)) {
+                      ?>
+                        <option value="<?php echo $data3['id_sales'] ?>"><?php echo $data3['nama_sales'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                  <div class="mt-3">
+                    <label for="Pelanggan" class="form-label">Pelanggan</label>
+                    <input type="hidden" class="form-control" id="id" name="id_cs">
+                    <input type="text" class="form-control bg-white" id="cs" name="pelanggan" data-bs-toggle="modal" data-bs-target="#modalCs" readonly>
+                  </div>
+                  <div class="mt-3">
+                    <label for="alamat" class="form-label">Alamat</label>
+                    <textarea type="text" class="form-control bg-white" id="alamat" name="alamat" rows="3" readonly></textarea>
+                  </div>
+                  <div class="mt-3">
+                    <label for="note" class="form-label">Note</label>
+                    <textarea type="text" class="form-control" id="note" name="note"></textarea>
+                  </div>
+                  <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <button type="submit" name="simpan" class="btn btn-primary btn-md m-2"><i class="bx bx-save"></i> Simpan Data</button>
+                <a href="spk-reg.php" class="btn btn-secondary m-2"><i class="bi bi-x-circle"></i> Cancel</a>
+              </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
+
       </div>
     </section>
   </main><!-- End #main -->

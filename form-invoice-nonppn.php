@@ -90,7 +90,7 @@ include "akses.php";
                     </div>
                     <div class="mt-3">
                       <label><strong>Tanggal Tempo</strong></label>
-                      <input type="text" id="tempo" class="form-control" name="tgl_tempo" required>
+                      <input type="text" id="tempo" class="form-control" name="tgl_tempo">
                     </div>
                     <div class="mt-3">
                       <label><strong>Jenis Invoice</strong></label>

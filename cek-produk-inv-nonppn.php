@@ -16,9 +16,25 @@ include "akses.php";
     <?php include "page/head.php"; ?>
 
     <style type="text/css">
+        /* Menghilangkan garis pada input */
+        input {
+            border: none;
+            outline: none;
+            background: none;
+            width: 100%;
+        }
+
         @media only screen and (max-width: 500px) {
             body {
-                font-size: 15px;
+                font-size: 14px;
+            }
+
+            .mobile {
+                display: none;
+            }
+
+            .mobile-text {
+                text-align: left !important;
             }
         }
     </style>
@@ -762,27 +778,27 @@ include "akses.php";
                     $total_cek_harga = mysqli_num_rows($query_cek_harga);
                     while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
                     ?>
-                        <div class="card-body border p-2">
+                        <div class="card-body border p-3 mb-3">
                             <div class="row">
-                                <div class="col-1">
-                                    <input type="text" class="form-control text-center" value="<?php echo $no; ?>">
+                                <div class="col-1 mb-2">
+                                    <input type="text" class="form-control text-center mobile bg-light" value="<?php echo $no; ?>" readonly>
                                     <?php $no++ ?>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-4 mb-2">
                                     <input type="hidden" name="id_inv" value="<?php echo $data_cek_harga['id_inv_nonppn'] ?>" readonly>
                                     <input type="hidden" name="id_trx[]" id="id_<?php echo $data_cek_harga['id_transaksi'] ?>" value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly>
-                                    <input type="text" class="form-control bg-light" value="<?php echo $data_cek_harga['nama_produk'] ?>" readonly>
+                                    <input type="text" class="form-control bg-light mobile-text" value="<?php echo $data_cek_harga['nama_produk'] ?>" readonly>
                                 </div>
-                                <div class="col-sm-1">
-                                    <input type="text" class="form-control bg-light text-center" value="<?php echo $data_cek_harga['nama_merk'] ?>" readonly>
+                                <div class="col-sm-1 mb-2">
+                                    <input type="text" class="form-control bg-light text-center mobile-text" value="<?php echo $data_cek_harga['nama_merk'] ?>" readonly>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 mb-2">
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1">Rp</span>
-                                        <input type="text" class="form-control text-end harga_produk" name="harga_produk[]" value="<?php echo number_format($data_cek_harga['harga']) ?>" required>
+                                        <input type="text" class="form-control text-end harga_produk  mobile-text" name="harga_produk[]" value="<?php echo number_format($data_cek_harga['harga']) ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 mb-2">
                                     <?php
                                     if ($total_cek_harga != 0) {
                                         if ($data_cek_harga['kategori_inv'] == 'Diskon') {
@@ -800,10 +816,10 @@ include "akses.php";
                                     ?>
 
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 mb-2">
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1">Qty</span>
-                                        <input type="text" class="form-control bg-light text-end" name="qty[]" value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly>
+                                        <input type="text" class="form-control bg-light text-end  mobile-text" name="qty[]" value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly>
                                     </div>
                                 </div>
                             </div>
