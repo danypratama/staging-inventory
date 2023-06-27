@@ -57,30 +57,29 @@ include "akses.php";
                 $query = mysqli_query($connect, $sql);
                 $data = mysqli_fetch_array($query);
                 ?>
-                <div class="card-body">
-                    <div class="row mt-3">
-                        <div class="col-sm-6">
-                            <div class="card-body p-3 border">
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Tgl. Pesanan</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['tgl_pesanan'] ?>
-                                    </div>
+                <div class="row mt-3">
+                    <div class="col-sm-6">
+                        <div class="card-body p-3 border">
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Tgl. Pesanan</p>
+                                    <p style="float: right;">:</p>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">No. SPK</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php
-                                        include "koneksi.php";
-                                        $id_inv = base64_decode($_GET['id']);
-                                        $no = 1;
-                                        $sql = "SELECT 
+                                <div class="col-7">
+                                    <?php echo $data['tgl_pesanan'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">No. SPK</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php
+                                    include "koneksi.php";
+                                    $id_inv = base64_decode($_GET['id']);
+                                    $no = 1;
+                                    $sql = "SELECT 
                                                     bum.*, 
                                                     sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                                                     cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
@@ -90,49 +89,49 @@ include "akses.php";
                                                     JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                                                     JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
                                                     WHERE bum.id_inv_bum = '$id_inv'";
-                                        $query = mysqli_query($connect, $sql);
-                                        $totalData = mysqli_num_rows($query);
+                                    $query = mysqli_query($connect, $sql);
+                                    $totalData = mysqli_num_rows($query);
 
-                                        while ($data2 = mysqli_fetch_array($query)) {
-                                            $id_inv = $data2['id_inv_bum'];
-                                            $kat_inv = $data2['kategori_inv'];
-                                            $id_cs = $data2['id_customer'];
-                                        ?>
-                                            <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / (<?php echo $data2['no_po'] ?>) / (<?php echo $data2['no_spk'] ?>)</p>
-                                            <?php $no++; ?>
-                                        <?php } ?>
-                                    </div>
+                                    while ($data2 = mysqli_fetch_array($query)) {
+                                        $id_inv = $data2['id_inv_bum'];
+                                        $kat_inv = $data2['kategori_inv'];
+                                        $id_cs = $data2['id_customer'];
+                                    ?>
+                                        <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / (<?php echo $data2['no_po'] ?>) / (<?php echo $data2['no_spk'] ?>)</p>
+                                        <?php $no++; ?>
+                                    <?php } ?>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">No. Invoice</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['no_inv'] ?>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">No. Invoice</p>
+                                    <p style="float: right;">:</p>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Tgl. Invoice</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['tgl_inv'] ?>
-                                    </div>
+                                <div class="col-7">
+                                    <?php echo $data['no_inv'] ?>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Jenis Invoice</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['kategori_inv'] ?>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Tgl. Invoice</p>
+                                    <p style="float: right;">:</p>
                                 </div>
-                                <?php
-                                if ($data['kategori_inv'] == 'Spesial Diskon') {
-                                    echo '<div class="row">
+                                <div class="col-7">
+                                    <?php echo $data['tgl_inv'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Jenis Invoice</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php echo $data['kategori_inv'] ?>
+                                </div>
+                            </div>
+                            <?php
+                            if ($data['kategori_inv'] == 'Spesial Diskon') {
+                                echo '<div class="row">
                                                 <div class="col-5">
                                                     <p style="float: left;">Spesial Diskon</p>
                                                     <p style="float: right;">:</p>
@@ -141,68 +140,68 @@ include "akses.php";
                                                     ' . $data['sp_disc'] . ' %
                                                 </div>
                                             </div>';
-                                }
-                                ?>
+                            }
+                            ?>
 
-                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="card-body p-3 border" style="min-height: 234px;">
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Order Via</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['order_by'] ?>
-                                    </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card-body p-3 border" style="min-height: 234px;">
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Order Via</p>
+                                    <p style="float: right;">:</p>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Sales</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['nama_sales'] ?>
-                                    </div>
+                                <div class="col-7">
+                                    <?php echo $data['order_by'] ?>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Pelanggan</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['nama_cs'] ?>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Sales</p>
+                                    <p style="float: right;">:</p>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Alamat</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php echo $data['alamat'] ?>
-                                    </div>
+                                <div class="col-7">
+                                    <?php echo $data['nama_sales'] ?>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Note</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php
-                                        if ($data['note_inv'] != '') {
-                                            echo $data['note_inv'];
-                                        } else {
-                                            echo '-';
-                                        }
-                                        ?>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Pelanggan</p>
+                                    <p style="float: right;">:</p>
                                 </div>
-                                <div class="row">
+                                <div class="col-7">
+                                    <?php echo $data['nama_cs'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Alamat</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php echo $data['alamat'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <p style="float: left;">Note</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
                                     <?php
-                                    if ($data['ongkir'] != 0) {
-                                        echo '<div class="row">
+                                    if ($data['note_inv'] != '') {
+                                        echo $data['note_inv'];
+                                    } else {
+                                        echo '-';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <?php
+                                if ($data['ongkir'] != 0) {
+                                    echo '<div class="row">
                                                 <div class="col-5">
                                                     <p style="float: left;">Ongkir</p>
                                                     <p style="float: right;">:</p>
@@ -211,9 +210,8 @@ include "akses.php";
                                                     ' . number_format($data['ongkir']) . '
                                                 </div>
                                             </div>';
-                                    }
-                                    ?>
-                                </div>
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
