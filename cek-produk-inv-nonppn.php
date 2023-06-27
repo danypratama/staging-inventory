@@ -670,11 +670,26 @@ include "akses.php";
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel"><i class="bi bi-x-circle"></i> Cancel</button>
                 </div>
             </form>
         </div>
     </div>
+    <script>
+        // Mendapatkan tombol "Cancel" berdasarkan ID
+        const cancelButton = document.getElementById('cancel');
+
+        // Mendapatkan elemen input teks berdasarkan nama
+        const ongkirInput = document.querySelector('input[name="ongkir"]');
+
+        // Fungsi untuk mengatur ulang input teks
+        function resetInput() {
+            ongkirInput.value = '';
+        }
+
+        // Event listener saat tombol "Cancel" ditekan
+        cancelButton.addEventListener('click', resetInput);
+    </script>
 </div>
 
 <!-- Modal Dikirim-->
