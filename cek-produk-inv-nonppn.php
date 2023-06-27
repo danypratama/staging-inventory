@@ -251,7 +251,7 @@ include "akses.php";
                                     <i class="bi bi-plus-circle"></i> Tambah SPK
                                 </a>
                                 <!-- Modal Add SPK-->
-                                <div class="modal fade" id="addSpk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="addSpk" tabindex="-1">
                                     <div class="modal-dialog modal-dialog-centered modal-xl">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -476,7 +476,7 @@ include "akses.php";
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Tanggal</label>
-                                                        <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" readonly>
+                                                        <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary" name="ubah-dikirim"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
