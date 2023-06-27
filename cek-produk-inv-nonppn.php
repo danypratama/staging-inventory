@@ -669,8 +669,8 @@ include "akses.php";
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
-                    <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
+                    <button type="submit" class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancel</button>
                 </div>
             </form>
         </div>
