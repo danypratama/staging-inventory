@@ -98,7 +98,9 @@ include "akses.php";
                                             $kat_inv = $data2['kategori_inv'];
                                             $id_cs = $data2['id_customer'];
                                         ?>
-                                            <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / (<?php echo $data2['no_po'] ?>) / (<?php echo $data2['no_spk'] ?>)</p>
+                                            <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / <?php if (!empty($data2['no_po'])) {
+                                                                                                                echo "(" . $data2['no_po'] . ")/";
+                                                                                                            } ?> (<?php echo $data2['no_spk'] ?>)</p>
                                             <?php $no++; ?>
                                         <?php } ?>
                                     </div>
