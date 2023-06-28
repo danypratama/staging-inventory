@@ -73,6 +73,7 @@ include "akses.php";
                             WHERE nonppn.id_inv_nonppn = '$id_inv'";
                     $query = mysqli_query($connect, $sql);
                     $data = mysqli_fetch_array($query);
+                    $ongkir = $data['ongkir'];
                     ?>
                     <div class="row mt-3">
                         <div class="col-sm-6">
@@ -658,37 +659,78 @@ include "akses.php";
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Biaya Ongkir</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="proses/proses-invoice-nonppn.php" method="POST">
                 <div class="modal-body">
                     <div class="mb-3">
                         <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
                         <label>Masukkan Biaya Ongkir (Rp)</label>
-                        <input type="text" class="form-control harga_produk" name="ongkir" required>
+                        <input type="text" class="form-control" name="ongkir" value="<?php echo number_format($ongkir); ?>" id="ongkir" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" name="update-ongkir"><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
+                    <button type="submit" class="btn btn-primary" name="update-ongkir" id="update" disabled><i class="bi bi-arrow-left-right"></i> Update Ongkir</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel"><i class="bi bi-x-circle"></i> Cancel</button>
                 </div>
             </form>
         </div>
     </div>
     <script>
-        // Mendapatkan tombol "Cancel" berdasarkan ID
-        const cancelButton = document.getElementById('cancel');
-
         // Mendapatkan elemen input teks berdasarkan nama
         const ongkirInput = document.querySelector('input[name="ongkir"]');
 
-        // Fungsi untuk mengatur ulang input teks
-        function resetInput() {
-            ongkirInput.value = '';
-        }
+        // Event listener saat nilai input berubah
+        ongkirInput.addEventListener('input', function(event) {
+            // Hapus tanda ribuan dari nilai saat ini
+            const currentValue = event.target.value.replace(/,/g, '');
 
-        // Event listener saat tombol "Cancel" ditekan
-        cancelButton.addEventListener('click', resetInput);
+            // Format nilai dengan tanda ribuan
+            const formattedValue = new Intl.NumberFormat().format(currentValue);
+
+            // Update nilai input dengan versi terformat
+            event.target.value = formattedValue;
+            // Mendapatkan tombol "Update Ongkir" berdasarkan ID
+            const updateButton = document.getElementById('update');
+
+            // Simpan nilai awal input
+            const initialValue = '<?php echo number_format($ongkir); ?>';
+
+            // Fungsi untuk mengatur status tombol "Update Ongkir"
+            function toggleUpdateButton() {
+                // console.log('Current Value:', (ongkirInput.value));
+                // console.log('Initial Value:', (initialValue));
+
+                if (ongkirInput.value !== initialValue) {
+                    updateButton.removeAttribute('disabled');
+                    console.log('Button enabled');
+                } else {
+                    updateButton.setAttribute('disabled', 'disabled');
+                    console.log('Button disabled');
+                }
+            }
+
+            // Fungsi untuk memformat angka dengan pemisah ribuan
+            function formatNumber(number) {
+                return new Intl.NumberFormat().format(number);
+            }
+
+            // Panggil fungsi toggleUpdateButton saat halaman dimuat
+            toggleUpdateButton();
+
+            // Mendapatkan tombol "Cancel" berdasarkan ID
+            const cancelButton = document.getElementById('cancel');
+
+            // Fungsi untuk mengatur ulang input teks dan tombol
+            function resetInput() {
+                ongkirInput.value = '<?php echo number_format($ongkir); ?>';
+                updateButton.setAttribute('disabled', 'disabled');
+            }
+
+            // Event listener saat tombol "Cancel" ditekan
+            cancelButton.addEventListener('click', function() {
+                resetInput();
+            });
+        });
     </script>
 </div>
 
