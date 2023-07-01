@@ -171,31 +171,45 @@ if (isset($_POST['simpan-inv'])) {
         header("Location:../cek-produk-inv-bum.php?id='$id_inv_encode'");
     }
 } else if (isset($_POST['ubah-dikirim'])) {
-    $id_status = $_POST['id_status'];
-    $id_inv = $_POST['id_inv'];
-    $jenis_pengiriman = $_POST['jenis_pengiriman'];
-    $tgl = $_POST['tgl'];
-    $jenis_inv = "bum";
+    // Mulai transaksi
+    mysqli_begin_transaction($connect);
 
-    if ($jenis_pengiriman == 'Driver') {
-        $pengirim = $_POST['pengirim'];
-        $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
+    try {
+        $id_status = $_POST['id_status'];
+        $id_inv = $_POST['id_inv'];
+        $jenis_pengiriman = $_POST['jenis_pengiriman'];
+        $tgl = $_POST['tgl'];
+        $jenis_inv = "nonppn";
 
-        $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                (id_status_kirim, id_inv, jenis_inv jenis_pengiriman, dikirim_driver, tgl_kirim)
+        if ($jenis_pengiriman == 'Driver') {
+            $pengirim = $_POST['pengirim'];
+            $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
+
+            $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
+                                                (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
                                                 VALUES 
                                                 ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
-        header("Location:../invoice-reguler.php?sort=baru");
-    } else {
-        $ekspedisi = $_POST['ekspedisi'];
-        $resi = $_POST['resi'];
-        $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
+        } else {
+            $ekspedisi = $_POST['ekspedisi'];
+            $resi = $_POST['resi'];
+            $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
 
-        $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
+            $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
                                                 (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
                                                 VALUES 
                                                 ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
+        }
+
+        // Commit transaksi jika berhasil
+        mysqli_commit($connect);
+
         header("Location:../invoice-reguler.php?sort=baru");
+    } catch (Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        mysqli_rollback($connect);
+
+        // Handle kesalahan sesuai kebutuhan Anda
+        echo "Terjadi kesalahan: " . $e->getMessage();
     }
 } else if (isset($_POST['update-ongkir'])) {
     $id_inv = $_POST['id_inv'];

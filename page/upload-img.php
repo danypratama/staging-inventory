@@ -21,8 +21,8 @@
             img.onload = function() {
                 var canvas = document.createElement('canvas');
                 var ctx = canvas.getContext('2d');
-                var maxWidth = 800; // Atur lebar maksimum yang diinginkan di sini
-                var maxHeight = 800; // Atur tinggi maksimum yang diinginkan di sini
+                var maxWidth = 500; // Atur lebar maksimum yang diinginkan di sini
+                var maxHeight = 500; // Atur tinggi maksimum yang diinginkan di sini
                 var width = img.width;
                 var height = img.height;
 
@@ -92,8 +92,8 @@
             img.onload = function() {
                 var canvas = document.createElement('canvas');
                 var ctx = canvas.getContext('2d');
-                var maxWidth = 800; // Atur lebar maksimum yang diinginkan di sini
-                var maxHeight = 800; // Atur tinggi maksimum yang diinginkan di sini
+                var maxWidth = 500; // Atur lebar maksimum yang diinginkan di sini
+                var maxHeight = 500; // Atur tinggi maksimum yang diinginkan di sini
                 var width = img.width;
                 var height = img.height;
 
@@ -163,8 +163,8 @@
             img.onload = function() {
                 var canvas = document.createElement('canvas');
                 var ctx = canvas.getContext('2d');
-                var maxWidth = 800; // Atur lebar maksimum yang diinginkan di sini
-                var maxHeight = 800; // Atur tinggi maksimum yang diinginkan di sini
+                var maxWidth = 500; // Atur lebar maksimum yang diinginkan di sini
+                var maxHeight = 500; // Atur tinggi maksimum yang diinginkan di sini
                 var width = img.width;
                 var height = img.height;
 

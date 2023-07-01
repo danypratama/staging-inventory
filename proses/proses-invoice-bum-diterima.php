@@ -16,6 +16,7 @@ try {
         $id_inv = $_POST['id_inv'];
         $alamat = $_POST['alamat'];
         $diterima_oleh = $_POST['diterima_oleh'];
+        $nama_penerima = $_POST['nama_penerima'];
 
         // Mendapatkan informasi file bukti terima 1
         $file1_name = $_FILES['fileku1']['name'];
@@ -41,7 +42,7 @@ try {
         $query1 = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$file1_name', '$file2_name', '$file3_name')");
 
         // Query-insert kedua
-        $query2 = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima2', '$id_inv', '$diterima_oleh', '$alamat')");
+        $query2 = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, diterima_oleh, nama_penerima, alamat) VALUES ('$id_inv_penerima2', '$id_inv', '$diterima_oleh', '$nama_penerima', '$alamat')");
 
         // Query-update
         $query3 = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Diterima' WHERE id_inv_bum = '$id_inv'");

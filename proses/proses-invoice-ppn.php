@@ -233,10 +233,10 @@ if (isset($_POST['simpan-inv'])) {
     } else {
         $ekspedisi = $_POST['ekspedisi'];
         $resi = $_POST['resi'];
-        $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim' WHERE id_inv_ppn = '$id_inv'");
+        $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Diterima' WHERE id_inv_ppn = '$id_inv'");
 
         $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim)
                                                 VALUES 
                                                 ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
         header("Location:../invoice-reguler.php?sort=baru");

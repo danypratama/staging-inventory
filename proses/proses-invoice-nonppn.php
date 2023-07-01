@@ -189,7 +189,7 @@ if (isset($_POST['simpan-inv'])) {
     } else {
         $ekspedisi = $_POST['ekspedisi'];
         $resi = $_POST['resi'];
-        $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
+        $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
         $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
                                                 (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 

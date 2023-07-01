@@ -47,11 +47,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <div class="pagetitle">
             <h1>List Invoice</h1>
@@ -66,16 +66,16 @@ include "akses.php";
         <section>
             <div class="container-fluid">
                 <div class="card">
-                    <div class="card-body mt-5">
-                        <?php
-                        date_default_timezone_set('Asia/Jakarta');
-                        $nama_user = $_SESSION['tiket_nama'];
-                        $date = date('d-m-Y');
-                        ?>
-                        <p><b>Nama Driver : <?php echo $_SESSION['tiket_nama'] ?></b></p>
-                        <p><b>Tanggal : <?php echo $date; ?></b></p>
-                    </div>
                     <div class="card-body p-3">
+                        <div class="mt-4">
+                            <?php
+                            date_default_timezone_set('Asia/Jakarta');
+                            $nama_user = $_SESSION['tiket_nama'];
+                            $date = date('d-m-Y');
+                            ?>
+                            <p><b>Nama Driver : <?php echo $_SESSION['tiket_nama'] ?></b></p>
+                            <p><b>Tanggal : <?php echo $date; ?></b></p>
+                        </div>
                         <div class="table-responsive mt-3">
                             <table class="table table-striped table-bordered" id="table2">
                                 <thead>
@@ -93,22 +93,30 @@ include "akses.php";
                                     date_default_timezone_set('Asia/Jakarta');
                                     include "koneksi.php";
                                     $no = 1;
-                                    $sql = "SELECT status_kirim.*,
-                                            inv_nonppn.no_inv AS no_inv_nonppn,
-                                            inv_ppn.no_inv AS no_inv_ppn, 
-                                            inv_bum.no_inv AS no_inv_bum,
-                                            spk_reg.id_inv, spk_reg.id_customer, spk_reg.tgl_pesanan,
-                                            tb_customer.nama_cs, tb_customer.alamat,
-                                            user.nama_user
-                                            FROM 
-                                            status_kirim 
+                                    $sql = "SELECT subquery.*,
+                                                    tb_customer.nama_cs,
+                                                    tb_customer.alamat,
+                                                    user.nama_user
+                                            FROM (
+                                            SELECT status_kirim.*,
+                                                    inv_nonppn.no_inv AS no_inv_nonppn,
+                                                    inv_ppn.no_inv AS no_inv_ppn, 
+                                                    inv_bum.no_inv AS no_inv_bum,
+                                                    inv_nonppn.status_transaksi AS status_trx_nonppn,
+                                                    inv_ppn.status_transaksi AS status_trx_ppn,
+                                                    inv_bum.status_transaksi AS status_trx_bum,
+                                                    spk_reg.id_inv AS id_inv_spk,
+                                                    spk_reg.id_customer,
+                                                    spk_reg.tgl_pesanan
+                                            FROM status_kirim 
                                             LEFT JOIN inv_nonppn ON status_kirim.id_inv = inv_nonppn.id_inv_nonppn 
                                             LEFT JOIN inv_ppn ON status_kirim.id_inv = inv_ppn.id_inv_ppn 
                                             LEFT JOIN inv_bum ON status_kirim.id_inv = inv_bum.id_inv_bum
                                             LEFT JOIN spk_reg ON status_kirim.id_inv = spk_reg.id_inv
-                                            LEFT JOIN tb_customer ON spk_reg.id_customer = tb_customer.id_cs
-                                            LEFT JOIN user ON status_kirim.dikirim_driver = user.id_user
-                                            WHERE user.nama_user = '$nama_user'";
+                                            ) AS subquery
+                                            LEFT JOIN tb_customer ON subquery.id_customer = tb_customer.id_cs
+                                            LEFT JOIN user ON subquery.dikirim_driver = user.id_user
+                                            WHERE user.nama_user = 'Teguh Pambudi' AND subquery.status_trx_nonppn = 'Dikirim' AND subquery.status_trx_ppn = 'Dikirim' AND subquery.status_trx_bum = 'Dikirim'";
                                     $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
