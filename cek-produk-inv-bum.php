@@ -1001,6 +1001,7 @@ include "akses.php";
                 labelDriver.style.display = 'block'; // Menampilkan form input
                 pengirimSelect.style.display = 'block'; // Menampilkan form input
                 pengirimSelect.setAttribute('required', 'true');
+                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
                 ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
                 resiSelect.style.display = 'none'; // Menyembunyikan form input
                 ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
