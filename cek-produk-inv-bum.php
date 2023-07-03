@@ -1116,6 +1116,7 @@ include "akses.php";
                 labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
                 labelDriver.style.display = 'none'; // Menyembunyikan form input
                 pengirimSelect.style.display = 'none'; // Menyembunyikan form input
+                labelResi.style.display = 'none'; // Menyembunyikan form input
                 resiSelect.style.display = 'none'; // Menyembunyikan form input
                 labelDate.style.display = 'none'; // Menyembunyikan form input
                 inputDate.style.display = 'none'; // Menyembunyikan form input
