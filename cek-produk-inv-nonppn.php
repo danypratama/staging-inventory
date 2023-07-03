@@ -823,6 +823,14 @@ include "akses.php";
     <?php include "page/upload-img.php";  ?>
     <!-- kode JS Dikirim -->
     <script>
+        var input = document.getElementById('resi');
+
+        input.addEventListener('input', function() {
+            var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
+            input.value = sanitizedValue;
+        });
+    </script>
+    <script>
         function checkFileName() {
             var file1 = document.getElementById('fileku1').value;
             var file2 = document.getElementById('fileku2').value;
@@ -881,9 +889,12 @@ include "akses.php";
                 ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
                 resiSelect.style.display = 'none'; // Menyembunyikan form input
                 ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                ekspedisiSelect.removeAttribute('required');
                 resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                resiSelect.removeAttribute('required');
                 labelDate.style.display = 'block'; // Menampilkan form input
                 inputDate.style.display = 'block'; // Menampilkan form input
+                labelResi.style.display = 'none'; // Menyembunyikan form input
                 labelBukti1.style.display = 'none'; // Menyembunyikan form input
                 labelBukti2.style.display = 'none'; // Menyembunyikan form input
                 labelBukti3.style.display = 'none'; // Menyembunyikan form input
@@ -891,6 +902,7 @@ include "akses.php";
                 file2.style.display = 'none'; // Menyembunyikan form input
                 file3.style.display = 'none'; // Menyembunyikan form input
                 file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                file1.removeAttribute('required');
                 file2.value = ''; // Mengatur ulang nilai menjadi kosong
                 file3.value = ''; // Mengatur ulang nilai menjadi kosong
                 imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"

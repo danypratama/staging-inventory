@@ -244,20 +244,22 @@ if (isset($_POST['simpan-inv'])) {
     } catch (Exception $e) {
         $connect->rollback();
         $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
-        echo <<<HTML
-                <!-- Sweet Alert -->
-                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                <script>
-                    swal({
-                        title: "Error!",
-                        text: "{$error_message}",
-                        icon: "error",
-                    }).then(function() {
-                        window.location.href = "../invoice-reguler.php?sort=baru";
-                    });
-                </script>
-            HTML;
+?>
+        <!-- Sweet Alert -->
+        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    title: "Error!",
+                    text: "<?php echo $error_message; ?>",
+                    icon: "error",
+                }).then(function() {
+                    window.location.href = "../invoice-reguler.php?sort=baru";
+                });
+            });
+        </script>
+<?php
     }
 } else if (isset($_POST['update-ongkir'])) {
     $id_inv = $_POST['id_inv'];

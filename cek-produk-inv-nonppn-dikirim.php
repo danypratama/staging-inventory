@@ -483,38 +483,51 @@ include "akses.php";
 
 <!-- Modal Diterima SPK-->
 <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <style>
-                video {
-                    width: 100%;
-                    height: auto;
-                }
-            </style>
             <div class="modal-body">
                 <div class="card-body">
+                    <?php
+                    include "koneksi.php";
+                    $status_kirim = "SELECT id_inv, jenis_pengiriman FROM status_kirim WHERE id_inv = '$id_inv'";
+                    $query_status_kirim = mysqli_query($connect, $status_kirim);
+                    $data_status_kirim = mysqli_fetch_array($query_status_kirim);
+                    $jenis_pengiriman = $data_status_kirim['jenis_pengiriman'];
+                    ?>
                     <form action="proses/proses-invoice-nonppn-diterima.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
                         <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
+                        <?php
+                        if ($jenis_pengiriman == 'Ekspedisi') {
+                            echo '
+                            <div class="mb-3">
+                            <label>Diterima Oleh</label>
+                                <select name="diterima_oleh" id="jenis-penerima" class="form-select">
+                                    <option value="">Pilih...</option>
+                                    <option value="Customer">Customer</option>
+                                    <option value="Ekspedisi">Ekspedisi</option>
+                                </select>
+                            </div>';
+                        } else {
+                            echo '
+                                <div class="mb-3">
+                                    <label>Nama Penerima</label>
+                                    <input type="text" class="form-control" name="nama_penerima" id="penerima" required>
+                                </div>';
+                        }
+                        ?>
+
                         <div class="mb-3">
-                            <label><strong>Diterima Oleh </strong></label>
-                            <select name="diterima_oleh" id="jenis-penerima" class="form-select">
-                                <option value="">Pilih...</option>
-                                <option value="Customer">Customer</option>
-                                <option value="Ekspedisi">Ekspedisi</option>
-                            </select>
+                            <label style="display: none;" id="labelPenerima">Nama Penerima</label>
+                            <input type="text" class="form-control" name="nama_penerima" id="penerima" style="display: none;">
                         </div>
                         <div class="mb-3">
-                            <label><strong>Nama Penerima </strong></label>
-                            <input type="text" class="form-control" name="nama_penerima" id="penerima" disabled required>
-                        </div>
-                        <div class="mb-3">
-                            <label>Dikirim Ekspedisi</label>
-                            <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
+                            <label id="labelEkspedisi" style="display: none;">Pilih Ekspedisi</label>
+                            <select id="ekspedisi" name="ekspedisi" class="form-select" style="display: none;">
                                 <option value="">Pilih...</option>
                                 <?php
                                 include "koneksi.php";
@@ -526,28 +539,45 @@ include "akses.php";
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label>No. Resi</label>
-                            <input type="text" class="form-control" name="resi" id="resi" disabled>
+                            <label style="display: none;" id="labelResi">No. Resi</label>
+                            <input type="text" class="form-control" name="resi" id="resi" style="display: none;">
                         </div>
                         <div class="mb-3">
-                            <label>Bukti Terima 1</label>
-                            <input type="file" name="fileku1" id="fileku1" onchange="compressAndPreviewImage(event)" disabled required>
+                            <label id="labelDate" style="display: none;">Tanggal</label>
+                            <input type="text" style="background-color:white; display: none;" class="bg-white form-control" name="tgl" id="date" required>
                         </div>
-                        <div class="mb-3" id="imagePreview"></div>
                         <div class="mb-3">
-                            <label>Bukti Terima 2</label>
-                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)" disabled>
+                            <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
+                            <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)" style="display: none;">
                         </div>
-                        <div class="mb-3" id="imagePreview2"></div>
+                        <div class="mb-3" id="imagePreview" style="display: none;"></div>
+
                         <div class="mb-3">
-                            <label for="fileku">Bukti Terima 3</label>
-                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)" disabled>
+                            <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
+                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)" style="display: none;">
                         </div>
-                        <div class="mb-3" id="imagePreview3"></div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="diterima" id="diterima" onclick="checkFileName()" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel"><i class="bi bi-x-circle"></i> Cancel</button>
+                        <div class="mb-3" id="imagePreview2" style="display: none;"></div>
+                        <div class="mb-3">
+                            <label id="labelBukti3" for="fileku" style="display: none;">Bukti Terima 3</label>
+                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)" style="display: none;">
                         </div>
+                        <div class="mb-3" id="imagePreview3" style="display: none;"></div>
+                        <?php
+                        if ($jenis_pengiriman == 'Driver') {
+                            echo '
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" name="diterima" id="diterima" onclick="checkFileName()" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel"><i class="bi bi-x-circle"></i> Cancel</button>
+                                </div>';
+                        } else {
+                            echo '
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="diterima" id="diterima" onclick="checkFileName()"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel"><i class="bi bi-x-circle"></i> Cancel</button>
+                            </div>';
+                        }
+
+                        ?>
                     </form>
                     <?php include "page/upload-img.php";  ?>
                     <!-- kode JS Dikirim -->
@@ -578,53 +608,96 @@ include "akses.php";
                     </script>
                     <script>
                         const jenisPenerimaSelect = document.getElementById('jenis-penerima');
+                        const labelPenerima = document.getElementById('labelPenerima');
                         const penerimaSelect = document.getElementById('penerima');
+                        const labelEkspedisi = document.getElementById('labelEkspedisi');
                         const ekspedisiSelect = document.getElementById('ekspedisi');
+                        const labelResi = document.getElementById('labelResi');
                         const resiSelect = document.getElementById('resi');
+                        const labelBukti1 = document.getElementById('labelBukti1');
+                        const labelBukti2 = document.getElementById('labelBukti2');
+                        const labelBukti3 = document.getElementById('labelBukti3');
                         const file1 = document.getElementById('fileku1');
                         const file2 = document.getElementById('fileku2');
                         const file3 = document.getElementById('fileku3');
+                        const imagePreview = document.getElementById('imagePreview');
+                        const imagePreview2 = document.getElementById('imagePreview2');
+                        const imagePreview3 = document.getElementById('imagePreview3');
                         const diterima = document.getElementById('diterima');
-
-                        let isModalShown = false;
-
 
                         jenisPenerimaSelect.addEventListener('change', function() {
                             if (this.value === 'Customer') {
-                                penerimaSelect.disabled = false;
+                                labelPenerima.style.display = 'block'; // Menampilkan form input
+                                penerimaSelect.style.display = 'block'; // Menampilkan form input
                                 penerimaSelect.setAttribute('required', 'true');
-                                ekspedisiSelect.disabled = true;
-                                resiSelect.disabled = true;
+                                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
+                                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelResi.style.display = 'none'; // Menyembunyikan form input
+                                resiSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                                file1.style.display = 'none'; // Menyembunyikan form input
+                                file2.style.display = 'none'; // Menyembunyikan form input
+                                file3.style.display = 'none'; // Menyembunyikan form input
                                 ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                                 resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                file1.disabled = false;
-                                file2.disabled = false;
-                                file3.disabled = false;
+                                file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                                file2.value = ''; // Mengatur ulang nilai menjadi kosong
+                                file3.value = ''; // Mengatur ulang nilai menjadi kosong
+                                imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+                                imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+                                imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
                                 diterima.disabled = false;
                             } else if (this.value === 'Ekspedisi') {
                                 penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                penerimaSelect.disabled = true;
-                                penerimaSelect.removeAttribute('required');
-                                ekspedisiSelect.disabled = false;
+                                labelPenerima.style.display = 'none'; // Menyembunyikan form input
+                                penerimaSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelEkspedisi.style.display = 'block'; // Menampilkan form input
+                                ekspedisiSelect.style.display = 'block'; // Menampilkan form input
                                 ekspedisiSelect.setAttribute('required', 'true');
-                                resiSelect.disabled = false;
+                                labelResi.style.display = 'block';
+                                resiSelect.style.display = 'block';
                                 resiSelect.setAttribute('required', 'true');
-                                file1.disabled = false;
-                                file2.disabled = false;
-                                file3.disabled = false;
+                                labelBukti1.style.display = 'block'; // Menampilkan form input
+                                labelBukti2.style.display = 'block'; // Menampilkan form input
+                                labelBukti3.style.display = 'block'; // Menampilkan form input
+                                file1.style.display = 'block'; // Menampilkan form input
+                                file1.setAttribute('required', 'true');
+                                file2.style.display = 'block'; // Menampilkan form input
+                                file3.style.display = 'block'; // Menampilkan form input
+                                imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
+                                imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
+                                imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
                                 diterima.disabled = false;
                             } else if (this.value === '') {
+                                jenisPenerimaSelect.value = '';
+                                penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                                 ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                                 resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                ekspedisiSelect.disabled = true;
-                                penerimaSelect.disabled = true;
-                                resiSelect.disabled = true;
-                                file1.disabled = true;
-                                file2.disabled = true;
-                                file3.disabled = true;
+                                file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                                file2.value = ''; // Mengatur ulang nilai menjadi kosong
+                                file3.value = ''; // Mengatur ulang nilai menjadi kosong
+                                imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+                                imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+                                imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
+                                labelPenerima.style.display = 'none'; // Menyembunyikan form input
+                                penerimaSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
+                                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelResi.style.display = 'none'; // Menyembunyikan form input
+                                resiSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                                file1.style.display = 'none'; // Menyembunyikan form input
+                                file2.style.display = 'none'; // Menyembunyikan form input
+                                file3.style.display = 'none'; // Menyembunyikan form input
                                 diterima.disabled = true;
                             }
+
+                            // membuat refresh halaman modal tanpa menutup modal dialog
+                            let isModalShown = false;
                             // Refresh halaman modal
                             if (isModalShown) {
                                 $('#Diterima').modal('hide'); // Menyembunyikan modal
@@ -638,15 +711,27 @@ include "akses.php";
                             // Fungsi untuk mengatur ulang input teks dan tombol
                             function resetInput() {
                                 jenisPenerimaSelect.value = '';
+                                penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                                 ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                                 resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                ekspedisiSelect.disabled = true;
-                                penerimaSelect.disabled = true;
-                                resiSelect.disabled = true;
-                                file1.disabled = true;
-                                file2.disabled = true;
-                                file3.disabled = true;
+                                file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                                file2.value = ''; // Mengatur ulang nilai menjadi kosong
+                                file3.value = ''; // Mengatur ulang nilai menjadi kosong
+                                imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+                                imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+                                imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
+                                labelPenerima.style.display = 'none'; // Menyembunyikan form input
+                                penerimaSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
+                                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelResi.style.display = 'none'; // Menyembunyikan form input
+                                resiSelect.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                                labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                                file1.style.display = 'none'; // Menyembunyikan form input
+                                file2.style.display = 'none'; // Menyembunyikan form input
+                                file3.style.display = 'none'; // Menyembunyikan form input
                                 diterima.disabled = true;
                             }
 
