@@ -874,7 +874,7 @@ include "akses.php";
                     $day = date('d');
                     $month = date('m');
                     ?>
-                    <form action="proses/proses-invoice-bum.php" method="POST">
+                    <form action="proses/proses-invoice-bum.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
                         <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
                         <div class="mb-3">
@@ -912,7 +912,7 @@ include "akses.php";
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label style="display: none;">No. Resi</label>
+                            <label style="display: none;" id="labelResi">No. Resi</label>
                             <input type="text" class="form-control" name="resi" id="resi" style="display: none;">
                         </div>
                         <div class="mb-3">
@@ -921,7 +921,7 @@ include "akses.php";
                         </div>
                         <div class="mb-3">
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
-                            <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)" style="display: none;" required>
+                            <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)" style="display: none;">
                         </div>
                         <div class="mb-3" id="imagePreview" style="display: none;"></div>
 
@@ -978,6 +978,7 @@ include "akses.php";
         const labelDriver = document.getElementById('labelDriver');
         const ekspedisiSelect = document.getElementById('ekspedisi');
         const labelEkspedisi = document.getElementById('labelEkspedisi');
+        const labelResi = document.getElementById('labelResi')
         const resiSelect = document.getElementById('resi');
         const dikirim = document.getElementById('dikirim');
         const labelDate = document.getElementById('labelDate');
@@ -1029,12 +1030,14 @@ include "akses.php";
                 labelEkspedisi.style.display = 'block'; // Menampilkan form input
                 ekspedisiSelect.style.display = 'block'; // Menampilkan form input
                 ekspedisiSelect.setAttribute('required', 'true');
-                resiSelect.disabled = false;
+                labelResi.style.display = 'block';
+                resiSelect.style.display = 'block';
                 resiSelect.setAttribute('required', 'true');
                 labelBukti1.style.display = 'block'; // Menampilkan form input
                 labelBukti2.style.display = 'block'; // Menampilkan form input
                 labelBukti3.style.display = 'block'; // Menampilkan form input
                 file1.style.display = 'block'; // Menampilkan form input
+                file1.setAttribute('required', 'true');
                 file2.style.display = 'block'; // Menampilkan form input
                 file3.style.display = 'block'; // Menampilkan form input
                 imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"

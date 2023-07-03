@@ -179,37 +179,85 @@ if (isset($_POST['simpan-inv'])) {
         $id_inv = $_POST['id_inv'];
         $jenis_pengiriman = $_POST['jenis_pengiriman'];
         $tgl = $_POST['tgl'];
-        $jenis_inv = "nonppn";
+        $jenis_inv = "bum";
 
+        $uuid = generate_uuid();
+        $year = date('y');
+        $day = date('d');
+        $month = date('m');
+        $id_inv_penerima = "BKTI" . $year . "" . $uuid . "" . $day;
+        $id_inv = $_POST['id_inv'];
+        // Mendapatkan informasi file bukti terima 1
+        $file1_name = $_FILES['fileku1']['name'];
+        $file1_tmp = $_FILES['fileku1']['tmp_name'];
+        $file1_destination = "../gambar/bukti1/" . $file1_name;
+
+        // Mendapatkan informasi file bukti terima 2
+        $file2_name = $_FILES['fileku2']['name'];
+        $file2_tmp = $_FILES['fileku2']['tmp_name'];
+        $file2_destination = "../gambar/bukti2/" . $file2_name;
+
+        // Mendapatkan informasi file bukti terima 3
+        $file3_name = $_FILES['fileku3']['name'];
+        $file3_tmp = $_FILES['fileku3']['tmp_name'];
+        $file3_destination = "../gambar/bukti3/" . $file3_name;
+
+        // Pindahkan file bukti terima ke lokasi tujuan
+        move_uploaded_file($file1_tmp, $file1_destination);
+        move_uploaded_file($file2_tmp, $file2_destination);
+        move_uploaded_file($file3_tmp, $file3_destination);
         if ($jenis_pengiriman == 'Driver') {
             $pengirim = $_POST['pengirim'];
+
+
             $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
-                                                VALUES 
-                                                ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
+                                                    (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
+                                                    VALUES 
+                                                    ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
+
+            if ($ubah_status && $status_kirim) {
+                // Commit transaksi jika berhasil
+                mysqli_commit($connect);
+                header("Location:../invoice-reguler.php?sort=baru");
+            }
         } else {
             $ekspedisi = $_POST['ekspedisi'];
             $resi = $_POST['resi'];
+
             $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
-                                                VALUES 
-                                                ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
+                                                        (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                        VALUES 
+                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
+
+            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$file1_name', '$file2_name', '$file3_name')");
+
+            if ($ubah_status && $status_kirim && $bukti_terima) {
+                // Commit transaksi jika berhasil
+                mysqli_commit($connect);
+                header("Location:../invoice-reguler.php?sort=baru");
+            }
         }
-
-        // Commit transaksi jika berhasil
-        mysqli_commit($connect);
-
-        header("Location:../invoice-reguler.php?sort=baru");
     } catch (Exception $e) {
-        // Rollback transaksi jika terjadi kesalahan
-        mysqli_rollback($connect);
-
-        // Handle kesalahan sesuai kebutuhan Anda
-        echo "Terjadi kesalahan: " . $e->getMessage();
+        $connect->rollback();
+        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+        echo <<<HTML
+                <!-- Sweet Alert -->
+                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                <script>
+                    swal({
+                        title: "Error!",
+                        text: "{$error_message}",
+                        icon: "error",
+                    }).then(function() {
+                        window.location.href = "../invoice-reguler.php?sort=baru";
+                    });
+                </script>
+            HTML;
     }
 } else if (isset($_POST['update-ongkir'])) {
     $id_inv = $_POST['id_inv'];
@@ -220,3 +268,21 @@ if (isset($_POST['simpan-inv'])) {
     $update_data = mysqli_query($connect, "UPDATE inv_bum SET ongkir = '$ongkir' WHERE id_inv_bum = '$id_inv'");
     header("Location:../cek-produk-inv-bum.php?id='$id_inv_encode'");
 }
+?>
+
+<?php
+function generate_uuid()
+{
+    return sprintf(
+        '%04x%04x%04x',
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0x0fff) | 0x4000,
+        mt_rand(0, 0x3fff) | 0x8000,
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff)
+    );
+}
+?>
