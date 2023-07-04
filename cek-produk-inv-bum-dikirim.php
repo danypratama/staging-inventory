@@ -213,6 +213,20 @@ include "akses.php";
                                 }
                                 ?>
                             </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <?php  
+                                        $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman FROM status_kirim WHERE id_inv = '$id_inv'");
+                                        $data_status_kirim = mysqli_fetch_array($status_kirim);
+                                        $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
+                                    ?>
+                                    <p style="float: left;">Jenis Pengiriman</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php echo $data_status_kirim['jenis_pengiriman'] ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -480,38 +494,32 @@ include "akses.php";
 
 <!-- Modal Diterima-->
 <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <style>
-                video {
-                    width: 100%;
-                    height: auto;
-                }
-            </style>
             <div class="modal-body">
                 <div class="card-body">
                     <form action="proses/proses-invoice-bum-diterima.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
                         <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
                         <div class="mb-3">
-                            <label><strong>Diterima Oleh </strong></label>
-                            <select name="diterima_oleh" id="jenis-penerima" class="form-select">
+                            <label id="labelJenisPenerima" style="display:none;">Diterima Oleh</label>
+                            <select name="diterima_oleh" id="jenis-penerima" class="form-select" style="display:none;">
                                 <option value="">Pilih...</option>
                                 <option value="Customer">Customer</option>
                                 <option value="Ekspedisi">Ekspedisi</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label><strong>Nama Penerima </strong></label>
-                            <input type="text" class="form-control" name="nama_penerima" id="penerima" disabled required>
+                            <label style="display: none;" id="labelPenerima">Nama Penerima</label>
+                            <input type="text" class="form-control" name="nama_penerima" id="penerima" style="display: none;">
                         </div>
                         <div class="mb-3">
-                            <label>Dikirim Ekspedisi</label>
-                            <select id="ekspedisi" name="ekspedisi" class="form-select" disabled>
+                            <label id="labelEkspedisi" style="display: none;">Pilih Ekspedisi</label>
+                            <select id="ekspedisi" name="ekspedisi" class="form-select" style="display: none;">
                                 <option value="">Pilih...</option>
                                 <?php
                                 include "koneksi.php";
@@ -523,149 +531,240 @@ include "akses.php";
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label>No. Resi</label>
-                            <input type="text" class="form-control" name="resi" id="resi" disabled>
+                            <label style="display: none;" id="labelResi">No. Resi</label>
+                            <input type="text" class="form-control" name="resi" id="resi" style="display: none;">
                         </div>
                         <div class="mb-3">
-                            <label>Bukti Terima 1</label>
-                            <input type="file" name="fileku1" id="fileku1" onchange="compressAndPreviewImage(event)" disabled required>
+                            <label id="labelDate">Tanggal</label>
+                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
                         </div>
-                        <div class="mb-3" id="imagePreview"></div>
+                        <div class="mb-3">
+                            <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
+                            <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)" style="display: none;">
+                        </div>
+                        <div class="mb-3" id="imagePreview" style="display: none;"></div>
 
                         <div class="mb-3">
-                            <label>Bukti Terima 2</label>
-                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)" disabled>
+                            <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
+                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)" style="display: none;">
                         </div>
-                        <div class="mb-3" id="imagePreview2"></div>
+                        <div class="mb-3" id="imagePreview2" style="display: none;"></div>
                         <div class="mb-3">
-                            <label for="fileku">Bukti Terima 3</label>
-                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)" disabled>
+                            <label id="labelBukti3" for="fileku" style="display: none;">Bukti Terima 3</label>
+                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)" style="display: none;">
                         </div>
-                        <div class="mb-3" id="imagePreview3"></div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="diterima" id="diterima" onclick="checkFileName()" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel"><i class="bi bi-x-circle"></i> Cancel</button>
-                        </div>
+                        <div class="mb-3" id="imagePreview3" style="display: none;"></div>
+                        <?php
+                        if ($jenis_pengiriman == 'Driver') {
+                            echo '
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" name="diterima_driver" id="diterima" onclick="checkFileName()" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDriver"><i class="bi bi-x-circle"></i> Cancel</button>
+                                </div>';
+                        } else {
+                            echo '
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="diterima_ekspedisi" id="diterima" onclick="checkFileName()"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEkspedisi"><i class="bi bi-x-circle"></i> Cancel</button>
+                            </div>';
+                        }
+                        ?>
                     </form>
-                    <?php include "page/upload-img.php";  ?>
-                    <!-- kode js dikirim -->
-                    <script>
-                        function checkFileName() {
-                            var file1 = document.getElementById('fileku1').value;
-                            var file2 = document.getElementById('fileku2').value;
-                            var file3 = document.getElementById('fileku3').value;
-
-                            if (file1 === file2 && file2 !== "") {
-                                alert("Nama file ke 2 harus berbeda!");
-                                document.getElementById('fileku2').value = "";
-                                document.getElementById('imagePreview2').innerHTML = "";
-                            }
-
-                            if (file1 === file3 && file3 !== "") {
-                                alert("Nama file ke 3 harus berbeda!");
-                                document.getElementById('fileku3').value = "";
-                                document.getElementById('imagePreview3').innerHTML = "";
-                            }
-
-                            if (file2 === file3 && file3 !== "") {
-                                alert("Nama file ke 3 harus berbeda!");
-                                document.getElementById('fileku3').value = "";
-                                document.getElementById('imagePreview3').innerHTML = "";
-                            }
-                        }
-                    </script>
-                    <script>
-                        const jenisPenerimaSelect = document.getElementById('jenis-penerima');
-                        const penerimaSelect = document.getElementById('penerima');
-                        const ekspedisiSelect = document.getElementById('ekspedisi');
-                        const resiSelect = document.getElementById('resi');
-                        const file1 = document.getElementById('fileku1');
-                        const file2 = document.getElementById('fileku2');
-                        const file3 = document.getElementById('fileku3');
-                        const diterima = document.getElementById('diterima');
-
-                        let isModalShown = false;
-
-
-                        jenisPenerimaSelect.addEventListener('change', function() {
-                            if (this.value === 'Customer') {
-                                penerimaSelect.disabled = false;
-                                penerimaSelect.setAttribute('required', 'true');
-                                ekspedisiSelect.disabled = true;
-                                resiSelect.disabled = true;
-                                ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                file1.disabled = false;
-                                file2.disabled = false;
-                                file3.disabled = false;
-                                diterima.disabled = false;
-                            } else if (this.value === 'Ekspedisi') {
-                                penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                penerimaSelect.disabled = true;
-                                penerimaSelect.removeAttribute('required');
-                                ekspedisiSelect.disabled = false;
-                                ekspedisiSelect.setAttribute('required', 'true');
-                                resiSelect.disabled = false;
-                                resiSelect.setAttribute('required', 'true');
-                                file1.disabled = false;
-                                file2.disabled = false;
-                                file3.disabled = false;
-                                diterima.disabled = false;
-                            } else if (this.value === '') {
-                                ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                ekspedisiSelect.disabled = true;
-                                penerimaSelect.disabled = true;
-                                resiSelect.disabled = true;
-                                file1.disabled = true;
-                                file2.disabled = true;
-                                file3.disabled = true;
-                                diterima.disabled = true;
-                            }
-                            // Refresh halaman modal
-                            if (isModalShown) {
-                                $('#Diterima').modal('hide'); // Menyembunyikan modal
-                                location.reload(); // Melakukan refresh halaman
-                                $('#Diterima').modal('show'); // Menampilkan modal kembali
-                            }
-
-                            // Mendapatkan tombol "Cancel" berdasarkan ID
-                            const cancelButton = document.getElementById('cancel');
-
-                            // Fungsi untuk mengatur ulang input teks dan tombol
-                            function resetInput() {
-                                jenisPenerimaSelect.value = '';
-                                ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                penerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                                ekspedisiSelect.disabled = true;
-                                penerimaSelect.disabled = true;
-                                resiSelect.disabled = true;
-                                file1.disabled = true;
-                                file2.disabled = true;
-                                file3.disabled = true;
-                                diterima.disabled = true;
-                            }
-
-                            // Event listener saat tombol "Cancel" ditekan
-                            cancelButton.addEventListener('click', function() {
-                                resetInput();
-                            });
-                        });
-                    </script>
-                    <!-- end kode js dikirim -->
-                    <style>
-                        .preview-image {
-                            max-width: 100%;
-                            height: auto;
-                        }
-                    </style>
-
                 </div>
             </div>
         </div>
     </div>
+    <?php include "page/upload-img.php";  ?>
+    <!-- kode JS Dikirim -->
+    <script>
+        var input = document.getElementById('resi');
+
+        input.addEventListener('input', function() {
+            var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
+            input.value = sanitizedValue;
+        });
+    </script>
+    <script>
+        function checkFileName() {
+            var file1 = document.getElementById('fileku1').value;
+            var file2 = document.getElementById('fileku2').value;
+            var file3 = document.getElementById('fileku3').value;
+
+            if (file1 === file2 && file2 !== "") {
+                alert("Nama file ke 2 harus berbeda!");
+                document.getElementById('fileku2').value = "";
+                document.getElementById('imagePreview2').innerHTML = "";
+            }
+
+            if (file1 === file3 && file3 !== "") {
+                alert("Nama file ke 3 harus berbeda!");
+                document.getElementById('fileku3').value = "";
+                document.getElementById('imagePreview3').innerHTML = "";
+            }
+
+            if (file2 === file3 && file3 !== "") {
+                alert("Nama file ke 3 harus berbeda!");
+                document.getElementById('fileku3').value = "";
+                document.getElementById('imagePreview3').innerHTML = "";
+            }
+        }
+    </script>
+    <script>
+        const jenisPenerima = <?php echo json_encode($jenis_pengiriman); ?>;
+        const labeljenisPenerima = document.getElementById('labelJenisPenerima');
+        const jenisPenerimaSelect = document.getElementById('jenis-penerima');
+        const labelPenerima = document.getElementById('labelPenerima');
+        const penerima = document.getElementById('penerima');
+        const labelEkspedisi = document.getElementById('labelEkspedisi');
+        const ekspedisiSelect = document.getElementById('ekspedisi');
+        const labelResi = document.getElementById('labelResi');
+        const resi = document.getElementById('resi');
+        const labelBukti1 = document.getElementById('labelBukti1');
+        const labelBukti2 = document.getElementById('labelBukti2');
+        const labelBukti3 = document.getElementById('labelBukti3'); 
+        const file1 = document.getElementById('fileku1');
+        const file2 = document.getElementById('fileku2');
+        const file3 = document.getElementById('fileku3');
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreview2 = document.getElementById('imagePreview2');
+        const imagePreview3 = document.getElementById('imagePreview3');
+        const diterima = document.getElementById('diterima');
+
+        if (jenisPenerima === 'Driver') { 
+            labelJenisPenerima.style.display = 'block'; // Menampilkan Form Input
+            jenisPenerimaSelect.style.display = 'block'; // Menampilkan Form Input
+            jenisPenerimaSelect.setAttribute('required', 'true');
+            diterima.disabled = false;
+            
+            //Membuat event listener saat select data
+            jenisPenerimaSelect.addEventListener('change', function(){
+                if (this.value === 'Customer'){
+                    labelPenerima.style.display = 'block'; // Menampilkan Form Input
+                    penerima.style.display = 'block'; // Menampilkan Form Input
+                    penerima.setAttribute('required', 'true'); // Membuat Atribut Required
+                    labelEkspedisi.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.value = ''; // Reset Value
+                    labelResi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.value = ''; // Reset Value
+                    labelBukti1.style.display = 'block'; // Menampilkan form input
+                    labelBukti2.style.display = 'block'; // Menampilkan form input
+                    labelBukti3.style.display = 'block'; // Menampilkan form input
+                    file1.style.display = 'block'; // Menampilkan form input
+                    file1.setAttribute('required', 'true');// Membuat Atribut Required
+                    file2.style.display = 'block'; // Menampilkan form input
+                    file3.style.display = 'block'; // Menampilkan form input
+                    imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
+                    imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
+                    imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
+                    file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                    file2.value = ''; // Mengatur ulang nilai menjadi kosong
+                    file3.value = ''; // Mengatur ulang nilai menjadi kosong
+                    imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+                    imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+                    imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
+                    ekspedisiSelect.removeAttribute('required', 'true'); // Membuat Atribut Required
+                    resi.removeAttribute('required', 'true'); // Membuat Atribut Required
+                } else if (this.value === 'Ekspedisi'){
+                    labelPenerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.value = ''; // Reset Value
+                    penerima.removeAttribute('required', 'true'); // Membuat Atribut Required
+                    labelEkspedisi.style.display = 'block'; // Menampilkan Form Input
+                    ekspedisiSelect.style.display = 'block'; // Menampilkan Form Input
+                    ekspedisiSelect.setAttribute('required', 'true'); // Membuat Atribut Required
+                    labelResi.style.display = 'block'; // Menampilkan Form Input
+                    resi.style.display = 'block'; // Menampilkan Form Input
+                    resi.setAttribute('required', 'true'); // Membuat Atribut Required
+                    labelBukti1.style.display = 'block'; // Menampilkan form input
+                    labelBukti2.style.display = 'block'; // Menampilkan form input
+                    labelBukti3.style.display = 'block'; // Menampilkan form input
+                    file1.style.display = 'block'; // Menampilkan form input
+                    file1.setAttribute('required', 'true');// Membuat Atribut Required
+                    file2.style.display = 'block'; // Menampilkan form input
+                    file3.style.display = 'block'; // Menampilkan form input
+                    imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
+                    imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
+                    imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
+                } else if (this.value === ''){
+                    labelPenerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.value = ''; // Reset Value
+                    labelEkspedisi.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.value = ''; // Reset Value
+                    labelResi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.value = ''; // Reset Value
+                }
+            });
+
+        } else if (jenisPenerima === 'Ekspedisi') {
+            labelPenerima.style.display = 'block'; // Menampilkan Form Input
+            penerima.style.display = 'block'; // Menampilkan Form Input
+            penerima.setAttribute('required', 'true'); // Membuat Atribut Required
+        } else {
+            console.log("Nilai jenis Penerima tidak valid");
+        }
+
+        // membuat refresh halaman modal tanpa menutup modal dialog
+        let isModalShown = false;
+        // Refresh halaman modal
+        if (isModalShown) {
+            $('#Diterima').modal('hide'); // Menyembunyikan modal
+            location.reload(); // Melakukan refresh halaman
+            $('#Diterima').modal('show'); // Menampilkan modal kembali
+        }
+
+        // Mendapatkan tombol "Cancel" berdasarkan ID
+        const cancelDriver = document.getElementById('cancelDriver');
+        if (cancelDriver) {
+            cancelDriver.addEventListener('click', function() {
+            jenisPenerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+            penerima.value = ''; // Mengatur ulang nilai menjadi kosong
+            ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+            resi.value = ''; // Mengatur ulang nilai menjadi kosong
+            file1.value = ''; // Mengatur ulang nilai menjadi kosong
+            file2.value = ''; // Mengatur ulang nilai menjadi kosong
+            file3.value = ''; // Mengatur ulang nilai menjadi kosong
+            imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+            imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+            imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
+            labelPenerima.style.display = 'none'; // Menyembunyikan form input
+            penerima.style.display = 'none'; // Menyembunyikan form input
+            labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
+            ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+            labelResi.style.display = 'none'; // Menyembunyikan form input
+            resi.style.display = 'none'; // Menyembunyikan form input
+            labelBukti1.style.display = 'none'; // Menyembunyikan form input
+            labelBukti2.style.display = 'none'; // Menyembunyikan form input
+            labelBukti3.style.display = 'none'; // Menyembunyikan form input
+            file1.style.display = 'none'; // Menyembunyikan form input
+            file2.style.display = 'none'; // Menyembunyikan form input
+            file3.style.display = 'none'; // Menyembunyikan form input
+        });
+        } else {
+            console.log("Button Cancel Driver Sedang Aktif");
+        }
+
+         // Mendapatkan tombol "Cancel" berdasarkan ID
+        const cancelEkspedisi = document.getElementById('cancelEkspedisi');
+        if (cancelEkspedisi) {
+            cancelEkspedisi.addEventListener('click', function() {
+                penerima.value = ''; // Mengatur ulang nilai menjadi kosong
+            });
+        } else {
+            console.log("Button Cancel Ekspedisi Sedang Aktif");
+        }
+    </script>
+    <!-- End JS Dikirim -->
+    <style>
+        .preview-image {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </div>
 <!-- End Modal Diterima  -->
 
@@ -746,7 +845,6 @@ function generate_uuid()
 </script>
 
 <!-- Number format untuk harga -->
-
 <script>
     // Mendapatkan referensi elemen input
     var hargaProdukInputs = document.querySelectorAll('.harga_produk');
@@ -799,3 +897,29 @@ function generate_uuid()
         $('#qty').val(qty);
     });
 </script>
+
+<!-- date picker with flatpick -->
+<script type="text/javascript">
+    flatpickr("#date", {
+        dateFormat: "d/m/Y",
+    });
+
+    flatpickr("#tempo", {
+        dateFormat: "d/m/Y",
+    });
+
+    // untuk menampilkan tanggal hari ini
+    var dateInput = document.getElementById('date');
+
+    // Membuat objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
+    var day = String(today.getDate()).padStart(2, '0');
+    var month = String(today.getMonth() + 1).padStart(2, '0');
+    var year = today.getFullYear();
+
+    // Mengatur nilai default input dengan format yang diinginkan
+    dateInput.value = day + '/' + month + '/' + year;
+</script>
+<!-- end date picker -->

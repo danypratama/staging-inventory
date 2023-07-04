@@ -874,9 +874,7 @@ include "akses.php";
         const imagePreview2 = document.getElementById('imagePreview2');
         const imagePreview3 = document.getElementById('imagePreview3');
 
-
         let isModalShown = false;
-
 
         jenisPengirimanSelect.addEventListener('change', function() {
             if (this.value === 'Driver') {

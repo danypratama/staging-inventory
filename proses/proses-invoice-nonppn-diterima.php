@@ -2,6 +2,16 @@
 session_start();
 include "../koneksi.php";
 
+
+if(isset($_POST['diterima_driver'])){
+    echo"oke driver";
+
+}else if(isset($_POST['diterima_ekspedisi'])){
+    echo"oke ekspedisi";
+}
+
+
+
 // Memulai transaksi
 $connect->begin_transaction();
 
