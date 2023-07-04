@@ -32,12 +32,10 @@ if (isset($_POST['simpan-tmp'])) {
 
         // Jika tidak terjadi kesalahan, commit transaksi
         mysqli_commit($connect);
-        $_SESSION['info'] = 'Disimpan';
         header("Location:../detail-produk-spk-reg.php?id='$id_spk_encode'");
     } catch (Exception $e) {
         // Jika terjadi kesalahan, rollback transaksi
         mysqli_rollback($connect);
-        $_SESSION['info'] = 'Silahkan Ulangi Kembali';
         header("Location:../detail-produk-spk-reg.php?id='$id_spk_encode'");
     }
 } else if (isset($_POST['simpan-trx'])) {
@@ -82,12 +80,10 @@ if (isset($_POST['simpan-tmp'])) {
         }
         // Jika tidak terjadi kesalahan, commit transaksi
         mysqli_commit($connect);
-        $_SESSION['info'] = 'Disimpan';
         header("Location:../spk-reg.php");
     } catch (Exception $e) {
         // Jika terjadi kesalahan, rollback transaksi
         mysqli_rollback($connect);
-        $_SESSION['info'] = 'Silahkan Ulangi Kembali';
         header("Location:../spk-reg.php");
     }
 } else if (isset($_POST['edit'])) {
@@ -100,7 +96,6 @@ if (isset($_POST['simpan-tmp'])) {
 
     $update = mysqli_query($connect, "UPDATE tmp_produk_spk SET qty = '$qty' WHERE id_tmp = '$id_tmp'");
     if ($update) {
-        $_SESSION['info'] = 'Diupdate';
         header("Location:../detail-produk-spk-reg.php?id='$id_spk_encode'");
     }
 } else if (isset($_GET['hapus_tmp'])) {
@@ -108,8 +103,6 @@ if (isset($_POST['simpan-tmp'])) {
     $id_spk = $_GET['id_spk'];
 
     $update = mysqli_query($connect, "DELETE FROM tmp_produk_spk WHERE id_tmp = '$idh'");
-
-    $_SESSION['info'] = 'Dihapus';
     header("Location:../detail-produk-spk-reg.php?id='$id_spk'");
 
     // hapus produk trx

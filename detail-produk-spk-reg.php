@@ -52,6 +52,12 @@ include "akses.php";
 
     <main id="main" class="main">
         <section>
+            <!-- SWEET ALERT -->
+            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                                        echo $_SESSION['info'];
+                                                    }
+                                                    unset($_SESSION['info']); ?>"></div>
+            <!-- END SWEET ALERT -->
             <div class="card shadow p-2">
                 <div class="card-header text-center">
                     <h5><strong>DETAIL PRODUK SPK</strong></h5>

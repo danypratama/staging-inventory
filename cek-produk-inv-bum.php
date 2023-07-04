@@ -916,8 +916,8 @@ include "akses.php";
                             <input type="text" class="form-control" name="resi" id="resi" style="display: none;">
                         </div>
                         <div class="mb-3">
-                            <label id="labelDate" style="display: none;">Tanggal</label>
-                            <input type="text" style="background-color:white; display: none;" class="bg-white form-control" name="tgl" id="date" required>
+                            <label id="labelDate">Tanggal</label>
+                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
                         </div>
                         <div class="mb-3">
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
@@ -989,8 +989,6 @@ include "akses.php";
         const labelResi = document.getElementById('labelResi')
         const resiSelect = document.getElementById('resi');
         const dikirim = document.getElementById('dikirim');
-        const labelDate = document.getElementById('labelDate');
-        const inputDate = document.getElementById('date');
         const labelBukti1 = document.getElementById('labelBukti1');
         const labelBukti2 = document.getElementById('labelBukti2');
         const labelBukti3 = document.getElementById('labelBukti3');
@@ -1001,9 +999,7 @@ include "akses.php";
         const imagePreview2 = document.getElementById('imagePreview2');
         const imagePreview3 = document.getElementById('imagePreview3');
 
-
         let isModalShown = false;
-
 
         jenisPengirimanSelect.addEventListener('change', function() {
             if (this.value === 'Driver') {
@@ -1017,8 +1013,6 @@ include "akses.php";
                 ekspedisiSelect.removeAttribute('required');
                 resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                 resiSelect.removeAttribute('required');
-                labelDate.style.display = 'block'; // Menampilkan form input
-                inputDate.style.display = 'block'; // Menampilkan form input
                 labelResi.style.display = 'none'; // Menyembunyikan form input
                 labelBukti1.style.display = 'none'; // Menyembunyikan form input
                 labelBukti2.style.display = 'none'; // Menyembunyikan form input
@@ -1064,9 +1058,7 @@ include "akses.php";
                 pengirimSelect.style.display = 'none'; // Menyembunyikan form input
                 labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
                 ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
-                resiSelect.style.display = 'none'; // Menyembunyikan form input
-                labelDate.style.display = 'none'; // Menyembunyikan form input
-                inputDate.style.display = 'none'; // Menyembunyikan form input
+                labelResi.style.display = 'none'; // Menyembunyikan form input
                 file1.style.display = 'none'; // Menyembunyikan form input
                 file2.style.display = 'none'; // Menyembunyikan form input
                 file3.style.display = 'none'; // Menyembunyikan form input
@@ -1086,6 +1078,7 @@ include "akses.php";
                 file1.style.display = 'none'; // Menyembunyikan form input
                 file2.style.display = 'none'; // Menyembunyikan form input
                 file3.style.display = 'none'; // Menyembunyikan form input
+                dikirim.disabled = true;
             });
 
             // Refresh halaman modal
@@ -1118,8 +1111,6 @@ include "akses.php";
                 pengirimSelect.style.display = 'none'; // Menyembunyikan form input
                 labelResi.style.display = 'none'; // Menyembunyikan form input
                 resiSelect.style.display = 'none'; // Menyembunyikan form input
-                labelDate.style.display = 'none'; // Menyembunyikan form input
-                inputDate.style.display = 'none'; // Menyembunyikan form input
                 labelBukti1.style.display = 'none'; // Menyembunyikan form input
                 labelBukti2.style.display = 'none'; // Menyembunyikan form input
                 labelBukti3.style.display = 'none'; // Menyembunyikan form input
