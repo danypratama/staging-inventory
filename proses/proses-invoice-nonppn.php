@@ -206,9 +206,25 @@ if (isset($_POST['simpan-inv'])) {
         move_uploaded_file($file1_tmp, $file1_destination);
         move_uploaded_file($file2_tmp, $file2_destination);
         move_uploaded_file($file3_tmp, $file3_destination);
+
+        // Kompres dan ubah ukuran gambar bukti terima 1
+        $compressed_file1_destination = "../gambar/bukti1/compressed_$file1_name";
+        compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+        unlink($file1_destination);
+
+        // Kompres dan ubah ukuran gambar bukti terima 2
+        $compressed_file2_destination = "../gambar/bukti2/compressed_$file2_name";
+        compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
+        unlink($file2_destination);
+
+        // Kompres dan ubah ukuran gambar bukti terima 3
+        $compressed_file3_destination = "../gambar/bukti3/compressed_$file3_name";
+        compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
+        unlink($file3_destination);
+
+
         if ($jenis_pengiriman == 'Driver') {
             $pengirim = $_POST['pengirim'];
-
 
             $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
 
@@ -233,7 +249,7 @@ if (isset($_POST['simpan-inv'])) {
                                                         VALUES 
                                                         ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
 
-            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$file1_name', '$file2_name', '$file3_name')");
+            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', 'compressed_$file1_name', 'compressed_$file2_name', 'compressed_$file3_name')");
 
             if ($ubah_status && $status_kirim && $bukti_terima) {
                 // Commit transaksi jika berhasil
@@ -274,6 +290,94 @@ if (isset($_POST['simpan-inv'])) {
 ?>
 
 <?php
+function compressAndResizeImage($source, $destination, $targetWidth, $targetHeight, $quality) {
+    // Mendapatkan informasi gambar
+    $info = getimagesize($source);
+    
+    // Mengecek tipe gambar
+    if ($info['mime'] == 'image/jpeg') {
+        // Membaca gambar
+        $image = imagecreatefromjpeg($source);
+    }
+    elseif ($info['mime'] == 'image/png') {
+        // Membaca gambar
+        $image = imagecreatefrompng($source);
+    } else {
+        // Tipe gambar tidak didukung
+        return false;
+    }
+    
+    // Mendapatkan orientasi gambar
+    $orientation = 1; // Default: landscape
+    if (function_exists('exif_read_data')) {
+        $exif = @exif_read_data($source);
+        if ($exif !== false && isset($exif['Orientation'])) {
+            $orientation = $exif['Orientation'];
+        }
+    }
+    
+    // Menghitung ukuran gambar yang akan diubah
+    $width = imagesx($image);
+    $height = imagesy($image);
+    
+    // Menghitung aspek rasio gambar asli
+    $aspectRatio = $width / $height;
+    
+    // Menghitung aspek rasio target
+    $targetAspectRatio = $targetWidth / $targetHeight;
+    
+    // Menentukan bagaimana gambar akan diubah
+    if ($aspectRatio >= $targetAspectRatio) {
+        // Gambar asli lebih lebar daripada target, maka lebar akan diubah ke targetWidth
+        $newWidth = $targetWidth;
+        $newHeight = $targetWidth / $aspectRatio;
+    } else {
+        // Gambar asli lebih tinggi daripada target, maka tinggi akan diubah ke targetHeight
+        $newHeight = $targetHeight;
+        $newWidth = $targetHeight * $aspectRatio;
+    }
+    
+    // Membuat gambar baru dengan ukuran yang diubah
+    $newImage = imagecreatetruecolor($targetWidth, $targetHeight);
+    
+    // Mengubah mode blending gambar baru untuk menghindari kotak hitam
+    imagealphablending($newImage, false);
+    imagesavealpha($newImage, true);
+    $transparent = imagecolorallocatealpha($newImage, 0, 0, 0, 127);
+    imagefill($newImage, 0, 0, $transparent);
+    
+    // Mengompres dan menyalin gambar ke gambar baru
+    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
+    
+    // Memutar gambar sesuai orientasi asli
+    switch ($orientation) {
+        case 3:
+            $newImage = imagerotate($newImage, 180, 0);
+            break;
+        case 6:
+            $newImage = imagerotate($newImage, -90, 0);
+            break;
+        case 8:
+            $newImage = imagerotate($newImage, 90, 0);
+            break;
+    }
+    
+    // Menyimpan gambar dengan kualitas tertentu
+    if ($info['mime'] == 'image/jpeg') {
+        imagejpeg($newImage, $destination, $quality);
+    } elseif ($info['mime'] == 'image/png') {
+        imagepng($newImage, $destination, round(9 - ($quality / 100) * 9));
+    }
+    
+    // Menghapus gambar dari memori
+    imagedestroy($image);
+    imagedestroy($newImage);
+    
+    return true;
+}
+
+
+
 function generate_uuid()
 {
     return sprintf(

@@ -798,7 +798,7 @@ include "akses.php";
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
                             <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)" style="display: none;">
                         </div>
-                        <div class="mb-3" id="imagePreview" style="display: none;"></div>
+                        <div class="mb-3 preview-image" id="imagePreview" style="display: none;"></div>
 
                         <div class="mb-3">
                             <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
