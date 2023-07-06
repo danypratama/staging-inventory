@@ -16,11 +16,11 @@ include "akses.php";
     <?php include "page/head.php"; ?>
 
     <style type="text/css">
-    @media only screen and (max-width: 500px) {
-        body {
-            font-size: 14px;
+        @media only screen and (max-width: 500px) {
+            body {
+                font-size: 14px;
+            }
         }
-    }
     </style>
 </head>
 
@@ -29,17 +29,18 @@ include "akses.php";
     <?php include "page/nav-header.php" ?>
     <!-- end nav header -->
 
-    <!-- sidebar  -->
+    <!-- sidebar -->
     <?php include "page/sidebar.php"; ?>
     <!-- end sidebar -->
-
 
     <main id="main" class="main">
         <!-- SWEET ALERT -->
         <section>
             <div class="card shadow p-2">
                 <div class="card-header text-center">
-                    <h5><strong>DETAIL INVOICE PPN</strong></h5>
+                    <h5>
+                        <strong>DETAIL INVOICE PPN</strong>
+                    </h5>
                 </div>
                 <?php
                 include "koneksi.php";
@@ -238,7 +239,8 @@ include "akses.php";
                     <div class="table-responsive">
                         <div class="text-start mb-3">
                             <a href="invoice-reguler-dikirim.php?sort=baru" class="btn btn-warning btn-detail  mb-2">
-                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                <i class="bi bi-arrow-left"></i>
+                                Halaman Sebelumnya
                             </a>
                             <?php
                             $id_inv_ppn = base64_decode($_GET['id']);
@@ -260,9 +262,9 @@ include "akses.php";
                             $data_cek = mysqli_fetch_array($query_cek);
                             $total_data = mysqli_num_rows($query_cek);
                             ?>
-                            <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
-                                data-bs-target="#Diterima">
-                                <i class="bi bi-send"></i> Diterima
+                            <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Diterima">
+                                <i class="bi bi-send"></i>
+                                Diterima
                             </button>
                             <?php
                             include "koneksi.php";
@@ -402,22 +404,23 @@ include "akses.php";
                             </div>
                             <div class="col-sm-4">
                                 <input type="hidden" name="id_inv" value="<?php echo $data_cek_harga['id_inv_ppn'] ?>"
-                                    readonly>
+                                    readonly="readonly">
                                 <input type="hidden" name="id_trx[]"
                                     id="id_<?php echo $data_cek_harga['id_transaksi'] ?>"
-                                    value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly>
+                                    value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly="readonly">
                                 <input type="text" class="form-control bg-light"
-                                    value="<?php echo $data_cek_harga['nama_produk'] ?>" readonly>
+                                    value="<?php echo $data_cek_harga['nama_produk'] ?>" readonly="readonly">
                             </div>
                             <div class="col-sm-1">
                                 <input type="text" class="form-control bg-light text-center"
-                                    value="<?php echo $data_cek_harga['nama_merk'] ?>" readonly>
+                                    value="<?php echo $data_cek_harga['nama_merk'] ?>" readonly="readonly">
                             </div>
                             <div class="col-sm-2">
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1">Rp</span>
                                     <input type="text" class="form-control text-end harga_produk" name="harga_produk[]"
-                                        value="<?php echo number_format($data_cek_harga['harga']) ?>" required>
+                                        value="<?php echo number_format($data_cek_harga['harga']) ?>"
+                                        required="required">
                                 </div>
                             </div>
                             <div class="col-sm-2">
@@ -442,7 +445,7 @@ include "akses.php";
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1">Qty</span>
                                     <input type="text" class="form-control bg-light text-end" name="qty[]"
-                                        value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly>
+                                        value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly="readonly">
                                 </div>
                             </div>
                         </div>
@@ -479,7 +482,8 @@ include "akses.php";
                                 $query_kat = mysqli_query($connect, $sql_kat);
                                 $data_kat = mysqli_fetch_array($query_kat);
                                 ?>
-                                <input type="hidden" name="id_inv" value="<?php echo $id_inv_kat ?>" readonly>
+                                <input type="hidden" name="id_inv" value="<?php echo $id_inv_kat ?>"
+                                    readonly="readonly">
                                 <div class="mb-3">
                                     <select name="kat_inv" class="form-select">
                                         <?php
@@ -506,13 +510,15 @@ include "akses.php";
             </div>
             <!-- End Modal -->
         </section>
-    </main><!-- End #main -->
+    </main>
+    <!-- End #main -->
 
     <!-- Footer -->
     <?php include "page/footer.php" ?>
     <!-- End Footer -->
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+        <i class="bi bi-arrow-up-short"></i>
+    </a>
 
     <?php include "page/script.php" ?>
 </body>
@@ -525,7 +531,8 @@ include "akses.php";
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Bukti Kiirim</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal"
+                    aria-label="Close">X</button>
             </div>
             <div class="modal-body">
                 <div class="card-body">
@@ -594,7 +601,7 @@ include "akses.php";
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
                 <div class="card-body">
@@ -635,7 +642,7 @@ include "akses.php";
                         <div class="mb-3">
                             <label id="labelDate">Tanggal</label>
                             <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
-                                id="date" required>
+                                id="date" required="required">
                         </div>
                         <div class="mb-3">
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
@@ -679,193 +686,213 @@ include "akses.php";
     <?php include "page/upload-img.php";  ?>
     <!-- kode JS Dikirim -->
     <script>
-    var input = document.getElementById('resi');
+        var input = document.getElementById('resi');
 
-    input.addEventListener('input', function() {
-        var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
-        input.value = sanitizedValue;
-    });
+        input.addEventListener('input', function () {
+            var sanitizedValue = input
+                .value
+                .replace(/[^A-Za-z0-9]/g, '');
+            input.value = sanitizedValue;
+        });
     </script>
     <script>
-    function checkFileName() {
-        var file1 = document.getElementById('fileku1').value;
-        var file2 = document.getElementById('fileku2').value;
-        var file3 = document.getElementById('fileku3').value;
+        function checkFileName() {
+            var file1 = document
+                .getElementById('fileku1')
+                .value;
+            var file2 = document
+                .getElementById('fileku2')
+                .value;
+            var file3 = document
+                .getElementById('fileku3')
+                .value;
 
-        if (file1 === file2 && file2 !== "") {
-            alert("Nama file ke 2 harus berbeda!");
-            document.getElementById('fileku2').value = "";
-            document.getElementById('imagePreview2').innerHTML = "";
-        }
+            if (file1 === file2 && file2 !== "") {
+                alert("Nama file ke 2 harus berbeda!");
+                document
+                    .getElementById('fileku2')
+                    .value = "";
+                document
+                    .getElementById('imagePreview2')
+                    .innerHTML = "";
+            }
 
-        if (file1 === file3 && file3 !== "") {
-            alert("Nama file ke 3 harus berbeda!");
-            document.getElementById('fileku3').value = "";
-            document.getElementById('imagePreview3').innerHTML = "";
-        }
+            if (file1 === file3 && file3 !== "") {
+                alert("Nama file ke 3 harus berbeda!");
+                document
+                    .getElementById('fileku3')
+                    .value = "";
+                document
+                    .getElementById('imagePreview3')
+                    .innerHTML = "";
+            }
 
-        if (file2 === file3 && file3 !== "") {
-            alert("Nama file ke 3 harus berbeda!");
-            document.getElementById('fileku3').value = "";
-            document.getElementById('imagePreview3').innerHTML = "";
+            if (file2 === file3 && file3 !== "") {
+                alert("Nama file ke 3 harus berbeda!");
+                document
+                    .getElementById('fileku3')
+                    .value = "";
+                document
+                    .getElementById('imagePreview3')
+                    .innerHTML = "";
+            }
         }
-    }
     </script>
     <script>
-    const jenisPenerima = <?php echo json_encode($jenis_pengiriman); ?>;
-    const labeljenisPenerima = document.getElementById('labelJenisPenerima');
-    const jenisPenerimaSelect = document.getElementById('jenis-penerima');
-    const labelPenerima = document.getElementById('labelPenerima');
-    const penerima = document.getElementById('penerima');
-    const labelEkspedisi = document.getElementById('labelEkspedisi');
-    const ekspedisiSelect = document.getElementById('ekspedisi');
-    const labelResi = document.getElementById('labelResi');
-    const resi = document.getElementById('resi');
-    const labelBukti1 = document.getElementById('labelBukti1');
-    const labelBukti2 = document.getElementById('labelBukti2');
-    const labelBukti3 = document.getElementById('labelBukti3');
-    const file1 = document.getElementById('fileku1');
-    const file2 = document.getElementById('fileku2');
-    const file3 = document.getElementById('fileku3');
-    const imagePreview = document.getElementById('imagePreview');
-    const imagePreview2 = document.getElementById('imagePreview2');
-    const imagePreview3 = document.getElementById('imagePreview3');
-    const diterima = document.getElementById('diterima');
+        const jenisPenerima = < ? php echo json_encode($jenis_pengiriman); ? > ;
+        const labeljenisPenerima = document.getElementById('labelJenisPenerima');
+        const jenisPenerimaSelect = document.getElementById('jenis-penerima');
+        const labelPenerima = document.getElementById('labelPenerima');
+        const penerima = document.getElementById('penerima');
+        const labelEkspedisi = document.getElementById('labelEkspedisi');
+        const ekspedisiSelect = document.getElementById('ekspedisi');
+        const labelResi = document.getElementById('labelResi');
+        const resi = document.getElementById('resi');
+        const labelBukti1 = document.getElementById('labelBukti1');
+        const labelBukti2 = document.getElementById('labelBukti2');
+        const labelBukti3 = document.getElementById('labelBukti3');
+        const file1 = document.getElementById('fileku1');
+        const file2 = document.getElementById('fileku2');
+        const file3 = document.getElementById('fileku3');
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreview2 = document.getElementById('imagePreview2');
+        const imagePreview3 = document.getElementById('imagePreview3');
+        const diterima = document.getElementById('diterima');
 
-    if (jenisPenerima === 'Driver') {
-        labelJenisPenerima.style.display = 'block'; // Menampilkan Form Input
-        jenisPenerimaSelect.style.display = 'block'; // Menampilkan Form Input
-        jenisPenerimaSelect.setAttribute('required', 'true');
-        diterima.disabled = false;
+        if (jenisPenerima === 'Driver') {
+            labelJenisPenerima.style.display = 'block'; // Menampilkan Form Input
+            jenisPenerimaSelect.style.display = 'block'; // Menampilkan Form Input
+            jenisPenerimaSelect.setAttribute('required', 'true');
+            diterima.disabled = false;
 
-        //Membuat event listener saat select data
-        jenisPenerimaSelect.addEventListener('change', function() {
-            if (this.value === 'Customer') {
-                labelPenerima.style.display = 'block'; // Menampilkan Form Input
-                penerima.style.display = 'block'; // Menampilkan Form Input
-                penerima.setAttribute('required', 'true'); // Membuat Atribut Required
-                labelEkspedisi.style.display = 'none'; // Menyembunyikan Form Input
-                ekspedisiSelect.style.display = 'none'; // Menyembunyikan Form Input
-                ekspedisiSelect.value = ''; // Reset Value
-                labelResi.style.display = 'none'; // Menyembunyikan Form Input
-                resi.style.display = 'none'; // Menyembunyikan Form Input
-                resi.value = ''; // Reset Value
-                labelBukti1.style.display = 'block'; // Menampilkan form input
-                labelBukti2.style.display = 'block'; // Menampilkan form input
-                labelBukti3.style.display = 'block'; // Menampilkan form input
-                file1.style.display = 'block'; // Menampilkan form input
-                file1.setAttribute('required', 'true'); // Membuat Atribut Required
-                file2.style.display = 'block'; // Menampilkan form input
-                file3.style.display = 'block'; // Menampilkan form input
-                imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
-                imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
-                imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
+            //Membuat event listener saat select data
+            jenisPenerimaSelect.addEventListener('change', function () {
+                if (this.value === 'Customer') {
+                    labelPenerima.style.display = 'block'; // Menampilkan Form Input
+                    penerima.style.display = 'block'; // Menampilkan Form Input
+                    penerima.setAttribute('required', 'true'); // Membuat Atribut Required
+                    labelEkspedisi.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.value = ''; // Reset Value
+                    labelResi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.value = ''; // Reset Value
+                    labelBukti1.style.display = 'block'; // Menampilkan form input
+                    labelBukti2.style.display = 'block'; // Menampilkan form input
+                    labelBukti3.style.display = 'block'; // Menampilkan form input
+                    file1.style.display = 'block'; // Menampilkan form input
+                    file1.setAttribute('required', 'true'); // Membuat Atribut Required
+                    file2.style.display = 'block'; // Menampilkan form input
+                    file3.style.display = 'block'; // Menampilkan form input
+                    imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
+                    imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
+                    imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
+                    file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                    file2.value = ''; // Mengatur ulang nilai menjadi kosong
+                    file3.value = ''; // Mengatur ulang nilai menjadi kosong
+                    imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+                    imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+                    imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
+                    ekspedisiSelect.removeAttribute('required', 'true'); // Membuat Atribut Required
+                    resi.removeAttribute('required', 'true'); // Membuat Atribut Required
+                } else if (this.value === 'Ekspedisi') {
+                    labelPenerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.value = ''; // Reset Value
+                    penerima.removeAttribute('required', 'true'); // Membuat Atribut Required
+                    labelEkspedisi.style.display = 'block'; // Menampilkan Form Input
+                    ekspedisiSelect.style.display = 'block'; // Menampilkan Form Input
+                    ekspedisiSelect.setAttribute('required', 'true'); // Membuat Atribut Required
+                    labelResi.style.display = 'block'; // Menampilkan Form Input
+                    resi.style.display = 'block'; // Menampilkan Form Input
+                    resi.setAttribute('required', 'true'); // Membuat Atribut Required
+                    labelBukti1.style.display = 'block'; // Menampilkan form input
+                    labelBukti2.style.display = 'block'; // Menampilkan form input
+                    labelBukti3.style.display = 'block'; // Menampilkan form input
+                    file1.style.display = 'block'; // Menampilkan form input
+                    file1.setAttribute('required', 'true'); // Membuat Atribut Required
+                    file2.style.display = 'block'; // Menampilkan form input
+                    file3.style.display = 'block'; // Menampilkan form input
+                    imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
+                    imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
+                    imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
+                } else if (this.value === '') {
+                    labelPenerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.style.display = 'none'; // Menyembunyikan Form Input
+                    penerima.value = ''; // Reset Value
+                    labelEkspedisi.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan Form Input
+                    ekspedisiSelect.value = ''; // Reset Value
+                    labelResi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.style.display = 'none'; // Menyembunyikan Form Input
+                    resi.value = ''; // Reset Value
+                }
+            });
+
+        } else if (jenisPenerima === 'Ekspedisi') {
+            labelPenerima.style.display = 'block'; // Menampilkan Form Input
+            penerima.style.display = 'block'; // Menampilkan Form Input
+            penerima.setAttribute('required', 'true'); // Membuat Atribut Required
+        } else {
+            console.log("Nilai jenis Penerima tidak valid");
+        }
+
+        // membuat refresh halaman modal tanpa menutup modal dialog
+        let isModalShown = false;
+        // Refresh halaman modal
+        if (isModalShown) {
+            $('#Diterima').modal('hide'); // Menyembunyikan modal
+            location.reload(); // Melakukan refresh halaman
+            $('#Diterima').modal('show'); // Menampilkan modal kembali
+        }
+
+        // Mendapatkan tombol "Cancel" berdasarkan ID
+        const cancelDriver = document.getElementById('cancelDriver');
+        if (cancelDriver) {
+            cancelDriver.addEventListener('click', function () {
+                jenisPenerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                penerima.value = ''; // Mengatur ulang nilai menjadi kosong
+                ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                resi.value = ''; // Mengatur ulang nilai menjadi kosong
                 file1.value = ''; // Mengatur ulang nilai menjadi kosong
                 file2.value = ''; // Mengatur ulang nilai menjadi kosong
                 file3.value = ''; // Mengatur ulang nilai menjadi kosong
                 imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
                 imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
                 imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
-                ekspedisiSelect.removeAttribute('required', 'true'); // Membuat Atribut Required
-                resi.removeAttribute('required', 'true'); // Membuat Atribut Required
-            } else if (this.value === 'Ekspedisi') {
-                labelPenerima.style.display = 'none'; // Menyembunyikan Form Input
-                penerima.style.display = 'none'; // Menyembunyikan Form Input
-                penerima.value = ''; // Reset Value
-                penerima.removeAttribute('required', 'true'); // Membuat Atribut Required
-                labelEkspedisi.style.display = 'block'; // Menampilkan Form Input
-                ekspedisiSelect.style.display = 'block'; // Menampilkan Form Input
-                ekspedisiSelect.setAttribute('required', 'true'); // Membuat Atribut Required
-                labelResi.style.display = 'block'; // Menampilkan Form Input
-                resi.style.display = 'block'; // Menampilkan Form Input
-                resi.setAttribute('required', 'true'); // Membuat Atribut Required
-                labelBukti1.style.display = 'block'; // Menampilkan form input
-                labelBukti2.style.display = 'block'; // Menampilkan form input
-                labelBukti3.style.display = 'block'; // Menampilkan form input
-                file1.style.display = 'block'; // Menampilkan form input
-                file1.setAttribute('required', 'true'); // Membuat Atribut Required
-                file2.style.display = 'block'; // Menampilkan form input
-                file3.style.display = 'block'; // Menampilkan form input
-                imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
-                imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
-                imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
-            } else if (this.value === '') {
-                labelPenerima.style.display = 'none'; // Menyembunyikan Form Input
-                penerima.style.display = 'none'; // Menyembunyikan Form Input
-                penerima.value = ''; // Reset Value
-                labelEkspedisi.style.display = 'none'; // Menyembunyikan Form Input
-                ekspedisiSelect.style.display = 'none'; // Menyembunyikan Form Input
-                ekspedisiSelect.value = ''; // Reset Value
-                labelResi.style.display = 'none'; // Menyembunyikan Form Input
-                resi.style.display = 'none'; // Menyembunyikan Form Input
-                resi.value = ''; // Reset Value
-            }
-        });
+                labelPenerima.style.display = 'none'; // Menyembunyikan form input
+                penerima.style.display = 'none'; // Menyembunyikan form input
+                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
+                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                labelResi.style.display = 'none'; // Menyembunyikan form input
+                resi.style.display = 'none'; // Menyembunyikan form input
+                labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                file1.style.display = 'none'; // Menyembunyikan form input
+                file2.style.display = 'none'; // Menyembunyikan form input
+                file3.style.display = 'none'; // Menyembunyikan form input
+            });
+        } else {
+            console.log("Button Cancel Driver Sedang Aktif");
+        }
 
-    } else if (jenisPenerima === 'Ekspedisi') {
-        labelPenerima.style.display = 'block'; // Menampilkan Form Input
-        penerima.style.display = 'block'; // Menampilkan Form Input
-        penerima.setAttribute('required', 'true'); // Membuat Atribut Required
-    } else {
-        console.log("Nilai jenis Penerima tidak valid");
-    }
-
-    // membuat refresh halaman modal tanpa menutup modal dialog
-    let isModalShown = false;
-    // Refresh halaman modal
-    if (isModalShown) {
-        $('#Diterima').modal('hide'); // Menyembunyikan modal
-        location.reload(); // Melakukan refresh halaman
-        $('#Diterima').modal('show'); // Menampilkan modal kembali
-    }
-
-    // Mendapatkan tombol "Cancel" berdasarkan ID
-    const cancelDriver = document.getElementById('cancelDriver');
-    if (cancelDriver) {
-        cancelDriver.addEventListener('click', function() {
-            jenisPenerimaSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-            penerima.value = ''; // Mengatur ulang nilai menjadi kosong
-            ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-            resi.value = ''; // Mengatur ulang nilai menjadi kosong
-            file1.value = ''; // Mengatur ulang nilai menjadi kosong
-            file2.value = ''; // Mengatur ulang nilai menjadi kosong
-            file3.value = ''; // Mengatur ulang nilai menjadi kosong
-            imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
-            imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
-            imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
-            labelPenerima.style.display = 'none'; // Menyembunyikan form input
-            penerima.style.display = 'none'; // Menyembunyikan form input
-            labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
-            ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
-            labelResi.style.display = 'none'; // Menyembunyikan form input
-            resi.style.display = 'none'; // Menyembunyikan form input
-            labelBukti1.style.display = 'none'; // Menyembunyikan form input
-            labelBukti2.style.display = 'none'; // Menyembunyikan form input
-            labelBukti3.style.display = 'none'; // Menyembunyikan form input
-            file1.style.display = 'none'; // Menyembunyikan form input
-            file2.style.display = 'none'; // Menyembunyikan form input
-            file3.style.display = 'none'; // Menyembunyikan form input
-        });
-    } else {
-        console.log("Button Cancel Driver Sedang Aktif");
-    }
-
-    // Mendapatkan tombol "Cancel" berdasarkan ID
-    const cancelEkspedisi = document.getElementById('cancelEkspedisi');
-    if (cancelEkspedisi) {
-        cancelEkspedisi.addEventListener('click', function() {
-            penerima.value = ''; // Mengatur ulang nilai menjadi kosong
-        });
-    } else {
-        console.log("Button Cancel Ekspedisi Sedang Aktif");
-    }
+        // Mendapatkan tombol "Cancel" berdasarkan ID
+        const cancelEkspedisi = document.getElementById('cancelEkspedisi');
+        if (cancelEkspedisi) {
+            cancelEkspedisi.addEventListener('click', function () {
+                penerima.value = ''; // Mengatur ulang nilai menjadi kosong
+            });
+        } else {
+            console.log("Button Cancel Ekspedisi Sedang Aktif");
+        }
     </script>
     <!-- End JS Dikirim -->
     <style>
-    .preview-image {
-        max-width: 100%;
-        height: auto;
-    }
+        .preview-image {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </div>
 <!-- End Modal Diterima -->
@@ -890,139 +917,145 @@ function generate_uuid()
 <!-- End Generate UUID -->
 
 <script>
-function refreshPage() {
-    location.reload();
-}
+    function refreshPage() {
+        location.reload();
+    }
 </script>
 
 <script>
-$(document).ready(function() {
-    $('.btn-detail').click(function() {
-        var idSpk = $(this).data('spk');
-        $('#spk').text(idSpk);
+    $(document).ready(function () {
+        $('.btn-detail').click(function () {
+            var idSpk = $(this).data('spk');
+            $('#spk').text(idSpk);
 
-        $('button.btn-pilih').attr('data-spk', idSpk);
+            $('button.btn-pilih').attr('data-spk', idSpk);
 
-        $('#modalBarang').modal('show');
-    });
-
-    $(document).on('click', '.btn-pilih', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var id = $(this).data('id');
-        var spk = $(this).attr('data-spk');
-
-        saveData(id, spk);
-    });
-
-    function saveData(id, spk) {
-        $.ajax({
-            url: 'simpan-data-spk.php',
-            type: 'POST',
-            data: {
-                id: id,
-                spk: spk
-            },
-            success: function(response) {
-                console.log('Data berhasil disimpan.');
-                $('button[data-id="' + id + '"]').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                console.error('Terjadi kesalahan saat menyimpan data:', error);
-            }
+            $('#modalBarang').modal('show');
         });
-    }
-});
+
+        $(document).on('click', '.btn-pilih', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var id = $(this).data('id');
+            var spk = $(this).attr('data-spk');
+
+            saveData(id, spk);
+        });
+
+        function saveData(id, spk) {
+            $.ajax({
+                url: 'simpan-data-spk.php',
+                type: 'POST',
+                data: {
+                    id: id,
+                    spk: spk
+                },
+                success: function (response) {
+                    console.log('Data berhasil disimpan.');
+                    $('button[data-id="' + id + '"]').prop('disabled', true);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Terjadi kesalahan saat menyimpan data:', error);
+                }
+            });
+        }
+    });
 </script>
 
 <!-- Fungsi menonaktifkan kerboard enter -->
 <script>
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        document.getElementById("simpan-data").click();
-    }
-});
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document
+                .getElementById("simpan-data")
+                .click();
+        }
+    });
 </script>
 
 <!-- Number format untuk harga -->
 
 <script>
-// Mendapatkan referensi elemen input
-var hargaProdukInputs = document.querySelectorAll('.harga_produk');
+    // Mendapatkan referensi elemen input
+    var hargaProdukInputs = document.querySelectorAll('.harga_produk');
 
-// Menambahkan event listener untuk memformat angka saat nilai berubah
-hargaProdukInputs.forEach(function(input) {
-    input.addEventListener('input', function() {
-        formatNumber(input);
+    // Menambahkan event listener untuk memformat angka saat nilai berubah
+    hargaProdukInputs.forEach(function (input) {
+        input.addEventListener('input', function () {
+            formatNumber(input);
+        });
     });
-});
 
-// Fungsi untuk memformat angka dengan pemisah ribuan
-function formatNumber(input) {
-    var hargaProdukValue = input.value.replace(/[^0-9.-]+/g, '');
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function formatNumber(input) {
+        var hargaProdukValue = input
+            .value
+            .replace(/[^0-9.-]+/g, '');
 
-    if (hargaProdukValue !== '') {
-        var formattedNumber = numberFormat(hargaProdukValue);
-        input.value = formattedNumber;
+        if (hargaProdukValue !== '') {
+            var formattedNumber = numberFormat(hargaProdukValue);
+            input.value = formattedNumber;
+        }
     }
-}
 
-// Fungsi untuk memformat angka dengan pemisah ribuan
-function numberFormat(number) {
-    return new Intl.NumberFormat('en-US').format(number);
-}
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function numberFormat(number) {
+        return new Intl
+            .NumberFormat('en-US')
+            .format(number);
+    }
 </script>
 <!-- Edit Harga -->
 <script>
-$('#edit-diskon').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('hargadisc');
-    var diskon = button.data('diskon');
-    var qty = button.data('qty');
+    $('#edit-diskon').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('hargadisc');
+        var diskon = button.data('diskon');
+        var qty = button.data('qty');
 
-    $('#id_trxdisc').val(idTrx);
-    $('#harga_produk_disc').val(harga);
-    $('#discc').val(diskon);
-    $('#qtydisc').val(qty);
-});
+        $('#id_trxdisc').val(idTrx);
+        $('#harga_produk_disc').val(harga);
+        $('#discc').val(diskon);
+        $('#qtydisc').val(qty);
+    });
 
-$('#edit').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('harga');
-    var qty = button.data('qty');
+    $('#edit').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('harga');
+        var qty = button.data('qty');
 
-    $('#id_trx').val(idTrx);
-    $('#harga_produk').val(harga);
-    $('#qty').val(qty);
-});
+        $('#id_trx').val(idTrx);
+        $('#harga_produk').val(harga);
+        $('#qty').val(qty);
+    });
 </script>
 
 <!-- date picker with flatpick -->
 <script type="text/javascript">
-flatpickr("#date", {
-    dateFormat: "d/m/Y",
-});
+    flatpickr("#date", {
+        dateFormat: "d/m/Y"
+    });
 
-flatpickr("#tempo", {
-    dateFormat: "d/m/Y",
-});
+    flatpickr("#tempo", {
+        dateFormat: "d/m/Y"
+    });
 
-// untuk menampilkan tanggal hari ini
-var dateInput = document.getElementById('date');
+    // untuk menampilkan tanggal hari ini
+    var dateInput = document.getElementById('date');
 
-// Membuat objek tanggal hari ini
-var today = new Date();
+    // Membuat objek tanggal hari ini
+    var today = new Date();
 
-// Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
-var day = String(today.getDate()).padStart(2, '0');
-var month = String(today.getMonth() + 1).padStart(2, '0');
-var year = today.getFullYear();
+    // Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
+    var day = String(today.getDate()).padStart(2, '0');
+    var month = String(today.getMonth() + 1).padStart(2, '0');
+    var year = today.getFullYear();
 
-// Mengatur nilai default input dengan format yang diinginkan
-dateInput.value = day + '/' + month + '/' + year;
+    // Mengatur nilai default input dengan format yang diinginkan
+    dateInput.value = day + '/' + month + '/' + year;
 </script>
 <!-- end date picker -->

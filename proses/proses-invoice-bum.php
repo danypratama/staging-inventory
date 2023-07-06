@@ -273,15 +273,15 @@ if (isset($_POST['simpan-inv'])) {
 <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
 <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    Swal.fire({
-        title: "Error!",
-        text: "<?php echo $error_message; ?>",
-        icon: "error",
-    }).then(function() {
-        window.location.href = "../invoice-reguler.php?sort=baru";
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal
+            .fire(
+                {title: "Error!", text: "<?php echo $error_message; ?>", icon: "error"}
+            )
+            .then(function () {
+                window.location.href = "../invoice-reguler.php?sort=baru";
+            });
     });
-});
 </script>
 <?php
     }

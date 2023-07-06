@@ -29,17 +29,18 @@ include "akses.php";
     <?php include "page/nav-header.php"?>
     <!-- end nav header -->
 
-    <!-- sidebar  -->
+    <!-- sidebar -->
     <?php include "page/sidebar.php";?>
     <!-- end sidebar -->
-
 
     <main id="main" class="main">
         <!-- SWEET ALERT -->
         <section>
             <div class="card shadow p-2">
                 <div class="card-header text-center">
-                    <h5><strong>DETAIL INVOICE NONPPN</strong></h5>
+                    <h5>
+                        <strong>DETAIL INVOICE NONPPN</strong>
+                    </h5>
                 </div>
                 <?php
 include "koneksi.php";
@@ -97,7 +98,8 @@ while ($data2 = mysqli_fetch_array($query)) {
     $kat_inv = $data2['kategori_inv'];
     $id_cs = $data2['id_customer'];
     ?>
-                                    <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / <?php if (!empty($data2['no_po'])) {
+                                    <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) /
+                                        <?php if (!empty($data2['no_po'])) {
         echo "(" . $data2['no_po'] . ")/";
     }?>
                                         (<?php echo $data2['no_spk'] ?>)</p>
@@ -241,7 +243,8 @@ $jenis_pengiriman = $data_status_kirim['jenis_pengiriman'];
                     <div class="table-responsive">
                         <div class="text-start mb-3">
                             <a href="invoice-reguler-dikirim.php?sort=baru" class="btn btn-warning btn-detail mb-2">
-                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                <i class="bi bi-arrow-left"></i>
+                                Halaman Sebelumnya
                             </a>
                             <?php
 $id_inv_nonppn = base64_decode($_GET['id']);
@@ -259,35 +262,36 @@ $sql_cek = "SELECT
                                         JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
                                         JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
                                         WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn' AND status_trx = '1' ORDER BY no_spk ASC";
-$query_cek = mysqli_query($connect, $sql_cek);
-$data_cek = mysqli_fetch_array($query_cek);
-$total_data = mysqli_num_rows($query_cek);
-?>
+                            $query_cek = mysqli_query($connect, $sql_cek);
+                            $data_cek = mysqli_fetch_array($query_cek);
+                            $total_data = mysqli_num_rows($query_cek);
+                            ?>
                             <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
                                 data-bs-target="#Diterima">
-                                <i class="bi bi-send"></i> Diterima
+                                <i class="bi bi-send"></i>
+                                Diterima
                             </button>
                             <?php
-include "koneksi.php";
-$sql_bukti_kirim = "SELECT * FROM inv_bukti_terima WHERE id_inv = '$id_inv'";
-$query_bukti_kirim = mysqli_query($connect, $sql_bukti_kirim);
-$total_row = mysqli_num_rows($query_bukti_kirim);
-if ($total_row > 0) {
-    echo '
+                                include "koneksi.php";
+                                $sql_bukti_kirim = "SELECT * FROM inv_bukti_terima WHERE id_inv = '$id_inv'";
+                                $query_bukti_kirim = mysqli_query($connect, $sql_bukti_kirim);
+                                $total_row = mysqli_num_rows($query_bukti_kirim);
+                                if ($total_row > 0) {
+                                    echo '
                                     <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
                                         <i class="bi bi-file-earmark-image"></i> Bukti Kirim
                                     </button>
                                     ';
-}
-?>
+                                }
+                            ?>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <?php
-if ($total_data != 0) {
-    if ($data_cek['kategori_inv'] != 'Diskon') {
-        echo '
+                                if ($total_data != 0) {
+                                    if ($data_cek['kategori_inv'] != 'Diskon') {
+                                        echo '
                                         <thead>
                                             <tr class="text-white" style="background-color: #051683;">
                                                 <th class="text-center text-nowrap p-3" style="width:20px">No</th>
@@ -299,8 +303,8 @@ if ($total_data != 0) {
                                                 <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
                                             </tr>
                                         </thead>';
-    } else {
-        echo '
+                                        } else {
+                                            echo '
                                         <thead>
                                             <tr class="text-white" style="background-color: #051683;">
                                                 <th class="text-center text-nowrap p-3" style="width:20px">No</th>
@@ -313,18 +317,18 @@ if ($total_data != 0) {
                                                 <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
                                             </tr>
                                         </thead>';
-    }
-}
-?>
+                                    }
+                                }
+                            ?>
                             <tbody>
                                 <?php
-include "koneksi.php";
-$year = date('y');
-$day = date('d');
-$month = date('m');
-$id_nonppn_decode = base64_decode($_GET['id']);
-$no = 1;
-$sql_trx = "SELECT
+                                include "koneksi.php";
+                                $year = date('y');
+                                $day = date('d');
+                                $month = date('m');
+                                $id_nonppn_decode = base64_decode($_GET['id']);
+                                $no = 1;
+                                $sql_trx = "SELECT
                                                 nonppn.id_inv_nonppn,
                                                 sr.id_inv, sr.no_spk,
                                                 trx.*,
@@ -338,11 +342,11 @@ $sql_trx = "SELECT
                                                 JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
                                                 JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
                                                 WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '1' ORDER BY no_spk ASC";
-$trx_produk_reg = mysqli_query($connect, $sql_trx);
-while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
-    $disc = $data_trx['disc'];
-    $id_spk = $data_trx['id_spk'];
-    ?>
+                                $trx_produk_reg = mysqli_query($connect, $sql_trx);
+                                while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                    $disc = $data_trx['disc'];
+                                    $id_spk = $data_trx['id_spk'];
+                                    ?>
                                 <tr>
                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                     <td class="text-center text-nowrap"><?php echo $data_trx['no_spk']; ?></td>
@@ -351,12 +355,12 @@ while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                     <td class="text-end text-nowrap"><?php echo number_format($data_trx['harga']) ?>
                                     </td>
                                     <?php
-if ($total_data != 0) {
-        if ($data_cek['kategori_inv'] == 'Diskon') {
-            echo "<td class='text-end'>" . $disc . "</td>";
-        }
-    }
-    ?>
+                                        if ($total_data != 0) {
+                                            if ($data_cek['kategori_inv'] == 'Diskon') {
+                                                echo "<td class='text-end'>" . $disc . "</td>";
+                                            }
+                                        }
+                                    ?>
                                     <td class="text-end text-nowrap"><?php echo number_format($data_trx['qty']) ?></td>
                                     <td class="text-end text-nowrap">
                                         <?php echo number_format($data_trx['total_harga']) ?></td>
@@ -370,16 +374,16 @@ if ($total_data != 0) {
                 </div>
                 <div class="container">
                     <?php
-if ($total_data == 0) {
-    echo '<h5 class="text-center">Cek Harga Produk</h5>';
-}
-?>
+                if ($total_data == 0) {
+                echo '<h5 class="text-center">Cek Harga Produk</h5>';
+                }
+                ?>
                 </div>
                 <form action="proses/proses-invoice-nonppn.php" method="POST">
-                    <?php
-$no = 1;
-$id_nonppn_decode = base64_decode($_GET['id']);
-$sql_cek_harga = "SELECT
+                    <?php 
+                        $no = 1;
+                        $id_nonppn_decode = base64_decode($_GET['id']);
+                        $sql_cek_harga = "SELECT
                                     nonppn.id_inv_nonppn, kategori_inv,
                                     sr.id_inv, sr.no_spk,
                                     trx.*,
@@ -393,10 +397,10 @@ $sql_cek_harga = "SELECT
                                     JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
                                     JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
                                     WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '0' ORDER BY no_spk ASC";
-$query_cek_harga = mysqli_query($connect, $sql_cek_harga);
-$total_cek_harga = mysqli_num_rows($query_cek_harga);
-while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
-    ?>
+                        $query_cek_harga = mysqli_query($connect, $sql_cek_harga);
+                        $total_cek_harga = mysqli_num_rows($query_cek_harga);
+                        while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
+                    ?>
                     <div class="card-body border p-2">
                         <div class="row">
                             <div class="col-1">
@@ -405,47 +409,47 @@ while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
                             </div>
                             <div class="col-sm-4">
                                 <input type="hidden" name="id_inv"
-                                    value="<?php echo $data_cek_harga['id_inv_nonppn'] ?>" readonly>
+                                    value="<?php echo $data_cek_harga['id_inv_nonppn'] ?>" readonly="readonly">
                                 <input type="hidden" name="id_trx[]"
                                     id="id_<?php echo $data_cek_harga['id_transaksi'] ?>"
-                                    value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly>
+                                    value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly="readonly">
                                 <input type="text" class="form-control bg-light"
-                                    value="<?php echo $data_cek_harga['nama_produk'] ?>" readonly>
+                                    value="<?php echo $data_cek_harga['nama_produk'] ?>" readonly="readonly">
                             </div>
                             <div class="col-sm-1">
                                 <input type="text" class="form-control bg-light text-center"
-                                    value="<?php echo $data_cek_harga['nama_merk'] ?>" readonly>
+                                    value="<?php echo $data_cek_harga['nama_merk'] ?>" readonly="readonly">
                             </div>
                             <div class="col-sm-2">
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1">Rp</span>
                                     <input type="text" class="form-control text-end harga_produk" name="harga_produk[]"
-                                        value="<?php echo number_format($data_cek_harga['harga']) ?>" required>
+                                        value="<?php echo number_format($data_cek_harga['harga']) ?>"
+                                        required="required">
                                 </div>
                             </div>
                             <div class="col-sm-2">
                                 <?php
-if ($total_cek_harga != 0) {
-        if ($data_cek_harga['kategori_inv'] == 'Diskon') {
-            echo '  <div class="input-group">
-                                                                <input type="text" class="form-control text-end" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" required>
-                                                                <span class="input-group-text" id="basic-addon1">%</span>
-                                                            </div>';
-        } else {
-            echo '  <div class="input-group">
-                                                                <input type="text" class="form-control text-end bg-light" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" readonly>
-                                                                <span class="input-group-text" id="basic-addon1">%</span>
-                                                            </div>';
-        }
-    }
-    ?>
-
+                                    if ($total_cek_harga != 0) {
+                                        if ($data_cek_harga['kategori_inv'] == 'Diskon') {
+                                            echo '  <div class="input-group">
+                                                        <input type="text" class="form-control text-end" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" required>
+                                                        <span class="input-group-text" id="basic-addon1">%</span>
+                                                    </div>';
+                                            } else {
+                                            echo '  <div class="input-group">
+                                                        <input type="text" class="form-control text-end bg-light" name="disc[]" value="' . number_format($data_cek_harga['disc']) . '" readonly>
+                                                        <span class="input-group-text" id="basic-addon1">%</span>
+                                                    </div>';
+                                            }
+                                        }
+                                    ?>
                             </div>
                             <div class="col-sm-2">
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1">Qty</span>
                                     <input type="text" class="form-control bg-light text-end" name="qty[]"
-                                        value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly>
+                                        value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly="readonly">
                                 </div>
                             </div>
                         </div>
@@ -454,10 +458,10 @@ if ($total_cek_harga != 0) {
                     <?php }?>
                     <div class="card-body mt-3 text-end">
                         <?php
-if ($total_data == 0) {
-    echo '<button type="submit" class="btn btn-primary" name="simpan-cek-harga" id="simpan-data"><i class="bi bi-save"></i> Simpan</button>';
-}
-?>
+                            if ($total_data == 0) {
+                                echo '<button type="submit" class="btn btn-primary" name="simpan-cek-harga" id="simpan-data"><i class="bi bi-save"></i> Simpan</button>';
+                            }
+                        ?>
                     </div>
                 </form>
             </div>
@@ -472,30 +476,30 @@ if ($total_data == 0) {
                         <div class="modal-body">
                             <form action="proses/proses-invoice-nonppn.php" method="POST">
                                 <?php
-$id_inv_kat = $id_inv;
-$sql_kat = "SELECT
-                                            nonppn.*,
-                                            sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan
-                                            FROM inv_nonppn AS nonppn
-                                            JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                            WHERE nonppn.id_inv_nonppn = '$id_inv_kat'";
-$query_kat = mysqli_query($connect, $sql_kat);
-$data_kat = mysqli_fetch_array($query_kat);
-?>
-                                <input type="hidden" name="id_inv" value="<?php echo $id_inv_kat ?>" readonly>
+                                    $id_inv_kat = $id_inv;
+                                    $sql_kat = "SELECT
+                                        nonppn.*,
+                                        sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan
+                                        FROM inv_nonppn AS nonppn
+                                        JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                        WHERE nonppn.id_inv_nonppn = '$id_inv_kat'";
+                                    $query_kat = mysqli_query($connect, $sql_kat);
+                                    $data_kat = mysqli_fetch_array($query_kat);
+                                    ?>
+                                <input type="hidden" name="id_inv" value="<?php echo $id_inv_kat ?>"
+                                    readonly="readonly">
                                 <div class="mb-3">
                                     <select name="kat_inv" class="form-select">
                                         <?php
-$kategori_inv = $data_kat['kategori_inv'];
-$pilihan_sisa = array('Reguler', 'Diskon', 'Spesial Diskon');
-foreach ($pilihan_sisa as $pilihan) {
-    if ($pilihan != $kategori_inv) {
-        echo '<option value="' . $pilihan . '">' . $pilihan . '</option>';
-    }
-}
-?>
+                                            $kategori_inv = $data_kat['kategori_inv'];
+                                            $pilihan_sisa = array('Reguler', 'Diskon', 'Spesial Diskon');
+                                            foreach ($pilihan_sisa as $pilihan) {
+                                                if ($pilihan != $kategori_inv) {
+                                                    echo '<option value="' . $pilihan . '">' . $pilihan . '</option>';
+                                                }
+                                            }
+                                            ?>
                                     </select>
-
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary" name="ubah-kategori">Update
                                             Kategori</button>
@@ -509,13 +513,15 @@ foreach ($pilihan_sisa as $pilihan) {
             </div>
             <!-- End Modal -->
         </section>
-    </main><!-- End #main -->
+    </main>
+    <!-- End #main -->
 
     <!-- Footer -->
     <?php include "page/footer.php"?>
     <!-- End Footer -->
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+        <i class="bi bi-arrow-up-short"></i>
+    </a>
 
     <?php include "page/script.php"?>
 </body>
@@ -528,8 +534,8 @@ foreach ($pilihan_sisa as $pilihan) {
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Bukti Kiirim</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Bukti Kirim</h1>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">X</button>
             </div>
             <div class="modal-body">
                 <div class="card-body">
@@ -597,7 +603,7 @@ foreach ($pilihan_sisa as $pilihan) {
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
                 <div class="card-body">
@@ -623,10 +629,10 @@ foreach ($pilihan_sisa as $pilihan) {
                             <select id="ekspedisi" name="ekspedisi" class="form-select" style="display: none;">
                                 <option value="">Pilih...</option>
                                 <?php
-include "koneksi.php";
-$sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
-while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
-    ?>
+                                include "koneksi.php";
+                                $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
+                                while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
+                                    ?>
                                 <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>">
                                     <?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
                                 <?php }?>
@@ -639,7 +645,7 @@ while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
                         <div class="mb-3">
                             <label id="labelDate">Tanggal</label>
                             <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
-                                id="date" required>
+                                id="date" required="required">
                         </div>
                         <div class="mb-3">
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
@@ -661,21 +667,21 @@ while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
                         </div>
                         <div class="mb-3" id="imagePreview3" style="display: none;"></div>
                         <?php
-if ($jenis_pengiriman == 'Driver') {
-    echo '
+                            if ($jenis_pengiriman == 'Driver') {
+                                echo '
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary" name="diterima_driver" id="diterima" onclick="checkFileName()" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDriver"><i class="bi bi-x-circle"></i> Cancel</button>
                                 </div>';
-} else {
-    echo '
+                            } else {
+                                echo '
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary" name="diterima_ekspedisi" id="diterima" onclick="checkFileName()"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEkspedisi"><i class="bi bi-x-circle"></i> Cancel</button>
                             </div>';
-}
+                            }
 
-?>
+                        ?>
                     </form>
                 </div>
             </div>
@@ -687,7 +693,9 @@ if ($jenis_pengiriman == 'Driver') {
     var input = document.getElementById('resi');
 
     input.addEventListener('input', function() {
-        var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
+        var sanitizedValue = input
+            .value
+            .replace(/[^A-Za-z0-9]/g, '');
         input.value = sanitizedValue;
     });
     </script>
@@ -705,14 +713,22 @@ if ($jenis_pengiriman == 'Driver') {
 
         if (file1 === file3 && file3 !== "") {
             alert("Nama file ke 3 harus berbeda!");
-            document.getElementById('fileku3').value = "";
-            document.getElementById('imagePreview3').innerHTML = "";
+            document
+                .getElementById('fileku3')
+                .value = "";
+            document
+                .getElementById('imagePreview3')
+                .innerHTML = "";
         }
 
         if (file2 === file3 && file3 !== "") {
             alert("Nama file ke 3 harus berbeda!");
-            document.getElementById('fileku3').value = "";
-            document.getElementById('imagePreview3').innerHTML = "";
+            document
+                .getElementById('fileku3')
+                .value = "";
+            document
+                .getElementById('imagePreview3')
+                .innerHTML = "";
         }
     }
     </script>
@@ -946,7 +962,9 @@ $(document).ready(function() {
 document.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        document.getElementById("simpan-data").click();
+        document
+            .getElementById("simpan-data")
+            .click();
     }
 });
 </script>
@@ -966,7 +984,9 @@ hargaProdukInputs.forEach(function(input) {
 
 // Fungsi untuk memformat angka dengan pemisah ribuan
 function formatNumber(input) {
-    var hargaProdukValue = input.value.replace(/[^0-9.-]+/g, '');
+    var hargaProdukValue = input
+        .value
+        .replace(/[^0-9.-]+/g, '');
 
     if (hargaProdukValue !== '') {
         var formattedNumber = numberFormat(hargaProdukValue);
@@ -976,7 +996,9 @@ function formatNumber(input) {
 
 // Fungsi untuk memformat angka dengan pemisah ribuan
 function numberFormat(number) {
-    return new Intl.NumberFormat('en-US').format(number);
+    return new Intl
+        .NumberFormat('en-US')
+        .format(number);
 }
 </script>
 
@@ -1010,11 +1032,11 @@ $('#edit').on('show.bs.modal', function(event) {
 <!-- date picker with flatpick -->
 <script type="text/javascript">
 flatpickr("#date", {
-    dateFormat: "d/m/Y",
+    dateFormat: "d/m/Y"
 });
 
 flatpickr("#tempo", {
-    dateFormat: "d/m/Y",
+    dateFormat: "d/m/Y"
 });
 
 // untuk menampilkan tanggal hari ini
