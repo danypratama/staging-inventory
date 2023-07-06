@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../koneksi.php";
+include "../page/resize-image.php";
 
 if (isset($_POST['simpan-inv'])) {
     $id_spk = $_POST['id_spk'];
@@ -226,6 +227,7 @@ if (isset($_POST['simpan-inv'])) {
         $jenis_inv = "ppn";
 
         $uuid = generate_uuid();
+        $img_uuid = img_uuid();
         $year = date('y');
         $day = date('d');
         $month = date('m');
@@ -250,16 +252,38 @@ if (isset($_POST['simpan-inv'])) {
         move_uploaded_file($file1_tmp, $file1_destination);
         move_uploaded_file($file2_tmp, $file2_destination);
         move_uploaded_file($file3_tmp, $file3_destination);
+
+        if($file1_name != ''){
+            // Kompres dan ubah ukuran gambar bukti terima 1
+            $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file1_destination = "../gambar/bukti1/$new_file1_name";
+            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+            unlink($file1_destination);
+        }elseif($file2_name != ''){
+             // Kompres dan ubah ukuran gambar bukti terima 2
+            $new_file1_name = "Bukti_Dua". $year . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file2_destination = "../gambar/bukti2/$new_file2_name";
+            compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
+            unlink($file2_destination);
+        }elseif($file3_name != ''){
+            // Kompres dan ubah ukuran gambar bukti terima 3
+            $new_file1_name = "Bukti_Tiga". $year . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file3_destination = "../gambar/bukti3/$nem_file3_name";
+            compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
+            unlink($file3_destination);
+        }
+
+       
+
         if ($jenis_pengiriman == 'Driver') {
             $pengirim = $_POST['pengirim'];
-
 
             $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim' WHERE id_inv_ppn = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                     (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
-                                                     VALUES 
-                                                     ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
+                                                    (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_driver, tgl_kirim)
+                                                    VALUES 
+                                                    ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$pengirim', '$tgl')");
 
             if ($ubah_status && $status_kirim) {
                 // Commit transaksi jika berhasil
@@ -273,11 +297,11 @@ if (isset($_POST['simpan-inv'])) {
             $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim' WHERE id_inv_ppn = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                         (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
-                                                         VALUES 
-                                                         ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
+                                                        (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                        VALUES 
+                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
 
-            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$file1_name', '$file2_name', '$file3_name')");
+            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 
             if ($ubah_status && $status_kirim && $bukti_terima) {
                 // Commit transaksi jika berhasil
@@ -289,20 +313,20 @@ if (isset($_POST['simpan-inv'])) {
         $connect->rollback();
         $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
 ?>
-        <!-- Sweet Alert -->
-        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    title: "Error!",
-                    text: "<?php echo $error_message; ?>",
-                    icon: "error",
-                }).then(function() {
-                    window.location.href = "../invoice-reguler.php?sort=baru";
-                });
-            });
-        </script>
+<!-- Sweet Alert -->
+<link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+<script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+        title: "Error!",
+        text: "<?php echo $error_message; ?>",
+        icon: "error",
+    }).then(function() {
+        window.location.href = "../invoice-reguler.php?sort=baru";
+    });
+});
+</script>
 <?php
     }
 } else if (isset($_POST['update-ongkir'])) {
@@ -332,5 +356,15 @@ function generate_uuid()
         mt_rand(0, 0xffff),
         mt_rand(0, 0xffff)
     );
+}
+
+function img_uuid() {
+    $data = openssl_random_pseudo_bytes(16);
+    assert(strlen($data) == 16);
+
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+    return vsprintf('%s%s', str_split(bin2hex($data), 4));
 }
 ?>

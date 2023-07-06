@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../koneksi.php";
+include "../resize-image.php";
 
 if (isset($_POST['simpan-inv'])) {
     $id_spk = $_POST['id_spk'];
@@ -182,6 +183,7 @@ if (isset($_POST['simpan-inv'])) {
         $jenis_inv = "nonppn";
 
         $uuid = generate_uuid();
+        $img_uuid = img_uuid();
         $year = date('y');
         $day = date('d');
         $month = date('m');
@@ -207,21 +209,27 @@ if (isset($_POST['simpan-inv'])) {
         move_uploaded_file($file2_tmp, $file2_destination);
         move_uploaded_file($file3_tmp, $file3_destination);
 
-        // Kompres dan ubah ukuran gambar bukti terima 1
-        $compressed_file1_destination = "../gambar/bukti1/compressed_$file1_name";
-        compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
-        unlink($file1_destination);
+        if($file1_name != ''){
+            // Kompres dan ubah ukuran gambar bukti terima 1
+            $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file1_destination = "../gambar/bukti1/$new_file1_name";
+            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+            unlink($file1_destination);
+        }elseif($file2_name != ''){
+             // Kompres dan ubah ukuran gambar bukti terima 2
+            $new_file1_name = "Bukti_Dua". $year . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file2_destination = "../gambar/bukti2/$new_file2_name";
+            compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
+            unlink($file2_destination);
+        }elseif($file3_name != ''){
+            // Kompres dan ubah ukuran gambar bukti terima 3
+            $new_file1_name = "Bukti_Tiga". $year . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file3_destination = "../gambar/bukti3/$nem_file3_name";
+            compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
+            unlink($file3_destination);
+        }
 
-        // Kompres dan ubah ukuran gambar bukti terima 2
-        $compressed_file2_destination = "../gambar/bukti2/compressed_$file2_name";
-        compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
-        unlink($file2_destination);
-
-        // Kompres dan ubah ukuran gambar bukti terima 3
-        $compressed_file3_destination = "../gambar/bukti3/compressed_$file3_name";
-        compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
-        unlink($file3_destination);
-
+       
 
         if ($jenis_pengiriman == 'Driver') {
             $pengirim = $_POST['pengirim'];
@@ -249,7 +257,7 @@ if (isset($_POST['simpan-inv'])) {
                                                         VALUES 
                                                         ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
 
-            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', 'compressed_$file1_name', 'compressed_$file2_name', 'compressed_$file3_name')");
+            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 
             if ($ubah_status && $status_kirim && $bukti_terima) {
                 // Commit transaksi jika berhasil
@@ -261,20 +269,20 @@ if (isset($_POST['simpan-inv'])) {
         $connect->rollback();
         $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
 ?>
-        <!-- Sweet Alert -->
-        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    title: "Error!",
-                    text: "<?php echo $error_message; ?>",
-                    icon: "error",
-                }).then(function() {
-                    window.location.href = "../invoice-reguler.php?sort=baru";
-                });
-            });
-        </script>
+<!-- Sweet Alert -->
+<link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+<script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+        title: "Error!",
+        text: "<?php echo $error_message; ?>",
+        icon: "error",
+    }).then(function() {
+        window.location.href = "../invoice-reguler.php?sort=baru";
+    });
+});
+</script>
 <?php
     }
 } else if (isset($_POST['update-ongkir'])) {
@@ -290,94 +298,6 @@ if (isset($_POST['simpan-inv'])) {
 ?>
 
 <?php
-function compressAndResizeImage($source, $destination, $targetWidth, $targetHeight, $quality) {
-    // Mendapatkan informasi gambar
-    $info = getimagesize($source);
-    
-    // Mengecek tipe gambar
-    if ($info['mime'] == 'image/jpeg') {
-        // Membaca gambar
-        $image = imagecreatefromjpeg($source);
-    }
-    elseif ($info['mime'] == 'image/png') {
-        // Membaca gambar
-        $image = imagecreatefrompng($source);
-    } else {
-        // Tipe gambar tidak didukung
-        return false;
-    }
-    
-    // Mendapatkan orientasi gambar
-    $orientation = 1; // Default: landscape
-    if (function_exists('exif_read_data')) {
-        $exif = @exif_read_data($source);
-        if ($exif !== false && isset($exif['Orientation'])) {
-            $orientation = $exif['Orientation'];
-        }
-    }
-    
-    // Menghitung ukuran gambar yang akan diubah
-    $width = imagesx($image);
-    $height = imagesy($image);
-    
-    // Menghitung aspek rasio gambar asli
-    $aspectRatio = $width / $height;
-    
-    // Menghitung aspek rasio target
-    $targetAspectRatio = $targetWidth / $targetHeight;
-    
-    // Menentukan bagaimana gambar akan diubah
-    if ($aspectRatio >= $targetAspectRatio) {
-        // Gambar asli lebih lebar daripada target, maka lebar akan diubah ke targetWidth
-        $newWidth = $targetWidth;
-        $newHeight = $targetWidth / $aspectRatio;
-    } else {
-        // Gambar asli lebih tinggi daripada target, maka tinggi akan diubah ke targetHeight
-        $newHeight = $targetHeight;
-        $newWidth = $targetHeight * $aspectRatio;
-    }
-    
-    // Membuat gambar baru dengan ukuran yang diubah
-    $newImage = imagecreatetruecolor($targetWidth, $targetHeight);
-    
-    // Mengubah mode blending gambar baru untuk menghindari kotak hitam
-    imagealphablending($newImage, false);
-    imagesavealpha($newImage, true);
-    $transparent = imagecolorallocatealpha($newImage, 0, 0, 0, 127);
-    imagefill($newImage, 0, 0, $transparent);
-    
-    // Mengompres dan menyalin gambar ke gambar baru
-    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
-    
-    // Memutar gambar sesuai orientasi asli
-    switch ($orientation) {
-        case 3:
-            $newImage = imagerotate($newImage, 180, 0);
-            break;
-        case 6:
-            $newImage = imagerotate($newImage, -90, 0);
-            break;
-        case 8:
-            $newImage = imagerotate($newImage, 90, 0);
-            break;
-    }
-    
-    // Menyimpan gambar dengan kualitas tertentu
-    if ($info['mime'] == 'image/jpeg') {
-        imagejpeg($newImage, $destination, $quality);
-    } elseif ($info['mime'] == 'image/png') {
-        imagepng($newImage, $destination, round(9 - ($quality / 100) * 9));
-    }
-    
-    // Menghapus gambar dari memori
-    imagedestroy($image);
-    imagedestroy($newImage);
-    
-    return true;
-}
-
-
-
 function generate_uuid()
 {
     return sprintf(
@@ -391,5 +311,16 @@ function generate_uuid()
         mt_rand(0, 0xffff),
         mt_rand(0, 0xffff)
     );
+}
+
+
+function img_uuid() {
+    $data = openssl_random_pseudo_bytes(16);
+    assert(strlen($data) == 16);
+
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+    return vsprintf('%s%s', str_split(bin2hex($data), 4));
 }
 ?>
