@@ -139,12 +139,12 @@
                     previewElement.classList.add('preview-image');
 
                     // Menampilkan pratinjau gambar
-                    var imagePreview = document.getElementById('imagePreview');
-                    imagePreview.innerHTML = '';
-                    imagePreview.appendChild(previewElement);
+                    var imagePreview2 = document.getElementById('imagePreview2');
+                    imagePreview2.innerHTML = '';
+                    imagePreview2.appendChild(previewElement);
 
                     console.log("Ukuran gambar setelah kompresi:", targetWidth, "x", targetHeight);
-                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes(compressedFileSize));
+                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes2(compressedFileSize));
                 }
             }
             reader.readAsDataURL(file);
@@ -217,12 +217,12 @@
                     previewElement.classList.add('preview-image');
 
                     // Menampilkan pratinjau gambar
-                    var imagePreview = document.getElementById('imagePreview');
-                    imagePreview.innerHTML = '';
-                    imagePreview.appendChild(previewElement);
+                    var imagePreview3 = document.getElementById('imagePreview3');
+                    imagePreview3.innerHTML = '';
+                    imagePreview3.appendChild(previewElement);
 
                     console.log("Ukuran gambar setelah kompresi:", targetWidth, "x", targetHeight);
-                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes(compressedFileSize));
+                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes3(compressedFileSize));
                 }
             }
             reader.readAsDataURL(file);
