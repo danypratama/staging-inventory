@@ -172,7 +172,7 @@ include "akses.php";
 
 
 <!-- date picker with flatpick -->
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     flatpickr("#date", {
         dateFormat: "d/m/Y",
     });
@@ -194,7 +194,81 @@ include "akses.php";
 
     // Mengatur nilai default input dengan format yang diinginkan
     dateInput.value = day + '/' + month + '/' + year;
+</script> -->
+
+<script type="text/javascript">
+  var dateInput = document.getElementById('date');
+  var tempoInput = document.getElementById('tempo');
+  var datepickerInstance;
+
+  // Mendapatkan tanggal hari ini dari sistem operasi
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var yyyy = today.getFullYear();
+  var todayFormatted = dd + '/' + mm + '/' + yyyy;
+
+  // Mengatur tanggal invoice sebagai tanggal hari ini dari sistem operasi
+  dateInput.value = todayFormatted;
+  tempoInput.value = todayFormatted;
+
+  flatpickr("#date", {
+    dateFormat: "d/m/Y",
+    onClose: function(selectedDates, dateStr) {
+      if (selectedDates[0]) {
+        // Menghapus dan menghancurkan instance datepicker sebelumnya, jika ada
+        if (datepickerInstance) {
+          datepickerInstance.destroy();
+        }
+
+        // Mengatur tanggal tempo sebagai tanggal invoice yang baru dipilih atau tanggal invoice jika sebelumnya
+        var selectedDate = new Date(selectedDates[0]);
+        var tempoDate = (selectedDate < today) ? selectedDate : today;
+        var tempoDateFormatted = String(tempoDate.getDate()).padStart(2, '0') + '/' + String(tempoDate.getMonth() + 1).padStart(2, '0') + '/' + tempoDate.getFullYear();
+        tempoInput.value = tempoDateFormatted;
+
+        // Menonaktifkan tanggal sebelum hari ini pada tanggal tempo
+        var disableDates = [
+          {
+            from: new Date(0, 0, 1),
+            to: today
+          }
+        ];
+
+        // Menerapkan datepicker pada tanggal tempo
+        datepickerInstance = flatpickr("#tempo", {
+          dateFormat: "d/m/Y",
+          disable: disableDates,
+          defaultDate: tempoDateFormatted
+        });
+      }
+    }
+  });
+
+  flatpickr("#tempo", {
+    dateFormat: "d/m/Y",
+    minDate: todayFormatted // Mengatur tanggal minimum pada tanggal tempo menjadi hari ini
+  });
+
+  // Validasi tanggal invoice agar tidak boleh kurang dari tanggal hari ini
+  dateInput.addEventListener('blur', function() {
+    var selectedDateParts = dateInput.value.split('/');
+    var selectedDay = parseInt(selectedDateParts[0]);
+    var selectedMonth = parseInt(selectedDateParts[1]) - 1;
+    var selectedYear = parseInt(selectedDateParts[2]);
+    var selectedDate = new Date(selectedYear, selectedMonth, selectedDay);
+
+    if (selectedDate < today) {
+      dateInput.value = todayFormatted; // Mengatur kembali tanggal invoice sebagai tanggal hari ini
+      tempoInput.value = todayFormatted; // Mengatur kembali tanggal tempo sebagai tanggal hari ini
+    } else {
+      tempoInput.value = dateInput.value; // Mengatur tanggal tempo sesuai dengan tanggal invoice yang baru dipilih
+    }
+  });
 </script>
+
+
+
 <!-- end date picker -->
 <!-- Generate UUID -->
 <?php

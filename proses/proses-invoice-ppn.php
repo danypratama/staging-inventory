@@ -4,90 +4,101 @@ include "../koneksi.php";
 include "../page/resize-image.php";
 
 if (isset($_POST['simpan-inv'])) {
+    // Ambil data dari form dan lakukan sanitasi
     $id_spk = $_POST['id_spk'];
-    $id_inv_ppn = $_POST['id_inv_ppn'];
-    $no_inv_ppn = $_POST['no_inv_ppn'];
-    $tgl_inv = $_POST['tgl_inv'];
-    $cs = $_POST['cs'];
-    $cs_inv = $_POST['cs_inv'];
-    $jenis_inv = $_POST['jenis_inv'];
-    $tgl_tempo = $_POST['tgl_tempo'];
-    $sp_disc = $_POST['sp_disc'];
-    $note_inv = $_POST['note_inv'];
-    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
-    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
+    $id_spk_escaped = array();
+    
+    // Escape each element of the $id_spk array
+    foreach ($id_spk as $value) {
+        $id_spk_escaped[] = mysqli_real_escape_string($connect, $value);
+    }
+    $id_inv_ppn = mysqli_real_escape_string($connect, $_POST['id_inv_ppn']);
+    $no_inv_ppn = mysqli_real_escape_string($connect, $_POST['no_inv_ppn']);
+    $tgl_inv = mysqli_real_escape_string($connect, $_POST['tgl_inv']);
+    $cs = mysqli_real_escape_string($connect, $_POST['cs']);
+    $cs_inv = mysqli_real_escape_string($connect, $_POST['cs_inv']);
+    $jenis_inv = mysqli_real_escape_string($connect, $_POST['jenis_inv']);
+    $tgl_tempo = mysqli_real_escape_string($connect, $_POST['tgl_tempo']);
+    $sp_disc = mysqli_real_escape_string($connect, $_POST['sp_disc']);
+    $note_inv = mysqli_real_escape_string($connect, $_POST['note_inv']);
+    $ongkir = mysqli_real_escape_string($connect, $_POST['ongkir']);
     $status_inv = 'Belum Dikirim';
     $status_spk = 'Invoice Sudah Diterbitkan';
-    $user = $_SESSION['tiket_nama'];
+    $user = mysqli_real_escape_string($connect, $_SESSION['tiket_nama']);
     $id_inv_ppn_encode = base64_encode($id_inv_ppn);
+    $nama_invoice = 'Invoice_PPN';
 
-    // Mulai transaksi
-    // Mulai transaksi
+    // Begin transaction
     mysqli_begin_transaction($connect);
 
     try {
-        $success = true;
+        // Insert invoice data into the database
         $sql_inv = mysqli_query($connect, "INSERT INTO inv_ppn 
-                                            (id_inv_ppn, no_inv, tgl_inv, cs_inv, tgl_tempo, sp_disc, note_inv, kategori_inv, ongkir, status_transaksi, user_created)
-                                            VALUES
-                                            ('$id_inv_ppn', '$no_inv_ppn', '$tgl_inv', '$cs_inv', '$tgl_tempo', '$sp_disc', '$note_inv', '$jenis_inv', '$ongkir', '$status_inv', '$user')");
-        for ($i = 0; $i < count($id_spk); $i++) {
-            $id_spk_array = $_POST['id_spk'][$i];
-            $sql = mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv_ppn', status_spk = '$status_spk' WHERE id_spk_reg = '$id_spk_array'");
+            (id_inv_ppn, no_inv, tgl_inv, cs_inv, tgl_tempo, sp_disc, note_inv, kategori_inv, ongkir, status_transaksi, nama_invoice, user_created)
+            VALUES
+            ('$id_inv_ppn', '$no_inv_ppn', '$tgl_inv', '$cs_inv', '$tgl_tempo', '$sp_disc', '$note_inv', '$jenis_inv', '$ongkir', '$status_inv', '$nama_invoice', '$user')");
 
-            if (!$sql) {
-                $success = false;
-                break;
-            }
+        // Convert $no_inv_ppn to the desired format
+        $no_inv_ppn_converted = str_replace('/', '_', $no_inv_ppn);
 
-            if (!$sql_inv) {
-                $success = false;
-                break;
+        // Generate folder name based on invoice details
+        $folder_name = $no_inv_ppn_converted;
+
+        // Encode a portion of the folder name
+        $encoded_portion = base64_encode($folder_name);
+
+        // Combine the original $no_inv_ppn, encoded portion, and underscore
+        $encoded_folder_name = $no_inv_ppn_converted . '_' . $encoded_portion;
+
+        // Set the path for the customer's folder
+        $customer_folder_path = "../Customer/" . $cs . "/" . date('Y') . "/" . date('m') . "/" . date('d') . "/" . ucwords(strtolower(str_replace('_', ' ', $nama_invoice))) . "/" . $encoded_folder_name;
+
+        // Create the customer's folder if it doesn't exist
+        if (!is_dir($customer_folder_path)) {
+            mkdir($customer_folder_path, 0777, true); // Set permission to 0777 to ensure the folder is writable
+        }
+
+        // Update SPK data in the database
+        $id_spk_count = count($id_spk_escaped);
+        for ($i = 0; $i < $id_spk_count; $i++) {
+            $id_spk_array = $id_spk_escaped[$i];
+            $sql_spk = mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv_ppn', status_spk = '$status_spk' WHERE id_spk_reg = '$id_spk_array'");
+
+            if (!$sql_spk) {
+                throw new Exception("Error updating SPK data");
             }
         }
 
-        if ($success) {
-            // Jika kedua query berhasil, lakukan commit
-            mysqli_commit($connect);
-            header("Location:../cek-produk-inv-ppn.php?id='$id_inv_ppn_encode'");
-        } else {
-            // Rollback jika terjadi kesalahan
-            mysqli_rollback($connect);
-            $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
-            echo <<<HTML
-                <!-- Sweet Alert -->
-                <link rel="stylesheet" href="assets/sweet-alert/dist/sweetalert2.min.css">
-                <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                <script>
-                    swal({
-                        title: "Error!",
-                        text: "{$error_message}",
-                        icon: "error",
-                    }).then(function() {
-                        window.location.href = "../cek-produk-inv-ppn.php?id='$id_inv_ppn_encode'";
-                    });
-                </script>
-            HTML;
-        }
+        // Commit the transaction
+        mysqli_commit($connect);
+        echo $sql_inv;
+
+        // Redirect to the invoice page
+        header("Location:../cek-produk-inv-ppn.php?id=$id_inv_ppn_encode");
+        exit();
     } catch (Exception $e) {
-        // Rollback jika terjadi kesalahan atau pengecualian
+        // Rollback the transaction if an error occurs
         mysqli_rollback($connect);
+        // Handle the error (e.g., display an error message)
         $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
-        echo <<<HTML
+            ?>
             <!-- Sweet Alert -->
-            <link rel="stylesheet" href="assets/sweet-alert/dist/sweetalert2.min.css">
-            <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
             <script>
-                swal({
+                document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
                     title: "Error!",
-                    text: "{$error_message}",
+                    text: "<?php echo $error_message; ?>",
                     icon: "error",
                 }).then(function() {
-                    window.location.href = "../cek-produk-inv-ppn.php?id='$id_inv_ppn_encode'";
+                    window.location.href = "../cek-produk-inv-ppn.php?id=$id_inv_ppn_encode";
+                });
                 });
             </script>
-        HTML;
-    }
+            <?php
+        }
+
 } else if (isset($_POST['simpan-cek-harga'])) {
     $id_inv = base64_encode($_POST['id_inv']);
     $id_trx = $_POST['id_trx'];
