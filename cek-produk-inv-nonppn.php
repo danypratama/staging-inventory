@@ -255,13 +255,14 @@ include "akses.php";
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                   <form action="proses/">
-                                        <input type="text" class="form-control" value=" <?php echo $data['cs_inv'] ?>">
+                                   <form action="proses/proses-invoice-nonppn.php" method="POST">
+                                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                        <input type="text" class="form-control" name="cs_inv" value="<?php echo $data['cs_inv'] ?>">
+                                        <div class="modal-footer">
+                                            <button type="submit" name="ubah-cs-inv" class="btn btn-primary">Ubah Data</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
                                 </div>
                             </div>
                         </div>

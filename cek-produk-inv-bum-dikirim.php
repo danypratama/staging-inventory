@@ -177,6 +177,15 @@ include "akses.php";
                             </div>
                             <div class="row">
                                 <div class="col-5">
+                                    <p style="float: left;">Pelanggan Inv</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php echo $data['cs_inv'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
                                     <p style="float: left;">Alamat</p>
                                     <p style="float: right;">:</p>
                                 </div>
@@ -692,7 +701,7 @@ include "akses.php";
     <script>
         // Data untuk dropdown
         const options = <?php
-       $server = "localhost"; //nama server
+        $server = "localhost"; //nama server
         $user = "mandiria_staging"; //usernya
         $password = "karsa_2023"; //password
         $db = "mandiria_staging"; //database

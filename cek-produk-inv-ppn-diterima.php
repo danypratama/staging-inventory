@@ -176,6 +176,15 @@ include "akses.php";
                             </div>
                             <div class="row">
                                 <div class="col-5">
+                                    <p style="float: left;">Pelanggan Inv</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php echo $data['cs_inv'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
                                     <p style="float: left;">Alamat</p>
                                     <p style="float: right;">:</p>
                                 </div>
@@ -212,6 +221,34 @@ include "akses.php";
                                             </div>';
                                 }
                                 ?>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <?php  
+                                        $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi FROM status_kirim WHERE id_inv = '$id_inv'");
+                                        $data_status_kirim = mysqli_fetch_array($status_kirim);
+                                        $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
+                                        $ekspedisi = $data_status_kirim['dikirim_ekspedisi'];
+
+
+                                        $ekspedisi_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_ekspedisi, ex.nama_ekspedisi
+                                                                                    FROM status_kirim AS sk
+                                                                                    JOIN ekspedisi ex ON (sk.dikirim_ekspedisi = ex.id_ekspedisi)
+                                                                                    WHERE sk.dikirim_ekspedisi = '$ekspedisi'");
+                                        $data_ekspedisi_kirim = mysqli_fetch_array($ekspedisi_kirim);
+                                    ?>
+                                    <p style="float: left;">Jenis Pengiriman</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php  
+                                        if($jenis_pengiriman == 'Ekspedisi'){
+                                            echo $jenis_pengiriman. " ( " . $data_ekspedisi_kirim['nama_ekspedisi']. " )";
+                                        } else {
+                                            echo $jenis_pengiriman;
+                                        }
+                                    ?>
+                                </div>
                             </div>
                         </div>
                     </div>

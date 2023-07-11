@@ -193,6 +193,15 @@ include "akses.php";
                             </div>
                             <div class="row">
                                 <div class="col-5">
+                                    <p style="float: left;">Pelanggan Inv</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php echo $data['cs_inv'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
                                     <p style="float: left;">Alamat</p>
                                     <p style="float: right;">:</p>
                                 </div>
@@ -228,6 +237,29 @@ include "akses.php";
                                             </div>';
                             }
                             ?>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3 mb-3">
+                        <button class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#editPelanggan"><i class="bi bi-pencil"></i> Edit Pelanggan Invoice</button>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="editPelanggan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Pelanggan Invoice</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="proses/proses-invoice-ppn.php" method="POST">
+                                    <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                                    <input type="text" class="form-control" name="cs_inv" value="<?php echo $data['cs_inv'] ?>">
+                                    <div class="modal-footer">
+                                        <button type="submit" name="ubah-cs-inv" class="btn btn-primary">Ubah Data</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -910,8 +942,8 @@ include "akses.php";
                             <input type="text" class="form-control" name="resi" id="resi" style="display: none;">
                         </div>
                         <div class="mb-3">
-                            <label id="labelDate" style="display: none;">Tanggal</label>
-                            <input type="text" style="background-color:white; display: none;" class="bg-white form-control" name="tgl" id="date" required>
+                            <label id="labelDate">Tanggal</label>
+                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
                         </div>
                         <div class="mb-3">
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
@@ -974,7 +1006,7 @@ include "akses.php";
             }
         }
     </script>
-    <script>
+   <script>
         const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
         const pengirimSelect = document.getElementById('pengirim');
         const labelDriver = document.getElementById('labelDriver');
@@ -983,8 +1015,6 @@ include "akses.php";
         const labelResi = document.getElementById('labelResi')
         const resiSelect = document.getElementById('resi');
         const dikirim = document.getElementById('dikirim');
-        const labelDate = document.getElementById('labelDate');
-        const inputDate = document.getElementById('date');
         const labelBukti1 = document.getElementById('labelBukti1');
         const labelBukti2 = document.getElementById('labelBukti2');
         const labelBukti3 = document.getElementById('labelBukti3');
@@ -995,9 +1025,7 @@ include "akses.php";
         const imagePreview2 = document.getElementById('imagePreview2');
         const imagePreview3 = document.getElementById('imagePreview3');
 
-
         let isModalShown = false;
-
 
         jenisPengirimanSelect.addEventListener('change', function() {
             if (this.value === 'Driver') {
@@ -1011,8 +1039,6 @@ include "akses.php";
                 ekspedisiSelect.removeAttribute('required');
                 resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                 resiSelect.removeAttribute('required');
-                labelDate.style.display = 'block'; // Menampilkan form input
-                inputDate.style.display = 'block'; // Menampilkan form input
                 labelResi.style.display = 'none'; // Menyembunyikan form input
                 labelBukti1.style.display = 'none'; // Menyembunyikan form input
                 labelBukti2.style.display = 'none'; // Menyembunyikan form input
@@ -1058,9 +1084,7 @@ include "akses.php";
                 pengirimSelect.style.display = 'none'; // Menyembunyikan form input
                 labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
                 ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
-                resiSelect.style.display = 'none'; // Menyembunyikan form input
-                labelDate.style.display = 'none'; // Menyembunyikan form input
-                inputDate.style.display = 'none'; // Menyembunyikan form input
+                labelResi.style.display = 'none'; // Menyembunyikan form input
                 file1.style.display = 'none'; // Menyembunyikan form input
                 file2.style.display = 'none'; // Menyembunyikan form input
                 file3.style.display = 'none'; // Menyembunyikan form input
@@ -1080,6 +1104,7 @@ include "akses.php";
                 file1.style.display = 'none'; // Menyembunyikan form input
                 file2.style.display = 'none'; // Menyembunyikan form input
                 file3.style.display = 'none'; // Menyembunyikan form input
+                dikirim.disabled = true;
             });
 
             // Refresh halaman modal
@@ -1112,8 +1137,6 @@ include "akses.php";
                 pengirimSelect.style.display = 'none'; // Menyembunyikan form input
                 labelResi.style.display = 'none'; // Menyembunyikan form input
                 resiSelect.style.display = 'none'; // Menyembunyikan form input
-                labelDate.style.display = 'none'; // Menyembunyikan form input
-                inputDate.style.display = 'none'; // Menyembunyikan form input
                 labelBukti1.style.display = 'none'; // Menyembunyikan form input
                 labelBukti2.style.display = 'none'; // Menyembunyikan form input
                 labelBukti3.style.display = 'none'; // Menyembunyikan form input

@@ -179,6 +179,15 @@ include "akses.php";
                             </div>
                             <div class="row">
                                 <div class="col-5">
+                                    <p style="float: left;">Pelanggan Inv</p>
+                                    <p style="float: right;">:</p>
+                                </div>
+                                <div class="col-7">
+                                    <?php echo $data['cs_inv'] ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
                                     <p style="float: left;">Alamat</p>
                                     <p style="float: right;">:</p>
                                 </div>
