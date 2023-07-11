@@ -100,7 +100,6 @@ if (isset($_POST['simpan-inv'])) {
         }
 
 
-
 } else if (isset($_POST['simpan-cek-harga'])) {
     $id_inv = base64_encode($_POST['id_inv']);
     $id_trx = $_POST['id_trx'];
@@ -334,6 +333,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     $update_data = mysqli_query($connect, "UPDATE inv_nonppn SET ongkir = '$ongkir' WHERE id_inv_nonppn = '$id_inv'");
     header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_encode'");
+} else if (isset($_POST['ubah-cs-inv'])) {
+    $id_inv = $_POST['id_inv'];
+    $cs_inv = $_POST['cs_inv'];
+    $id_inv_encode = base64_encode($id_inv);
+
+    $update_data = mysqli_query($connect, "UPDATE inv_nonppn SET cs_inv = '$cs_inv' WHERE id_inv_nonppn = '$id_inv'");
+    header("Location:../cek-produk-inv-nonppn.php?id=$id_inv_encode");
 }
 
 ?>

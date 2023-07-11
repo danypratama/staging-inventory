@@ -334,6 +334,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     $update_data = mysqli_query($connect, "UPDATE inv_bum SET ongkir = '$ongkir' WHERE id_inv_bum = '$id_inv'");
     header("Location:../cek-produk-inv-bum.php?id='$id_inv_encode'");
+} else if (isset($_POST['ubah-cs-inv'])) {
+    $id_inv = $_POST['id_inv'];
+    $cs_inv = $_POST['cs_inv'];
+    $id_inv_encode = base64_encode($id_inv);
+
+    $update_data = mysqli_query($connect, "UPDATE inv_bum SET cs_inv = '$cs_inv' WHERE id_inv_bum = '$id_inv'");
+    header("Location:../cek-produk-inv-bum.php?id=$id_inv_encode");
 }
 ?>
 
