@@ -1,64 +1,106 @@
 <?php
 session_start();
 include "../koneksi.php";
+include "../page/resize-image.php";
 
 if (isset($_POST['simpan-inv'])) {
+    // Ambil data dari form dan lakukan sanitasi
     $id_spk = $_POST['id_spk'];
-    $id_inv_nonppn = $_POST['id_inv_nonppn'];
-    $no_inv_nonppn = $_POST['no_inv_nonppn'];
-    $tgl_inv = $_POST['tgl_inv'];
-    $cs = $_POST['cs'];
-    $cs_inv = $_POST['cs_inv'];
-    $jenis_inv = $_POST['jenis_inv'];
-    $tgl_tempo = $_POST['tgl_tempo'];
-    $sp_disc = $_POST['sp_disc'];
-    $note_inv = $_POST['note_inv'];
-    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
-    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
+    $id_spk_escaped = array();
+    
+    // Escape each element of the $id_spk array
+    foreach ($id_spk as $value) {
+        $id_spk_escaped[] = mysqli_real_escape_string($connect, $value);
+    }
+    $id_inv_nonppn = mysqli_real_escape_string($connect, $_POST['id_inv_nonppn']);
+    $no_inv_nonppn = mysqli_real_escape_string($connect, $_POST['no_inv_nonppn']);
+    $tgl_inv = mysqli_real_escape_string($connect, $_POST['tgl_inv']);
+    $cs = mysqli_real_escape_string($connect, $_POST['cs']);
+    $cs_inv = mysqli_real_escape_string($connect, $_POST['cs_inv']);
+    $jenis_inv = mysqli_real_escape_string($connect, $_POST['jenis_inv']);
+    $tgl_tempo = mysqli_real_escape_string($connect, $_POST['tgl_tempo']);
+    $sp_disc = mysqli_real_escape_string($connect, $_POST['sp_disc']);
+    $note_inv = mysqli_real_escape_string($connect, $_POST['note_inv']);
+    $ongkir = mysqli_real_escape_string($connect, $_POST['ongkir']);
     $status_inv = 'Belum Dikirim';
     $status_spk = 'Invoice Sudah Diterbitkan';
-    $user = $_SESSION['tiket_nama'];
+    $user = mysqli_real_escape_string($connect, $_SESSION['tiket_nama']);
     $id_inv_nonppn_encode = base64_encode($id_inv_nonppn);
+    $nama_invoice = 'Invoice_Non_PPN';
 
-    // Mulai transaksi
-    // Mulai transaksi
+    // Begin transaction
     mysqli_begin_transaction($connect);
 
     try {
-        $success = true;
+        // Insert invoice data into the database
         $sql_inv = mysqli_query($connect, "INSERT INTO inv_nonppn 
-                                            (id_inv_nonppn, no_inv, tgl_inv, cs_inv, tgl_tempo, sp_disc, note_inv, kategori_inv, ongkir, status_transaksi, user_created)
-                                            VALUES
-                                            ('$id_inv_nonppn', '$no_inv_nonppn', '$tgl_inv', '$cs_inv', '$tgl_tempo', '$sp_disc', '$note_inv', '$jenis_inv', '$ongkir', '$status_inv', '$user')");
-        for ($i = 0; $i < count($id_spk); $i++) {
-            $id_spk_array = $_POST['id_spk'][$i];
-            $sql = mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv_nonppn', status_spk = '$status_spk' WHERE id_spk_reg = '$id_spk_array'");
+            (id_inv_nonppn, no_inv, tgl_inv, cs_inv, tgl_tempo, sp_disc, note_inv, kategori_inv, ongkir, status_transaksi, nama_invoice, user_created)
+            VALUES
+            ('$id_inv_nonppn', '$no_inv_nonppn', '$tgl_inv', '$cs_inv', '$tgl_tempo', '$sp_disc', '$note_inv', '$jenis_inv', '$ongkir', '$status_inv', '$nama_invoice', '$user')");
 
-            if (!$sql) {
-                $success = false;
-                break;
-            }
+        // Convert $no_inv_nonppn to the desired format
+        $no_inv_nonppn_converted = str_replace('/', '_', $no_inv_nonppn);
 
-            if (!$sql_inv) {
-                $success = false;
-                break;
+        // Generate folder name based on invoice details
+        $folder_name = $no_inv_nonppn_converted;
+
+        // Encode a portion of the folder name
+        $encoded_portion = base64_encode($folder_name);
+
+        // Combine the original $no_inv_nonppn, encoded portion, and underscore
+        $encoded_folder_name = $no_inv_nonppn_converted . '_' . $encoded_portion;
+
+        // Set the path for the customer's folder
+        $customer_folder_path = "../Customer/" . $cs . "/" . date('Y') . "/" . date('m') . "/" . date('d') . "/" . ucwords(strtolower(str_replace('_', ' ', $nama_invoice))) . "/" . $encoded_folder_name;
+
+        // Create the customer's folder if it doesn't exist
+        if (!is_dir($customer_folder_path)) {
+            mkdir($customer_folder_path, 0777, true); // Set permission to 0777 to ensure the folder is writable
+        }
+
+        // Update SPK data in the database
+        $id_spk_count = count($id_spk_escaped);
+        for ($i = 0; $i < $id_spk_count; $i++) {
+            $id_spk_array = $id_spk_escaped[$i];
+            $sql_spk = mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv_nonppn', status_spk = '$status_spk' WHERE id_spk_reg = '$id_spk_array'");
+
+            if (!$sql_spk) {
+                throw new Exception("Error updating SPK data");
             }
         }
 
-        if ($success) {
-            // Jika kedua query berhasil, lakukan commit
-            mysqli_commit($connect);
-            header("Location:../cek-produk-inv-nonppn.php?id='$id_inv_nonppn_encode'");
-        } else {
-            // Rollback jika terjadi kesalahan
-            mysqli_rollback($connect);
-            echo "Error: Query gagal. Transaksi dibatalkan.";
-        }
+        // Commit the transaction
+        mysqli_commit($connect);
+        echo $sql_inv;
+
+        // Redirect to the invoice page
+        header("Location:../cek-produk-inv-nonppn.php?id=$id_inv_nonppn_encode");
+        exit();
     } catch (Exception $e) {
-        // Rollback jika terjadi kesalahan atau pengecualian
+        // Rollback the transaction if an error occurs
         mysqli_rollback($connect);
-        echo "Error: " . $e->getMessage();
-    }
+        // Handle the error (e.g., display an error message)
+        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+            ?>
+            <!-- Sweet Alert -->
+            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    title: "Error!",
+                    text: "<?php echo $error_message; ?>",
+                    icon: "error",
+                }).then(function() {
+                    window.location.href = "../cek-produk-inv-nonppn.php?id=$id_inv_nonppn_encode";
+                });
+                });
+            </script>
+            <?php
+        }
+
+
+
 } else if (isset($_POST['simpan-cek-harga'])) {
     $id_inv = base64_encode($_POST['id_inv']);
     $id_trx = $_POST['id_trx'];
@@ -182,6 +224,7 @@ if (isset($_POST['simpan-inv'])) {
         $jenis_inv = "nonppn";
 
         $uuid = generate_uuid();
+        $img_uuid = img_uuid();
         $year = date('y');
         $day = date('d');
         $month = date('m');
@@ -206,9 +249,31 @@ if (isset($_POST['simpan-inv'])) {
         move_uploaded_file($file1_tmp, $file1_destination);
         move_uploaded_file($file2_tmp, $file2_destination);
         move_uploaded_file($file3_tmp, $file3_destination);
+
+        if($file1_name != ''){
+            // Kompres dan ubah ukuran gambar bukti terima 1
+            $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file1_destination = "../gambar/bukti1/$new_file1_name";
+            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+            unlink($file1_destination);
+        }elseif($file2_name != ''){
+             // Kompres dan ubah ukuran gambar bukti terima 2
+            $new_file1_name = "Bukti_Dua". $year . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file2_destination = "../gambar/bukti2/$new_file2_name";
+            compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
+            unlink($file2_destination);
+        }elseif($file3_name != ''){
+            // Kompres dan ubah ukuran gambar bukti terima 3
+            $new_file1_name = "Bukti_Tiga". $year . "" . $img_uuid . "" . $day . ".jpg";
+            $compressed_file3_destination = "../gambar/bukti3/$nem_file3_name";
+            compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
+            unlink($file3_destination);
+        }
+
+       
+
         if ($jenis_pengiriman == 'Driver') {
             $pengirim = $_POST['pengirim'];
-
 
             $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
 
@@ -233,7 +298,7 @@ if (isset($_POST['simpan-inv'])) {
                                                         VALUES 
                                                         ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
 
-            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$file1_name', '$file2_name', '$file3_name')");
+            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 
             if ($ubah_status && $status_kirim && $bukti_terima) {
                 // Commit transaksi jika berhasil
@@ -245,20 +310,20 @@ if (isset($_POST['simpan-inv'])) {
         $connect->rollback();
         $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
 ?>
-        <!-- Sweet Alert -->
-        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    title: "Error!",
-                    text: "<?php echo $error_message; ?>",
-                    icon: "error",
-                }).then(function() {
-                    window.location.href = "../invoice-reguler.php?sort=baru";
-                });
-            });
-        </script>
+<!-- Sweet Alert -->
+<link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+<script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+        title: "Error!",
+        text: "<?php echo $error_message; ?>",
+        icon: "error",
+    }).then(function() {
+        window.location.href = "../invoice-reguler.php?sort=baru";
+    });
+});
+</script>
 <?php
     }
 } else if (isset($_POST['update-ongkir'])) {
@@ -287,5 +352,16 @@ function generate_uuid()
         mt_rand(0, 0xffff),
         mt_rand(0, 0xffff)
     );
+}
+
+
+function img_uuid() {
+    $data = openssl_random_pseudo_bytes(16);
+    assert(strlen($data) == 16);
+
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+    return vsprintf('%s%s', str_split(bin2hex($data), 4));
 }
 ?>
