@@ -208,7 +208,7 @@ include "akses.php";
                                     ?>
                                 </div>
                             </div>
-                            <div class="row">
+                          
                                 <?php
                                 if ($data['ongkir'] != 0) {
                                     echo '<div class="row">
@@ -222,7 +222,7 @@ include "akses.php";
                                             </div>';
                                 }
                                 ?>
-                            </div>
+                          
                             <div class="row">
                                 <div class="col-5">
                                     <?php  

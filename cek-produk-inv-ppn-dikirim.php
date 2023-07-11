@@ -133,19 +133,18 @@ include "akses.php";
                                 </div>
                             </div>
                             <?php
-                            if ($data['kategori_inv'] == 'Spesial Diskon') {
-                                echo '<div class="row">
-                                                <div class="col-5">
-                                                    <p style="float: left;">Spesial Diskon</p>
-                                                    <p style="float: right;">:</p>
-                                                </div>
-                                                <div class="col-7">
-                                                    ' . $data['sp_disc'] . ' %
-                                                </div>
-                                            </div>';
-                            }
+                                if ($data['kategori_inv'] == 'Spesial Diskon') {
+                                    echo '<div class="row">
+                                            <div class="col-5">
+                                                <p style="float: left;">Spesial Diskon</p>
+                                                <p style="float: right;">:</p>
+                                            </div>
+                                            <div class="col-7">
+                                                ' . $data['sp_disc'] . ' %
+                                            </div>
+                                        </div>';
+                                }
                             ?>
-
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -210,8 +209,7 @@ include "akses.php";
                                     ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <?php
+                            <?php
                                 if ($data['ongkir'] != 0) {
                                     echo '<div class="row">
                                                 <div class="col-5">
@@ -223,8 +221,7 @@ include "akses.php";
                                                 </div>
                                             </div>';
                                 }
-                                ?>
-                            </div>
+                            ?>
                             <div class="row">
                                 <div class="col-5">
                                     <?php  

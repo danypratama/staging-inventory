@@ -43,21 +43,21 @@ include "akses.php";
                     </h5>
                 </div>
                 <?php
-include "koneksi.php";
-$id_inv = base64_decode($_GET['id']);
-$sql = "SELECT
-                            nonppn.*,
-                            sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
-                            cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
-                            FROM inv_nonppn AS nonppn
-                            JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                            JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
-                            JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                            WHERE nonppn.id_inv_nonppn = '$id_inv'";
-$query = mysqli_query($connect, $sql);
-$data = mysqli_fetch_array($query);
-?>
+                    include "koneksi.php";
+                    $id_inv = base64_decode($_GET['id']);
+                    $sql = "SELECT
+                                                nonppn.*,
+                                                sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                                                cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
+                                                FROM inv_nonppn AS nonppn
+                                                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
+                                                JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
+                                                WHERE nonppn.id_inv_nonppn = '$id_inv'";
+                    $query = mysqli_query($connect, $sql);
+                    $data = mysqli_fetch_array($query);
+                ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
                         <div class="card-body p-3 border">
@@ -77,31 +77,31 @@ $data = mysqli_fetch_array($query);
                                 </div>
                                 <div class="col-7">
                                     <?php
-include "koneksi.php";
-$id_inv = base64_decode($_GET['id']);
-$no = 1;
-$sql = "SELECT
-                                                    nonppn.*,
-                                                    sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
-                                                    cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
-                                                    FROM inv_nonppn AS nonppn
-                                                    JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                                    JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                    JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
-                                                    JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                                                    WHERE nonppn.id_inv_nonppn = '$id_inv'";
-$query = mysqli_query($connect, $sql);
-$totalData = mysqli_num_rows($query);
+                                        include "koneksi.php";
+                                        $id_inv = base64_decode($_GET['id']);
+                                        $no = 1;
+                                        $sql = "SELECT
+                                                nonppn.*,
+                                                sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                                                cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
+                                                FROM inv_nonppn AS nonppn
+                                                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
+                                                JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
+                                                WHERE nonppn.id_inv_nonppn = '$id_inv'";
+                                        $query = mysqli_query($connect, $sql);
+                                        $totalData = mysqli_num_rows($query);
 
-while ($data2 = mysqli_fetch_array($query)) {
-    $id_inv = $data2['id_inv_nonppn'];
-    $kat_inv = $data2['kategori_inv'];
-    $id_cs = $data2['id_customer'];
-    ?>
-                                    <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) /
-                                        <?php if (!empty($data2['no_po'])) {
-        echo "(" . $data2['no_po'] . ")/";
-    }?>
+                                        while ($data2 = mysqli_fetch_array($query)) {
+                                            $id_inv = $data2['id_inv_nonppn'];
+                                            $kat_inv = $data2['kategori_inv'];
+                                            $id_cs = $data2['id_customer'];
+                                            ?>
+                                                                            <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) /
+                                                                                <?php if (!empty($data2['no_po'])) {
+                                                echo "(" . $data2['no_po'] . ")/";
+                                            }?>
                                         (<?php echo $data2['no_spk'] ?>)</p>
                                     <?php $no++;?>
                                     <?php }?>
@@ -212,10 +212,9 @@ while ($data2 = mysqli_fetch_array($query)) {
                                     ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <?php
-                                    if ($data['ongkir'] != 0) {
-                                        echo '<div class="row">
+                            <?php
+                                if ($data['ongkir'] != 0) {
+                                      echo '<div class="row">
                                                 <div class="col-5">
                                                     <p style="float: left;">Ongkir</p>
                                                     <p style="float: right;">:</p>
@@ -225,8 +224,7 @@ while ($data2 = mysqli_fetch_array($query)) {
                                                 </div>
                                             </div>';
                                     }
-                                ?>
-                            </div>
+                            ?>
                             <div class="row">
                                 <div class="col-5">
                                     <?php  
