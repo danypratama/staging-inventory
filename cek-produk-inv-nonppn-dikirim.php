@@ -43,21 +43,21 @@ include "akses.php";
                     </h5>
                 </div>
                 <?php
-                    include "koneksi.php";
-                    $id_inv = base64_decode($_GET['id']);
-                    $sql = "SELECT
-                                                nonppn.*,
-                                                sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
-                                                cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
-                                                FROM inv_nonppn AS nonppn
-                                                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
-                                                JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                                                WHERE nonppn.id_inv_nonppn = '$id_inv'";
-                    $query = mysqli_query($connect, $sql);
-                    $data = mysqli_fetch_array($query);
-                ?>
+include "koneksi.php";
+$id_inv = base64_decode($_GET['id']);
+$sql = "SELECT
+                            nonppn.*,
+                            sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                            cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
+                            FROM inv_nonppn AS nonppn
+                            JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                            JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
+                            JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
+                            WHERE nonppn.id_inv_nonppn = '$id_inv'";
+$query = mysqli_query($connect, $sql);
+$data = mysqli_fetch_array($query);
+?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
                         <div class="card-body p-3 border">
@@ -77,31 +77,31 @@ include "akses.php";
                                 </div>
                                 <div class="col-7">
                                     <?php
-                                        include "koneksi.php";
-                                        $id_inv = base64_decode($_GET['id']);
-                                        $no = 1;
-                                        $sql = "SELECT
-                                                nonppn.*,
-                                                sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
-                                                cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
-                                                FROM inv_nonppn AS nonppn
-                                                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
-                                                JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                                                WHERE nonppn.id_inv_nonppn = '$id_inv'";
-                                        $query = mysqli_query($connect, $sql);
-                                        $totalData = mysqli_num_rows($query);
+include "koneksi.php";
+$id_inv = base64_decode($_GET['id']);
+$no = 1;
+$sql = "SELECT
+                                                    nonppn.*,
+                                                    sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                                                    cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
+                                                    FROM inv_nonppn AS nonppn
+                                                    JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                                    JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                    JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
+                                                    JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
+                                                    WHERE nonppn.id_inv_nonppn = '$id_inv'";
+$query = mysqli_query($connect, $sql);
+$totalData = mysqli_num_rows($query);
 
-                                        while ($data2 = mysqli_fetch_array($query)) {
-                                            $id_inv = $data2['id_inv_nonppn'];
-                                            $kat_inv = $data2['kategori_inv'];
-                                            $id_cs = $data2['id_customer'];
-                                            ?>
-                                                                            <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) /
-                                                                                <?php if (!empty($data2['no_po'])) {
-                                                echo "(" . $data2['no_po'] . ")/";
-                                            }?>
+while ($data2 = mysqli_fetch_array($query)) {
+    $id_inv = $data2['id_inv_nonppn'];
+    $kat_inv = $data2['kategori_inv'];
+    $id_cs = $data2['id_customer'];
+    ?>
+                                    <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) /
+                                        <?php if (!empty($data2['no_po'])) {
+        echo "(" . $data2['no_po'] . ")/";
+    }?>
                                         (<?php echo $data2['no_spk'] ?>)</p>
                                     <?php $no++;?>
                                     <?php }?>
@@ -214,16 +214,16 @@ include "akses.php";
                             </div>
                             <?php
                                 if ($data['ongkir'] != 0) {
-                                      echo '<div class="row">
-                                                <div class="col-5">
-                                                    <p style="float: left;">Ongkir</p>
-                                                    <p style="float: right;">:</p>
-                                                </div>
-                                                <div class="col-7">
-                                                    ' . number_format($data['ongkir']) . '
-                                                </div>
-                                            </div>';
-                                    }
+                                    echo '<div class="row">
+                                            <div class="col-5">
+                                                <p style="float: left;">Ongkir</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                ' . number_format($data['ongkir']) . '
+                                            </div>
+                                        </div>';
+                                }
                             ?>
                             <div class="row">
                                 <div class="col-5">
@@ -287,11 +287,6 @@ include "akses.php";
                             $data_cek = mysqli_fetch_array($query_cek);
                             $total_data = mysqli_num_rows($query_cek);
                             ?>
-                            <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
-                                data-bs-target="#Diterima">
-                                <i class="bi bi-send"></i>
-                                Diterima
-                            </button>
                             <?php
                                 include "koneksi.php";
                                 $sql_bukti_kirim = "SELECT * FROM inv_bukti_terima WHERE id_inv = '$id_inv'";
@@ -301,6 +296,20 @@ include "akses.php";
                                     echo '
                                     <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
                                         <i class="bi bi-file-earmark-image"></i> Bukti Kirim
+                                    </button>
+
+                                    <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
+                                        data-bs-target="#DiterimaEx">
+                                        <i class="bi bi-send"></i>
+                                        Diterima
+                                    </button>
+                                    ';
+                                }else{
+                                    echo '
+                                    <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
+                                        data-bs-target="#Diterima">
+                                        <i class="bi bi-send"></i>
+                                        Diterima
                                     </button>
                                     ';
                                 }
@@ -549,6 +558,41 @@ include "akses.php";
 </body>
 
 </html>
+<!-- Modal Diterima-->
+<div class="modal fade" id="DiterimaEx" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <form action="proses/proses-invoice-nonppn-diterima.php" method="POST"
+                        enctype="multipart/form-data">
+                        <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
+                        <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
+                        <div class="mb-3">
+                            <label>Nama Penerima</label>
+                            <input type="text" class="form-control" name="nama_penerima" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label id="labelDate">Tanggal</label>
+                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
+                                id="date" required="required">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" name="diterima_ekspedisi"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEkspedisi"><i class="bi bi-x-circle"></i> Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Diterima SPK -->
 
 <!-- Modal Diterima-->
 <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -643,9 +687,9 @@ include "akses.php";
         // Data untuk dropdown
         const options = <?php
         $server = "localhost"; //nama server
-        $user = "mandiria_staging"; //usernya
-        $password = "karsa_2023"; //password
-        $db = "mandiria_staging"; //database
+        $user = "root"; //usernya
+        $password = ""; //password
+        $db = "db_inventory"; //database
     
         // Koneksi dan memilih database di server
         $connect = mysqli_connect($server, $user, $password, $db);
