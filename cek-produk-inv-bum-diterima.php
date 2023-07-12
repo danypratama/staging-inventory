@@ -262,11 +262,11 @@ include "akses.php";
                             <a href="invoice-reguler-diterima.php" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
-                            <!-- Button modal Bukti Kirim -->
+                            <!-- Button modal Bukti Terima -->
                             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#bukti">
                                 <i class="bi bi-file-earmark-image"></i> Bukti Terima
                             </button>
-                            <!-- End Button Modal Bukti Kirim -->
+                            <!-- End Button Modal Bukti Terima -->
                             
                             <!-- Trx Selesai -->
                             <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#trxSelesai">
@@ -274,77 +274,6 @@ include "akses.php";
                             </button>
                             <!-- End Trx Selesai -->  
 
-                            <!-- Modal  Bukti Kirim-->
-                            <div class="modal fade" id="bukti" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-md">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Bukti Terima</h1>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="card-body">
-                                            <?php
-                                            include "koneksi.php";
-                                            $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima
-                                                                FROM inv_bukti_terima AS ibt
-                                                                LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv) WHERE ibt.id_inv = '$id_inv';";
-                                            $query_bukti = mysqli_query($connect, $sql_bukti);
-                                            $data_bukti = mysqli_fetch_array($query_bukti);
-                                            $gambar1 = $data_bukti['bukti_satu'];
-                                            $gambar_bukti1 = "gambar/bukti1/$gambar1";
-                                            $gambar2 = $data_bukti['bukti_dua'];
-                                            $gambar_bukti2 = "gambar/bukti2/$gambar2";
-                                            $gambar3 = $data_bukti['bukti_tiga'];
-                                            $gambar_bukti3 = "gambar/bukti3/$gambar3";
-                                            ?>
-                                            <div class="mb-3">
-                                                <h6>Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
-                                                <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['tgl_terima']))?></h6>
-                                            </div>
-                                            <div id="carouselExample" class="carousel slide">
-                                                <div class="carousel-inner">
-                                                    <?php if (!empty($gambar1)) : ?>
-                                                        <div class="carousel-item active">
-                                                            <img src="<?php echo $gambar_bukti1 ?>" class="d-block w-100">
-                                                            <div class="text-center mt-3">
-                                                                <h5>Bukti Terima 1</h5>
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($gambar2)) : ?>
-                                                        <div class="carousel-item">
-                                                            <img src="<?php echo $gambar_bukti2 ?>" class="d-block w-100">
-                                                            <div class="text-center mt-3">
-                                                                <h5>Bukti Terima 2</h5>
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($gambar3)) : ?>
-                                                        <div class="carousel-item">
-                                                            <img src="<?php echo $gambar_bukti3 ?>" class="d-block w-100">
-                                                            <div class="text-center mt-3">
-                                                                <h5>Bukti Terima 3</h5>
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Previous</span>
-                                                </button>
-                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Next</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Modal Bukti Kirim -->
 
                             <?php
                             $id_inv_bum = base64_decode($_GET['id']);
@@ -539,51 +468,77 @@ include "akses.php";
                     </div>
                 </form>
             </div>
-            <!-- Modal Kategori Inv -->
-            <div class="modal fade" id="ubahKat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+            <!-- Modal  Bukti Terima-->
+            <div class="modal fade" id="bukti" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kategori</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Bukti Terima</h1>
                         </div>
                         <div class="modal-body">
-                            <form action="proses/proses-invoice-bum.php" method="POST">
-                                <?php
-                                $id_inv_kat = $id_inv;
-                                $sql_kat = "SELECT 
-                                            bum.*, 
-                                            sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan
-                                            FROM inv_bum AS bum
-                                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
-                                            WHERE bum.id_inv_bum = '$id_inv_kat'";
-                                $query_kat = mysqli_query($connect, $sql_kat);
-                                $data_kat = mysqli_fetch_array($query_kat);
-                                ?>
-                                <input type="hidden" name="id_inv" value="<?php echo $id_inv_kat ?>" readonly>
-                                <div class="mb-3">
-                                    <select name="kat_inv" class="form-select">
-                                        <?php
-                                        $kategori_inv = $data_kat['kategori_inv'];
-                                        $pilihan_sisa = array('Reguler', 'Diskon', 'Spesial Diskon');
-                                        foreach ($pilihan_sisa as $pilihan) {
-                                            if ($pilihan != $kategori_inv) {
-                                                echo '<option value="' . $pilihan . '">' . $pilihan . '</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary" name="ubah-kategori">Update Kategori</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                            </form>
+                            <div class="card-body">
+                            <?php
+                            include "koneksi.php";
+                            $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima
+                                                FROM inv_bukti_terima AS ibt
+                                                LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv) WHERE ibt.id_inv = '$id_inv';";
+                            $query_bukti = mysqli_query($connect, $sql_bukti);
+                            $data_bukti = mysqli_fetch_array($query_bukti);
+                            $gambar1 = $data_bukti['bukti_satu'];
+                            $gambar_bukti1 = "gambar/bukti1/$gambar1";
+                            $gambar2 = $data_bukti['bukti_dua'];
+                            $gambar_bukti2 = "gambar/bukti2/$gambar2";
+                            $gambar3 = $data_bukti['bukti_tiga'];
+                            $gambar_bukti3 = "gambar/bukti3/$gambar3";
+                            ?>
+                            <div class="mb-3">
+                                <h6>Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
+                                <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['tgl_terima']))?></h6>
+                            </div>
+                            <div id="carouselExample" class="carousel slide">
+                                <div class="carousel-inner">
+                                    <?php if (!empty($gambar1)) : ?>
+                                        <div class="carousel-item active">
+                                            <img src="<?php echo $gambar_bukti1 ?>" class="d-block w-100">
+                                            <div class="text-center mt-3">
+                                                <h5>Bukti Terima 1</h5>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($gambar2)) : ?>
+                                        <div class="carousel-item">
+                                            <img src="<?php echo $gambar_bukti2 ?>" class="d-block w-100">
+                                            <div class="text-center mt-3">
+                                                <h5>Bukti Terima 2</h5>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($gambar3)) : ?>
+                                        <div class="carousel-item">
+                                            <img src="<?php echo $gambar_bukti3 ?>" class="d-block w-100">
+                                            <div class="text-center mt-3">
+                                                <h5>Bukti Terima 3</h5>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- End Modal -->
+            <!-- End Modal Bukti Terima -->
         </section>
     </main><!-- End #main -->
 
