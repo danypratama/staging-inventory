@@ -64,8 +64,10 @@ if(isset($_POST['diterima_driver'])){
                 $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat')");
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
+
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
     
-                if ( $bukti_terima && $query_diterima && $query_update_inv) {
+                if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi
                     $connect->commit();
                     header("Location:../invoice-reguler-dikirim.php?sort=baru");
@@ -86,8 +88,10 @@ if(isset($_POST['diterima_driver'])){
                 $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat')");
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
+
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
     
-                if ( $bukti_terima && $query_diterima && $query_update_inv) {
+                if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi
                     $connect->commit();
                     header("Location:../invoice-reguler-dikirim.php?sort=baru");
@@ -103,8 +107,10 @@ if(isset($_POST['diterima_driver'])){
                 $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat')");
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
+
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
     
-                if ( $bukti_terima && $query_diterima && $query_update_inv) {
+                if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi
                     $connect->commit();
                     header("Location:../invoice-reguler-dikirim.php?sort=baru");
@@ -120,8 +126,10 @@ if(isset($_POST['diterima_driver'])){
                 $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat')");
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
+
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
     
-                if ( $bukti_terima && $query_diterima && $query_update_inv) {
+                if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi
                     $connect->commit();
                     header("Location:../invoice-reguler-dikirim.php?sort=baru");
@@ -166,6 +174,10 @@ if(isset($_POST['diterima_driver'])){
             $resi = $_POST['resi'];
             $tgl = $_POST['tgl'];
 
+            $query_ekspedisi = mysqli_query($connect, "SELECT id_ekspedisi, nama_ekspedisi FROM ekspedisi WHERE nama_ekspedisi = '$nama_ekspedisi'");
+            $data_ekspedisi = mysqli_fetch_array($query_ekspedisi);
+            $id_ekspedisi = $data_ekspedisi['id_ekspedisi'];
+
             $file1_name = $_FILES['fileku1']['name'];
             $file1_tmp = $_FILES['fileku1']['tmp_name'];
             $file1_destination = "../gambar/bukti1/" . $file1_name;
@@ -209,7 +221,8 @@ if(isset($_POST['diterima_driver'])){
 
             $update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
 
-            $update_status_kirim = mysqli_query($connect, "UPDATE status_kirim SET dikirim_ekspedisi = '$nama_ekspedisi', no_resi = '$resi'  WHERE id_inv = '$id_inv'");
+            $update_status_kirim = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Ekspedisi', dikirim_ekspedisi = '$id_ekspedisi', no_resi = '$resi'  WHERE id_inv = '$id_inv'");
+
 
             if ( $bukti_terima && $update_inv && $update_status_kirim) {
                 // Commit transaksi

@@ -43,9 +43,9 @@ include "akses.php";
                     </h5>
                 </div>
                 <?php
-include "koneksi.php";
-$id_inv = base64_decode($_GET['id']);
-$sql = "SELECT
+                    include "koneksi.php";
+                    $id_inv = base64_decode($_GET['id']);
+                    $sql = "SELECT
                             ppn.*,
                             sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
@@ -55,9 +55,9 @@ $sql = "SELECT
                             JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                             JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
                             WHERE ppn.id_inv_ppn = '$id_inv'";
-$query = mysqli_query($connect, $sql);
-$data = mysqli_fetch_array($query);
-?>
+                    $query = mysqli_query($connect, $sql);
+                    $data = mysqli_fetch_array($query);
+                    ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
                         <div class="card-body p-3 border">
@@ -77,31 +77,31 @@ $data = mysqli_fetch_array($query);
                                 </div>
                                 <div class="col-7">
                                     <?php
-include "koneksi.php";
-$id_inv = base64_decode($_GET['id']);
-$no = 1;
-$sql = "SELECT
-                                                    ppn.*,
-                                                    sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
-                                                    cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
-                                                    FROM inv_ppn AS ppn
-                                                    JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                                    JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                    JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
-                                                    JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                                                    WHERE ppn.id_inv_ppn = '$id_inv'";
-$query = mysqli_query($connect, $sql);
-$totalData = mysqli_num_rows($query);
+                                        include "koneksi.php";
+                                        $id_inv = base64_decode($_GET['id']);
+                                        $no = 1;
+                                        $sql = "SELECT
+                                                ppn.*,
+                                                sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                                                cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
+                                                FROM inv_ppn AS ppn
+                                                JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
+                                                JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
+                                                WHERE ppn.id_inv_ppn = '$id_inv'";
+                                        $query = mysqli_query($connect, $sql);
+                                        $totalData = mysqli_num_rows($query);
 
-while ($data2 = mysqli_fetch_array($query)) {
-    $id_inv = $data2['id_inv_ppn'];
-    $kat_inv = $data2['kategori_inv'];
-    $id_cs = $data2['id_customer'];
-    ?>
-                                    <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) /
-                                        <?php if (!empty($data2['no_po'])) {
-        echo "(" . $data2['no_po'] . ")/";
-    }?>
+                                        while ($data2 = mysqli_fetch_array($query)) {
+                                            $id_inv = $data2['id_inv_ppn'];
+                                            $kat_inv = $data2['kategori_inv'];
+                                            $id_cs = $data2['id_customer'];
+                                            ?>
+                                                                            <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) /
+                                                                                <?php if (!empty($data2['no_po'])) {
+                                                echo "(" . $data2['no_po'] . ")/";
+                                            }?>
                                         (<?php echo $data2['no_spk'] ?>)</p>
                                     <?php $no++;?>
                                     <?php }?>
@@ -197,21 +197,20 @@ while ($data2 = mysqli_fetch_array($query)) {
                                     <?php echo $data['alamat'] ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-5">
-                                    <p style="float: left;">Note</p>
-                                    <p style="float: right;">:</p>
-                                </div>
-                                <div class="col-7">
-                                    <?php
-                                        if ($data['note_inv'] != '') {
-                                            echo $data['note_inv'];
-                                        } else {
-                                            echo '-';
-                                        }
-                                    ?>
-                                </div>
-                            </div>
+                            <?php
+                                if ($data['note_inv'] != '') {
+                                        echo '
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <p style="float: left;">Note Invoice</p>
+                                                <p style="float: right;">:</p>
+                                            </div>
+                                            <div class="col-7">
+                                                ' . $data['note_inv'] . '
+                                            </div>
+                                        </div>';
+                                    }
+                            ?>
                             <?php
                                 if ($data['ongkir'] != 0) {
                                     echo '<div class="row">
@@ -228,10 +227,11 @@ while ($data2 = mysqli_fetch_array($query)) {
                             <div class="row">
                                 <div class="col-5">
                                     <?php  
-                                        $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi FROM status_kirim WHERE id_inv = '$id_inv'");
+                                        $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, dikirim_driver FROM status_kirim WHERE id_inv = '$id_inv'");
                                         $data_status_kirim = mysqli_fetch_array($status_kirim);
                                         $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
                                         $ekspedisi = $data_status_kirim['dikirim_ekspedisi'];
+                                        $driver = $data_status_kirim['dikirim_driver'];
 
 
                                         $ekspedisi_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_ekspedisi, ex.nama_ekspedisi
@@ -239,6 +239,12 @@ while ($data2 = mysqli_fetch_array($query)) {
                                                                                     JOIN ekspedisi ex ON (sk.dikirim_ekspedisi = ex.id_ekspedisi)
                                                                                     WHERE sk.dikirim_ekspedisi = '$ekspedisi'");
                                         $data_ekspedisi_kirim = mysqli_fetch_array($ekspedisi_kirim);
+                                        
+                                        $driver_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_driver, us.nama_user 
+                                                                                    FROM status_kirim AS sk
+                                                                                    JOIN user us ON (sk.dikirim_driver = us.id_user)
+                                                                                    WHERE sk.dikirim_driver = '$driver'");
+                                        $data_driver_kirim = mysqli_fetch_array($driver_kirim);
                                     ?>
                                     <p style="float: left;">Jenis Pengiriman</p>
                                     <p style="float: right;">:</p>
@@ -246,9 +252,9 @@ while ($data2 = mysqli_fetch_array($query)) {
                                 <div class="col-7">
                                     <?php  
                                         if($jenis_pengiriman == 'Ekspedisi'){
-                                            echo $jenis_pengiriman. " ( " . $data_ekspedisi_kirim['nama_ekspedisi']. " )";
+                                            echo $jenis_pengiriman . " ( " . $data_ekspedisi_kirim['nama_ekspedisi']. " )";
                                         } else {
-                                            echo $jenis_pengiriman;
+                                            echo $jenis_pengiriman . " ( " . $data_driver_kirim['nama_user']. " )";
                                         }
                                     ?>
                                 </div>
@@ -688,17 +694,6 @@ while ($data2 = mysqli_fetch_array($query)) {
         const options = <?php
         include "koneksi.php";
     
-        // Membuat cache untuk script ini dengan OpCache
-        if (function_exists('opcache_invalidate')) {
-            opcache_invalidate(__FILE__);
-        }
-    
-        // Melakukan reset cache OpCache setiap 10 detik
-        if (function_exists('opcache_reset')) {
-            if (time() % 10 == 0) {
-                opcache_reset();
-            }
-        }
         $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
         $option_values = array();
         while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
@@ -934,9 +929,12 @@ while ($data2 = mysqli_fetch_array($query)) {
                 <div class="card-body">
                 <?php
                 include "koneksi.php";
-                $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima
+                $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima, sk.jenis_penerima, sk.dikirim_ekspedisi, sk.no_resi, ex.nama_ekspedisi
                                 FROM inv_bukti_terima AS ibt
-                                LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv) WHERE ibt.id_inv = '$id_inv';";
+                                LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv)
+                                LEFT JOIN status_kirim sk ON (ibt.id_inv = sk.id_inv)
+                                LEFT JOIN ekspedisi ex ON (ex.id_ekspedisi = sk.dikirim_ekspedisi) 
+                                WHERE ibt.id_inv = '$id_inv'";
                 $query_bukti = mysqli_query($connect, $sql_bukti);
                 $data_bukti = mysqli_fetch_array($query_bukti);
                 $gambar1 = $data_bukti['bukti_satu'];
@@ -947,8 +945,9 @@ while ($data2 = mysqli_fetch_array($query)) {
                 $gambar_bukti3 = "gambar/bukti3/$gambar3";
                 ?>
                 <div class="mb-3">
-                    <h6>Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
-                    <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['tgl_terima']))?></h6>
+                    <h6>Penerima : <?php echo $data_bukti['jenis_penerima'] ?> (<?php echo $data_bukti['nama_ekspedisi'] ?>)</h6>
+                    <h6>No. Resi : <?php echo $data_bukti['no_resi'] ?></h6>
+                    <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['created_date']))?></h6>
                 </div>
                 <div id="carouselExample" class="carousel slide">
                     <div class="carousel-inner">
@@ -1132,26 +1131,26 @@ $('#edit').on('show.bs.modal', function(event) {
 
 <!-- date picker with flatpick -->
 <script type="text/javascript">
-flatpickr("#date", {
-    dateFormat: "d/m/Y"
-});
+    flatpickr("#date", {
+        dateFormat: "d/m/Y"
+    });
 
-flatpickr("#tempo", {
-    dateFormat: "d/m/Y"
-});
+    flatpickr("#tempo", {
+        dateFormat: "d/m/Y"
+    });
 
-// untuk menampilkan tanggal hari ini
-var dateInput = document.getElementById('date');
+    // untuk menampilkan tanggal hari ini
+    var dateInput = document.getElementById('date');
 
-// Membuat objek tanggal hari ini
-var today = new Date();
+    // Membuat objek tanggal hari ini
+    var today = new Date();
 
-// Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
-var day = String(today.getDate()).padStart(2, '0');
-var month = String(today.getMonth() + 1).padStart(2, '0');
-var year = today.getFullYear();
+    // Mendapatkan hari, bulan, dan tahun dari tanggal hari ini
+    var day = String(today.getDate()).padStart(2, '0');
+    var month = String(today.getMonth() + 1).padStart(2, '0');
+    var year = today.getFullYear();
 
-// Mengatur nilai default input dengan format yang diinginkan
-dateInput.value = day + '/' + month + '/' + year;
+    // Mengatur nilai default input dengan format yang diinginkan
+    dateInput.value = day + '/' + month + '/' + year;
 </script>
 <!-- end date picker -->

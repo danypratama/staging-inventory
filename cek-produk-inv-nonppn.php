@@ -212,21 +212,20 @@ include "akses.php";
                                         <?php echo $data['alamat'] ?>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p style="float: left;">Note</p>
-                                        <p style="float: right;">:</p>
-                                    </div>
-                                    <div class="col-7">
-                                        <?php
-                                        if ($data['note_inv'] != '') {
-                                            echo $data['note_inv'];
-                                        } else {
-                                            echo '-';
+                                <?php
+                                    if ($data['note_inv'] != '') {
+                                            echo '
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Note Invoice</p>
+                                                    <p style="float: right;">:</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    ' . $data['note_inv'] . '
+                                                </div>
+                                            </div>';
                                         }
-                                        ?>
-                                    </div>
-                                </div>
+                                ?>
                                 <?php
                                 if ($data['ongkir'] != 0) {
                                     echo '<div class="row">

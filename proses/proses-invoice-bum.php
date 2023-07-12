@@ -292,9 +292,9 @@ if (isset($_POST['simpan-inv'])) {
             $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                        (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                        (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, tgl_kirim) 
                                                         VALUES 
-                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
+                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', Ekspedisi , '$ekspedisi', '$resi', '$tgl')");
 
             $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 

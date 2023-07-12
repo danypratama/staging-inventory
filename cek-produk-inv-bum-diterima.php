@@ -97,7 +97,9 @@ include "akses.php";
                                         $kat_inv = $data2['kategori_inv'];
                                         $id_cs = $data2['id_customer'];
                                     ?>
-                                        <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / (<?php echo $data2['no_po'] ?>) / (<?php echo $data2['no_spk'] ?>)</p>
+                                        <p><?php echo $no; ?>. (<?php echo $data2['tgl_pesanan'] ?>) / <?php if (!empty($data2['no_po'])) {
+                                                                                                            echo "(" . $data2['no_po'] . ")/";
+                                                                                                        } ?> (<?php echo $data2['no_spk'] ?>)</p>
                                         <?php $no++; ?>
                                     <?php } ?>
                                 </div>
@@ -142,11 +144,6 @@ include "akses.php";
                                             </div>';
                             }
                             ?>
-
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card-body p-3 border" style="min-height: 234px;">
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Order Via</p>
@@ -156,6 +153,10 @@ include "akses.php";
                                     <?php echo $data['order_by'] ?>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card-body p-3 border" style="min-height: 234px;">
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Sales</p>
@@ -192,36 +193,34 @@ include "akses.php";
                                     <?php echo $data['alamat'] ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-5">
-                                    <p style="float: left;">Note</p>
-                                    <p style="float: right;">:</p>
-                                </div>
-                                <div class="col-7">
-                                    <?php
-                                    if ($data['note_inv'] != '') {
-                                        echo $data['note_inv'];
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <?php
-                                if ($data['ongkir'] != 0) {
-                                    echo '<div class="row">
-                                                <div class="col-5">
-                                                    <p style="float: left;">Ongkir</p>
-                                                    <p style="float: right;">:</p>
-                                                </div>
-                                                <div class="col-7">
-                                                    ' . number_format($data['ongkir']) . '
-                                                </div>
-                                            </div>';
+                            <?php
+                               if ($data['note_inv'] != '') {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">Note</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . $data['note_inv'] . '
+                                        </div>
+                                    </div>';
                                 }
-                                ?>
-                            </div>
+                            ?>
+                            <?php
+                                if ($data['ongkir'] != 0) {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">Ongkir</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . number_format($data['ongkir']) . '
+                                        </div>
+                                    </div>';
+                                }
+                            ?>
                             <div class="row">
                                 <div class="col-5">
                                     <?php  
@@ -260,9 +259,93 @@ include "akses.php";
                 <div class="card-body p-3">
                     <div class="table-responsive">
                         <div class="text-start mb-3">
-                            <a href="invoice-reguler-diterima.php" class="btn btn-warning btn-detail">
+                            <a href="invoice-reguler-diterima.php" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
+                            <!-- Button modal Bukti Kirim -->
+                            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#bukti">
+                                <i class="bi bi-file-earmark-image"></i> Bukti Terima
+                            </button>
+                            <!-- End Button Modal Bukti Kirim -->
+                            
+                            <!-- Trx Selesai -->
+                            <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#trxSelesai">
+                                <i class="bi bi-check2-circle"></i> Transaksi Selesai
+                            </button>
+                            <!-- End Trx Selesai -->  
+
+                            <!-- Modal  Bukti Kirim-->
+                            <div class="modal fade" id="bukti" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Bukti Terima</h1>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="card-body">
+                                            <?php
+                                            include "koneksi.php";
+                                            $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima
+                                                                FROM inv_bukti_terima AS ibt
+                                                                LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv) WHERE ibt.id_inv = '$id_inv';";
+                                            $query_bukti = mysqli_query($connect, $sql_bukti);
+                                            $data_bukti = mysqli_fetch_array($query_bukti);
+                                            $gambar1 = $data_bukti['bukti_satu'];
+                                            $gambar_bukti1 = "gambar/bukti1/$gambar1";
+                                            $gambar2 = $data_bukti['bukti_dua'];
+                                            $gambar_bukti2 = "gambar/bukti2/$gambar2";
+                                            $gambar3 = $data_bukti['bukti_tiga'];
+                                            $gambar_bukti3 = "gambar/bukti3/$gambar3";
+                                            ?>
+                                            <div class="mb-3">
+                                                <h6>Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
+                                                <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['tgl_terima']))?></h6>
+                                            </div>
+                                            <div id="carouselExample" class="carousel slide">
+                                                <div class="carousel-inner">
+                                                    <?php if (!empty($gambar1)) : ?>
+                                                        <div class="carousel-item active">
+                                                            <img src="<?php echo $gambar_bukti1 ?>" class="d-block w-100">
+                                                            <div class="text-center mt-3">
+                                                                <h5>Bukti Terima 1</h5>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <?php if (!empty($gambar2)) : ?>
+                                                        <div class="carousel-item">
+                                                            <img src="<?php echo $gambar_bukti2 ?>" class="d-block w-100">
+                                                            <div class="text-center mt-3">
+                                                                <h5>Bukti Terima 2</h5>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <?php if (!empty($gambar3)) : ?>
+                                                        <div class="carousel-item">
+                                                            <img src="<?php echo $gambar_bukti3 ?>" class="d-block w-100">
+                                                            <div class="text-center mt-3">
+                                                                <h5>Bukti Terima 3</h5>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Modal Bukti Kirim -->
+
                             <?php
                             $id_inv_bum = base64_decode($_GET['id']);
                             $sql_cek = "SELECT 
@@ -368,6 +451,7 @@ include "akses.php";
                             <!-- Modal -->
                         </table>
                     </div>
+
                 </div>
                 <div class="container">
                     <?php
@@ -381,19 +465,19 @@ include "akses.php";
                     $no = 1;
                     $id_bum_decode = base64_decode($_GET['id']);
                     $sql_cek_harga = "SELECT 
-                                    bum.id_inv_bum, kategori_inv,
-                                    sr.id_inv, sr.no_spk,
-                                    trx.*, 
-                                    spr.stock, 
-                                    tpr.nama_produk, 
-                                    tpr.harga_produk, mr.* 
-                                    FROM inv_bum AS bum
-                                    JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
-                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                    JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                    JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                    WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '0' ORDER BY no_spk ASC";
+                                        bum.id_inv_bum, kategori_inv,
+                                        sr.id_inv, sr.no_spk,
+                                        trx.*, 
+                                        spr.stock, 
+                                        tpr.nama_produk, 
+                                        tpr.harga_produk, mr.* 
+                                        FROM inv_bum AS bum
+                                        JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
+                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '0' ORDER BY no_spk ASC";
                     $query_cek_harga = mysqli_query($connect, $sql_cek_harga);
                     $total_cek_harga = mysqli_num_rows($query_cek_harga);
                     while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
@@ -455,7 +539,6 @@ include "akses.php";
                     </div>
                 </form>
             </div>
-
             <!-- Modal Kategori Inv -->
             <div class="modal fade" id="ubahKat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -510,9 +593,31 @@ include "akses.php";
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <?php include "page/script.php" ?>
+
 </body>
 
 </html>
+
+<!-- Modal Trx Selesai -->
+<div class="modal fade" id="trxSelesai" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <h5>Apakah anda yakin ingin menyelesaikan pesanan ini?</h5>
+            </div>
+            <div class="modal-footer">
+                <a href="proses/proses-trx-selesai.php?id_inv_bum=<?php echo $id_inv ?>" class="btn btn-primary mb-2">
+                    <i class="bi bi-check2-circle"></i> Ya, Saya yakin
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Trx Selesai -->
+
 
 <!-- Generat UUID -->
 <?php

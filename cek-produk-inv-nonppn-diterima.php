@@ -144,11 +144,6 @@ include "akses.php";
                                             </div>';
                             }
                             ?>
-
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card-body p-3 border" style="min-height: 234px;">
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Order Via</p>
@@ -158,6 +153,10 @@ include "akses.php";
                                     <?php echo $data['order_by'] ?>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card-body p-3 border" style="min-height: 234px;">
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Sales</p>
@@ -194,36 +193,34 @@ include "akses.php";
                                     <?php echo $data['alamat'] ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-5">
-                                    <p style="float: left;">Note</p>
-                                    <p style="float: right;">:</p>
-                                </div>
-                                <div class="col-7">
-                                    <?php
-                                    if ($data['note_inv'] != '') {
-                                        echo $data['note_inv'];
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <?php
-                                if ($data['ongkir'] != 0) {
-                                    echo '<div class="row">
-                                                <div class="col-5">
-                                                    <p style="float: left;">Ongkir</p>
-                                                    <p style="float: right;">:</p>
-                                                </div>
-                                                <div class="col-7">
-                                                    ' . number_format($data['ongkir']) . '
-                                                </div>
-                                            </div>';
+                            <?php
+                               if ($data['note_inv'] != '') {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">Note</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . $data['note_inv'] . '
+                                        </div>
+                                    </div>';
                                 }
-                                ?>
-                            </div>
+                            ?>
+                            <?php
+                                if ($data['ongkir'] != 0) {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">Ongkir</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . number_format($data['ongkir']) . '
+                                        </div>
+                                    </div>';
+                                }
+                            ?>
                             <div class="row">
                                 <div class="col-5">
                                     <?php  
@@ -267,7 +264,7 @@ include "akses.php";
                             </a>
                             <!-- Button modal Bukti Kirim -->
                             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#bukti">
-                                <i class="bi bi-file-earmark-image"></i> Bukti Pengiriman
+                                <i class="bi bi-file-earmark-image"></i> Bukti Terima
                             </button>
                             <!-- End Button Modal Bukti Kirim -->
                             
@@ -282,7 +279,7 @@ include "akses.php";
                                 <div class="modal-dialog modal-dialog-centered modal-md">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Bukti Kirim</h1>
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Bukti Terima</h1>
                                         </div>
                                         <div class="modal-body">
                                             <div class="card-body">
@@ -468,19 +465,19 @@ include "akses.php";
                     $no = 1;
                     $id_nonppn_decode = base64_decode($_GET['id']);
                     $sql_cek_harga = "SELECT 
-                                    nonppn.id_inv_nonppn, kategori_inv,
-                                    sr.id_inv, sr.no_spk,
-                                    trx.*, 
-                                    spr.stock, 
-                                    tpr.nama_produk, 
-                                    tpr.harga_produk, mr.* 
-                                    FROM inv_nonppn AS nonppn
-                                    JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                    JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                    JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                    JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '0' ORDER BY no_spk ASC";
+                                        nonppn.id_inv_nonppn, kategori_inv,
+                                        sr.id_inv, sr.no_spk,
+                                        trx.*, 
+                                        spr.stock, 
+                                        tpr.nama_produk, 
+                                        tpr.harga_produk, mr.* 
+                                        FROM inv_nonppn AS nonppn
+                                        JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '0' ORDER BY no_spk ASC";
                     $query_cek_harga = mysqli_query($connect, $sql_cek_harga);
                     $total_cek_harga = mysqli_num_rows($query_cek_harga);
                     while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
@@ -542,8 +539,6 @@ include "akses.php";
                     </div>
                 </form>
             </div>
-
-
             <!-- Modal Kategori Inv -->
             <div class="modal fade" id="ubahKat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -605,21 +600,22 @@ include "akses.php";
 
 <!-- Modal Trx Selesai -->
 <div class="modal fade" id="trxSelesai" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-      </div>
-      <div class="modal-body">
-        <h5>Apakah anda yakin ingin menyelesaikan pesanan ini?</h5>
-      </div>
-      <div class="modal-footer">
-        <a href="proses/proses-trx-selesai.php?id_inv_nonppn=<?php echo $id_inv ?>" class="btn btn-primary mb-2">
-            <i class="bi bi-check2-circle"></i> Ya, Saya yakin
-        </a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <h5>Apakah anda yakin ingin menyelesaikan pesanan ini?</h5>
+            </div>
+            <div class="modal-footer">
+                <a href="proses/proses-trx-selesai.php?id_inv_nonppn=<?php echo $id_inv ?>" class="btn btn-primary mb-2">
+                    <i class="bi bi-check2-circle"></i> Ya, Saya yakin
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
 <!-- End Modal Trx Selesai -->
 
 
