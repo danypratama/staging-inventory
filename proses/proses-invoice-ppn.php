@@ -21,12 +21,13 @@ if (isset($_POST['simpan-inv'])) {
     $tgl_tempo = mysqli_real_escape_string($connect, $_POST['tgl_tempo']);
     $sp_disc = mysqli_real_escape_string($connect, $_POST['sp_disc']);
     $note_inv = mysqli_real_escape_string($connect, $_POST['note_inv']);
-    $ongkir = mysqli_real_escape_string($connect, $_POST['ongkir']);
+    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
+    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
     $status_inv = 'Belum Dikirim';
     $status_spk = 'Invoice Sudah Diterbitkan';
     $user = mysqli_real_escape_string($connect, $_SESSION['tiket_nama']);
     $id_inv_ppn_encode = base64_encode($id_inv_ppn);
-    $nama_invoice = 'Invoice_PPN';
+    $nama_invoice = 'Invoice_Non_PPN';
 
     // Begin transaction
     mysqli_begin_transaction($connect);
@@ -99,6 +100,7 @@ if (isset($_POST['simpan-inv'])) {
             <?php
         }
 
+
 } else if (isset($_POST['simpan-cek-harga'])) {
     $id_inv = base64_encode($_POST['id_inv']);
     $id_trx = $_POST['id_trx'];
@@ -119,8 +121,7 @@ if (isset($_POST['simpan-inv'])) {
             $qty_array = str_replace(',', '', $qty[$i]);
             $qty_array = intval($qty_array);
             $update_status_trx_array = $update_status_trx;
-            $ongkir =  str_replace(',', '', $ongkir[$i]);
-            $harga = intval($ongkir);
+
             $diskon = $disc_array / 100;
             $harga_disc = $harga * $diskon;
             $total = $harga * $qty_array;
@@ -136,26 +137,12 @@ if (isset($_POST['simpan-inv'])) {
         }
 
         // Commit transaction jika semua query berhasil
-        mysqli_commit($connect);;
+        mysqli_commit($connect);
         header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     } catch (Exception $e) {
         // Rollback transaction jika terjadi kesalahan
         mysqli_rollback($connect);
-        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
-        echo <<<HTML
-            <!-- Sweet Alert -->
-            <link rel="stylesheet" href="assets/sweet-alert/dist/sweetalert2.min.css">
-            <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-            <script>
-                swal({
-                    title: "Error!",
-                    text: "{$error_message}",
-                    icon: "error",
-                }).then(function() {
-                    window.location.href = "../cek-produk-inv-ppn.php?id='$id_inv'";
-                });
-            </script>
-        HTML;
+        header("Location:../cek-produk-inv-ppn.php?id='$id_inv'");
     }
 } else if (isset($_POST['update-harga'])) {
     $id_trx = $_POST['id_trx'];
@@ -211,8 +198,6 @@ if (isset($_POST['simpan-inv'])) {
     $spdisc = $_POST['spdisc'];
     mysqli_query($connect, "UPDATE inv_ppn SET sp_disc = '$spdisc' WHERE id_inv_ppn = '$id_inv'");
     header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
-
-    // Proses add SPK
 } else if (isset($_POST['add-spk'])) {
     $id_spk = $_POST['id_spk'];
     $id_inv = $_POST['id_inv'];
@@ -224,6 +209,7 @@ if (isset($_POST['simpan-inv'])) {
 
         mysqli_query($connect, "UPDATE spk_reg SET id_inv = '$id_inv', status_spk = '$status_spk'  WHERE id_spk_reg = '$id_spk_array'");
         mysqli_query($connect, "UPDATE transaksi_produk_reg SET status_trx = '1'  WHERE id_spk = '$id_spk_array'");
+
         header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
     }
 } else if (isset($_POST['ubah-dikirim'])) {
@@ -304,13 +290,14 @@ if (isset($_POST['simpan-inv'])) {
         } else {
             $ekspedisi = $_POST['ekspedisi'];
             $resi = $_POST['resi'];
+            $jenis_penerima = 'Ekspedisi';
 
             $ubah_status = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Dikirim' WHERE id_inv_ppn = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                        (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, dikirim_ekspedisi, no_resi, tgl_kirim) 
+                                                        (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, tgl_kirim) 
                                                         VALUES 
-                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$ekspedisi', '$resi', '$tgl')");
+                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$jenis_penerima', '$ekspedisi', '$resi', '$tgl')");
 
             $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 
@@ -341,7 +328,6 @@ document.addEventListener("DOMContentLoaded", function() {
 <?php
     }
 } else if (isset($_POST['update-ongkir'])) {
-    $id_trx = $_POST['id_trx'];
     $id_inv = $_POST['id_inv'];
     $id_inv_encode = base64_encode($id_inv);
     $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
@@ -349,7 +335,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     $update_data = mysqli_query($connect, "UPDATE inv_ppn SET ongkir = '$ongkir' WHERE id_inv_ppn = '$id_inv'");
     header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
-
 } else if (isset($_POST['ubah-cs-inv'])) {
     $id_inv = $_POST['id_inv'];
     $cs_inv = $_POST['cs_inv'];
@@ -376,6 +361,7 @@ function generate_uuid()
         mt_rand(0, 0xffff)
     );
 }
+
 
 function img_uuid() {
     $data = openssl_random_pseudo_bytes(16);

@@ -158,7 +158,7 @@ include "akses.php";
                             $total_inv_bum = mysqli_num_rows($query_inv_bum);
                             $hasil = $total_inv_nonppn + $total_inv_ppn + $total_inv_bum;
                             ?>
-                            <a class="nav-link active">
+                            <a class="nav-link" href="invoice-reguler.php?sort=baru">
                                 Invoice Sudah Dicetak &nbsp;
                                 <?php if ($hasil != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $hasil . '</span>';
@@ -166,7 +166,7 @@ include "akses.php";
                                 ?>
                             </a>
                         </li>
-                        <li class="nav-item flex-fill" role="presentation">
+                        <li class=" nav-item flex-fill" role="presentation">
                             <?php
                             $sql_inv_dikirim = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
                                 FROM inv_nonppn AS nonppn
@@ -193,9 +193,9 @@ include "akses.php";
                                 WHERE status_transaksi = 'Dikirim' GROUP BY no_inv";
                             $query_inv_bum_dikirim = mysqli_query($connect, $sql_inv_bum_dikirim);
                             $total_inv_bum_dikirim = mysqli_num_rows($query_inv_bum_dikirim);
-                            $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim + $total_inv_bum_dikirim;
+                            $hasil_dikirim = $total_inv_nonppn_dikirim + $total_inv_ppn_dikirim +  $total_inv_bum_dikirim;
                             ?>
-                            <a class="nav-link" href="invoice-reguler-dikirim.php?sort=baru">
+                            <a class="nav-link" href="invoice-reguler-dikirim.php">
                                 Dikirim &nbsp;
                                 <?php if ($hasil_dikirim != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $hasil_dikirim . '</span>';
@@ -241,7 +241,7 @@ include "akses.php";
                             </a>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
-                        <?php
+                            <?php
                             $sql_inv_selesai = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
                                 FROM inv_nonppn AS nonppn
                                 LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
@@ -269,7 +269,7 @@ include "akses.php";
                             $total_inv_bum_selesai = mysqli_num_rows($query_inv_bum_selesai);
                             $hasil_selesai = $total_inv_nonppn_selesai + $total_inv_ppn_selesai + $total_inv_bum_selesai;
                             ?>
-                            <a class="nav-link" href="invoice-reguler-selesai.php?sort=baru">
+                            <a class="nav-link active" href="#">
                                 Transaksi Selesai &nbsp;
                                 <?php if ($hasil_selesai != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $hasil_selesai . '</span>';
@@ -284,25 +284,26 @@ include "akses.php";
                     <div class="card-body bg-body rounded mt-3">
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'nonppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#nonppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice Non PPN &nbsp;
-                            <?php if ($total_inv_nonppn != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn . '</span>';
+                            <?php if ($total_inv_nonppn_selesai != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_nonppn_selesai . '</span>';
                             } ?>
                         </a>
 
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'ppn') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#ppn" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice PPN &nbsp;
-                            <?php if ($total_inv_ppn != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_ppn . '</span>';
+                            <?php if ($total_inv_ppn_selesai != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_ppn_selesai . '</span>';
                             } ?>
                         </a>
+
                         <a class="btn btn-outline-dark <?php if ($activeButton == 'bum') echo 'active'; ?> mb-3" data-bs-toggle="collapse" href="#bum" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Invoice BUM &nbsp;
-                            <?php if ($total_inv_bum != 0) {
-                                echo '<span class="badge text-bg-secondary">' . $total_inv_bum . '</span>';
+                            <?php if ($total_inv_bum_selesai != 0) {
+                                echo '<span class="badge text-bg-secondary">' . $total_inv_bum_selesai . '</span>';
                             } ?>
                         </a>
                         <div class="collapse <?php if ($activeButton == 'nonppn') echo 'show'; ?>" id="nonppn" data-bs-parent="#accordion">
-                            <div class="table-responsive" id="filteredData">
+                            <div class="table-responsive m-2" id="filteredData">
                                 <form id="invoiceForm" name="proses" method="POST">
                                     <div class="row mb-3 mt-4">
                                         <div class="col-md-2">
@@ -315,6 +316,7 @@ include "akses.php";
                                                                                 echo "selected";
                                                                             } ?>>Paling Lama</option>
                                                 </select>
+
                                             </form>
                                         </div>
                                     </div>
@@ -347,10 +349,9 @@ include "akses.php";
                                                             FROM inv_nonppn AS nonppn
                                                             LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
-
                                             ?>
                                                 <tr>
                                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
@@ -361,7 +362,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-nonppn-selesai.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -372,7 +373,7 @@ include "akses.php";
                             </div>
                         </div>
                         <div class="collapse <?php if ($activeButton == 'ppn') echo 'show'; ?>" id="ppn" data-bs-parent="#accordion">
-                            <div class="table-responsive" id="filteredDataPpn">
+                            <div class="table-responsive m-2" id="filteredDataPpn">
                                 <form id="invoiceForm" name="proses" method="POST">
                                     <div class="row mb-3 mt-4">
                                         <div class="col-md-2">
@@ -391,7 +392,7 @@ include "akses.php";
                                     </div>
                                     <table class="table table-bordered table-striped" id="tableppn">
                                         <thead>
-                                            <tr class="text-white text-nowrap" style="background-color: navy;">
+                                            <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
@@ -418,7 +419,7 @@ include "akses.php";
                                                             FROM inv_ppn AS ppn
                                                             LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -431,7 +432,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-ppn-selesai.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -442,7 +443,7 @@ include "akses.php";
                             </div>
                         </div>
                         <div class="collapse <?php if ($activeButton == 'bum') echo 'show'; ?>" id="bum" data-bs-parent="#accordion">
-                            <div class="table-responsive" id="filteredDataBum">
+                            <div class="table-responsive m-2" id="filteredDataBum">
                                 <form id="invoiceForm" name="proses" method="POST">
                                     <div class="row mb-3 mt-4">
                                         <div class="col-md-2">
@@ -461,7 +462,7 @@ include "akses.php";
                                     </div>
                                     <table class="table table-bordered table-striped" id="tablebum">
                                         <thead>
-                                            <tr class="text-white text-nowrap" style="background-color: navy;">
+                                            <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
@@ -488,7 +489,7 @@ include "akses.php";
                                                             FROM inv_bum AS bum
                                                             LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
+                                                            WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -501,7 +502,7 @@ include "akses.php";
                                                     <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-bum.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-bum-selesai.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -524,7 +525,7 @@ include "akses.php";
                                 // Atur callback function untuk menangani perubahan status permintaan
                                 xhttp.onreadystatechange = function() {
                                     if (this.readyState == 4 && this.status == 200) {
-                                        // Update elemen filteredData dengan hasil filter yang diterima dari server
+                                        // Update elemen filteredData dengan hasil filter yang selesai dari server
                                         document.getElementById('filteredData').innerHTML = this.responseText;
                                         // Inisialisasi ulang DataTable setelah mengganti isi tabel
                                         $('#table5').DataTable({
@@ -536,37 +537,9 @@ include "akses.php";
                                 };
 
                                 // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-nonppn.php?sort=' + sortValue, true);
+                                xhttp.open('GET', 'filter-data-nonppn-selesai.php?sort=' + sortValue, true);
                                 xhttp.send();
                             }
-
-                            // Filter PPN
-                            // Fungsi untuk mengirim permintaan AJAX
-                            function filterDataPpn() {
-                                // Ambil nilai filter dari elemen select
-                                var sortValue = document.getElementById('select_ppn').value;
-
-                                // Buat objek XMLHttpRequest
-                                var xhttp = new XMLHttpRequest();
-
-                                // Atur callback function untuk menangani perubahan status permintaan
-                                xhttp.onreadystatechange = function() {
-                                    if (this.readyState == 4 && this.status == 200) {
-                                        // Update elemen filteredData dengan hasil filter yang diterima dari server
-                                        document.getElementById('filteredDataPpn').innerHTML = this.responseText;
-                                        $('#table6').DataTable({
-                                            "lengthChange": false,
-                                            "ordering": false,
-                                            "autoWidth": false
-                                        });
-                                    }
-                                };
-
-                                // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-ppn.php?sort=' + sortValue, true);
-                                xhttp.send();
-                            }
-
 
                             // Filter PPN
                             // Fungsi untuk mengirim permintaan AJAX
@@ -580,8 +553,10 @@ include "akses.php";
                                 // Atur callback function untuk menangani perubahan status permintaan
                                 xhttp.onreadystatechange = function() {
                                     if (this.readyState == 4 && this.status == 200) {
-                                        // Update elemen filteredData dengan hasil filter yang diterima dari server
+                                        // Update elemen filteredData dengan hasil filter yang selesai dari server
                                         document.getElementById('filteredDataBum').innerHTML = this.responseText;
+
+                                        // Inisialisasi ulang DataTable setelah mengganti isi tabel
                                         $('#table7').DataTable({
                                             "lengthChange": false,
                                             "ordering": false,
@@ -591,7 +566,7 @@ include "akses.php";
                                 };
 
                                 // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-bum.php?sort=' + sortValue, true);
+                                xhttp.open('GET', 'filter-data-bum-selesai.php?sort=' + sortValue, true);
                                 xhttp.send();
                             }
                         </script>

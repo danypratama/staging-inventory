@@ -141,7 +141,7 @@ include "akses.php";
             }
         };
 
-        xhttp.open('GET', 'filter-data-nonppn.php?sort=' + sortValue, true);
+        xhttp.open('GET', 'filter-data-ppn.php?sort=' + sortValue, true);
         xhttp.send();
     }
 </script>

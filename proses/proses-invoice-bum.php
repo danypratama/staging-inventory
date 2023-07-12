@@ -2,6 +2,7 @@
 session_start();
 include "../koneksi.php";
 include "../page/resize-image.php";
+
 if (isset($_POST['simpan-inv'])) {
     // Ambil data dari form dan lakukan sanitasi
     $id_spk = $_POST['id_spk'];
@@ -20,12 +21,13 @@ if (isset($_POST['simpan-inv'])) {
     $tgl_tempo = mysqli_real_escape_string($connect, $_POST['tgl_tempo']);
     $sp_disc = mysqli_real_escape_string($connect, $_POST['sp_disc']);
     $note_inv = mysqli_real_escape_string($connect, $_POST['note_inv']);
-    $ongkir = mysqli_real_escape_string($connect, $_POST['ongkir']);
+    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
+    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
     $status_inv = 'Belum Dikirim';
     $status_spk = 'Invoice Sudah Diterbitkan';
     $user = mysqli_real_escape_string($connect, $_SESSION['tiket_nama']);
     $id_inv_bum_encode = base64_encode($id_inv_bum);
-    $nama_invoice = 'Invoice_Bum';
+    $nama_invoice = 'Invoice_Non_PPN';
 
     // Begin transaction
     mysqli_begin_transaction($connect);
@@ -288,13 +290,14 @@ if (isset($_POST['simpan-inv'])) {
         } else {
             $ekspedisi = $_POST['ekspedisi'];
             $resi = $_POST['resi'];
+            $jenis_penerima = 'Ekspedisi';
 
             $ubah_status = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Dikirim' WHERE id_inv_bum = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
                                                         (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, tgl_kirim) 
                                                         VALUES 
-                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', Ekspedisi , '$ekspedisi', '$resi', '$tgl')");
+                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$jenis_penerima', '$ekspedisi', '$resi', '$tgl')");
 
             $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 
@@ -313,15 +316,13 @@ if (isset($_POST['simpan-inv'])) {
 <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    Swal
-        .fire({
-            title: "Error!",
-            text: "<?php echo $error_message; ?>",
-            icon: "error"
-        })
-        .then(function() {
-            window.location.href = "../invoice-reguler.php?sort=baru";
-        });
+    Swal.fire({
+        title: "Error!",
+        text: "<?php echo $error_message; ?>",
+        icon: "error",
+    }).then(function() {
+        window.location.href = "../invoice-reguler.php?sort=baru";
+    });
 });
 </script>
 <?php
@@ -342,6 +343,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $update_data = mysqli_query($connect, "UPDATE inv_bum SET cs_inv = '$cs_inv' WHERE id_inv_bum = '$id_inv'");
     header("Location:../cek-produk-inv-bum.php?id=$id_inv_encode");
 }
+
 ?>
 
 <?php
@@ -359,6 +361,7 @@ function generate_uuid()
         mt_rand(0, 0xffff)
     );
 }
+
 
 function img_uuid() {
     $data = openssl_random_pseudo_bytes(16);

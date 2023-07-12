@@ -90,7 +90,10 @@ include "akses.php";
                                         </div>
                                         <div class="mt-3">
                                             <label><strong>Tanggal Tempo</strong></label>
-                                            <input type="text" id="tempo" class="form-control" name="tgl_tempo">
+                                            <div class="input-group flex-nowrap">
+                                                <input type="text" id="tempo" class="form-control" name="tgl_tempo">
+                                                <span class="input-group-text" id="clear-search"><i class="bi bi-x-circle"></i></span>
+                                            </div>
                                         </div>
                                         <div class="mt-3">
                                             <label><strong>Jenis Invoice</strong></label>
@@ -183,7 +186,7 @@ include "akses.php";
 
   // Mengatur tanggal invoice sebagai tanggal hari ini dari sistem operasi
   dateInput.value = todayFormatted;
-  tempoInput.value = todayFormatted;
+  tempoInput.value = '';
 
   flatpickr("#date", {
     dateFormat: "d/m/Y",
@@ -238,6 +241,17 @@ include "akses.php";
       tempoInput.value = dateInput.value; // Mengatur tanggal tempo sesuai dengan tanggal invoice yang baru dipilih
     }
   });
+
+  var tempoInput = document.getElementById('tempo');
+  var clearSearchBtn = document.getElementById('clear-search');
+
+  // Fungsi untuk menghapus isi input 'tempo'
+  function clearSearch() {
+    tempoInput.value = '';
+  }
+
+  // Menambahkan event listener pada tombol 'Clear Search'
+  clearSearchBtn.addEventListener('click', clearSearch);
 </script>
 
 

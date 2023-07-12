@@ -186,6 +186,7 @@
             WHERE bum.id_inv_bum = '$id_inv'";
     $query = mysqli_query($connect, $sql);
     $data = mysqli_fetch_array($query);
+    $no_inv = $data['no_inv'];
     // Ubah Format Tanggal
     $bulan = [
         '01' => 'Januari',
@@ -543,7 +544,7 @@ function terbilang($nilai)
         const element = document.querySelector('.invoice');
         const options = {
             margin: 0,
-            filename: `D:/folder_tujuan/invoice_${Date.now()}.pdf`,
+            filename: '<?php echo $no_inv ?>.pdf',
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 4 },
             jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }

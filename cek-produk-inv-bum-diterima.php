@@ -113,6 +113,20 @@ include "akses.php";
                                     <?php echo $data['no_inv'] ?>
                                 </div>
                             </div>
+                            <?php
+                               if ($data['no_po'] != '') {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">No. PO</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . $data['no_po'] . '
+                                        </div>
+                                    </div>';
+                                }
+                            ?>
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Tgl. Invoice</p>
@@ -223,11 +237,12 @@ include "akses.php";
                             ?>
                             <div class="row">
                                 <div class="col-5">
-                                    <?php  
-                                        $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi FROM status_kirim WHERE id_inv = '$id_inv'");
+                                <?php  
+                                        $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, dikirim_driver FROM status_kirim WHERE id_inv = '$id_inv'");
                                         $data_status_kirim = mysqli_fetch_array($status_kirim);
                                         $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
                                         $ekspedisi = $data_status_kirim['dikirim_ekspedisi'];
+                                        $driver = $data_status_kirim['dikirim_driver'];
 
 
                                         $ekspedisi_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_ekspedisi, ex.nama_ekspedisi
@@ -235,6 +250,12 @@ include "akses.php";
                                                                                     JOIN ekspedisi ex ON (sk.dikirim_ekspedisi = ex.id_ekspedisi)
                                                                                     WHERE sk.dikirim_ekspedisi = '$ekspedisi'");
                                         $data_ekspedisi_kirim = mysqli_fetch_array($ekspedisi_kirim);
+                                        
+                                        $driver_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_driver, us.nama_user 
+                                                                                    FROM status_kirim AS sk
+                                                                                    JOIN user us ON (sk.dikirim_driver = us.id_user)
+                                                                                    WHERE sk.dikirim_driver = '$driver'");
+                                        $data_driver_kirim = mysqli_fetch_array($driver_kirim);
                                     ?>
                                     <p style="float: left;">Jenis Pengiriman</p>
                                     <p style="float: right;">:</p>
@@ -242,9 +263,9 @@ include "akses.php";
                                 <div class="col-7">
                                     <?php  
                                         if($jenis_pengiriman == 'Ekspedisi'){
-                                            echo $jenis_pengiriman. " ( " . $data_ekspedisi_kirim['nama_ekspedisi']. " )";
+                                            echo $jenis_pengiriman . " ( " . $data_ekspedisi_kirim['nama_ekspedisi']. " )";
                                         } else {
-                                            echo $jenis_pengiriman;
+                                            echo $jenis_pengiriman . " ( " . $data_driver_kirim['nama_user']. " )";
                                         }
                                     ?>
                                 </div>
@@ -479,9 +500,12 @@ include "akses.php";
                             <div class="card-body">
                             <?php
                             include "koneksi.php";
-                            $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima
-                                                FROM inv_bukti_terima AS ibt
-                                                LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv) WHERE ibt.id_inv = '$id_inv';";
+                            $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima, sk.jenis_penerima, sk.dikirim_ekspedisi, sk.no_resi, ex.nama_ekspedisi
+                                            FROM inv_bukti_terima AS ibt
+                                            LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv)
+                                            LEFT JOIN status_kirim sk ON (ibt.id_inv = sk.id_inv)
+                                            LEFT JOIN ekspedisi ex ON (ex.id_ekspedisi = sk.dikirim_ekspedisi) 
+                                            WHERE ibt.id_inv = '$id_inv'";
                             $query_bukti = mysqli_query($connect, $sql_bukti);
                             $data_bukti = mysqli_fetch_array($query_bukti);
                             $gambar1 = $data_bukti['bukti_satu'];
@@ -490,10 +514,18 @@ include "akses.php";
                             $gambar_bukti2 = "gambar/bukti2/$gambar2";
                             $gambar3 = $data_bukti['bukti_tiga'];
                             $gambar_bukti3 = "gambar/bukti3/$gambar3";
+                            $jenis_penerima = $data_bukti['jenis_penerima'];
+                            $no_resi = $data_bukti['no_resi'];
                             ?>
                             <div class="mb-3">
-                                <h6>Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
-                                <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['tgl_terima']))?></h6>
+                                <h6>Nama Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
+                                <?php if ($jenis_penerima == 'Ekspedisi') {
+                                    echo'
+                                        <h6>No. Resi :' . $no_resi . '</h6> 
+                                    ';
+                                }
+                                ?>
+                                <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['created_date']))?></h6>
                             </div>
                             <div id="carouselExample" class="carousel slide">
                                 <div class="carousel-inner">

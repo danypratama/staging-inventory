@@ -65,7 +65,7 @@ if(isset($_POST['diterima_driver'])){
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
-                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
     
                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi
@@ -89,7 +89,7 @@ if(isset($_POST['diterima_driver'])){
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
-                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
     
                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi
@@ -108,7 +108,7 @@ if(isset($_POST['diterima_driver'])){
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
-                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
     
                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi
@@ -127,7 +127,7 @@ if(isset($_POST['diterima_driver'])){
     
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
-                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_status_kirim = '$id_inv'");
+                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
     
                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
                     // Commit transaksi

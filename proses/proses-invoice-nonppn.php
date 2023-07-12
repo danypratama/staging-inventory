@@ -21,7 +21,8 @@ if (isset($_POST['simpan-inv'])) {
     $tgl_tempo = mysqli_real_escape_string($connect, $_POST['tgl_tempo']);
     $sp_disc = mysqli_real_escape_string($connect, $_POST['sp_disc']);
     $note_inv = mysqli_real_escape_string($connect, $_POST['note_inv']);
-    $ongkir = mysqli_real_escape_string($connect, $_POST['ongkir']);
+    $ongkir = str_replace(',', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
+    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
     $status_inv = 'Belum Dikirim';
     $status_spk = 'Invoice Sudah Diterbitkan';
     $user = mysqli_real_escape_string($connect, $_SESSION['tiket_nama']);
@@ -271,7 +272,7 @@ if (isset($_POST['simpan-inv'])) {
 
        
 
-        if ($jenis_pengiriman == 'Driver') {
+        if ($jenis_pengiriman == 'Driver') { 
             $pengirim = $_POST['pengirim'];
 
             $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");

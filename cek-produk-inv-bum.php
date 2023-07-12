@@ -129,6 +129,20 @@ include "akses.php";
                                     <?php echo $data['no_inv'] ?>
                                 </div>
                             </div>
+                            <?php
+                               if ($data['no_po'] != '') {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">No. PO</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . $data['no_po'] . '
+                                        </div>
+                                    </div>';
+                                }
+                            ?>
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Tgl. Invoice</p>
@@ -210,21 +224,20 @@ include "akses.php";
                                     <?php echo $data['alamat'] ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-5">
-                                    <p style="float: left;">Note</p>
-                                    <p style="float: right;">:</p>
-                                </div>
-                                <div class="col-7">
-                                    <?php
-                                    if ($data['note_inv'] != '') {
-                                        echo $data['note_inv'];
-                                    } else {
-                                        echo '-';
+                            <?php
+                                if ($data['note_inv'] != '') {
+                                        echo '
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <p style="float: left;">Note Invoice</p>
+                                                <p style="float: right;">:</p>
+                                            </div>
+                                            <div class="col-7">
+                                                ' . $data['note_inv'] . '
+                                            </div>
+                                        </div>';
                                     }
-                                    ?>
-                                </div>
-                            </div>
+                            ?>
                             <?php
                             if ($data['ongkir'] != 0) {
                                 echo '<div class="row">
@@ -332,7 +345,7 @@ include "akses.php";
                                                     <i class="bi bi-send"></i> Proses Dikirim
                                                 </button> 
                                                 <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_bum) . '">
-                                                <a href="generate_pdf.php?id=' . base64_encode($id_inv_bum) . '" class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice 2</a>
+                                                <a href="generate_pdf.php?id=' . base64_encode($id_inv_bum) . '" class="btn btn-primary mb-2"><i class="bi bi-printer-fill"></i> Cetak PDF</a>
                                                 <a href="cetak-inv-bum-reg.php?id=' . base64_encode($id_inv_bum) . '"
                                                  class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>';
 
