@@ -39,7 +39,7 @@ include "akses.php";
             <div class="card shadow p-2">
                 <div class="card-header text-center">
                     <h5>
-                        <strong>DETAIL INVOICE ppn</strong>
+                        <strong>DETAIL INVOICE PPN</strong>
                     </h5>
                 </div>
                 <?php
@@ -686,19 +686,7 @@ while ($data2 = mysqli_fetch_array($query)) {
     <script>
         // Data untuk dropdown
         const options = <?php
-        $server = "localhost"; //nama server
-        $user = "mandiria_staging"; //usernya
-        $password = "karsa_2023"; //password
-        $db = "mandiria_staging"; //database
-    
-        // Koneksi dan memilih database di server
-        $connect = mysqli_connect($server, $user, $password, $db);
-    
-        if (!$connect) {
-            die("Koneksi gagal: ".mysqli_connect_error());
-        }
-        // echo "Koneksi berhasil";
-        // mysqli_close($connect);
+        include "koneksi.php";
     
         // Membuat cache untuk script ini dengan OpCache
         if (function_exists('opcache_invalidate')) {
