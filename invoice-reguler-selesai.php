@@ -305,11 +305,11 @@ include "akses.php";
                                             <div class="row">
                                                 <div class="col-md-4 mb-3">
                                                     <label for="start_date">Tanggal Awal:</label>
-                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>" readonly>
+                                                    <input type="date" name="start_date" id="start_date" class="form-control text-center" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>" readonly>
                                                 </div>
                                                 <div class="col-md-4 mb-3">
                                                     <label for="end_date">Tanggal Akhir:</label>
-                                                    <input type="date" name="end_date" id="end_date" class="form-control" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>" readonly>
+                                                    <input type="date" name="end_date" id="end_date" class="form-control text-center" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>" readonly>
                                                 </div>
                                                 <div class="col-md-3 text-center">
                                                     <br>
