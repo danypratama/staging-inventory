@@ -45,11 +45,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <div class="pagetitle">
             <h1>Dashboard</h1>
@@ -242,29 +242,24 @@ include "akses.php";
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
                             <?php
-                            $sql_inv_selesai = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
-                                FROM inv_nonppn AS nonppn
-                                LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
-                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv";
+                            $month = date('m');
+                            $sql_inv_selesai = "SELECT nonppn.no_inv, STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y') AS tgl_inv, nonppn.status_transaksi
+                                                FROM inv_nonppn AS nonppn
+                                                WHERE status_transaksi = 'Transaksi Selesai' AND MONTH(STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y')) = '$month' GROUP BY no_inv";
                             $query_inv_selesai = mysqli_query($connect, $sql_inv_selesai);
                             $total_inv_nonppn_selesai = mysqli_num_rows($query_inv_selesai);
                             ?>
                             <?php
-                            $sql_inv_ppn_selesai = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
-                                FROM inv_ppn AS ppn
-                                LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
-                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv";
+                            $sql_inv_ppn_selesai = "SELECT ppn.no_inv, STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y') AS tgl_inv, ppn.status_transaksi
+                                                    FROM inv_ppn AS ppn
+                                                    WHERE status_transaksi = 'Transaksi Selesai' AND MONTH(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) = '$month' GROUP BY no_inv";
                             $query_inv_ppn_selesai = mysqli_query($connect, $sql_inv_ppn_selesai);
                             $total_inv_ppn_selesai = mysqli_num_rows($query_inv_ppn_selesai);
                             ?>
                             <?php
-                            $sql_inv_bum_selesai = "SELECT bum.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
-                                FROM inv_bum AS bum
-                                LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
-                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv";
+                            $sql_inv_bum_selesai = "SELECT bum.no_inv, STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') AS tgl_inv, bum.status_transaksi
+                                                    FROM inv_bum AS bum
+                                                    WHERE status_transaksi = 'Transaksi Selesai' AND MONTH(STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y')) = '$month' GROUP BY no_inv";
                             $query_inv_bum_selesai = mysqli_query($connect, $sql_inv_bum_selesai);
                             $total_inv_bum_selesai = mysqli_num_rows($query_inv_bum_selesai);
                             $hasil_selesai = $total_inv_nonppn_selesai + $total_inv_ppn_selesai + $total_inv_bum_selesai;
@@ -304,55 +299,71 @@ include "akses.php";
                         </a>
                         <div class="collapse <?php if ($activeButton == 'nonppn') echo 'show'; ?>" id="nonppn" data-bs-parent="#accordion">
                             <div class="table-responsive m-2" id="filteredData">
-                                <form id="invoiceForm" name="proses" method="POST">
+                                <form id="invoiceForm" name="proses" onsubmit="filterData(); return false;">
                                     <div class="row mb-3 mt-4">
-                                        <div class="col-md-2">
-                                            <form action="" method="GET">
-                                                <select name="sort" class="form-select" id="select" aria-label="Default select example" onchange="filterData()">
-                                                    <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
-                                                                                echo "selected";
-                                                                            } ?>>Paling Baru</option>
-                                                    <option value="lama" <?php if (isset($_GET['sort']) && $_GET['sort'] == "lama") {
-                                                                                echo "selected";
-                                                                            } ?>>Paling Lama</option>
-                                                </select>
-
-                                            </form>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label>Tanggal Awal :</label>
+                                                    <input type="text" name="start_date" id="start_date" placeholder="dd/mm/yyyy" class="form-control" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>">
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label>Tanggal Akhir :</label>
+                                                    <input type="text" name="end_date" id="end_date" placeholder="dd/mm/yyyy" class="form-control" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <br>
+                                                    <button type="submit" class="btn btn-primary" id="select" onclick="filterData()">Cari Data</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <table class="table table-bordered table-striped" id="table2">
-                                        <thead>
-                                            <tr class="text-white" style="background-color: navy;">
-                                                <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
+                                </form>
+                                <table class="table table-bordered table-striped" id="table2">
+                                    <thead>
+                                        <tr class="text-white" style="background-color: navy;">
+                                            <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
                                             include "koneksi.php";
                                             $no = 1;
-                                            $filter = '';
-                                            if (isset($_GET['sort'])) {
-                                                if ($_GET['sort'] == "baru") {
-                                                    $filter = "ORDER BY tgl_inv DESC";
-                                                } elseif ($_GET['sort'] == "lama") {
-                                                    $filter = "ORDER BY tgl_inv ASC";
-                                                }
-                                            }
-                                            $sql = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
-                                                            FROM inv_nonppn AS nonppn
-                                                            LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
-                                                            JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv  $filter";
+                                            // Ubah format tanggal ke format yang sesuai dengan database Anda
+                                            $month = date('m');
+                                            $sql = "SELECT nonppn.id_inv_nonppn,
+                                                        nonppn.no_inv, 
+                                                        STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y') AS tgl_inv,
+                                                        nonppn.cs_inv, 
+                                                        nonppn.tgl_tempo, 
+                                                        nonppn.sp_disc, 
+                                                        nonppn.note_inv, 
+                                                        nonppn.kategori_inv, 
+                                                        nonppn.ongkir, 
+                                                        nonppn.total_inv, 
+                                                        nonppn.status_transaksi, 
+                                                        sr.id_inv, 
+                                                        sr.id_customer, 
+                                                        sr.no_po, 
+                                                        cs.nama_cs, cs.alamat, 
+                                                        fn.status_pembayaran, fn.id_inv
+                                                        FROM inv_nonppn AS nonppn
+                                                        LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
+                                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                        JOIN finance fn ON (fn.id_inv = nonppn.id_inv_nonppn)
+                                                        WHERE status_transaksi = 'Transaksi Selesai' AND
+                                                        MONTH(STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y')) = '$month'
+                                                        GROUP BY no_inv";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
-                                            ?>
+                                        ?>
                                                 <tr>
                                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                                     <td class="text-nowrap"><?php echo $data['no_inv'] ?></td>
@@ -365,11 +376,12 @@ include "akses.php";
                                                         <a href="cek-produk-inv-nonppn-selesai.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                                                     </td>
                                                 </tr>
-                                                <?php $no++ ?>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </form>
+                                        <?php
+                                                $no++;
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="collapse <?php if ($activeButton == 'ppn') echo 'show'; ?>" id="ppn" data-bs-parent="#accordion">
@@ -415,11 +427,25 @@ include "akses.php";
                                                     $filter = "ORDER BY tgl_inv ASC";
                                                 }
                                             }
-                                            $sql = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                            $sql = " SELECT ppn.id_inv_ppn,
+                                                            ppn.no_inv, 
+                                                            STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y') AS tgl_inv,
+                                                            ppn.cs_inv, 
+                                                            ppn.tgl_tempo, 
+                                                            ppn.sp_disc, 
+                                                            ppn.note_inv, 
+                                                            ppn.kategori_inv, 
+                                                            ppn.ongkir, 
+                                                            ppn.total_inv, 
+                                                            ppn.status_transaksi,
+                                                            sr.id_inv, sr.id_customer, sr.no_po, 
+                                                            cs.nama_cs, cs.alamat,
+                                                            fn.status_pembayaran, fn.id_inv
                                                             FROM inv_ppn AS ppn
                                                             LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv  $filter";
+                                                            JOIN finance fn ON (fn.id_inv = ppn.id_inv_ppn)
+                                                            WHERE status_transaksi = 'Transaksi Selesai' AND MONTH(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) = '$month' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -485,11 +511,25 @@ include "akses.php";
                                                     $filter = "ORDER BY tgl_inv ASC";
                                                 }
                                             }
-                                            $sql = "SELECT bum.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                            $sql = " SELECT bum.id_inv_bum,
+                                                            bum.no_inv, 
+                                                            STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') AS tgl_inv,
+                                                            bum.cs_inv, 
+                                                            bum.tgl_tempo, 
+                                                            bum.sp_disc, 
+                                                            bum.note_inv, 
+                                                            bum.kategori_inv, 
+                                                            bum.ongkir, 
+                                                            bum.total_inv, 
+                                                            bum.status_transaksi,
+                                                            sr.id_inv, sr.id_customer, sr.no_po, 
+                                                            cs.nama_cs, cs.alamat,
+                                                            fn.status_pembayaran, fn.id_inv
                                                             FROM inv_bum AS bum
                                                             LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                            WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv  $filter";
+                                                            JOIN finance fn ON (fn.id_inv = bum.id_inv_bum)
+                                                            WHERE status_transaksi = 'Transaksi Selesai' AND MONTH(STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y')) = '$month' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
@@ -513,11 +553,11 @@ include "akses.php";
                             </div>
                         </div>
                         <script>
-                            // Filter Non PPN
-                            // Fungsi untuk mengirim permintaan AJAX
                             function filterData() {
                                 // Ambil nilai filter dari elemen select
                                 var sortValue = document.getElementById('select').value;
+                                var startDate = document.getElementById('start_date').value;
+                                var endDate = document.getElementById('end_date').value;
 
                                 // Buat objek XMLHttpRequest
                                 var xhttp = new XMLHttpRequest();
@@ -528,18 +568,45 @@ include "akses.php";
                                         // Update elemen filteredData dengan hasil filter yang selesai dari server
                                         document.getElementById('filteredData').innerHTML = this.responseText;
                                         // Inisialisasi ulang DataTable setelah mengganti isi tabel
-                                        $('#table5').DataTable({
+                                        $('#table7').DataTable({
                                             "lengthChange": false,
                                             "ordering": false,
                                             "autoWidth": false
+                                        });
+
+                                        flatpickr("#start_date", {
+                                            dateFormat: "d/m/Y",
+                                            onClose: function(selectedDates, dateStr, instance) {
+                                            // Ambil tanggal awal yang dipilih
+                                            var startDate = selectedDates[0];
+
+                                            // Perbarui batas tanggal maksimal pada pemilih tanggal akhir
+                                            var endDateInput = document.getElementById("end_date");
+                                            var endDatePicker = flatpickr("#end_date", {
+                                                dateFormat: "d/m/Y",
+                                                minDate: startDate,
+                                                maxDate: new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000)
+                                            });
+
+                                            // Jika tanggal akhir saat ini berada di bawah tanggal awal, hapus nilainya
+                                            var endDate = endDatePicker.selectedDates[0];
+                                            if (endDate < startDate) {
+                                                endDateInput.value = "";
+                                            }
+                                            }
                                         });
                                     }
                                 };
 
                                 // Buat permintaan GET ke file PHP yang akan memproses filter
-                                xhttp.open('GET', 'filter-data-nonppn-selesai.php?sort=' + sortValue, true);
+                                xhttp.open('GET', 'filter-date-trx-nonppn-selesai.php?' + sortValue + '&start_date=' + startDate + '&end_date=' + endDate, true);
                                 xhttp.send();
+
+                                // Tambahkan kode berikut untuk menjaga collapse tetap terbuka setelah button cari data diklik
+                                $('#nonppn').collapse('show');
                             }
+
+
 
                             // Filter PPN
                             // Fungsi untuk mengirim permintaan AJAX
@@ -624,6 +691,32 @@ include "akses.php";
 </body>
 
 </html>
+
+<!-- date picker with flatpick -->
+<script type="text/javascript">
+  flatpickr("#start_date", {
+    dateFormat: "d/m/Y",
+    onClose: function(selectedDates, dateStr, instance) {
+      // Ambil tanggal awal yang dipilih
+      var startDate = selectedDates[0];
+
+      // Perbarui batas tanggal maksimal pada pemilih tanggal akhir
+      var endDateInput = document.getElementById("end_date");
+      var endDatePicker = flatpickr("#end_date", {
+        dateFormat: "d/m/Y",
+        minDate: startDate,
+        maxDate: new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000)
+      });
+
+      // Jika tanggal akhir saat ini berada di bawah tanggal awal, hapus nilainya
+      var endDate = endDatePicker.selectedDates[0];
+      if (endDate < startDate) {
+        endDateInput.value = "";
+      }
+    }
+  });
+</script>
+<!-- end date picker -->
 
 <script>
     $(document).ready(function() {

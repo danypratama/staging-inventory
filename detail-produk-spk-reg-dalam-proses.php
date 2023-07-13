@@ -86,21 +86,20 @@ include "akses.php";
                                     <?php echo $data['tgl_spk'] ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-5">
-                                    <p style="float: left;">No. PO</p>
-                                    <p style="float: right;">:</p>
-                                </div>
-                                <div class="col-7">
-                                    <?php
-                                    if ($data['no_po'] != '') {
-                                        echo $data['no_po'];
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
+                            <?php
+                               if ($data['no_po'] != '') {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">No. PO</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . $data['no_po'] . '
+                                        </div>
+                                    </div>';
+                                }
+                            ?>
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Tgl. Pesanan</p>
@@ -150,21 +149,20 @@ include "akses.php";
                                     <?php echo $data['alamat'] ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-5">
-                                    <p style="float: left;">Note</p>
-                                    <p style="float: right;">:</p>
-                                </div>
-                                <div class="col-7">
-                                    <?php
-                                    if ($data['note'] != '') {
-                                        echo $data['note'];
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
+                            <?php
+                               if ($data['note'] != '') {
+                                    echo '
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <p style="float: left;">Note</p>
+                                            <p style="float: right;">:</p>
+                                        </div>
+                                        <div class="col-7">
+                                            ' . $data['note'] . '
+                                        </div>
+                                    </div>';
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>

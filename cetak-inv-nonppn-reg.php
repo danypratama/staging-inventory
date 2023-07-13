@@ -243,7 +243,7 @@
             <div class="col-header-2">
                 <!-- Kolom kedua -->
                 Kepada : <br>
-                <?php echo $data['nama_cs'] ?> <br>
+                <?php echo $data['cs_inv'] ?> <br>
                 <?php echo $data['alamat'] ?>
             </div>
         </div>

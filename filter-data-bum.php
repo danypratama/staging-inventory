@@ -113,12 +113,12 @@ include "akses.php";
 
         // Fungsi untuk mengirim permintaan AJAX
         function filterData() {
-            var sortValue = document.getElementById('select').value;
+            var sortValue = document.getElementById('select_bum').value;
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('filteredData').innerHTML = this.responseText;
+                    document.getElementById('filteredDataBum').innerHTML = this.responseText;
 
                     // Inisialisasi ulang DataTable setelah mengganti isi tabel
                     $('#table7').DataTable({

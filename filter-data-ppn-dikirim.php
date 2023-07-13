@@ -34,11 +34,10 @@ include "akses.php";
 </head>
 
 <body>
-    <div class="table-responsive" id="filteredData">
+    <div class="table-responsive" id="filteredDataPpn">
         <div class="row mb-3 mt-4">
             <div class="col-md-2">
                 <form action="" method="GET">
-
                     <select name="sort" class="form-select" id="select_ppn" aria-label="Default select example" onchange="filterDataPpn()">
                         <option value="baru" <?php if (isset($_GET['sort']) && $_GET['sort'] == "baru") {
                                                     echo "selected";
@@ -113,7 +112,7 @@ include "akses.php";
         });
 
         // Fungsi untuk mengirim permintaan AJAX
-        function filterData() {
+        function filterDataPpn() {
             var sortValue = document.getElementById('select_ppn').value;
 
             var xhttp = new XMLHttpRequest();

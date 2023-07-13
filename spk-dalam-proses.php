@@ -246,7 +246,41 @@ include "akses.php";
                             </a>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
-                            <button class="nav-link" id="transaksi-selesai-tab" data-bs-toggle="tab" data-bs-target="#transaksi-selesai-tab-pane" type="button" role="tab" aria-controls="transaksi-selesai-tab-pane" aria-selected="false">Transaksi Selesai</button>
+                        <?php
+                            $sql_inv_selesai = "SELECT nonppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_nonppn AS nonppn
+                                LEFT JOIN spk_reg sr ON(nonppn.id_inv_nonppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv";
+                            $query_inv_selesai = mysqli_query($connect, $sql_inv_selesai);
+                            $total_inv_nonppn_selesai = mysqli_num_rows($query_inv_selesai);
+                            ?>
+                            <?php
+                            $sql_inv_ppn_selesai = "SELECT ppn.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_ppn AS ppn
+                                LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv";
+                            $query_inv_ppn_selesai = mysqli_query($connect, $sql_inv_ppn_selesai);
+                            $total_inv_ppn_selesai = mysqli_num_rows($query_inv_ppn_selesai);
+                            ?>
+                            <?php
+                            $sql_inv_bum_selesai = "SELECT bum.*, sr.id_inv, sr.id_customer, sr.no_po, cs.nama_cs, cs.alamat
+                                FROM inv_bum AS bum
+                                LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
+                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                WHERE status_transaksi = 'Transaksi Selesai' GROUP BY no_inv";
+                            $query_inv_bum_selesai = mysqli_query($connect, $sql_inv_bum_selesai);
+                            $total_inv_bum_selesai = mysqli_num_rows($query_inv_bum_selesai);
+                            $hasil_selesai = $total_inv_nonppn_selesai + $total_inv_ppn_selesai + $total_inv_bum_selesai;
+                            ?>
+                            <a class="nav-link" href="invoice-reguler-selesai.php">
+                                Transaksi Selesai &nbsp;
+                                <?php if ($hasil_selesai != 0) {
+                                    echo '<span class="badge text-bg-secondary">' . $hasil_selesai . '</span>';
+                                }
+                                ?>
+                            </a>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
                             <a class="nav-link" href="transaksi-cancel.php">Transaksi Cancel</a>

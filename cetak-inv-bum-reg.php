@@ -240,7 +240,7 @@
             <div class="col-header-2">
                 <!-- Kolom kedua -->
                 Kepada : <br>
-                <?php echo $data['nama_cs'] ?> <br>
+                <?php echo $data['cs_inv'] ?> <br>
                 <?php echo $data['alamat'] ?>
             </div>
         </div>
@@ -527,3 +527,25 @@ function terbilang($nilai)
     return $hasil;
 }
 ?>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" integrity="sha512-OpVm6PQGWfDksMIZ0iigU4S+hRC3MM9J90Yij1EC5Bp7ZoABK/zZxttCzA3iTL4vYNY41FqCMLaE0WvjgiywFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        // Function to generate the PDF
+        function generatePDF() {
+            const element = document.querySelector('.invoice');
+            const options = {
+                margin: 0.5,
+                filename: 'invoice.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 4 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(options).from(element).save();
+        }
+
+        // Call the generatePDF function when the page is loaded
+        window.addEventListener('load', generatePDF);
+    </script>
