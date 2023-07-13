@@ -304,16 +304,16 @@ include "akses.php";
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4 mb-3">
-                                                    <label>Tanggal Awal :</label>
-                                                    <input type="text" name="start_date" id="start_date" placeholder="dd/mm/yyyy" class="form-control" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>">
+                                                    <label for="start_date">Tanggal Awal:</label>
+                                                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>" readonly>
                                                 </div>
                                                 <div class="col-md-4 mb-3">
-                                                    <label>Tanggal Akhir :</label>
-                                                    <input type="text" name="end_date" id="end_date" placeholder="dd/mm/yyyy" class="form-control" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
+                                                    <label for="end_date">Tanggal Akhir:</label>
+                                                    <input type="date" name="end_date" id="end_date" class="form-control" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>" readonly>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-3 text-center">
                                                     <br>
-                                                    <button type="submit" class="btn btn-primary" id="select" onclick="filterData()">Cari Data</button>
+                                                    <button type="submit" class="btn btn-primary" id="select">Cari Data</button>
                                                 </div>
                                             </div>
                                         </div>
