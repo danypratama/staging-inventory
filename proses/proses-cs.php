@@ -2,6 +2,7 @@
 session_start();
 include "../koneksi.php";
 
+// Simpan
 if (isset($_POST["simpan-cs"])) {
 	$id_cs = $_POST['id_cs'];
 	$nama_cs = $_POST['nama_cs'];
@@ -9,34 +10,18 @@ if (isset($_POST["simpan-cs"])) {
 	$telp = $_POST['telp_cs'];
 	$email = $_POST['email'];
 	$created = $_POST['created'];
-  
+
 	$cek_cs = mysqli_query($connect, "SELECT nama_cs FROM tb_customer WHERE nama_cs = '$nama_cs'");
-  
+
 	if ($cek_cs->num_rows > 0) {
-	  $_SESSION['info'] = 'Data Gagal Disimpan';
-	  header("Location:../data-customer.php");
+		$_SESSION['info'] = 'Data Gagal Disimpan';
+		header("Location:../data-customer.php");
 	} else {
-		// Membuat folder baru
-		$path = "../Customer/".$nama_cs;
-		mkdir($path, 0777, true);
-		$simpan_cs = mysqli_query($connect, "INSERT INTO tb_customer
-							(id_cs, nama_cs, alamat, no_telp, email, created_date) VALUES ('$id_cs', '$nama_cs', '$alamat', '$telp', '$email', '$created')");
-		
-		// Data hasil
-		$result = array(
-			'query' => true
-		);
+		mysqli_query($connect, "INSERT INTO tb_customer
+                      (id_cs, nama_cs, alamat, no_telp, email, created_date) VALUES ('$id_cs', '$nama_cs', '$alamat', '$telp', '$email', '$created')");
 
-		// Mengonversi data ke format JSON
-		$json_result = json_encode($result);
-
-		// Menampilkan hasil JSON ke console log browser
-		echo "<script>";
-		echo "console.log(" . $json_result . ");";
-		echo "</script>";
-	
-		// $_SESSION['info'] = 'Disimpan';
-		// echo "<script>document.location.href='../data-customer.php'</script>";
+		$_SESSION['info'] = 'Disimpan';
+		echo "<script>document.location.href='../data-customer.php'</script>";
 	}
 
 	//Edit

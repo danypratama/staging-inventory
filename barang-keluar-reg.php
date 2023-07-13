@@ -45,10 +45,8 @@ include "akses.php";
                 <div class="card">
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Keluar Reguler</h5>
-                        <a href="input-br-out-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i>
-                            Tambah Data</a>
-                        <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i
-                                class="bi bi-arrow-left"></i> Kembali</a>
+                        <a href="input-br-out-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah Data</a>
+                        <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
                         <div class="table-responsive pt-3">
                             <table class="table table-striped table-bordered" id="table1">
                                 <thead>
@@ -76,24 +74,20 @@ include "akses.php";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
-                                    <tr>
-                                        <td class="text-center"><?php echo $no ?></td>
-                                        <td><?php echo $data['nama_produk'] ?></td>
-                                        <td class="text-center"><?php echo $data['nama_merk'] ?></td>
-                                        <td class="text-end"><?php echo number_format($data['qty']) ?></td>
-                                        <td><?php echo $data['ket_out'] ?></td>
-                                        <td><?php echo $data['nama_user'] ?></td>
-                                        <td class="text-center"><?php echo $data['created'] ?></td>
-                                        <td class="text-center">
-                                            <a href="edit-br-out-reg.php?id=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>"
-                                                class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil"
-                                                    style="font-size: 14px;"></i></a>
-                                            <a href="proses/proses-br-out-reg.php?hapus=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>"
-                                                class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash"
-                                                    style="font-size: 14px;"></i></a>
-                                        </td>
-                                    </tr>
-                                    <?php $no++ ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo $no ?></td>
+                                            <td><?php echo $data['nama_produk'] ?></td>
+                                            <td class="text-center"><?php echo $data['nama_merk'] ?></td>
+                                            <td class="text-end"><?php echo number_format($data['qty']) ?></td>
+                                            <td><?php echo $data['ket_out'] ?></td>
+                                            <td><?php echo $data['nama_user'] ?></td>
+                                            <td class="text-center"><?php echo $data['created'] ?></td>
+                                            <td class="text-center">
+                                                <a href="edit-br-out-reg.php?id=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>" class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil" style="font-size: 14px;"></i></a>
+                                                <a href="proses/proses-br-out-reg.php?hapus=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>" class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash" style="font-size: 14px;"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php $no++ ?>
                                     <?php } ?>
                                 </tbody>
                             </table>
@@ -107,8 +101,7 @@ include "akses.php";
     <!-- Footer -->
     <?php include "page/footer.php" ?>
     <!-- End Footer -->
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <?php include "page/script.php" ?>
 </body>
