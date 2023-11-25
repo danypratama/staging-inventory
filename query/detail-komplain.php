@@ -110,25 +110,45 @@
                 ik.id_komplain,
                 COALESCE(spk_nonppn.id_spk_reg, spk_ppn.id_spk_reg, spk_bum.id_spk_reg) AS id_spk,
                 COALESCE(spk_nonppn.no_spk, spk_ppn.no_spk, spk_bum.no_spk) AS no_spk,
-                tpr.id_transaksi,
-                tpr.id_produk,
-                tpr.nama_produk_spk,
-                tpr.harga,
-                tpr.qty,
-                tpr.disc,
+                COALESCE(tpr_nonppn.id_transaksi, tpr_ppn.id_transaksi, tpr_bum.id_transaksi) AS id_transaksi,
+                COALESCE(tpr_nonppn.id_produk, tpr_ppn.id_produk, tpr_bum.id_produk) AS id_produk,
+                COALESCE(tpr_nonppn.nama_produk_spk, tpr_ppn.nama_produk_spk, tpr_bum.nama_produk_spk) AS nama_produk_spk,
+                COALESCE(tpr_nonppn.harga, tpr_ppn.harga, tpr_bum.harga) AS harga,
+                COALESCE(tpr_nonppn.qty, tpr_ppn.qty, tpr_bum.qty) AS qty,
+                COALESCE(tpr_nonppn.disc, tpr_ppn.disc, tpr_bum.disc) AS disc,
                 COALESCE(mr_produk.nama_merk, mr_set.nama_merk) AS merk
-            FROM inv_komplain AS ik
-            LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
-            LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
-            LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
-            LEFT JOIN spk_reg spk_nonppn ON ik.id_inv = spk_nonppn.id_inv
-            LEFT JOIN spk_reg spk_ppn ON ik.id_inv = spk_ppn.id_inv
-            LEFT JOIN spk_reg spk_bum ON ik.id_inv = spk_bum.id_inv
-            LEFT JOIN transaksi_produk_reg tpr ON spk_nonppn.id_spk_reg = tpr.id_spk OR spk_ppn.id_spk_reg = tpr.id_spk OR spk_bum.id_spk_reg = tpr.id_spk
-            LEFT JOIN tb_produk_reguler pr ON tpr.id_produk = pr.id_produk_reg
-            LEFT JOIN tb_produk_set_marwa tpsm ON tpr.id_produk = tpsm.id_set_marwa
-            LEFT JOIN tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
-            LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+            FROM
+                inv_komplain AS ik
+            LEFT JOIN
+                inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
+            LEFT JOIN
+                inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
+            LEFT JOIN
+                inv_bum bum ON ik.id_inv = bum.id_inv_bum
+            LEFT JOIN
+                spk_reg spk_nonppn ON ik.id_inv = spk_nonppn.id_inv
+            LEFT JOIN
+                spk_reg spk_ppn ON ik.id_inv = spk_ppn.id_inv
+            LEFT JOIN
+                spk_reg spk_bum ON ik.id_inv = spk_bum.id_inv
+            LEFT JOIN
+                transaksi_produk_reg tpr_nonppn ON spk_nonppn.id_spk_reg = tpr_nonppn.id_spk
+            LEFT JOIN
+                transaksi_produk_reg tpr_ppn ON spk_ppn.id_spk_reg = tpr_ppn.id_spk
+            LEFT JOIN
+                transaksi_produk_reg tpr_bum ON spk_bum.id_spk_reg = tpr_bum.id_spk
+            LEFT JOIN
+                tb_produk_reguler pr ON tpr_nonppn.id_produk = pr.id_produk_reg
+                OR tpr_ppn.id_produk = pr.id_produk_reg
+                OR tpr_bum.id_produk = pr.id_produk_reg
+            LEFT JOIN
+                tb_produk_set_marwa tpsm ON tpr_nonppn.id_produk = tpsm.id_set_marwa
+                OR tpr_ppn.id_produk = tpsm.id_set_marwa
+                OR tpr_bum.id_produk = tpsm.id_set_marwa
+            LEFT JOIN
+                tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk
+            LEFT JOIN
+                tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
             WHERE ik.id_komplain = '$id'";
     $query = mysqli_query($connect, $sql);
    
