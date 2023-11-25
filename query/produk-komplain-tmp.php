@@ -1,7 +1,7 @@
 <?php  
     include "koneksi.php";
     // Query Untuk Table
-    $sql_tmp = "SELECT
+    $sql_tmp = "SELECT DISTINCT
                     COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                     STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                     ik.id_inv,
@@ -40,7 +40,7 @@
     $query_total = mysqli_query($connect, $sql_tmp);
 
     // Query tampil Produk
-    $sql_produk = " SELECT
+    $sql_produk = " SELECT DISTINCT
                         tpk.id_tmp,
                         tpk.id_produk,
                         tpk.nama_produk,
@@ -66,7 +66,7 @@
     $query_produk_total = mysqli_query($connect, $sql_produk);
 
 
-    $sql_refund = "SELECT
+    $sql_refund = "SELECT DISTINCT
                     COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                     STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                     ik.id_komplain,
