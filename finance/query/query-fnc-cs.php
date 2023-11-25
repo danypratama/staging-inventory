@@ -88,7 +88,7 @@ $sql = "SELECT
                 COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
                 COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv) AS tgl_inv,
                 COALESCE(nonppn.status_transaksi, ppn.status_transaksi, bum.status_transaksi) AS status_transaksi,
-                COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS nominal_inv
+                fnc.total_inv AS nominal_inv
             FROM spk_reg AS spk
             LEFT JOIN inv_nonppn nonppn ON spk.id_inv = nonppn.id_inv_nonppn
             LEFT JOIN inv_ppn ppn ON spk.id_inv = ppn.id_inv_ppn

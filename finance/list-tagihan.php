@@ -154,7 +154,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                       $total_tagihan = $data['total_tagihan'];
                       $total_sisa_tagihan = $total_tagihan - $total_bayar;
                       $tgl_tagihan = $data['tgl_tagihan'];
-                      $no_tagihan = $data['no_tagihan']
+                      $no_tagihan = $data['no_tagihan'];
                   ?>
                   <tr>
                     <td class="text-center"><?php echo $no; ?></td>

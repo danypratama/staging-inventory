@@ -93,7 +93,7 @@
                 STR_TO_DATE(COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo), '%d/%m/%Y') AS tgl_tempo_convert,
                 COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
                 ft.no_tagihan,
-                fb.total_bayar AS total_bayar
+                SUM(fb.total_bayar) AS total_bayar
             FROM spk_reg AS spk
             LEFT JOIN inv_nonppn nonppn ON (spk.id_inv = nonppn.id_inv_nonppn)
             LEFT JOIN inv_ppn ppn ON (spk.id_inv = ppn.id_inv_ppn)

@@ -328,7 +328,7 @@ include 'function/class-finance.php';
                                                             COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
                                                             STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), '%d/%m/%Y') AS tgl_inv,
                                                             STR_TO_DATE(COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo), '%d/%m/%Y') AS tgl_tempo,
-                                                            COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
+                                                            fnc.total_inv AS total_inv,
                                                             SUM(fb.total_bayar) AS total_bayar
                                                         FROM finance AS fnc
                                                         LEFT JOIN inv_nonppn nonppn ON (fnc.id_inv = nonppn.id_inv_nonppn)
@@ -438,7 +438,7 @@ include 'function/class-finance.php';
                                 <td class="text-nowrap text-end"><?php echo number_format($total_bayar) ?></td>     
                                 <td class="text-nowrap text-center">
                                     <?php
-                                        if($status_lunas == 0){
+                                        if($status_lunas == 1){
                                             echo "Lunas";
                                         }else{
 
