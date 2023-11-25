@@ -103,7 +103,7 @@
     $data_kondisi = mysqli_fetch_array($query_kondisi);
 
     // Query Untuk Table
-    $sql = "SELECT
+    $sql = "SELECT DISTINCT
                 COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                 COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
                 STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
