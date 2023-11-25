@@ -73,7 +73,7 @@
     $data_driver = mysqli_fetch_array($query_driver);
 
     // Query untuk total inv
-    $sql_total = " SELECT
+    $sql_total = " SELECT DISTINCT
                         ik.id_komplain,
                         COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                         COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv
@@ -86,7 +86,7 @@
     $data_total = mysqli_fetch_array($query_total);
     
     // echo $id;
-    $sql_kondisi = "SELECT
+    $sql_kondisi = "SELECT DISTINCT
                         COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                         COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
                         ik.id_inv,
