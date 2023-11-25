@@ -2,7 +2,7 @@
     include "koneksi.php";
 
     // query untuk detail
-    $sql_detail = "SELECT
+    $sql_detail = "SELECT DISTINCT
                         COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                         COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
                         COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv) AS tgl_inv,
@@ -42,7 +42,7 @@
     $data_detail = mysqli_fetch_array($query_detail);
     $query_detail2 = mysqli_query($connect, $sql_detail);
     // Query Driver
-    $sql_driver = " SELECT
+    $sql_driver = " SELECT DISTINCT
                         ik.id_komplain,
                         COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                         COALESCE(status_kirim_nonppn.jenis_pengiriman, status_kirim_ppn.jenis_pengiriman, status_kirim_bum.jenis_pengiriman) AS jenis_pengiriman,
