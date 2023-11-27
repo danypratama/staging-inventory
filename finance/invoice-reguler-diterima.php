@@ -275,20 +275,13 @@ include "akses.php";
                                     echo '<span class="badge text-bg-secondary">' . $hasil_selesai . '</span>';
                                 }
                                 ?>
-                            </a>
+                            </a> 
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
                             <?php
                                 $sql_cancel = " SELECT 
-                                                    sr.id_spk_reg,
-                                                    sr.no_spk,
-                                                    sr.tgl_spk,
-                                                    sr.no_po,
-                                                    sr.menu_cancel,
-                                                    sr.note,
-                                                    cs.nama_cs, cs.alamat
+                                                    sr.menu_cancel
                                                 FROM spk_reg AS sr
-                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                 WHERE status_spk = 'Cancel Order'";
                                  $query_cancel = mysqli_query($connect, $sql_cancel);
                                 $total_query_cancel = mysqli_num_rows($query_cancel);

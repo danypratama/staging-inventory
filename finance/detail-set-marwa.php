@@ -1,5 +1,5 @@
 <?php
-$page = 'produk';
+$page = 'data';
 $page2 = 'data-produk-set-marwa';
 include "akses.php";
 ?>
@@ -49,16 +49,15 @@ include "akses.php";
                 <p>Nama set : <?php echo $data['nama_set_marwa']; ?></p>
                 <?php
                 include "koneksi.php";
+                $no = 1;
                 $grand_total = 0;
                 $id = base64_decode($_GET['detail-id']);
-                $sql_data = "SELECT ipsm.id_isi_set_marwa, ipsm.id_set_marwa, ipsm.id_produk, ipsm.qty, tpr.nama_produk, tpr.harga_produk FROM isi_produk_set_marwa ipsm
-                              LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
-                              LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)
-                              WHERE tpsm.id_set_marwa = '$id'";
+                $sql_data = "SELECT ipsm.*, tpsm.*, tpr.* FROM isi_produk_set_marwa ipsm
+                             LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
+                             LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)
+                             WHERE ipsm.id_set_marwa = '$id'";
                 $query_data = mysqli_query($connect, $sql_data) or die(mysqli_error($connect, $sql_data));
                 while ($row = mysqli_fetch_array($query_data)) {
-                  $id_isi_set = $row['id_isi_set_marwa'];
-                  $id_set_marwa = $row['id_set_marwa'];
                   $harga = $row['harga_produk'];
                   $qty = $row['qty'];
                   $jumlah = $qty * $harga;
@@ -78,40 +77,39 @@ include "akses.php";
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr class="text-white" style="background-color: #051683;">
-                    <th class="text-center p-3 text-nowrap" style="width: 50px">No</th>
-                    <th class="text-center p-3 text-nowrap" style="width: 450px">Nama Produk</th>
-                    <th class="text-center p-3 text-nowrap" style="width: 100px">Harga Satuan</th>
-                    <th class="text-center p-3 text-nowrap" style="width: 50px">Qty</th>
-                    <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
+                    <th class="text-center p-3" style="width: 50px">No</th>
+                    <th class="text-center p-3" style="width: 450px">Nama Produk</th>
+                    <th class="text-center p-3" style="width: 50px">Qty</th>
+                    <th class="text-center p-3" style="width: 80px">Aksi</th>
                   </tr>
                 </thead>
-                <tbody>   
-                  <?php  
-                      $no = 1;
-                      $sql_isi = " SELECT 
-                                      ipsm.id_isi_set_marwa, ipsm.id_set_marwa, ipsm.id_produk, ipsm.qty, tpr.nama_produk, tpr.harga_produk 
-                                    FROM isi_produk_set_marwa ipsm
-                                    LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
-                                    LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)
-                                    WHERE tpsm.id_set_marwa = '$id'";
-                      $query_isi = mysqli_query($connect, $sql_data) or die(mysqli_error($connect, $sql_data));
-                      while($data = mysqli_fetch_array($query_isi)){
-                        $harga = $data['harga_produk'];
-                        $qty = $data['qty'];
-                        $nama_produk = $data['nama_produk'];    
-                        $id_isi_set_marwa = $data['id_isi_set_marwa'];        
+                <tbody>
+                  <?php
+                  include "koneksi.php";
+                  $no = 1;
+                  $grand_total = 0;
+                  $id = base64_decode($_GET['detail-id']);
+                  $sql_data = "SELECT ipsm.*, tpsm.*, tpr.* FROM isi_produk_set_marwa ipsm
+                               LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
+                               LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)
+                               WHERE ipsm.id_set_marwa = '$id'";
+                  $query_data = mysqli_query($connect, $sql_data) or die(mysqli_error($connect, $sql_data));
+                  while ($row = mysqli_fetch_array($query_data)) {
+                    $harga = $row['harga_produk'];
+                    $qty = $row['qty'];
+                    $jumlah = $qty * $harga;
+                    $grand_total += $jumlah;
                   ?>
-                  <tr>
-                    <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                    <td class="text-nowrap"><?php echo $nama_produk; ?></td>
-                    <td class="text-end text-nowrap"><?php echo number_format($harga) ?></td>
-                    <td class="text-end text-nowrap"><?php echo $qty; ?></td>
-                    <td class="text-center text-nowrap">
-                      <a href="edit-isi-produk-set-marwa.php?edit-id=<?php echo base64_encode($id_isi_set_marwa) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
-                      <a href="proses/proses-produk-set-marwa.php?hapus-isi-set=<?php echo base64_encode($id_isi_set_marwa) ?>&kode=<?php echo base64_encode($id_set_marwa) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                    </td>
-                  </tr>
-                  <?php $no++; ?>
+                    <tr>
+                      <td class="text-center"><?php echo $no; ?></td>
+                      <td><?php echo $row['nama_produk']; ?></td>
+                      <td class="text-end"><?php echo $qty; ?></td>
+                      <td class="text-center">
+                        <a href="edit-isi-produk-set-marwa.php?edit-id=<?php echo base64_encode($row['id_isi_set_marwa']) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                        <a href="proses/proses-produk-set-marwa.php?hapus-isi-set=<?php echo base64_encode($row['id_isi_set_marwa']) ?>&kode=<?php echo base64_encode($row['id_set_marwa']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                      </td>
+                    </tr>
+                    <?php $no++; ?>
                   <?php } ?>
                 </tbody>
               </table>

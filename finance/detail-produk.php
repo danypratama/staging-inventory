@@ -28,8 +28,8 @@
                 lok.*,
                 spr.*
                 FROM tb_produk_reguler as pr
-                LEFT JOIN user uc ON (pr.created_by = uc.id_user)
-                LEFT JOIN user uu ON (pr.updated_by = uu.id_user)
+                LEFT JOIN user uc ON (pr.id_user = uc.id_user)
+                LEFT JOIN user uu ON (pr.user_updated = uu.id_user)
                 LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
                 LEFT JOIN tb_kat_produk kp ON (pr.id_kat_produk = kp.id_kat_produk)
                 LEFT JOIN tb_kat_penjualan kj ON (pr.id_kat_penjualan = kj.id_kat_penjualan)
@@ -40,7 +40,7 @@
         $result = mysqli_query($connect, $sql);
         $data = mysqli_fetch_array($result);
         $img = $data['gambar'];
-        $no_img = $data["gambar"] == "" ? "gambar/upload-produk-reg/no-image.png" : "gambar/upload-produk-req/$img";
+        $no_img = $data["gambar"] == "" ? "gambar/upload-marwa/no-image.png" : "gambar/upload-marwa/$img";
     ?>
         <div class="container">
             <div class="card">
@@ -50,7 +50,7 @@
                 <div class="card-body p-3">
                     <div class="row">
                         <div class="col-md-5">
-                            <img alt="Gambar Produk" src="gambar/upload-produk-reg/<?php echo $img ?>" style="height: 100%; width: 100%;" class="img-fluid">
+                            <img alt="Gambar Produk" src="gambar/upload-marwa/<?php echo $img ?>" style="height: 100%; width: 100%;" class="img-fluid">
                         </div>
                         <div class="col-md-7">
                             <div class="table-responsive">

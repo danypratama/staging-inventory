@@ -280,15 +280,8 @@ include "akses.php";
                         <li class="nav-item flex-fill" role="presentation">
                             <?php
                                 $sql_cancel = " SELECT 
-                                                    sr.id_spk_reg,
-                                                    sr.no_spk,
-                                                    sr.tgl_spk,
-                                                    sr.no_po,
-                                                    sr.menu_cancel,
-                                                    sr.note,
-                                                    cs.nama_cs, cs.alamat
+                                                    sr.menu_cancel
                                                 FROM spk_reg AS sr
-                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                 WHERE status_spk = 'Cancel Order'";
                                  $query_cancel = mysqli_query($connect, $sql_cancel);
                                 $total_query_cancel = mysqli_num_rows($query_cancel);
@@ -348,7 +341,7 @@ include "akses.php";
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                             </tr>
                                         </thead>
@@ -443,15 +436,15 @@ include "akses.php";
                                         </div>
                                     </div>
                                     <table class="table table-bordered table-striped" id="tableppn">
-                                        <thead>
-                                            <tr class="text-white text-nowrap" style="background-color: navy;">
+                                    <thead>
+                                            <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                             </tr>
                                         </thead>
@@ -484,6 +477,7 @@ include "akses.php";
                                                     WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
+
                                             ?>
                                                 <tr>
                                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
@@ -545,15 +539,15 @@ include "akses.php";
                                         </div>
                                     </div>
                                     <table class="table table-bordered table-striped" id="tablebum">
-                                        <thead>
-                                            <tr class="text-white text-nowrap" style="background-color: navy;">
+                                    <thead>
+                                            <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                             </tr>
                                         </thead>
@@ -586,6 +580,7 @@ include "akses.php";
                                                     WHERE status_transaksi = 'Belum Dikirim' GROUP BY no_inv  $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
+
                                             ?>
                                                 <tr>
                                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
@@ -618,7 +613,7 @@ include "akses.php";
                                                         ?>
                                                     </td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-bum.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-bum.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>

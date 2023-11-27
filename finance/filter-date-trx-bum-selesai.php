@@ -54,38 +54,38 @@ include "akses.php";
                 $no = 1;
                 $start_date = $_GET['start_date_bum']; // Tanggal awal rentang
                 $end_date = $_GET['end_date_bum'];// Tanggal akhir rentang
-                $sql = "SELECT  bum.id_inv_bum,
-                                bum.no_inv, 
-                                STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') AS tgl_inv,
-                                bum.cs_inv, 
-                                bum.tgl_tempo, 
-                                bum.sp_disc, 
-                                bum.note_inv, 
-                                bum.kategori_inv, 
-                                bum.ongkir, 
-                                bum.total_inv, 
-                                bum.status_transaksi, 
-                                sr.id_inv, 
-                                sr.id_customer, 
-                                sr.no_po, 
-                                cs.nama_cs, cs.alamat, 
-                                fn.status_pembayaran, fn.id_inv
-                                FROM inv_bum AS bum
-                                LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
-                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                JOIN finance fn ON (fn.id_inv = bum.id_inv_bum)
-                                WHERE status_transaksi = 'Transaksi Selesai' AND
-                                STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') >= STR_TO_DATE('$start_date', '%d/%m/%Y') AND
-                                STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') <= STR_TO_DATE('$end_date', '%d/%m/%Y')
+                $sql = "SELECT bum.id_inv_bum,
+                            bum.no_inv, 
+                            STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') AS tgl_inv_date,
+                            bum.cs_inv, 
+                            bum.tgl_tempo, 
+                            bum.sp_disc, 
+                            bum.note_inv, 
+                            bum.kategori_inv, 
+                            bum.ongkir, 
+                            bum.total_inv, 
+                            bum.status_transaksi, 
+                            sr.id_inv, 
+                            sr.id_customer, 
+                            sr.no_po, 
+                            cs.nama_cs, cs.alamat, 
+                            fn.status_pembayaran, fn.id_inv
+                        FROM inv_bum AS bum
+                        LEFT JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
+                        JOIN tb_customer cs ON (sr.id_customer = cs.id_cs)
+                        JOIN finance fn ON (fn.id_inv = bum.id_inv_bum)
+                        WHERE status_transaksi = 'Transaksi Selesai' AND
+                            STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') >= STR_TO_DATE('$start_date', '%d/%m/%Y') AND
+                            STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') <= STR_TO_DATE('$end_date', '%d/%m/%Y')
                         GROUP BY no_inv";
                 $query = mysqli_query($connect, $sql);
                 while ($data = mysqli_fetch_array($query)) {
                 ?>
                     <tr>
                         <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                        <td class="text-nowrap"><?php echo $data['no_inv'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['tgl_inv'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['no_po'] ?></td>
+                        <td class="text-center text-nowrap"><?php echo $data['no_inv'] ?></td>
+                        <td class="text-center text-nowrap"><?php echo date('d/m/Y', strtotime($data['tgl_inv_date']))?></td>
+                        <td class="text-center text-nowrap"><?php echo $data['no_po'] ?></td>
                         <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                         <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
                         <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
@@ -163,4 +163,5 @@ include "akses.php";
         }
     </script>
 </body>
+
 </html>

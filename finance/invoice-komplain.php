@@ -1,6 +1,5 @@
 <?php
-$page  = 'transaksi';
-$page2  = 'list-cmp';
+$page  = 'list-cmp';
 include "akses.php";
 include 'function/class-komplain.php';
 ?>
@@ -14,7 +13,7 @@ include 'function/class-komplain.php';
     <title>Inventory KMA</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
-    <link rel="stylesheet" href="assets/css/wrap-text.css">
+    <link rel="stylesheet" href="../assets/css/wrap-text.css">
    
     <?php include "page/head.php"; ?>
     <?php include "page/style-button-filterdate.php"; ?>
@@ -50,11 +49,11 @@ include 'function/class-komplain.php';
 
     <main id="main" class="main">
         <!-- Loading -->
-        <!-- <div class="loader loader">
+        <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div> -->
+        </div>
         <!-- ENd Loading -->
         <div class="pagetitle">
             <h1>Invoice Komplain</h1>
@@ -200,12 +199,14 @@ include 'function/class-komplain.php';
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <label><b>Filter status komplain :</b></label>
-                        <select class="form-select" id="statusSelect">
-                            <option value="All">Semua</option>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Selesai">Selesai</option>
-                        </select>
+                        <form action="" method="GET">
+                            <label><b>Filter status komplain :</b></label>
+                            <select name="status" class="form-select" id="statusSelect">
+                                <option value="">Pilih...</option>
+                                <option value="0">Aktif</option>
+                                <option value="1">Selesai</option>
+                            </select>
+                        </form>
                     </div>
                 </div>
                 <div class="d-flex justify-content-around flex-wrap">
@@ -217,8 +218,8 @@ include 'function/class-komplain.php';
                             <p><b>Total Komplain</b></p> 
                             <p>
                                 <?php 
-                                    if($total_komplain != 0){
-                                        echo $total_komplain;
+                                    if(!empty($data_count['total_komplain'])){
+                                        echo $data_count['total_komplain'];
                                     }else{
                                         echo "0";
                                     } 
@@ -231,8 +232,8 @@ include 'function/class-komplain.php';
                             <p><b>Komplain Aktif</b></p>  
                             <p>
                                 <?php 
-                                    if($total_aktif != 0){
-                                        echo $total_aktif;
+                                    if(!empty($data_count['total_komplain'])){
+                                        echo $data_count['total_komplain_aktif'];
                                     }else{
                                         echo "0";
                                     } 
@@ -245,8 +246,8 @@ include 'function/class-komplain.php';
                             <p><b>Komplain Selesai</b></p>  
                             <p>
                                 <?php 
-                                    if($total_selesai != 0){
-                                        echo $total_selesai;
+                                    if(!empty($data_count['total_komplain'])){
+                                        echo $data_count['total_komplain_selesai'];
                                     }else{
                                         echo "0";
                                     } 
@@ -258,7 +259,7 @@ include 'function/class-komplain.php';
                 <div class="table-responsive mt-2">
                     <table class="table table-bordered table-striped" id="table1">
                         <thead>
-                            <tr class="text-white" style="background-color: navy">
+                            <tr>
                                 <th class="text-center text-nowrap p-3">No</th>
                                 <th class="text-center text-nowrap p-3">No. Komplain</th>
                                 <th class="text-center text-nowrap p-3">Tgl. Komplain</th>
@@ -267,7 +268,7 @@ include 'function/class-komplain.php';
                                 <th class="text-center text-nowrap p-3">Kategori Komplain</th>
                                 <th class="text-center text-nowrap p-3">Alasan Komplain</th>
                                 <th class="text-center text-nowrap p-3">Status</th>
-                                <th class="text-center text-nowrap p-3">Aksi</th> 
+                                <th class="text-center text-nowrap p-3">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -304,10 +305,9 @@ include 'function/class-komplain.php';
                                     ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="detail-komplain.php?id=<?php echo base64_encode($id_komplain) ?>" class="btn btn-primary btn-sm" title="Detail"><i class="bi bi-eye"></i></a>
+                                    <a href="detail-komplain-bum.php?id=<?php echo base64_encode($id_komplain) ?>" class="btn btn-primary btn-sm" title="Detail"><i class="bi bi-eye"></i></a>
                                 </td>
                             </tr>
-                            <?php $no++ ?>
                             <?php } ?>
                         </tbody>
                     </table>
@@ -327,40 +327,23 @@ include 'function/class-komplain.php';
 
 </html>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const filterstatusSelect = document.getElementById('statusSelect');
-    const dataTable = document.getElementById('table1');
+    var selectElement = document.getElementById('statusSelect');
 
-    filterstatusSelect.addEventListener('change', applyFilters);
+    selectElement.addEventListener('change', function() {
+        var selectedValue = selectElement.value;
 
-    function applyFilters() {
-        const selectedValue = filterstatusSelect.value;
-        const rows = dataTable.getElementsByTagName('tr');
+        // Mengambil URL awal
+        var baseUrl = "<?php echo $baseUrl; ?>";
 
-        for (let i = 1; i < rows.length; i++) {
-            const row = rows[i];
-            const cell = row.cells[7]; // Pastikan indeks 7 sesuai dengan kolom status
+        // Menggabungkan URL awal dengan parameter status
+        var newUrl = baseUrl + "&status=" + selectedValue;
 
-            if (cell) {
-                const cellValue = cell.textContent.trim();
-                let showRow = false;
+        // Mengubah URL tanpa memuat ulang halaman
+        window.history.replaceState({}, '', newUrl);
 
-                if (selectedValue === 'All') {
-                    showRow = true;
-                } else if (selectedValue === 'Aktif' && cellValue === 'Aktif') {
-                    showRow = true;
-                } else if (selectedValue === 'Selesai' && cellValue === 'Selesai') {
-                    showRow = true;
-                }
-
-                row.style.display = showRow ? '' : 'none';
-            }
-        }
-    }
-
-    // Inisialisasi filter pada awal halaman
-    applyFilters();
-});
+        // Merefresh halaman
+        window.location.href = newUrl;
+    });
 </script>
 
 

@@ -44,7 +44,7 @@ include "akses.php";
                     <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                     <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                     <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                    <th class="text-center p-3 text-nowrap" style="width: 100px">Status Pembayaran</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
                     <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                 </tr>
             </thead>
@@ -56,7 +56,7 @@ include "akses.php";
                 $end_date = $_GET['end_date_ppn'];// Tanggal akhir rentang
                 $sql = " SELECT ppn.id_inv_ppn,
                                 ppn.no_inv, 
-                                STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y') AS tgl_inv,
+                                STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y') AS tgl_inv_date,
                                 ppn.cs_inv, 
                                 ppn.tgl_tempo, 
                                 ppn.sp_disc, 
@@ -70,11 +70,11 @@ include "akses.php";
                                 sr.no_po, 
                                 cs.nama_cs, cs.alamat, 
                                 fn.status_pembayaran, fn.id_inv
-                                FROM inv_ppn AS ppn
-                                LEFT JOIN spk_reg sr ON(ppn.id_inv_ppn = sr.id_inv)
-                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                JOIN finance fn ON (fn.id_inv = ppn.id_inv_ppn)
-                                WHERE status_transaksi = 'Transaksi Selesai' AND
+                            FROM inv_ppn AS ppn
+                            LEFT JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                            JOIN tb_customer cs ON (sr.id_customer = cs.id_cs)
+                            JOIN finance fn ON (fn.id_inv = ppn.id_inv_ppn)
+                            WHERE status_transaksi = 'Transaksi Selesai' AND
                                 STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y') >= STR_TO_DATE('$start_date', '%d/%m/%Y') AND
                                 STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y') <= STR_TO_DATE('$end_date', '%d/%m/%Y')
                             GROUP BY no_inv";
@@ -83,20 +83,12 @@ include "akses.php";
                 ?>
                     <tr>
                         <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                        <td class="text-nowrap text-center"><?php echo $data['no_inv'] ?></td>
-                        <td class="text-nowrap text-center"><?php echo date('d/m/Y', strtotime($data['tgl_inv'])) ?></td>
-                        <td class="text-nowrap text-center"><?php echo $data['no_po'] ?></td>
+                        <td class="text-center text-nowrap"><?php echo $data['no_inv'] ?></td>
+                        <td class="text-center text-nowrap"><?php echo date('d/m/Y', strtotime($data['tgl_inv_date'])) ?></td>
+                        <td class="text-center text-nowrap"><?php echo $data['no_po'] ?></td>
                         <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
-                        <td class="text-nowrap text-center"><?php echo $data['kategori_inv'] ?></td>
-                        <td class="text-nowrap text-center">
-                            <?php 
-                            if($data['status_pembayaran'] == 0){
-                                echo "Belum Bayar";
-                            } else {
-                                echo "Sudah Bayar";
-                            }
-                            ?>
-                        </td>
+                        <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
+                        <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
                         <td class="text-center text-nowrap">
                             <a href="cek-produk-inv-ppn-selesai.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                         </td>
@@ -107,5 +99,65 @@ include "akses.php";
         </table>
     </div>
     <?php include "page/script.php" ?>
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi DataTable
+            var table = $('#table8').DataTable({
+                "lengthChange": false,
+                "ordering": false,
+                "autoWidth": false
+            });
+        });
+
+        function filterDataPPN() {
+            var dateRangePpnValue = document.getElementById('dateRangePPN').value;
+            var startDate = document.getElementById('start_date_ppn').value;
+            var endDate = document.getElementById('end_date_ppn').value;
+
+            if (startDate === '' || endDate === '') {
+                return; // Jika salah satu dari startDate atau endDate kosong, hentikan eksekusi filter data
+            }
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                document.getElementById('filteredDataPPN').innerHTML = this.responseText;
+                $('#table8').DataTable({
+                    "lengthChange": false,
+                    "ordering": false,
+                    "autoWidth": false
+                });
+
+                flatpickr("#start_date_ppn", {
+                    dateFormat: "d/m/Y",
+                    onClose: function(selectedDates, dateStr, instance) {
+                    var startDate = selectedDates[0];
+                    var endDateInput = document.getElementById("end_date");
+                    var endDatePicker = flatpickr("#end_date_ppn", {
+                        dateFormat: "d/m/Y",
+                        minDate: startDate,
+                        maxDate: new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000)
+                    });
+
+                    var endDate = endDatePicker.selectedDates[0];
+                    if (endDate < startDate) {
+                        endDateInput.value = "";
+                    }
+                    }
+                });
+
+                document.getElementById('start_date_ppn').value = startDate;
+                document.getElementById('end_date_ppn').value = endDate;
+                }
+            };
+
+            var url = 'filter-date-trx-ppn-selesai.php?start_date_ppn=' + startDate + '&end_date_ppn=' + endDate ;
+            xhttp.open('GET', url, true);
+            xhttp.send();
+
+            $('#ppn').collapse('show');
+        }
+    </script>
 </body>
+
 </html>

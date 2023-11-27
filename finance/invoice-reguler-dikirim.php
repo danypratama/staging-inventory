@@ -278,19 +278,12 @@ include "akses.php";
                             </a>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
-                            <?php
+                            <?php 
                                 $sql_cancel = " SELECT 
-                                                    sr.id_spk_reg,
-                                                    sr.no_spk,
-                                                    sr.tgl_spk,
-                                                    sr.no_po,
-                                                    sr.menu_cancel,
-                                                    sr.note,
-                                                    cs.nama_cs, cs.alamat
+                                                    sr.menu_cancel
                                                 FROM spk_reg AS sr
-                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                 WHERE status_spk = 'Cancel Order'";
-                                 $query_cancel = mysqli_query($connect, $sql_cancel);
+                                $query_cancel = mysqli_query($connect, $sql_cancel);
                                 $total_query_cancel = mysqli_num_rows($query_cancel);
                             ?>
                             <a class="nav-link" href="transaksi-cancel.php">
@@ -445,7 +438,7 @@ include "akses.php";
                                         </div>
                                     </div>
                                     <table class="table table-bordered table-striped" id="tableppn">
-                                        <thead>
+                                    <thead>
                                             <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
@@ -488,7 +481,7 @@ include "akses.php";
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
                                                 <tr>
-                                                <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                                                    <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                                     <td class="text-center text-nowrap"><?php echo $data['no_inv'] ?></td>
                                                     <td class="text-center text-nowrap"><?php echo $data['tgl_inv'] ?></td>
                                                     <td class="text-center text-nowrap">
@@ -519,7 +512,7 @@ include "akses.php";
                                                     </td>
                                                     <td class="text-center text-nowrap"><?php echo $data['jenis_pengiriman'] ?></td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-ppn-dikirim.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i> </a>
+                                                        <a href="cek-produk-inv-ppn-dikirim.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>
@@ -548,7 +541,7 @@ include "akses.php";
                                         </div>
                                     </div>
                                     <table class="table table-bordered table-striped" id="tablebum">
-                                        <thead>
+                                    <thead>
                                             <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
@@ -591,7 +584,7 @@ include "akses.php";
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>
                                                 <tr>
-                                                <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                                                    <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                                     <td class="text-center text-nowrap"><?php echo $data['no_inv'] ?></td>
                                                     <td class="text-center text-nowrap"><?php echo $data['tgl_inv'] ?></td>
                                                     <td class="text-center text-nowrap">

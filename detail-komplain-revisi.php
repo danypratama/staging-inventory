@@ -72,11 +72,11 @@
 
         <main id="main" class="main">
             <!-- Loading -->
-            <div class="loader loader">
+            <!-- <div class="loader loader">
                 <div class="loading">
                     <img src="img/loading.gif" width="200px" height="auto">
                 </div>
-            </div>
+            </div> -->
             <!-- ENd Loading -->
             <section>
                 <!-- SWEET ALERT -->
@@ -110,7 +110,7 @@
                                                                 COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                                                                 rev.no_inv_revisi
                                                             FROM inv_revisi AS rev
-                                                            LEFT JOIN inv_komplain ik ON rev.id_komplain = ik.id_komplain
+                                                            LEFT JOIN inv_komplain ik ON rev.id_inv = ik.id_inv
                                                             LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
                                                             LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
                                                             LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum 
@@ -359,7 +359,7 @@
                             $id_kmpl = $id;
                             $sql_kmpl = mysqli_query($connect, "SELECT status_komplain FROM inv_komplain WHERE id_komplain = '$id_kmpl'");
                             $data_kmpl = mysqli_fetch_array($sql_kmpl);
-                            $sql_rev = mysqli_query($connect, "SELECT id_komplain, status_pengiriman, status_trx_komplain, status_trx_selesai, created_date FROM inv_revisi WHERE id_komplain = '$id_kmpl' ORDER BY created_date DESC LIMIT 1");
+                            $sql_rev = mysqli_query($connect, "SELECT id_inv, status_pengiriman, status_trx_komplain, status_trx_selesai, created_date FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY created_date DESC LIMIT 1");
                             $data_rev = mysqli_fetch_array($sql_rev);
                             $total_data_rev = mysqli_num_rows($sql_rev);
                             $status_kmpl = $data_kmpl['status_komplain'];
@@ -472,25 +472,53 @@
                                             }
                                         ?>
                                     </div>
+                                    <!-- kode untuk kondisi button cetak -->
+                                    <?php  
+                                        $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
+                                        $data_rev = mysqli_fetch_array($sql_rev);
+                                        $total_data = mysqli_num_rows($sql_rev);
+                                    
+                                    ?>
                                     <div class="p-2 text-start">
                                         <?php  
                                             if($jenis_inv == "nonppn") {
                                                 ?>
-                                                    <a href="cetak-inv-revisi-nonppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                        <i></i> Cetak Invoice
-                                                    </a> 
+                                                    <?php  
+                                                        if($total_data == 0){
+                                                        } else {
+                                                            ?>
+                                                                <a href="cetak-inv-revisi-nonppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                                    <i></i> Cetak Invoice
+                                                                </a> 
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 <?php
                                             } else if($jenis_inv == "ppn") {
                                                 ?>
-                                                    <a href="cetak-inv-revisi-ppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                        <i></i> Cetak Invoice
-                                                    </a> 
+                                                    <?php  
+                                                        if($total_data == 0){
+                                                        } else {
+                                                            ?>
+                                                                <a href="cetak-inv-revisi-ppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                                    <i></i> Cetak Invoice
+                                                                </a> 
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 <?php
                                             }else if($jenis_inv == "bum") {
                                                 ?>
-                                                    <a href="cetak-inv-revisi-bum.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                        <i></i> Cetak Invoice
-                                                    </a> 
+                                                    <?php  
+                                                        if($total_data == 0){
+                                                        } else {
+                                                            ?>
+                                                                <a href="cetak-inv-revisi-bum.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                                    <i></i> Cetak Invoice
+                                                                </a> 
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 <?php
                                             }
                                         ?>
@@ -501,7 +529,6 @@
                                         <thead>
                                             <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center text-nowrap p-3">No</th>
-                                                <th class="text-center text-nowrap p-3">No.SPK</th>
                                                 <th class="text-center text-nowrap p-3">Nama Produk</th>
                                                 <th class="text-center text-nowrap p-3">Satuan</th>
                                                 <th class="text-center text-nowrap p-3">Merk</th>
@@ -525,7 +552,6 @@
                                             ?>
                                             <tr>
                                                 <td class="text-center text-nowrap"><?php echo $no ?></td>
-                                                <td class="text-center text-nowrap"><?php echo $data_tmp['no_spk'] ?></td>
                                                 <td class="text-nowrap"><?php echo $data_tmp['nama_produk'] ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $satuan ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $data_tmp['merk'] ?></td>

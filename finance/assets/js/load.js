@@ -1,11 +1,7 @@
-$(document).ready(function () {
-  $(".loader")
-    .delay(800)
-    .fadeOut(function () {
-      document.documentElement.style.overflow = "auto";
-    });
+$(document).ready(function(){
+    $('.loader').delay(200).fadeOut();
 });
 
-$(document).ready(function () {
-  $(".loader-br").fadeOut(800);
+$(document).ready(function(){
+    $('.loader-br').fadeOut(100);
 });

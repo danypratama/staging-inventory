@@ -2,7 +2,7 @@
 $page  = 'transaksi';
 $page2 = 'spk';
 include "akses.php";
-include "function/class-spk.php";
+include "../function/class-spk.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,7 +76,6 @@ include "function/class-spk.php";
                             bum.tgl_tempo,
                             bum.ongkir,
                             bum.note_inv,
-                            bum.total_inv,
                             sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
                             FROM inv_bum AS bum
@@ -90,7 +89,6 @@ include "function/class-spk.php";
                     $data = mysqli_fetch_array($query);
                     $sp_disc = $data['sp_disc'];
                     $ongkir = $data['ongkir'];
-                    $total_inv = $data['total_inv'];
                 ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
@@ -410,11 +408,6 @@ include "function/class-spk.php";
                             </button>
                             <!-- End Button Modal Bukti Terima -->
                             
-                            <!-- Trx Selesai -->
-                            <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#trxSelesai">
-                                <i class="bi bi-check2-circle"></i> Ubah Status
-                            </button>
-                            <!-- End Trx Selesai -->  
 
                             <?php
                             $id_inv_bum = base64_decode($_GET['id']);
@@ -480,7 +473,6 @@ include "function/class-spk.php";
                                     $sql_trx = "SELECT 
                                                     bum.id_inv_bum, 
                                                     bum.kategori_inv,
-                                                    bum.total_inv,
                                                     
                                                     spk.id_inv, 
                                                     spk.no_spk,
@@ -513,6 +505,7 @@ include "function/class-spk.php";
                                             $satuan = $data_trx['satuan'];
                                             $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
                                             $disc = $data_trx['disc'];
+                                            $satuan_produk = '';
                                             $id_produk_substr = substr($id_produk, 0, 2);
                                             if ($id_produk_substr == 'BR') {
                                                 $satuan_produk = $satuan;
@@ -522,7 +515,7 @@ include "function/class-spk.php";
                                 ?>
                                     <tr>
                                         <td class="text-center"><?php echo $no; ?></td>
-                                        <td class="text-center"><?php echo $data_trx['no_spk']; ?></td>
+                                        <td class="text-center text-nowrap"><?php echo $data_trx['no_spk']; ?></td>
                                         <td class="text-nowrap"><?php echo $data_trx['nama_produk_spk'] ?></td>
                                         <td class="text-center"><?php echo $satuan_produk ?></td>
                                         <td class="text-center"><?php echo $nama_merk ?></td>
@@ -566,11 +559,11 @@ include "function/class-spk.php";
                             $query_bukti = mysqli_query($connect, $sql_bukti);
                             $data_bukti = mysqli_fetch_array($query_bukti);
                             $gambar1 = $data_bukti['bukti_satu'];
-                            $gambar_bukti1 = "gambar/bukti1/$gambar1";
+                            $gambar_bukti1 = "../gambar/bukti1/$gambar1";
                             $gambar2 = $data_bukti['bukti_dua'];
-                            $gambar_bukti2 = "gambar/bukti2/$gambar2";
+                            $gambar_bukti2 = "../gambar/bukti2/$gambar2";
                             $gambar3 = $data_bukti['bukti_tiga'];
-                            $gambar_bukti3 = "gambar/bukti3/$gambar3";
+                            $gambar_bukti3 = "../gambar/bukti3/$gambar3";
                             $jenis_penerima = $data_bukti['jenis_penerima'];
                             $no_resi = $data_bukti['no_resi'];
                             ?>
@@ -639,160 +632,4 @@ include "function/class-spk.php";
     <?php include "page/script.php" ?>
 
 </body>
-
 </html>
-
-<!-- Modal Trx Selesai -->
-<div class="modal fade" id="trxSelesai" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-            </div>
-            <div class="modal-body">
-                <h5>Apakah anda yakin ingin menyelesaikan pesanan ini?</h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
-                <a href="proses/proses-trx-selesai.php?id_inv_bum=<?php echo $id_inv ?>&&total_inv=<?php echo $total_inv ?> " class="btn btn-primary mb-2">
-                    <i class="bi bi-check2-circle"></i> Transaksi Selesai 
-                </a>
-                <a href="proses/proses-trx-komplain.php?id_inv_bum=<?php echo $id_inv ?>" class="btn btn-warning mb-2">
-                    <i class="bi bi-info-circle"></i> Komplain
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Modal Trx Selesai -->
-
-
-<!-- Generat UUID -->
-<?php
-function generate_uuid()
-{
-    return sprintf(
-        '%04x%04x%04x',
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0x0fff) | 0x4000,
-        mt_rand(0, 0x3fff) | 0x8000,
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff)
-    );
-}
-?>
-<!-- End Generate UUID -->
-
-<script>
-    function refreshPage() {
-        location.reload();
-    }
-</script>
-
-<script>
-    $(document).ready(function() {
-        $('.btn-detail').click(function() {
-            var idSpk = $(this).data('spk');
-            $('#spk').text(idSpk);
-
-            $('button.btn-pilih').attr('data-spk', idSpk);
-
-            $('#modalBarang').modal('show');
-        });
-
-        $(document).on('click', '.btn-pilih', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            var id = $(this).data('id');
-            var spk = $(this).attr('data-spk');
-
-            saveData(id, spk);
-        });
-
-        function saveData(id, spk) {
-            $.ajax({
-                url: 'simpan-data-spk.php',
-                type: 'POST',
-                data: {
-                    id: id,
-                    spk: spk
-                },
-                success: function(response) {
-                    console.log('Data berhasil disimpan.');
-                    $('button[data-id="' + id + '"]').prop('disabled', true);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Terjadi kesalahan saat menyimpan data:', error);
-                }
-            });
-        }
-    });
-</script>
-
-<!-- Fungsi menonaktifkan kerboard enter -->
-<script>
-    document.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            document.getElementById("simpan-data").click();
-        }
-    });
-</script>
-
-<!-- Number format untuk harga -->
-
-<script>
-    // Mendapatkan referensi elemen input
-    var hargaProdukInputs = document.querySelectorAll('.harga_produk');
-
-    // Menambahkan event listener untuk memformat angka saat nilai berubah
-    hargaProdukInputs.forEach(function(input) {
-        input.addEventListener('input', function() {
-            formatNumber(input);
-        });
-    });
-
-    // Fungsi untuk memformat angka dengan pemisah ribuan
-    function formatNumber(input) {
-        var hargaProdukValue = input.value.replace(/[^0-9.-]+/g, '');
-
-        if (hargaProdukValue !== '') {
-            var formattedNumber = numberFormat(hargaProdukValue);
-            input.value = formattedNumber;
-        }
-    }
-
-    // Fungsi untuk memformat angka dengan pemisah ribuan
-    function numberFormat(number) {
-        return new Intl.NumberFormat('en-US').format(number);
-    }
-</script>
-<!-- Edit Harga -->
-<script>
-    $('#edit-diskon').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var idTrx = button.data('id');
-        var harga = button.data('hargadisc');
-        var diskon = button.data('diskon');
-        var qty = button.data('qty');
-
-        $('#id_trxdisc').val(idTrx);
-        $('#harga_produk_disc').val(harga);
-        $('#discc').val(diskon);
-        $('#qtydisc').val(qty);
-    });
-
-    $('#edit').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var idTrx = button.data('id');
-        var harga = button.data('harga');
-        var qty = button.data('qty');
-
-        $('#id_trx').val(idTrx);
-        $('#harga_produk').val(harga);
-        $('#qty').val(qty);
-    });
-</script>
