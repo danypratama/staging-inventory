@@ -75,7 +75,7 @@
     // Lakukan sesuatu dengan $sort_option, misalnya memproses data dari database
     }
 
-    $status = isset($_GET['status']) ? $_GET['status'] : ''; // Periksa apakah status ada dalam query string
+    // $status = isset($_GET['status']) ? $_GET['status'] : ''; // Periksa apakah status ada dalam query string
 
 // $sql = "SELECT
 //             id_inv,
@@ -119,29 +119,63 @@ $sql = "SELECT
             STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
             ik.id_komplain,
             ik.no_komplain,
-            ik.kat_komplain,
-            ik.kondisi_pesanan,
-            ik.status_retur,
-            ik.status_refund,
-            COUNT(CASE WHEN ik.status_komplain = '0' THEN 1 ELSE NULL END) AS total_komplain_aktif,
+            kk.kat_komplain,
+            kk.kondisi_pesanan,
+            kk.status_retur,
+            kk.status_refund,
+            SUM(CASE WHEN ik.status_komplain = '0' THEN 1 ELSE NULL END) AS total_komplain_aktif,
             COUNT(CASE WHEN ik.status_komplain = '1' THEN 1 ELSE NULL END) AS total_komplain_selesai,
             COUNT(ik.status_komplain) AS total_komplain,
-            ik.status_komplain
+            ik.status_komplain,
+            ik.created_date
         FROM inv_komplain AS ik
         LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
         LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
         LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
+        LEFT JOIN komplain_kondisi kk ON ik.id_komplain = kk.id_komplain
         WHERE $sort_option AND ik.tgl_komplain IS NOT NULL
-        GROUP BY id_inv, cs_inv, no_inv, tanggal, no_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, ik.status_komplain";
+        AND (ik.no_komplain, ik.created_date) IN (
+        SELECT no_komplain, MAX(created_date)
+        FROM inv_komplain
+        GROUP BY no_komplain
+        )
+        GROUP BY no_komplain
+        ORDER BY ik.created_date DESC";
+    
+$komplain_aktif = "SELECT
+                        COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
+                        COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
+                        COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
+                        STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
+                        ik.status_komplain
+                    FROM inv_komplain AS ik
+                    LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
+                    LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
+                    LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
+                    WHERE $sort_option AND ik.tgl_komplain IS NOT NULL AND ik.status_komplain = 0
+                    GROUP BY no_komplain";
 
-// Hanya tambahkan kondisi status jika $status tidak kosong
-if (!empty($status)) {
-    $sql .= " AND ik.status_komplain = '$status'";
-}
+$komplain_selesai = "SELECT
+                        COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
+                        COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
+                        COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
+                        STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
+                        ik.status_komplain
+                    FROM inv_komplain AS ik
+                    LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
+                    LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
+                    LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
+                    WHERE $sort_option AND ik.tgl_komplain IS NOT NULL AND ik.status_komplain = 1
+                    GROUP BY no_komplain";
 
 // $sql .= " GROUP BY id_inv, cs_inv, no_inv, tanggal, no_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, status_komplain
 //         ) AS subquery";
 
 $query = mysqli_query($connect, $sql);
 $query2 = mysqli_query($connect, $sql);
+$total_komplain = mysqli_num_rows($query);
+$query_komplain_aktif = mysqli_query($connect, $komplain_aktif);
+$total_aktif = mysqli_num_rows($query_komplain_aktif);
+$query_komplain_selesai = mysqli_query($connect, $komplain_selesai);
+$total_selesai = mysqli_num_rows($query_komplain_selesai);
 ?>

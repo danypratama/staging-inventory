@@ -55,6 +55,24 @@ include "akses.php";
         </div><!-- End Page Title -->
 
         <section>
+            <!-- SWEET ALERT -->
+            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
+                                                        echo $_SESSION['info'];
+                                                    }
+                                                    unset($_SESSION['info']); ?>"></div>
+            <!-- END SWEET ALERT -->
+            <div class="card">
+                <div class="card-body mt-3">
+                    <div class="row mt-4 text-center">
+                        <div class="mb-4" style="width: 180px;">
+                            <a href="form-create-spk-reg.php" class="btn btn-primary btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK Reguler</a>
+                        </div>
+                        <div class="mb-4" style="width: 160px;">
+                            <a href="form-create-spk-ecat.php" class="btn btn-success btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK E-cat</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="mt-4">
                     <div class="ps-4">
@@ -273,10 +291,17 @@ include "akses.php";
                         <li class="nav-item flex-fill" role="presentation">
                             <?php
                                 $sql_cancel = " SELECT 
-                                                    sr.menu_cancel
+                                                    sr.id_spk_reg,
+                                                    sr.no_spk,
+                                                    sr.tgl_spk,
+                                                    sr.no_po,
+                                                    sr.menu_cancel,
+                                                    sr.note,
+                                                    cs.nama_cs, cs.alamat
                                                 FROM spk_reg AS sr
+                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                 WHERE status_spk = 'Cancel Order'";
-                                $query_cancel = mysqli_query($connect, $sql_cancel);
+                                 $query_cancel = mysqli_query($connect, $sql_cancel);
                                 $total_query_cancel = mysqli_num_rows($query_cancel);
                             ?>
                             <a class="nav-link" href="transaksi-cancel.php">
@@ -314,7 +339,7 @@ include "akses.php";
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. SPK</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 200px">Nama Customer</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">Note</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 250px">Note SPK</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Aksi</th>
                                             </tr>
                                         </thead>
@@ -367,8 +392,33 @@ include "akses.php";
                                                         ?>
                                                     </td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                        <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm"  title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order"><i class="bi bi-x-circle"></i></a>
                                                     </td>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4><strong>Silahkan Isi Alasan</strong></h4>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form action="proses/proses-produk-spk-reg.php" method="POST">
+                                                                        <div class="mb-3">
+                                                                            <input type="hidden" name="id_spk" value="<?php echo $data['id_spk_reg'] ?>">
+                                                                            <Label>Alasan Cancel</Label>
+                                                                            <input type="text" class="form-control" name="alasan" required>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="submit" class="btn btn-primary" name="cancel-dalam-proses">Ya, Cancel Transaksi</button>
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </tr>
                                                 <?php $no++ ?>
                                             <?php } ?>

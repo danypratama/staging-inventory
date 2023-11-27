@@ -2,7 +2,7 @@
 $page  = 'transaksi';
 $page2 = 'spk';
 include "akses.php";
-include "../function/class-spk.php";
+include "function/class-spk.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,6 +65,7 @@ include "../function/class-spk.php";
                     WHERE sr.id_spk_reg = '$id_spk'";
                 $query = mysqli_query($connect, $sql);
                 $data = mysqli_fetch_array($query);
+                $petugas = $data['petugas'];
                 ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
@@ -122,7 +123,7 @@ include "../function/class-spk.php";
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="card-body p-3 border" style="min-height: 194px;">
+                        <div class="card-body p-3 border">
                             <div class="row">
                                 <div class="col-5">
                                     <p style="float: left;">Sales</p>
@@ -151,17 +152,26 @@ include "../function/class-spk.php";
                                 </div>
                             </div>
                             <?php
-                               if ($data['note'] != '') {
+                                $note = $data['note'];
+
+                                $items = explode("\n", trim($note));
+                                if (!empty($note)) {
                                     echo '
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <p style="float: left;">Note</p>
-                                            <p style="float: right;">:</p>
-                                        </div>
-                                        <div class="col-7">
-                                            ' . $data['note'] . '
-                                        </div>
-                                    </div>';
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <p style="float: left;">Note</p>
+                                                <p style="float: right;">:</p>
+                                            </div>
+                                            <div class="col-7">
+                                    ';
+
+                                    foreach ($items as $notes) {
+                                        echo trim($notes) . '<br>';
+                                    }
+
+                                    echo '
+                                            </div>
+                                        </div>';
                                 }
                             ?>
                         </div>
@@ -172,83 +182,88 @@ include "../function/class-spk.php";
             <div class="card shadow">
                 <div class="card-body p-3">
                     <div class="table-responsive">
-                        <div class="text-start mb-3">
-                            <a href="spk-siap-kirim.php?sort=baru" class="btn btn-warning btn-detail">
-                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                            </a>
-                        </div>
-                        <table class="table table-striped table-bordered" id="table2">
-                            <thead>
-                                <tr class="text-white" style="background-color: #051683;">
-                                    <th class="text-center p-3 text-nowrap" style="width:20px">No</th>
-                                    <th class="text-center p-3 text-nowrap" style="width:300px">Nama Produk</th>
-                                    <th class="text-center p-3 text-nowrap" style="width:100px">Satuan</th>
-                                    <th class="text-center p-3 text-nowrap" style="width:100px">Merk</th>
-                                    <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
-                                    <th class="text-center p-3 text-nowrap" style="width:80px">Qty Order</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <form action="proses/proses-produk-spk-reg.php" method="POST">
+                            <div class="text-start mb-3">
+                                <a href="spk-siap-kirim.php?sort=baru" class="btn btn-warning btn-detail">
+                                    <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                </a>
                                 <?php
-                                include "koneksi.php";
-                                $year = date('y');
-                                $day = date('d');
-                                $month = date('m');
-                                $id_spk_decode = base64_decode($_GET['id']);
-                                $no = 1;
-                                $sql_trx = "SELECT 
-                                                sr.id_spk_reg,
-                                                sr.id_inv,
-                                                trx.id_transaksi,
-                                                trx.id_produk,
-                                                trx.qty,
-                                                spr.stock, 
-                                                tpr.nama_produk, 
-                                                tpr.satuan,
-                                                tpr.harga_produk,
-                                                mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                                tpsm.nama_set_marwa,
-                                                tpsm.harga_set_marwa,
-                                                mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
-                                            FROM  transaksi_produk_reg AS trx
-                                            LEFT JOIN spk_reg sr ON sr.id_spk_reg = trx.id_spk
-                                            LEFT JOIN stock_produk_reguler spr ON trx.id_produk = spr.id_produk_reg
-                                            LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
-                                            LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
-                                            LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
-                                            LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                            WHERE sr.id_spk_reg = '$id_spk_decode'";
-                                $trx_produk_reg = mysqli_query($connect, $sql_trx);
-                                while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
-                                    $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
-                                    $id_produk = $data_trx['id_produk'];
-                                    $satuan = $data_trx['satuan'];
-                                    $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
-                                    $harga = detailSpk::getHarga($data_trx['harga_produk'], $data_trx['harga_set_marwa']);
-                                    $satuan_produk = '';
-                                    $id_produk_substr = substr($id_produk, 0, 2);
-                                    if ($id_produk_substr == 'BR') {
-                                        $satuan_produk = $satuan;
-                                    } else {
-                                        $satuan_produk = 'Set';
-                                    }
+                                $id_spk = base64_decode($_GET['id']);
                                 ?>
-                                    <tr>
-                                        <td class="text-center"><?php echo $no; ?></td>
-                                        <td class="text-nowrap"><?php echo $namaProduk ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $satuan_produk ?></td>
-                                        <td class="text-center"><?php echo $nama_merk ?></td>
-                                        <td class="text-end"><?php echo number_format($harga) ?></td>
-                                        <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
+                            </div>
+                            <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
+                            <table class="table table-striped table-bordered" id="table2">
+                                <thead>
+                                    <tr class="text-white" style="background-color: #051683;">
+                                        <th class="text-center p-3 text-nowrap" style="width:20px">No</th>
+                                        <th class="text-center p-3 text-nowrap" style="width:300px">Nama Produk</th>
+                                        <th class="text-center p-3 text-nowrap" style="width:100px">Satuan</th>
+                                        <th class="text-center p-3 text-nowrap" style="width:100px">Merk</th>
+                                        <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
+                                        <th class="text-center p-3 text-nowrap" style="width:80px">Qty Order</th>
                                     </tr>
-                                    <?php $no++; ?>
-                                <?php } ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    include "koneksi.php";
+                                    $year = date('y');
+                                    $day = date('d');
+                                    $month = date('m');
+                                    $id_spk_decode = base64_decode($_GET['id']);
+                                    $no = 1;
+                                    $sql_trx = "SELECT 
+                                                    sr.id_spk_reg,
+                                                    sr.id_inv,
+                                                    trx.id_transaksi,
+                                                    trx.id_produk,
+                                                    trx.qty,
+                                                    spr.stock, 
+                                                    tpr.nama_produk, 
+                                                    tpr.satuan,
+                                                    tpr.harga_produk,
+                                                    mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
+                                                    tpsm.nama_set_marwa,
+                                                    tpsm.harga_set_marwa,
+                                                    mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                                FROM  transaksi_produk_reg AS trx
+                                                LEFT JOIN spk_reg sr ON sr.id_spk_reg = trx.id_spk
+                                                LEFT JOIN stock_produk_reguler spr ON trx.id_produk = spr.id_produk_reg
+                                                LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
+                                                LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
+                                                LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
+                                                LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+                                                WHERE sr.id_spk_reg = '$id_spk_decode'";
+                                    $trx_produk_reg = mysqli_query($connect, $sql_trx);
+                                    while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                        $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
+                                        $id_produk = $data_trx['id_produk'];
+                                        $satuan = $data_trx['satuan'];
+                                        $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
+                                        $harga = detailSpk::getHarga($data_trx['harga_produk'], $data_trx['harga_set_marwa']);
+                                        $satuan_produk = '';
+                                        $id_produk_substr = substr($id_produk, 0, 2);
+                                        if ($id_produk_substr == 'BR') {
+                                            $satuan_produk = $satuan;
+                                        } else {
+                                            $satuan_produk = 'Set';
+                                        }
+                                    ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo $no; ?></td>
+                                            <td class="text-nowrap"><?php echo $namaProduk ?></td>
+                                            <td class="text-center text-nowrap"><?php echo $satuan_produk ?></td>
+                                            <td class="text-center"><?php echo $nama_merk ?></td>
+                                            <td class="text-end"><?php echo number_format($harga) ?></td>
+                                            <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
+                                        </tr>
+                                        <?php $no++; ?>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                 </div>
             </div>
-
         </section>
     </main><!-- End #main -->
 

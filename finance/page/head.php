@@ -34,7 +34,7 @@
 <!-- Flatpickr Date -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_green.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 
 <!-- DataTables CSS -->
 <!-- <link rel="stylesheet" type="text/css" href="assets/DataTables/datatables.min.css"/> -->

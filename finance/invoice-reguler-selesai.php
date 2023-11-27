@@ -23,6 +23,24 @@ include "akses.php";
                 /* Contoh: Mengatur tinggi elemen select pada tampilan mobile */
                 height: 50px;
             }
+
+            #tablenonppn_wrapper, #tableppn_wrapper, #tablebum_wrapper .col-md-6:eq(0) .btn-group {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            #table7_wrapper, #table8_wrapper, #table9_wrapper .col-md-6:eq(0) .btn-group {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            #tablenonppn_filter, #tableppn_filter, #tablebum_filter {
+                margin-top: 20px;
+            }
+
+            #table7_filter, #table8_filter, #table9_filter {
+                margin-top: 20px;
+            }
         }
 
         .btn.active {
@@ -245,21 +263,33 @@ include "akses.php";
                             $month = date('m');
                             $sql_inv_selesai = "SELECT nonppn.no_inv, STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y') AS tgl_inv, nonppn.status_transaksi
                                                 FROM inv_nonppn AS nonppn
-                                                WHERE status_transaksi = 'Transaksi Selesai'";
+                                                WHERE status_transaksi = 'Transaksi Selesai'
+                                                AND
+                                                MONTH(STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y')) = MONTH(CURRENT_DATE())
+                                                AND 
+                                                YEAR(STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y')) = YEAR(CURRENT_DATE())";
                             $query_inv_selesai = mysqli_query($connect, $sql_inv_selesai);
                             $total_inv_nonppn_selesai = mysqli_num_rows($query_inv_selesai);
                             ?>
                             <?php
                             $sql_inv_ppn_selesai = "SELECT ppn.no_inv, STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y') AS tgl_inv, ppn.status_transaksi
                                                     FROM inv_ppn AS ppn
-                                                    WHERE status_transaksi = 'Transaksi Selesai'";
+                                                    WHERE status_transaksi = 'Transaksi Selesai'
+                                                    AND
+                                                    MONTH(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) = MONTH(CURRENT_DATE())
+                                                    AND 
+                                                    YEAR(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) = YEAR(CURRENT_DATE())";
                             $query_inv_ppn_selesai = mysqli_query($connect, $sql_inv_ppn_selesai);
                             $total_inv_ppn_selesai = mysqli_num_rows($query_inv_ppn_selesai);
                             ?>
                             <?php
                             $sql_inv_bum_selesai = "SELECT bum.no_inv, STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') AS tgl_inv, bum.status_transaksi
                                                     FROM inv_bum AS bum
-                                                    WHERE status_transaksi = 'Transaksi Selesai'";
+                                                    WHERE status_transaksi = 'Transaksi Selesai'
+                                                    AND
+                                                    MONTH(STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y')) = MONTH(CURRENT_DATE())
+                                                    AND 
+                                                    YEAR(STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y')) = YEAR(CURRENT_DATE())";
                             $query_inv_bum_selesai = mysqli_query($connect, $sql_inv_bum_selesai);
                             $total_inv_bum_selesai = mysqli_num_rows($query_inv_bum_selesai);
                             $hasil_selesai = $total_inv_nonppn_selesai + $total_inv_ppn_selesai + $total_inv_bum_selesai;
@@ -275,10 +305,17 @@ include "akses.php";
                         <li class="nav-item flex-fill" role="presentation">
                             <?php
                                 $sql_cancel = " SELECT 
-                                                    sr.menu_cancel
+                                                    sr.id_spk_reg,
+                                                    sr.no_spk,
+                                                    sr.tgl_spk,
+                                                    sr.no_po,
+                                                    sr.menu_cancel,
+                                                    sr.note,
+                                                    cs.nama_cs, cs.alamat
                                                 FROM spk_reg AS sr
+                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                 WHERE status_spk = 'Cancel Order'";
-                                 $query_cancel = mysqli_query($connect, $sql_cancel);
+                                $query_cancel = mysqli_query($connect, $sql_cancel);
                                 $total_query_cancel = mysqli_num_rows($query_cancel);
                             ?>
                             <a class="nav-link" href="transaksi-cancel.php">
@@ -326,14 +363,18 @@ include "akses.php";
                                             </div>                                                                                            
                                             <div class="col-md-4 mb-1 text-center">
                                                 <br>
-                                                <button type="submit" class="btn btn-primary" id="dateRange">Cari Data</button>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="submit" class="btn btn-primary" id="dateRange">Cari Data</button>
+                                                    &nbsp;
+                                                    <a href="invoice-reguler-selesai.php" class="btn btn-danger">Reset</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-                            <div class="table-responsive" id="filteredData">
-                                <table class="table table-bordered table-striped" id="table2">
+                            <div class="table-responsive"  id="filteredData">
+                                <table class="table table-bordered table-striped" id="tablenonppn">
                                     <thead>
                                         <tr class="text-white" style="background-color: navy;">
                                             <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
@@ -342,6 +383,7 @@ include "akses.php";
                                             <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 100px">Total Invoice</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 100px">Status Pembayaran</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                         </tr>
@@ -377,7 +419,7 @@ include "akses.php";
                                                         MONTH(STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y')) = MONTH(CURRENT_DATE())
                                                         AND 
                                                         YEAR(STR_TO_DATE(nonppn.tgl_inv, '%d/%m/%Y')) = YEAR(CURRENT_DATE())
-                                                        GROUP BY no_inv LIMIT 500";
+                                                        GROUP BY no_inv";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                         ?>
@@ -385,17 +427,10 @@ include "akses.php";
                                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                                     <td class="text-nowrap text-center"><?php echo $data['no_inv'] ?></td>
                                                     <td class="text-nowrap text-center"><?php echo date('d/m/Y',strtotime($data['tgl_inv'])) ?></td>
-                                                    <td class="text-nowrap text-center">
-                                                        <?php 
-                                                            if(!empty($data['no_po'])){
-                                                                echo $data['no_po'];
-                                                            }else{
-                                                                echo "-";
-                                                            }
-                                                        ?>
-                                                    </td>
+                                                    <td class="text-nowrap text-center"><?php echo $data['no_po'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                                                     <td class="text-nowrap text-center"><?php echo $data['kategori_inv'] ?></td>
+                                                    <td class="text-nowrap text-end"><?php echo number_format($data['total_inv'])?></td>
                                                     <td class="text-nowrap text-center">
                                                         <?php 
                                                         if($data['status_pembayaran'] == 0){
@@ -409,7 +444,7 @@ include "akses.php";
                                                         <a href="cek-produk-inv-nonppn-selesai.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
                                                     </td>
                                                 </tr>
-                                        <?php $no++; ?>
+                                            <?php $no++; ?>
                                         <?php } ?>
                                     </tbody>
                                 </table>
@@ -428,9 +463,13 @@ include "akses.php";
                                                 <label for="end_date">Tanggal Akhir:</label>
                                                 <input type="text" name="end_date_ppn" id="end_date_ppn" class="form-control text-center" value="<?php echo isset($_GET['end_date_ppn']) ? $_GET['end_date_ppn'] : ''; ?>"  placeholder="dd/mm/yyyy"readonly>
                                             </div>
-                                                <div class="col-md-4 mb-1 text-center">
+                                            <div class="col-md-4 mb-1 text-center">
                                                 <br>
-                                                <button type="submit" class="btn btn-primary" id="dateRangePPN">Cari Data</button>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="submit" class="btn btn-primary" id="dateRangePPN">Cari Data</button>
+                                                    &nbsp;
+                                                    <a href="invoice-reguler-selesai.php" class="btn btn-danger">Reset</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -446,6 +485,7 @@ include "akses.php";
                                             <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 100px">Total Invoice</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 100px">Status Pembayaran</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                         </tr>
@@ -481,7 +521,7 @@ include "akses.php";
                                                         MONTH(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) = MONTH(CURRENT_DATE())
                                                         AND 
                                                         YEAR(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) = YEAR(CURRENT_DATE())
-                                                        GROUP BY no_inv LIMIT 500";
+                                                        GROUP BY no_inv";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                         ?>
@@ -489,17 +529,10 @@ include "akses.php";
                                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                                     <td class="text-nowrap text-center"><?php echo $data['no_inv'] ?></td>
                                                     <td class="text-nowrap text-center"><?php echo date('d/m/Y',strtotime($data['tgl_inv'])) ?></td>
-                                                    <td class="text-nowrap text-center">
-                                                        <?php 
-                                                            if(!empty($data['no_po'])){
-                                                                echo $data['no_po'];
-                                                            }else{
-                                                                echo "-";
-                                                            }
-                                                        ?>
-                                                    </td>
+                                                    <td class="text-nowrap text-center"><?php echo $data['no_po'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                                                     <td class="text-nowrap text-center"><?php echo $data['kategori_inv'] ?></td>
+                                                    <td class="text-nowrap text-end"><?php echo number_format($data['total_inv'])?></td>
                                                     <td class="text-nowrap text-center">
                                                         <?php 
                                                         if($data['status_pembayaran'] == 0){
@@ -513,7 +546,7 @@ include "akses.php";
                                                         <a href="cek-produk-inv-ppn-selesai.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
                                                     </td>
                                                 </tr>
-                                        <?php $no++; ?>
+                                            <?php $no++; ?>
                                         <?php } ?>
                                     </tbody>
                                 </table>
@@ -532,9 +565,13 @@ include "akses.php";
                                                 <label for="end_date">Tanggal Akhir:</label>
                                                 <input type="text" name="end_date_bum" id="end_date_bum" class="form-control text-center" value="<?php echo isset($_GET['end_date_bum']) ? $_GET['end_date_bum'] : ''; ?>" placeholder="dd/mm/yyyy" readonly>
                                             </div>
-                                                <div class="col-md-4 mb-1 text-center">
+                                            <div class="col-md-4 mb-1 text-center">
                                                 <br>
-                                                <button type="submit" class="btn btn-primary" id="dateRangeBUM">Cari Data</button>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="submit" class="btn btn-primary" id="dateRangeBUM">Cari Data</button>
+                                                    &nbsp;
+                                                    <a href="invoice-reguler-selesai.php" class="btn btn-danger">Reset</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -550,6 +587,7 @@ include "akses.php";
                                             <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
+                                            <th class="text-center p-3 text-nowrap" style="width: 100px">Total Invoice</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 100px">Status Pembayaran</th>
                                             <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                         </tr>
@@ -585,7 +623,7 @@ include "akses.php";
                                                         MONTH(STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y')) = MONTH(CURRENT_DATE())
                                                         AND 
                                                         YEAR(STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y')) = YEAR(CURRENT_DATE())
-                                                        GROUP BY no_inv LIMIT 500";
+                                                        GROUP BY no_inv";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                         ?>
@@ -593,17 +631,10 @@ include "akses.php";
                                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                                     <td class="text-nowrap text-center"><?php echo $data['no_inv'] ?></td>
                                                     <td class="text-nowrap text-center"><?php echo date('d/m/Y',strtotime($data['tgl_inv'])) ?></td>
-                                                    <td class="text-nowrap text-center">
-                                                        <?php 
-                                                            if(!empty($data['no_po'])){
-                                                                echo $data['no_po'];
-                                                            }else{
-                                                                echo "-";
-                                                            }
-                                                        ?>
-                                                    </td>
+                                                    <td class="text-nowrap text-center"><?php echo $data['no_po'] ?></td>
                                                     <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                                                     <td class="text-nowrap text-center"><?php echo $data['kategori_inv'] ?></td>
+                                                    <td class="text-nowrap text-end"><?php echo number_format($data['total_inv'])?></td>
                                                     <td class="text-nowrap text-center">
                                                         <?php 
                                                         if($data['status_pembayaran'] == 0){
@@ -617,7 +648,7 @@ include "akses.php";
                                                         <a href="cek-produk-inv-bum-selesai.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
                                                     </td>
                                                 </tr>
-                                        <?php $no++; ?>
+                                            <?php $no++; ?>
                                         <?php } ?>
                                     </tbody>
                                 </table>
@@ -637,10 +668,18 @@ include "akses.php";
                                 xhttp.onreadystatechange = function() {
                                     if (this.readyState == 4 && this.status == 200) {
                                     document.getElementById('filteredData').innerHTML = this.responseText;
-                                    $('#table7').DataTable({
-                                        "lengthChange": false,
-                                        "ordering": false,
-                                        "autoWidth": false
+                                    $(function () {
+                                        $("#table7").DataTable({
+                                            "responsive": true,
+                                            "lengthChange": false,
+                                            "autoWidth": false,
+                                            "buttons": [
+                                                { extend: 'csv', text: 'Export CSV' },
+                                                { extend: 'excel', text: 'Export Excel' },
+                                                { extend: 'pdf', text: 'Export PDF' },
+                                                { extend: 'print', text: 'Export Print' }
+                                            ]
+                                        }).buttons().container().appendTo('#table7_wrapper .col-md-6:eq(0)');
                                     });
 
                                     flatpickr("#start_date", {
@@ -688,10 +727,18 @@ include "akses.php";
                                 xhttp.onreadystatechange = function() {
                                     if (this.readyState == 4 && this.status == 200) {
                                     document.getElementById('filteredDataPPN').innerHTML = this.responseText;
-                                    $('#table8').DataTable({
-                                        "lengthChange": false,
-                                        "ordering": false,
-                                        "autoWidth": false
+                                    $(function () {
+                                        $("#table8").DataTable({
+                                            "responsive": true,
+                                            "lengthChange": false,
+                                            "autoWidth": false,
+                                            "buttons": [
+                                                { extend: 'csv', text: 'Export CSV' },
+                                                { extend: 'excel', text: 'Export Excel' },
+                                                { extend: 'pdf', text: 'Export PDF' },
+                                                { extend: 'print', text: 'Export Print' }
+                                            ]
+                                        }).buttons().container().appendTo('#table8_wrapper .col-md-6:eq(0)');
                                     });
 
                                     flatpickr("#start_date_ppn", {
@@ -739,10 +786,18 @@ include "akses.php";
                                 xhttp.onreadystatechange = function() {
                                     if (this.readyState == 4 && this.status == 200) {
                                     document.getElementById('filteredDataBUM').innerHTML = this.responseText;
-                                    $('#table9').DataTable({
-                                        "lengthChange": false,
-                                        "ordering": false,
-                                        "autoWidth": false
+                                    $(function () {
+                                        $("#table9").DataTable({
+                                            "responsive": true,
+                                            "lengthChange": false,
+                                            "autoWidth": false,
+                                            "buttons": [
+                                                { extend: 'csv', text: 'Export CSV' },
+                                                { extend: 'excel', text: 'Export Excel' },
+                                                { extend: 'pdf', text: 'Export PDF' },
+                                                { extend: 'print', text: 'Export Print' }
+                                            ]
+                                        }).buttons().container().appendTo('#table9_wrapper .col-md-6:eq(0)');
                                     });
 
                                     flatpickr("#start_date_bum", {
@@ -937,18 +992,51 @@ include "akses.php";
 </script>
 
 <script>
-    $(document).ready(function() {
-        var table = $('#tableppn').DataTable({
+    $(function () {
+        $("#tablenonppn").DataTable({
+            "responsive": {
+                details: false // Disable default responsive behavior
+            },
             "lengthChange": false,
-            "ordering": false,
-            "autoWidth": false
-        });
+            "autoWidth": false,
+            "buttons": [
+                { extend: 'csv', text: 'Export CSV' },
+                { extend: 'excel', text: 'Export Excel' },
+                { extend: 'pdf', text: 'Export PDF' },
+                { extend: 'print', text: 'Export Print' }
+            ],
+            "rowReorder": {
+                selector: 'td:nth-child(2)' // Reorder based on the second column (change this to the appropriate column index)
+            }
+        }).buttons().container().appendTo('#tablenonppn_wrapper .col-md-6:eq(0)');
     });
-    $(document).ready(function() {
-        var table = $('#tablebum').DataTable({
+
+
+    $(function () {
+        $("#tableppn").DataTable({
+            "responsive": true,
             "lengthChange": false,
-            "ordering": false,
-            "autoWidth": false
-        });
+            "autoWidth": false,
+            "buttons": [
+                { extend: 'csv', text: 'Export CSV' },
+                { extend: 'excel', text: 'Export Excel' },
+                { extend: 'pdf', text: 'Export PDF' },
+                { extend: 'print', text: 'Export Print' }
+            ]
+        }).buttons().container().appendTo('#tableppn_wrapper .col-md-6:eq(0)');
+    });
+
+    $(function () {
+        $("#tablebum").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": [
+                { extend: 'csv', text: 'Export CSV' },
+                { extend: 'excel', text: 'Export Excel' },
+                { extend: 'pdf', text: 'Export PDF' },
+                { extend: 'print', text: 'Export Print' }
+            ]
+        }).buttons().container().appendTo('#tablebum_wrapper .col-md-6:eq(0)');
     });
 </script>

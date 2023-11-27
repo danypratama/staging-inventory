@@ -27,11 +27,13 @@
 </html>
 
 
+<!-- Isi halaman web Anda -->
+
 <script>
     // Fungsi untuk mengarahkan ke halaman login
     function redirectToLogin() {
         // Arahkan ke halaman logout
-        window.location.href = '../logout.php';
+        window.location.href = 'logout.php';
     }
 
     // Fungsi untuk menampilkan Sweet Alert saat sesi habis
@@ -43,7 +45,7 @@
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'OK',
-            allowOutsideClick: false // Tambahkan opsi allowOutsideClick: false
+            allowOutsideClick: false
         }).then((result) => {
             if (result.isConfirmed) {
                 redirectToLogin();
@@ -69,8 +71,10 @@
         redirectToLogin();
     });
 
-    // Mulai timer dan atur event listener untuk mereset timer saat pengguna berinteraksi dengan halaman web
-    startTimer();
+    // Event listener untuk mereset timer saat pengguna berinteraksi dengan halaman web
     document.addEventListener('mousemove', resetTimer);
     document.addEventListener('keypress', resetTimer);
+
+    // Mulai timer
+    startTimer();
 </script>

@@ -1,7 +1,10 @@
 <script>
     // Data untuk dropdown
     const options = <?php
-    include "..koneksi.php";
+    $server = "localhost"; //nama server
+    $user = "root"; //usernya
+    $password = ""; //password
+    $db = "db_inventory"; //database
 
     // Koneksi dan memilih database di server
     $connect = mysqli_connect($server, $user, $password, $db);
@@ -23,14 +26,15 @@
             opcache_reset();
         }
     }
-    $sql_ekspedisi = mysqli_query($connect, "SELECT cs_inv FROM inv_nonppn");
+    $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
     $option_values = array();
     while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
         $option_values[] = $data_ekspedisi['nama_ekspedisi'];
     }
     echo json_encode($option_values); 
     ?> ;
-  const dropdownInput = document.getElementById('dropdown-input');
+
+const dropdownInput = document.getElementById('dropdown-input');
   const dropdownList = document.getElementById('dropdown-list');
   const clearSearch = document.getElementById('clear-search');
 
