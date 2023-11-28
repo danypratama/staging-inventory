@@ -13,6 +13,7 @@
         $status_kirim = $_POST['status_kirim'];
         $id_komplain = $_POST['id_komplain'];
         $id_komplain_encode = base64_encode($id_komplain);
+        $id_inv = $_POST['id_inv'];
         $no_inv = $_POST['no_inv'];
         $revisi_invoice = reviseInvoice($no_inv);
         $tgl = $_POST['tgl'];
@@ -30,7 +31,7 @@
                     try{
                         $simapn_status_kirim = mysqli_query($connect,"INSERT INTO revisi_status_kirim (id_status_kirim_revisi, id_komplain, jenis_pengiriman, dikirim_driver, tgl_kirim) VALUES ('$id_status_kirim_revisi', '$id_komplain', '$jenis_pengiriman', '$pengirim', '$tgl')");
 
-                        $simpan_inv_revisi = mysqli_query($connect,"INSERT INTO inv_revisi (id_inv_revisi, id_komplain, no_inv_revisi, tgl_inv_revisi, pelanggan_revisi, alamat_revisi, total_inv, status_pengiriman, status_trx_komplain, status_trx_selesai) VALUES ('$id_inv_rev', '$id_komplain', '$revisi_invoice', '$tgl', '$cs_inv', '$alamat', '$total_inv', '0', '0', '0')");
+                        $simpan_inv_revisi = mysqli_query($connect,"INSERT INTO inv_revisi (id_inv_revisi, id_inv, no_inv_revisi, tgl_inv_revisi, pelanggan_revisi, alamat_revisi, total_inv, status_pengiriman, status_trx_komplain, status_trx_selesai) VALUES ('$id_inv_rev', '$id_inv', '$revisi_invoice', '$tgl', '$cs_inv', '$alamat', '$total_inv', '0', '0', '0')");
 
 
                         if (!$simapn_status_kirim && !$simpan_inv_revisi) {
