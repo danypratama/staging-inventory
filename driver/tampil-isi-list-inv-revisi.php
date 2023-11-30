@@ -68,6 +68,7 @@ include "../function/class-spk.php";
                 <?php
                     include "koneksi.php";
                     $id_inv = base64_decode($_GET['id']);
+                    $id_komplain = base64_decode($_GET['id_komplain']);
                     $sql = "SELECT
                                 COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                                 COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
@@ -138,7 +139,11 @@ include "../function/class-spk.php";
                                     <p style="float: right;">:</p>
                                 </div>
                                 <div class="col-7">
-                                    <?php echo $data['no_inv'] ?>
+                                    <?php  
+                                        $sql_inv_revisi = mysqli_query($connect, "SELECT id_inv, max(no_inv_revisi) AS no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv'");
+                                        $data_inv_revisi = mysqli_fetch_array($sql_inv_revisi);
+                                    ?>
+                                    <?php echo $data_inv_revisi['no_inv_revisi'] ?>
                                 </div>
                             </div>
                             <?php
@@ -278,7 +283,7 @@ include "../function/class-spk.php";
                             ?>
 
                             <?php  
-                                $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
+                                $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, penanggung_jawab FROM revisi_status_kirim WHERE id_komplain = '$id_komplain'");
                                 $data_status_kirim = mysqli_fetch_array($status_kirim);
                                 $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
                                 $ekspedisi = $data_status_kirim['dikirim_ekspedisi'];
@@ -286,20 +291,20 @@ include "../function/class-spk.php";
 
 
                                 $ekspedisi_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_ekspedisi, sk.jenis_penerima, ex.nama_ekspedisi
-                                                                            FROM status_kirim AS sk
+                                                                            FROM revisi_status_kirim AS sk
                                                                             JOIN ekspedisi ex ON (sk.dikirim_ekspedisi = ex.id_ekspedisi)
                                                                             WHERE sk.dikirim_ekspedisi = '$ekspedisi'");
                                 $data_ekspedisi_kirim = mysqli_fetch_array($ekspedisi_kirim);
                                 
                                 $driver_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_driver, us.nama_user 
-                                                                            FROM status_kirim AS sk
+                                                                            FROM revisi_status_kirim AS sk
                                                                             JOIN user us ON (sk.dikirim_driver = us.id_user)
                                                                             WHERE sk.dikirim_driver = '$driver'");
                                 $data_driver_kirim = mysqli_fetch_array($driver_kirim);
 
-                                $penerima =  mysqli_query($connect,"SELECT id_inv, nama_penerima 
-                                                                FROM inv_penerima
-                                                                WHERE id_inv = '$id_inv'");
+                                $penerima =  mysqli_query($connect,"SELECT id_komplain, nama_penerima, created_date 
+                                                                FROM inv_penerima_revisi
+                                                                WHERE id_komplain = '$id_komplain' ORDER BY created_date DESC");
                                 $data_penerima = mysqli_fetch_array($penerima);
                             ?>
 
@@ -573,6 +578,12 @@ include "../function/class-spk.php";
             </div>
             <div class="modal-body">
                 <div class="card-body">
+                    <?php 
+                        $id_inv = $data_cek['id_inv'];  
+                        $inv_revisi = mysqli_query($connect, "SELECT id_inv, max(no_inv_revisi) AS no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv'");
+                        $data_inv_revisi = mysqli_fetch_array($inv_revisi);
+                        $no_inv_revisi = $data_inv_revisi['no_inv_revisi'];
+                    ?>
                     <form action="proses/proses-invoice-revisi.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_komplain" value="<?php echo $id_komplain; ?>">
                         <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv']; ?>">
@@ -580,8 +591,8 @@ include "../function/class-spk.php";
                         <input type="hidden" name="id_spk" value="<?php echo $data_cek['id_spk']; ?>">
                         <input type="hidden" name="no_komplain" value="<?php echo $data_cek['no_komplain']; ?>">
                         <div class="mb-3">  
-                            <label><b>Nama Penerima</b></label>
-                            <input type="text" class="form-control" value="<?php echo $data_cek['no_inv']; ?>" readonly>
+                            <label><b>No. Invoice</b></label>
+                            <input type="text" class="form-control" value="<?php echo $no_inv_revisi; ?>" readonly>
                         </div>
                         <div class="mb-3">
                             <label id="labelJenisPenerima"><b>Diterima Oleh</b></label>
@@ -734,21 +745,21 @@ include "../function/class-spk.php";
                         </div> 
                         <div class="mb-3">
                             <label id="labelBukti1"><b>Bukti Terima 1</b></label>
-                            <input type="file" name="fileku1" id="fileku1" accept="image/*"
+                            <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png"
                                 onchange="compressAndPreviewImage(event)" required>
                         </div>
                         <div class="mb-3" id="imagePreview" ></div>
 
                         <div class="mb-3">
                             <label id="labelBukti2"><b>Bukti Terima 2</b></label>
-                            <input type="file" name="fileku2" id="fileku2" accept="image/*"
+                            <input type="file" name="fileku2" id="fileku2" accept=".jpg, .jpeg, .png"
                                 onchange="compressAndPreviewImage2(event)">
                         </div>
                         <div class="mb-3" id="imagePreview2"></div>
 
                         <div class="mb-3">
                             <label id="labelBukti3" for="fileku"><b>Bukti Terima 3</b></label>
-                            <input type="file" name="fileku3" id="fileku3" accept="image/*"
+                            <input type="file" name="fileku3" id="fileku3" accept=".jpg, .jpeg, .png"
                                 onchange="compressAndPreviewImage3(event)">
                         </div>
                         <div class="mb-3" id="imagePreview3"></div> 
@@ -796,24 +807,32 @@ include "../function/class-spk.php";
                 <div class="card-body">
                 <?php
                 include "koneksi.php";
-                $sql_bukti = "SELECT ibt.*, ip.id_inv, ip.nama_penerima, ip.tgl_terima, sk.jenis_penerima, sk.dikirim_ekspedisi, sk.no_resi, ex.nama_ekspedisi
+                $sql_bukti = " SELECT 
+                                    ibt.id_komplain, ibt.bukti_satu, ibt.bukti_dua, ibt.bukti_tiga, ibt.created_date, ip.id_komplain, ip.nama_penerima, ip.tgl_terima, ip.created_date, sk.jenis_penerima, sk.dikirim_ekspedisi, sk.no_resi, ex.nama_ekspedisi
                                 FROM inv_bukti_terima_revisi AS ibt
-                                LEFT JOIN inv_penerima ip ON (ibt.id_inv = ip.id_inv)
-                                LEFT JOIN status_kirim sk ON (ibt.id_inv = sk.id_inv)
+                                LEFT JOIN inv_penerima_revisi ip ON (ibt.id_komplain = ip.id_komplain)
+                                LEFT JOIN revisi_status_kirim sk ON (ibt.id_komplain = sk.id_komplain)
                                 LEFT JOIN ekspedisi ex ON (ex.id_ekspedisi = sk.dikirim_ekspedisi) 
-                                WHERE ibt.id_inv = '$id_inv'";
+                                WHERE ibt.id_komplain = '$id_komplain' ORDER BY ip.created_date AND ibt.created_date DESC LIMIT 1";
                 $query_bukti = mysqli_query($connect, $sql_bukti);
                 $data_bukti = mysqli_fetch_array($query_bukti);
                 $gambar1 = $data_bukti['bukti_satu'];
-                $gambar_bukti1 = "gambar-revisi/bukti1/$gambar1";
+                $gambar_bukti1 = "../gambar-revisi/bukti1/$gambar1";
                 $gambar2 = $data_bukti['bukti_dua'];
-                $gambar_bukti2 = "gambar-revisi/bukti2/$gambar2";
+                $gambar_bukti2 = "../gambar-revisi/bukti2/$gambar2";
                 $gambar3 = $data_bukti['bukti_tiga'];
-                $gambar_bukti3 = "gambar-revisi/bukti3/$gambar3";
+                $gambar_bukti3 = "../gambar-revisi/bukti3/$gambar3";
+                $jenis_penerima = $data_bukti['jenis_penerima'];
+                $no_resi = $data_bukti['no_resi'];
                 ?>
                 <div class="mb-3">
-                    <h6>Penerima : <?php echo $data_bukti['jenis_penerima'] ?> (<?php echo $data_bukti['nama_ekspedisi'] ?>)</h6>
-                    <h6>No. Resi : <?php echo $data_bukti['no_resi'] ?></h6>
+                    <h6>Nama Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
+                    <?php if ($jenis_penerima == 'Ekspedisi') {
+                        echo'
+                            <h6>No. Resi :' . $no_resi . '</h6> 
+                        ';
+                    }
+                    ?>
                     <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['created_date']))?></h6>
                 </div>
                 <div id="carouselExample" class="carousel slide">

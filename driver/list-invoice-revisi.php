@@ -104,7 +104,9 @@ include "function/class-list-inv.php";
                                     include "koneksi.php";
                                     $no = 1;
                                     $sql = "SELECT 
+                                                max(ir.no_inv_revisi) AS no_inv_rev,
                                                 ik.id_inv,
+                                                ik.id_komplain,
                                                 sk.dikirim_driver,
                                                 sk.jenis_pengiriman,
                                                 sk.jenis_penerima,
@@ -133,6 +135,7 @@ include "function/class-list-inv.php";
                                                 cs_spk_bum.alamat AS alamat_bum
                                             FROM revisi_status_kirim AS sk
                                             LEFT JOIN inv_komplain ik ON (ik.id_komplain = sk.id_komplain)
+                                            LEFT JOIN inv_revisi ir ON (ir.id_inv = ik.id_inv)
                                             LEFT JOIN inv_nonppn nonppn ON (ik.id_inv = nonppn.id_inv_nonppn)
                                             LEFT JOIN inv_ppn ppn ON (ik.id_inv = ppn.id_inv_ppn)
                                             LEFT JOIN inv_bum bum ON (ik.id_inv = bum.id_inv_bum)
@@ -152,10 +155,12 @@ include "function/class-list-inv.php";
                                         $alamat = listInvoice::getAlamat($data['alamat_nonppn'], $data['alamat_ppn'], $data['alamat_bum']);
                                         $jenis_pengiriman = $data['jenis_pengiriman'];
                                         $jenis_penerima = $data['jenis_penerima'];
+                                        $no_inv_revisi = $data['no_inv_rev'];
+                                        $id_komplain = base64_encode($data['id_komplain']);
                                     ?>
                                         <tr>
                                             <td class="text-center text-nowrap"><?php echo $no ?></td>
-                                            <td class="text-nowrap text-center"><?php echo $no_inv ?></td>
+                                            <td class="text-nowrap text-center"><?php echo $no_inv_revisi ?></td>
                                             <td class="text-nowrap text-center"><?php echo $tgl_pesanan ?></td>
                                             <td class="text-nowrap"><?php echo $cs_inv ?></td>
                                             <td class="text-nowrap-mobille wrap-text"><?php echo $alamat ?></td>
@@ -163,7 +168,7 @@ include "function/class-list-inv.php";
                                                 <?php
                                                     if($jenis_pengiriman = 'Driver' && $jenis_penerima == ''){
                                                         ?>
-                                                            <a href="tampil-isi-list-inv-revisi.php?id=<?php echo base64_encode($data['id_inv'])?>" class="btn btn-primary btn-sm"><i class="bi bi-arrow-repeat"></i> Perlu Diproses</a>
+                                                            <a href="tampil-isi-list-inv-revisi.php?id=<?php echo base64_encode($data['id_inv'])?>&&id_komplain=<?php echo $id_komplain ?>" class="btn btn-primary btn-sm"><i class="bi bi-arrow-repeat"></i> Perlu Diproses</a>
                                                         <?php
                                                     } else {
                                                        

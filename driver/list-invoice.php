@@ -103,7 +103,7 @@ include "function/class-list-inv.php";
                                     date_default_timezone_set('Asia/Jakarta');
                                     include "koneksi.php";
                                     $no = 1;
-                                    $sql = "SELECT 
+                                    $sql = "SELECT
                                                 sk.id_inv,
                                                 sk.jenis_inv,
                                                 sk.dikirim_driver,
@@ -144,8 +144,9 @@ include "function/class-list-inv.php";
                                             LEFT JOIN tb_customer cs_spk_nonppn ON (spk_nonppn.id_customer = cs_spk_nonppn.id_cs)
                                             LEFT JOIN tb_customer cs_spk_ppn ON (spk_ppn.id_customer = cs_spk_ppn.id_cs)
                                             LEFT JOIN tb_customer cs_spk_bum ON (spk_bum.id_customer = cs_spk_bum.id_cs)
-                                            WHERE sk.dikirim_driver = '$id_user'
-                                            AND nonppn.status_transaksi = 'Dikirim' OR ppn.status_transaksi = 'Dikirim' OR bum.status_transaksi = 'Dikirim'
+                                            WHERE
+                                                sk.dikirim_driver = '$id_user'
+                                                AND (nonppn.status_transaksi = 'Dikirim' OR ppn.status_transaksi = 'Dikirim' OR bum.status_transaksi = 'Dikirim')
                                             GROUP BY no_inv_nonppn, no_inv_ppn, no_inv_bum";
                                     $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
                                     while ($data = mysqli_fetch_array($query)) {

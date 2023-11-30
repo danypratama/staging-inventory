@@ -72,6 +72,45 @@
     $query_driver = mysqli_query($connect, $sql_driver);
     $data_driver = mysqli_fetch_array($query_driver);
 
+
+    $sql_driver_rev = " SELECT DISTINCT 
+                            sk.id_komplain,
+                            sk.jenis_pengiriman,
+                            sk.jenis_penerima,
+                            sk.no_resi,
+                            sk.dikirim_oleh,
+                            sk.penanggung_jawab,
+                            user.nama_user AS nama_driver,
+                            ekspedisi.nama_ekspedisi,
+                            penerima.nama_penerima AS nama_penerima,
+                            COALESCE(MAX(penerima.created_date), 'Tidak Ada Data') AS created_date
+                        FROM 
+                            revisi_status_kirim AS sk
+                        LEFT JOIN 
+                            user user ON sk.dikirim_driver = user.id_user
+                        LEFT JOIN 
+                            ekspedisi ekspedisi ON sk.dikirim_ekspedisi = ekspedisi.id_ekspedisi
+                        LEFT JOIN 
+                            inv_penerima_revisi penerima ON sk.id_komplain = penerima.id_komplain
+                        WHERE 
+                            sk.id_komplain = 'KMPLN23114ee18b029fd730'
+                        GROUP BY
+                            sk.id_komplain,
+                            sk.jenis_pengiriman,
+                            sk.jenis_penerima,
+                            sk.no_resi,
+                            sk.dikirim_oleh,
+                            sk.penanggung_jawab,
+                            user.nama_user,
+                            ekspedisi.nama_ekspedisi,
+                            penerima.nama_penerima
+                        ORDER BY 
+                            created_date DESC
+                        LIMIT 1";
+    $query_driver_rev = mysqli_query($connect, $sql_driver_rev);
+    $data_driver_rev = mysqli_fetch_array($query_driver_rev);
+    $total_driver_rev = mysqli_num_rows($query_driver_rev);
+
     // Query untuk total inv
     $sql_total = " SELECT DISTINCT
                         ik.id_komplain,

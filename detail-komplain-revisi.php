@@ -72,11 +72,11 @@
 
         <main id="main" class="main">
             <!-- Loading -->
-            <!-- <div class="loader loader">
+            <div class="loader loader">
                 <div class="loading">
                     <img src="img/loading.gif" width="200px" height="auto">
                 </div>
-            </div> -->
+            </div>
             <!-- ENd Loading -->
             <section>
                 <!-- SWEET ALERT -->
@@ -90,6 +90,7 @@
                     include "query/detail-komplain.php";
                     $id_inv = $data_kondisi['id_inv'];
                     $no_inv = $data_kondisi['no_inv'];
+                    $alamat = $data_detail['alamat'];
                     include "query/produk-komplain-tmp.php";
 
                     $id_inv_substr = $id_inv;
@@ -108,13 +109,13 @@
                     // query untuk cek no invoice
                     $cek_no_inv = mysqli_query($connect,"   SELECT 
                                                                 COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
-                                                                rev.no_inv_revisi
+                                                                max(rev.no_inv_revisi) AS no_inv_revisi
                                                             FROM inv_revisi AS rev
                                                             LEFT JOIN inv_komplain ik ON rev.id_inv = ik.id_inv
                                                             LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
                                                             LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
                                                             LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum 
-                                                            WHERE nonppn.id_inv_nonppn = '$id_inv' OR ppn.id_inv_ppn = '$id_inv' OR bum.id_inv_bum = '$id_inv'    
+                                                            WHERE '$id_inv' IN (nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) GROUP BY id_inv
                                               ");
                     $total_row_rev = mysqli_num_rows($cek_no_inv);
                     $data_inv_rev = mysqli_fetch_array($cek_no_inv);
@@ -190,7 +191,7 @@
                                         </tr>
                                         <tr>
                                             <td class="col-md-6 text-nowrap">No. Invoice</td>
-                                            <td class="text-nowrap">: <?php echo $data_detail['no_inv'] ?></td>
+                                            <td class="text-nowrap">: <?php echo $no_inv_fix ?></td>
                                         </tr>
                                         <tr>
                                             <td class="col-md-6 text-nowrap">Tgl.Invoice</td>
@@ -228,78 +229,85 @@
                                             <td class="col-md-6 text-nowrap">Alamat</td>
                                             <td class="text-nowrap">: <?php echo $data_detail['alamat'] ?></td>
                                         </tr>
+
                                         <tr>
                                             <td class="col-md-6 text-nowrap">Ongkos Kirim</td>
                                             <td class="text-nowrap">: <?php echo number_format($data_detail['ongkir']) ?></td>
                                         </tr>
-                                        <tr>
-                                            <td class="col-md-6 text-nowrap">Jenis Pengiriman</td>
-                                            <td class="text-nowrap">
-                                                :   <?php  
-                                                        if($data_driver['jenis_pengiriman'] == 'Driver'){
-                                                            ?>
-                                                                <?php echo $data_driver['jenis_pengiriman']?> (<?php echo $data_driver['nama_driver'] ?>)
-                                                            <?php
-                                                        } else {
-                                                            ?>
-                                                                <?php echo $data_driver['jenis_pengiriman']?> (<?php echo $data_driver['nama_ekspedisi'] ?>)
-                                                            <?php
-                                                        }
-                                                
-                                                    ?>
-
-                                            </td>
-                                        </tr>
                                         <?php  
-                                            if(!empty($data_driver['jenis_penerima']) && $data_driver['jenis_pengiriman'] == 'Driver'){
+                                            if($total_driver_rev != 0){
                                                 ?>
                                                     <tr>
-                                                        <td class="col-md-6 text-nowrap">Diterima Oleh</td>
+                                                        <td class="col-md-6 text-nowrap">Jenis Pengiriman</td>
                                                         <td class="text-nowrap">
-                                                            :   <?php 
-                                                                    if($data_driver['jenis_penerima'] == 'Customer'){
+                                                            :   <?php  
+                                                                    if($data_driver_rev['jenis_pengiriman'] == 'Driver'){
                                                                         ?>
-                                                                            <?php echo $data_driver['jenis_penerima'] ?> 
+                                                                            <?php echo $data_driver_rev['jenis_pengiriman']?> (<?php echo $data_driver_rev['nama_driver'] ?>)
                                                                         <?php
                                                                     } else {
                                                                         ?>
-                                                                            <?php echo $data_driver['jenis_penerima'] ?> (<?php echo $data_driver['nama_ekspedisi'] ?>)
+                                                                            <?php echo $data_driver_rev['jenis_pengiriman']?> (<?php echo $data_driver_rev['nama_ekspedisi'] ?>)
                                                                         <?php
                                                                     }
                                                             
                                                                 ?>
-                                                    
+
                                                         </td>
                                                     </tr>
+                                                    <?php  
+                                                        if(!empty($data_driver_rev['jenis_pengiriman'] && $data_driver_rev['jenis_penerima'])){
+                                                            ?>
+                                                                <tr>
+                                                                    <td class="col-md-6 text-nowrap">Diterima Oleh</td>
+                                                                    <td class="text-nowrap">
+                                                                        :   <?php 
+                                                                                if($data_driver_rev['jenis_penerima'] == 'Customer'){
+                                                                                    ?>
+                                                                                        <?php echo $data_driver_rev['jenis_penerima'] ?> 
+                                                                                    <?php
+                                                                                } else {
+                                                                                    ?>
+                                                                                        <?php echo $data_driver_rev['jenis_penerima'] ?> (<?php echo $data_driver_rev['nama_ekspedisi'] ?>)
+                                                                                    <?php
+                                                                                }
+                                                                        
+                                                                            ?>
+                                                                
+                                                                    </td>
+                                                                </tr>
+                                                            <?php
+                                                        }
+                                                    
+                                                    ?>
+                                                    <?php  
+                                                        if(!empty($data_driver_rev['nama_penerima'])){
+                                                            ?>
+                                                                <tr>
+                                                                    <td class="col-md-6 text-nowrap">Nama Penerima</td>
+                                                                    <td class="text-nowrap">: <?php echo $data_driver_rev['nama_penerima'] ?></td>
+                                                                </tr>
+                                                            <?php
+                                                        }
+                                                    
+                                                    ?>
+                                                    <?php  
+                                                        if(!empty($data_driver_rev['dikirim_oleh']) && !empty($data_driver_rev['penanggung_jawab'])){
+                                                            ?>
+                                                                <tr>
+                                                                    <td class="col-md-6 text-nowrap">Dikirim Oleh</td>
+                                                                    <td class="text-nowrap">: <?php echo $data_driver_rev['dikirim_oleh'] ?></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="col-md-6 text-nowrap">PJ. Paket Kirim</td> 
+                                                                    <td class="text-nowrap">: <?php echo $data_driver_rev['penanggung_jawab'] ?></td>
+                                                                </tr>
+                                                            <?php
+                                                        }
+                                                    
+                                                    ?>
                                                 <?php
                                             }
-                                        
-                                        ?>
-                                        <?php  
-                                            if(!empty($data_driver['nama_penerima'])){
-                                                ?>
-                                                    <tr>
-                                                        <td class="col-md-6 text-nowrap">Nama Penerima</td>
-                                                        <td class="text-nowrap">: <?php echo $data_driver['nama_penerima'] ?></td>
-                                                    </tr>
-                                                <?php
-                                            }
-                                        
-                                        ?>
-                                        <?php  
-                                            if(!empty($data_driver['dikirim_oleh']) && !empty($data_driver['penanggung_jawab'])){
-                                                ?>
-                                                    <tr>
-                                                        <td class="col-md-6 text-nowrap">Dikirim Oleh</td>
-                                                        <td class="text-nowrap">: <?php echo $data_driver['dikirim_oleh'] ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="col-md-6 text-nowrap">PJ. Paket Kirim</td> 
-                                                        <td class="text-nowrap">: <?php echo $data_driver['penanggung_jawab'] ?></td>
-                                                    </tr>
-                                                <?php
-                                            }
-                                        
                                         ?>
                                     </table>
                                 </div>
@@ -370,9 +378,17 @@
                                     <a href="invoice-komplain.php?date_range=weekly" class="btn btn-warning mb-3">
                                         <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                     </a>
-                                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#bukti">
-                                        <i class="bi bi-image"></i> Bukti Terima
-                                    </button>
+                                    <?php  
+                                        $cek_bukti_terima = mysqli_query($connect, "SELECT id_komplain FROM inv_bukti_terima_revisi WHERE id_komplain = '$id'");
+                                        $total_data_bukti = mysqli_num_rows($cek_bukti_terima);
+                                        if($total_data_bukti != '0'){
+                                            ?>
+                                                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#bukti">
+                                                    <i class="bi bi-image"></i> Bukti Terima
+                                                </button>
+                                            <?php
+                                        }
+                                    ?>
                                     <?php
                                         if ($total_data_rev != '0' && $status_kmpl == '0') {
                                             $status_pengiriman = $data_rev['status_pengiriman'];
@@ -404,6 +420,26 @@
                                                     <i class="bi bi-arrow-left-right"></i> Ubah Status
                                                 </button>
                                             <?php
+                                        }
+                                    ?>
+                                    <?php  
+                                        $cek_jenis_pengiriman = mysqli_query($connect, "SELECT 
+                                                                                            id_komplain, jenis_penerima, status_kirim, created_date
+                                                                                        FROM revisi_status_kirim
+                                                                                        WHERE id_komplain = '$id'
+                                                                                        AND created_date = (SELECT MAX(created_date) FROM revisi_status_kirim WHERE id_komplain = '$id');
+                                                                                        ");
+                                        $data_cek_jenis_pengiriman = mysqli_fetch_array($cek_jenis_pengiriman);
+                                        $total_cek_jenis_pengiriman = mysqli_num_rows($cek_jenis_pengiriman);
+                                        if($total_cek_jenis_pengiriman != 0){
+                                            if( $data_cek_jenis_pengiriman['jenis_penerima'] == 'Ekspedisi' && $data_cek_jenis_pengiriman['status_kirim'] == '0'){
+                                                ?>
+                                                    <button class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#DiterimaEx">
+                                                        <i class="bi bi-send"></i>
+                                                        Diterima
+                                                    </button>
+                                                <?php
+                                            }
                                         }
                                     ?>
                                 </div>
@@ -475,7 +511,7 @@
                                     <!-- kode untuk kondisi button cetak -->
                                     <?php  
                                         $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
-                                        $data_rev = mysqli_fetch_array($sql_rev);
+                                        $cek_rev = mysqli_fetch_array($sql_rev);
                                         $total_data = mysqli_num_rows($sql_rev);
                                     
                                     ?>
@@ -744,12 +780,12 @@
                     <?php
                         include "koneksi.php";
                         $sql_bukti = "  SELECT 
-                                            ibt.*, ip.id_komplain, ip.nama_penerima, ip.tgl_terima, ip.created_date, sk.jenis_penerima, sk.dikirim_ekspedisi, sk.no_resi, ex.nama_ekspedisi
+                                            ibt.id_komplain, ibt.bukti_satu, ibt.bukti_dua, ibt.bukti_tiga, ibt.created_date, ip.id_komplain, ip.nama_penerima, ip.tgl_terima, ip.created_date, sk.jenis_penerima, sk.dikirim_ekspedisi, sk.no_resi, sk.tgl_kirim, ex.nama_ekspedisi
                                         FROM inv_bukti_terima_revisi AS ibt
                                         LEFT JOIN inv_penerima_revisi ip ON (ibt.id_komplain = ip.id_komplain)
                                         LEFT JOIN revisi_status_kirim sk ON (ibt.id_komplain = sk.id_komplain)
                                         LEFT JOIN ekspedisi ex ON (ex.id_ekspedisi = sk.dikirim_ekspedisi) 
-                                        WHERE ibt.id_komplain = '$id_komplain' ORDER BY ip.created_date AND ibt.created_date DESC LIMIT 1";
+                                        WHERE ibt.id_komplain = '$id_komplain' ORDER BY ip.created_date  DESC LIMIT 1";
                         $query_bukti = mysqli_query($connect, $sql_bukti);
                         $data_bukti = mysqli_fetch_array($query_bukti);
                         $gambar1 = $data_bukti['bukti_satu'];
@@ -760,40 +796,77 @@
                         $gambar_bukti3 = "gambar-revisi/bukti3/$gambar3";
                         $jenis_penerima = $data_bukti['jenis_penerima'];
                         $no_resi = $data_bukti['no_resi'];
+                        $tgl_terima = $data_bukti['tgl_terima'];
                     ?>
                     <div class="mb-3">
-                        <h6>Nama Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
-                        <?php if ($jenis_penerima == 'Ekspedisi') {
-                            echo'
-                                <h6>No. Resi :' . $no_resi . '</h6> 
-                            ';
-                        }
+                        <?php  
+                            if($data_bukti['nama_penerima'] != ''){
+                                ?>
+                                    <h6>Nama Penerima : <?php echo $data_bukti['nama_penerima'] ?></h6>
+                                    <?php if ($jenis_penerima == 'Ekspedisi') {
+                                        echo'
+                                            <h6>No. Resi :' . $no_resi . '</h6> 
+                                        ';
+                                    }
+                                    ?>
+                                <?php
+                            }
                         ?>
-                        <h6>Tgl. Terima : <?php echo date('d/m/Y', strtotime($data_bukti['created_date']))?></h6>
+                        <?php  
+                            if( $tgl_terima){
+                                ?>
+                                <h6>Tgl. Terima : <?php echo $data_bukti['tgl_terima']?></h6>
+                                <?php
+                            } else {
+                                ?>
+                                <h6>Tgl. Kirim : <?php echo $data_bukti['tgl_kirim']?></h6>
+                                <?php
+                            }
+                        ?>
                     </div>
-                    <div id="carouselExample" class="carousel slide">
+                    <div id="carouselExample" class="carousel carousel-dark slide">
+                        <div class="carousel-indicators">
+                            <?php if (!empty($gambar1)) : ?>
+                                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <?php endif; ?>
+
+                            <?php if (!empty($gambar2)) : ?>
+                                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <?php endif; ?>
+
+                            <?php if (!empty($gambar3)) : ?>
+                                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            <?php endif; ?>
+                            
+                        </div>
                         <div class="carousel-inner">
                             <?php if (!empty($gambar1)) : ?>
                                 <div class="carousel-item active">
                                     <img src="<?php echo $gambar_bukti1 ?>" class="d-block w-100">
-                                    <div class="text-center mt-3">
-                                        <h5>Bukti Terima 1</h5>
+                                    <div class="text-center mt-5">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>Bukti Terima 1</h5>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endif; ?>
                             <?php if (!empty($gambar2)) : ?>
                                 <div class="carousel-item">
                                     <img src="<?php echo $gambar_bukti2 ?>" class="d-block w-100">
-                                    <div class="text-center mt-3">
-                                        <h5>Bukti Terima 2</h5>
+                                    <div class="text-center mt-5">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>Bukti Terima 2</h5>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endif; ?>
                             <?php if (!empty($gambar3)) : ?>
                                 <div class="carousel-item">
                                     <img src="<?php echo $gambar_bukti3 ?>" class="d-block w-100">
-                                    <div class="text-center mt-3">
-                                        <h5>Bukti Terima 3</h5>
+                                    <div class="text-center mt-5">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>Bukti Terima 3</h5>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -851,7 +924,7 @@
                                             <label class="form-check-label" for="dikirim">Dikirim</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai">
+                                            <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai" disabled>
                                             <label class="form-check-label" for="selesai">Transaksi Selesai</label>
                                         </div>
                                     <?php
@@ -881,7 +954,7 @@
                                         <label class="form-check-label" for="dikirim">Dikirim</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai">
+                                        <input class="form-check-input bg-light" type="radio" name="status_kirim" id="selesai" value="selesai" disabled>
                                         <label class="form-check-label" for="selesai">Transaksi Selesai</label>
                                     </div>
                                 <?php
@@ -905,9 +978,9 @@
                             <?php
                             include "koneksi.php";
                             $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
-                            while ($data_driver = mysqli_fetch_array($sql_driver)) {
+                            while ($data_driver_rev = mysqli_fetch_array($sql_driver)) {
                             ?>
-                                <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>
+                                <option value="<?php echo $data_driver_rev['id_user'] ?>"><?php echo $data_driver_rev['nama_user'] ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -939,7 +1012,7 @@
                         </div>
                         <div class="mb-3">
                             <label id="labelOngkir">Ongkir</label>
-                            <input type="text" class="form-control" name="ongkir" id="ongkos_kirim">
+                            <input type="text" class="form-control" style="background-color: #f8f9fa;" name="ongkir" id="ongkos_kirim" readonly>
                         </div>
                         <div class="mb-3">
                             <label id="labelDikirimOleh">Dikirim Oleh</label>
@@ -965,10 +1038,8 @@
                     <button type="submit" class="btn btn-primary" name="ubah-status"> Ubah Status</button>
                 </div>
             </form>
-            <!-- kode JS Dikirim -->
+            
             <?php include "page/upload-img.php";  ?>
-            <!-- kode JS Dikirim -->
-             <!-- End JS Dikirim -->
             <style>
                 .preview-image {
                     max-width: 100%;
@@ -1059,6 +1130,33 @@
                             bukti.style.display = 'none';
                         }
                     });
+
+                    jenis_ongkir.addEventListener('change', function() {
+                        if (this.value === '0') {
+                            ongkos_kirim.style.display = 'block';
+                            ongkos_kirim.style.backgroundColor = '';
+                            ongkos_kirim.removeAttribute('readonly');
+                            ongkos_kirim.setAttribute('required', 'true');
+                        } else {
+                            ongkos_kirim.style.display = 'block';
+                            ongkos_kirim.style.backgroundColor = '#f8f9fa';
+                            ongkos_kirim.removeAttribute('required');
+                            ongkos_kirim.setAttribute('readonly', 'true');
+                            ongkos_kirim.value = '0';
+                        }
+                    });
+
+                   // Menambahkan event listener untuk memformat angka saat nilai berubah
+                    ongkos_kirim.addEventListener('input', function() {
+                        formatNumber(ongkos_kirim);
+                    });
+
+                    // Fungsi untuk memformat angka
+                    function formatNumber(input) {
+                        var value = input.value.replace(/\D/g, ''); // Menghapus karakter non-digit
+                        value = new Intl.NumberFormat().format(value); // Memformat angka
+                        input.value = value;
+                    }
 
                     // Mendapatkan tombol "Cancel" berdasarkan ID
                     const cancelButton = document.getElementById('cancelDikirim');
@@ -1343,6 +1441,44 @@
     </div>
 </div>
 
+<!-- Modal Dikirim-->
+<div class="modal fade" id="DiterimaEx" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <form action="proses/proses-invoice-diterima-revisi.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="id_komplain" value="<?php echo $id; ?>">
+                        <input type="hidden" name="id_inv" value="<?php echo $id_inv; ?>">
+                        <input type="hidden" name="alamat" value="<?php echo $alamat; ?>">
+                        <input type="hidden" name="jenis_inv" value="<?php echo $jenis_inv; ?>">
+                        <div class="mb-3">
+                            <label>Nama Penerima</label>
+                            <input type="text" class="form-control" name="nama_penerima" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label id="labelDate">Tanggal</label>
+                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
+                                id="date" required="required">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" name="diterima_ekspedisi"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEkspedisi"><i class="bi bi-x-circle"></i> Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Dikirim -->
+
+
 <!-- Menampilkan data konfirmasi saat Hapus Data -->
 <script>
     // untuk menampilkan data pada atribut <td>
@@ -1489,7 +1625,7 @@
     }
 </script>
 
-<!-- Kode untuk tambah adata -->
+<!-- Kode untuk tambah data -->
 <script>
     $(document).ready(function() {
         $('.btn-detail').click(function() {
@@ -1591,5 +1727,14 @@
         }
     }
 </script>
+
+<!-- date picker with flatpick -->
+<script type="text/javascript">
+    flatpickr("#date", {
+        dateFormat: "d/m/Y",
+        defaultDate: "today"
+    });
+</script>
+<!-- end date picker -->
 
 

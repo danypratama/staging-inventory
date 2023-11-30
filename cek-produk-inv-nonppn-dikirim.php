@@ -326,7 +326,7 @@ include "function/class-spk.php";
                                     </div>
                                     <?php
                                 } else {
-                                    if($data_status_kirim['jenis_penerima'] == "Customer"){
+                                    if($data_status_kirim['jenis_penerima'] == "Customer" || $jenis_pengiriman == 'Driver'){
                                         ?>
                                         <div class="row mt-2">
                                             <div class="col-5">
@@ -1235,44 +1235,44 @@ function refreshPage() {
 </script>
 
 <script>
-$(document).ready(function() {
-    $('.btn-detail').click(function() {
-        var idSpk = $(this).data('spk');
-        $('#spk').text(idSpk);
+    $(document).ready(function() {
+        $('.btn-detail').click(function() {
+            var idSpk = $(this).data('spk');
+            $('#spk').text(idSpk);
 
-        $('button.btn-pilih').attr('data-spk', idSpk);
+            $('button.btn-pilih').attr('data-spk', idSpk);
 
-        $('#modalBarang').modal('show');
-    });
-
-    $(document).on('click', '.btn-pilih', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var id = $(this).data('id');
-        var spk = $(this).attr('data-spk');
-
-        saveData(id, spk);
-    });
-
-    function saveData(id, spk) {
-        $.ajax({
-            url: 'simpan-data-spk.php',
-            type: 'POST',
-            data: {
-                id: id,
-                spk: spk
-            },
-            success: function(response) {
-                console.log('Data berhasil disimpan.');
-                $('button[data-id="' + id + '"]').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                console.error('Terjadi kesalahan saat menyimpan data:', error);
-            }
+            $('#modalBarang').modal('show');
         });
-    }
-});
+
+        $(document).on('click', '.btn-pilih', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var id = $(this).data('id');
+            var spk = $(this).attr('data-spk');
+
+            saveData(id, spk);
+        });
+
+        function saveData(id, spk) {
+            $.ajax({
+                url: 'simpan-data-spk.php',
+                type: 'POST',
+                data: {
+                    id: id,
+                    spk: spk
+                },
+                success: function(response) {
+                    console.log('Data berhasil disimpan.');
+                    $('button[data-id="' + id + '"]').prop('disabled', true);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Terjadi kesalahan saat menyimpan data:', error);
+                }
+            });
+        }
+    });
 </script>
 
 <!-- Fungsi menonaktifkan kerboard enter -->
@@ -1322,18 +1322,18 @@ function numberFormat(number) {
 
 <!-- Edit Harga -->
 <script>
-$('#edit-diskon').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('hargadisc');
-    var diskon = button.data('diskon');
-    var qty = button.data('qty');
+    $('#edit-diskon').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('hargadisc');
+        var diskon = button.data('diskon');
+        var qty = button.data('qty');
 
-    $('#id_trxdisc').val(idTrx);
-    $('#harga_produk_disc').val(harga);
-    $('#discc').val(diskon);
-    $('#qtydisc').val(qty);
-});
+        $('#id_trxdisc').val(idTrx);
+        $('#harga_produk_disc').val(harga);
+        $('#discc').val(diskon);
+        $('#qtydisc').val(qty);
+    });
 
 $('#edit').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget);

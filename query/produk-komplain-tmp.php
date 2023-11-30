@@ -67,8 +67,6 @@
                     kk.kat_komplain,
                     kk.kondisi_pesanan,
                     kk.status_refund,
-                    COALESCE(spk_nonppn.id_spk_reg, spk_ppn.id_spk_reg, spk_bum.id_spk_reg) AS id_spk,
-                    COALESCE(spk_nonppn.no_spk, spk_ppn.no_spk, spk_bum.no_spk) AS no_spk,
                     tpk.id_tmp,
                     tpk.id_produk,
                     tpk.nama_produk,
@@ -83,10 +81,7 @@
                 LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
                 LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
                 LEFT JOIN komplain_kondisi kk ON ik.id_komplain = kk.id_komplain
-                LEFT JOIN spk_reg spk_nonppn ON ik.id_inv = spk_nonppn.id_inv
-                LEFT JOIN spk_reg spk_ppn ON ik.id_inv = spk_ppn.id_inv
-                LEFT JOIN spk_reg spk_bum ON ik.id_inv = spk_bum.id_inv
-                LEFT JOIN tmp_produk_komplain tpk ON spk_nonppn.id_inv = tpk.id_inv OR spk_ppn.id_inv = tpk.id_inv OR spk_bum.id_inv = tpk.id_inv
+                LEFT JOIN tmp_produk_komplain tpk ON nonppn.id_inv_nonppn = tpk.id_inv OR ppn.id_inv_ppn = tpk.id_inv OR bum.id_inv_bum = tpk.id_inv
                 LEFT JOIN tb_produk_reguler pr ON tpk.id_produk = pr.id_produk_reg
                 LEFT JOIN tb_produk_set_marwa tpsm ON tpk.id_produk = tpsm.id_set_marwa
                 LEFT JOIN tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler

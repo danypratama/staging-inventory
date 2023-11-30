@@ -19,8 +19,8 @@
 
             if(isset($_POST['diterima_driver'])){
                 $diterima_oleh = $_POST['diterima_oleh'];
-                $kondisi_pesanan = $_POST['kondisi'];
                 if($diterima_oleh == 'Customer'){
+                    $kondisi_pesanan = $_POST['kondisi'];
                     if($kondisi_pesanan == 'sesuai'){
                         $connect->begin_transaction();
                         try{
@@ -84,7 +84,7 @@
 
                                 $query_update_status = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Customer' WHERE id_komplain = '$id_komplain'");
 
-                                $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_komplain = '$id_komplain'");
+                                 $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_inv = '$id_inv'");
                     
                                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_inv_revisi ) {
                                     // Commit transaksi
@@ -129,7 +129,7 @@
 
                                 $query_update_status = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Customer' WHERE id_komplain = '$id_komplain'");
 
-                                $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_komplain = '$id_komplain'");
+                                $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_inv = '$id_inv'");
                     
                                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_inv_revisi ) {
                                     // Commit transaksi
@@ -168,7 +168,7 @@
 
                                 $query_update_status = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Customer' WHERE id_komplain = '$id_komplain'");
 
-                                $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_komplain = '$id_komplain'");
+                                 $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_inv = '$id_inv'");
                     
                                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_inv_revisi ) {
                                     // Commit transaksi
@@ -207,7 +207,7 @@
 
                                 $query_update_status = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Customer' WHERE id_komplain = '$id_komplain'");
 
-                                $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_komplain = '$id_komplain'");
+                                 $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '1' WHERE id_inv = '$id_inv'");
                     
                                 if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_inv_revisi ) {
                                     // Commit transaksi
@@ -338,7 +338,7 @@
 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
 
                                     if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain && $query_inv_revisi ) {
                                         // Commit transaksi
@@ -381,7 +381,7 @@
 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                   $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
                                     
                                     if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain && $query_inv_revisi ) {
                                         // Commit transaksi
@@ -436,7 +436,7 @@
 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                   $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
 
                                     if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain && $query_inv_revisi ) {
                                         // Commit transaksi
@@ -486,7 +486,7 @@
 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                   $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
 
                                     if ($bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain && $query_inv_revisi) {
                                         // Commit transaksi
@@ -612,7 +612,7 @@
                 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                   $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
 
                                     if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain && $query_inv_revisi ) {
                                         // Commit transaksi
@@ -668,7 +668,7 @@
                 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                   $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
 
                                     if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain ) {
                                         // Commit transaksi
@@ -723,7 +723,7 @@
                 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                   $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
 
                                     if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain ) {
                                         // Commit transaksi
@@ -773,7 +773,7 @@
                 
                                     $query_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
 
-                                    $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_komplain = '$id_komplain'");
+                                   $query_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_pengiriman = '1', status_trx_komplain = '0', status_trx_selesai = '0' WHERE id_inv = '$id_inv'");
                                     
                         
                                     if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status && $query_komplain ) {
@@ -832,6 +832,7 @@
                         $month = date('m');
                         $id_inv_bukti = "BKTI" . $year . "". $month . "" . $uuid . "" . $day;
                         $id_inv_penerima_revisi = "PNMR" . $year . "". $month . "" . $uuid . "" . $day;
+                        $id_komplain = $_POST['id_komplain'];
                         $id_inv = $_POST['id_inv'];
                         $alamat = $_POST['alamat'];
                         $nama_penerima = $_POST['nama_penerima'];
@@ -865,52 +866,166 @@
                         move_uploaded_file($file2_tmp, $file2_destination);
                         move_uploaded_file($file3_tmp, $file3_destination);
 
-                        if($file1_name != ''){
+                        $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+                        $new_file2_name = "Bukti_Dua". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+                        $new_file3_name = "Bukti_Tiga". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+
+                        if($file1_name != '' && $file2_name != '' &&  $file3_name != ''){
                             // Kompres dan ubah ukuran gambar-revisi bukti terima 1
-                            $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
                             $compressed_file1_destination = "../../gambar-revisi/bukti1/$new_file1_name";
                             compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
                             unlink($file1_destination);
-                        }elseif($file2_name != ''){
+
                             // Kompres dan ubah ukuran gambar-revisi bukti terima 2
-                            $new_file1_name = "Bukti_Dua". $year . "" . $img_uuid . "" . $day . ".jpg";
                             $compressed_file2_destination = "../../gambar-revisi/bukti2/$new_file2_name";
                             compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
                             unlink($file2_destination);
-                        }elseif($file3_name != ''){
+
                             // Kompres dan ubah ukuran gambar-revisi bukti terima 3
-                            $new_file1_name = "Bukti_Tiga". $year . "" . $img_uuid . "" . $day . ".jpg";
-                            $compressed_file3_destination = "../../gambar-revisi/bukti3/$nem_file3_name";
+                            $compressed_file3_destination = "../../gambar-revisi/bukti3/$new_file3_name";
                             compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
                             unlink($file3_destination);
-                        }
 
-                        $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_inv, bukti_satu) VALUES ('$id_inv_bukti', '$id_inv', '$new_file1_name')");
-
-                        $update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET ongkir = '$ongkir', status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
-
-                        $update_revisi_status_kirim = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Ekspedisi', dikirim_ekspedisi = '$id_ekspedisi', no_resi = '$resi', jenis_ongkir = '$jenis_ongkir'  WHERE id_inv = '$id_inv'");
+                            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_komplain, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_bukti', '$id_komplain', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 
 
-                        if ( $bukti_terima && $update_inv && $update_revisi_status_kirim) {
-                            // Commit transaksi
-                            $connect->commit();
-                            ?>
-                            <!-- Sweet Alert -->
-                            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                Swal.fire({
-                                    title: "Sukses",
-                                    text: "Data Berhasil Disimpan",
-                                    icon: "success",
-                                }).then(function() {
-                                    window.location.href = "../list-invoice-revisi.php?sort=baru";
-                                });
-                                });
-                            </script>
-                            <?php
+                            $update_revisi_status_kirim = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Ekspedisi', dikirim_ekspedisi = '$id_ekspedisi', no_resi = '$resi', jenis_ongkir = '$jenis_ongkir' WHERE id_komplain = '$id_komplain'");
+
+                            
+                
+                            if ($bukti_terima && $update_revisi_status_kirim) {
+                                // Commit transaksi
+                                $connect->commit();
+                                ?>
+                                <!-- Sweet Alert -->
+                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        title: "Sukses",
+                                        text: "Data Berhasil Disimpan",
+                                        icon: "success",
+                                    }).then(function() {
+                                        window.location.href = "../list-invoice-revisi.php?sort=baru";
+                                    });
+                                    });
+                                </script>
+                                <?php
+                            } else {
+                                unlink($compressed_file1_destination);
+                                unlink($compressed_file2_destination);
+                                unlink($compressed_file3_destination);
+                            }
+                        }elseif($file1_name != '' && $file2_name != ''){
+                            // Kompres dan ubah ukuran gambar-revisi bukti terima 1
+                            $compressed_file1_destination = "../../gambar-revisi/bukti1/$new_file1_name";
+                            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+                            unlink($file1_destination);
+
+                            // Kompres dan ubah ukuran gambar-revisi bukti terima 2
+                            $compressed_file2_destination = "../../gambar-revisi/bukti2/$new_file2_name";
+                            compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
+                            unlink($file2_destination);
+
+                            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_komplain, bukti_satu, bukti_dua) VALUES ('$id_inv_bukti', '$id_komplain', '$new_file1_name', '$new_file2_name')");
+
+                            $update_revisi_status_kirim = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Ekspedisi', dikirim_ekspedisi = '$id_ekspedisi', no_resi = '$resi', jenis_ongkir = '$jenis_ongkir'  WHERE id_komplain = '$id_komplain'");
+                
+                            if ($bukti_terima && $update_revisi_status_kirim) {
+                                // Commit transaksi
+                                $connect->commit();
+                                ?>
+                                <!-- Sweet Alert -->
+                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        title: "Sukses",
+                                        text: "Data Berhasil Disimpan",
+                                        icon: "success",
+                                    }).then(function() {
+                                        window.location.href = "../list-invoice-revisi.php?sort=baru";
+                                    });
+                                    });
+                                </script>
+                                <?php
+                            } else {
+                                unlink($compressed_file1_destination);
+                                unlink($compressed_file2_destination);
+                            }
+                        }elseif($file1_name != '' && $file3_name != ''){
+                            // Kompres dan ubah ukuran gambar-revisi bukti terima 1
+                            $compressed_file1_destination = "../../gambar-revisi/bukti1/$new_file1_name";
+                            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+                            unlink($file1_destination);
+
+                            // Kompres dan ubah ukuran gambar-revisi bukti terima 3
+                            $compressed_file3_destination = "../../gambar-revisi/bukti3/$new_file3_name";
+                            compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
+                            unlink($file3_destination);
+
+                            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_komplain, bukti_satu, bukti_tiga) VALUES ('$id_inv_bukti', '$id_komplain', '$new_file1_name', '$new_file3_name')");
+
+
+                            $update_revisi_status_kirim = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Ekspedisi', dikirim_ekspedisi = '$id_ekspedisi', no_resi = '$resi', jenis_ongkir = '$jenis_ongkir'  WHERE id_komplain = '$id_komplain'");
+                
+                            if ($bukti_terima && $update_revisi_status_kirim) {
+                                // Commit transaksi
+                                $connect->commit();
+                                ?>
+                                <!-- Sweet Alert -->
+                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        title: "Sukses",
+                                        text: "Data Berhasil Disimpan",
+                                        icon: "success",
+                                    }).then(function() {
+                                        window.location.href = "../list-invoice-revisi.php?sort=baru";
+                                    });
+                                    });
+                                </script>
+                                <?php
+                            }else{
+                                unlink($compressed_file1_destination);
+                                unlink($compressed_file3_destination);
+                            }
+                        }elseif($file1_name != ''){
+                            // Kompres dan ubah ukuran gambar-revisi bukti terima 1
+                            $compressed_file1_destination = "../../gambar-revisi/bukti1/$new_file1_name";
+                            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+                            unlink($file1_destination);
+
+                            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_komplain, bukti_satu) VALUES ('$id_inv_bukti', '$id_komplain', '$new_file1_name')");
+
+                            $update_revisi_status_kirim = mysqli_query($connect, "UPDATE revisi_status_kirim SET jenis_penerima = 'Ekspedisi', dikirim_ekspedisi = '$id_ekspedisi', no_resi = '$resi', jenis_ongkir = '$jenis_ongkir' WHERE id_komplain = '$id_komplain'");
+                
+                            if ($bukti_terima && $update_revisi_status_kirim) {
+                                // Commit transaksi
+                                $connect->commit();
+                                ?>
+                                <!-- Sweet Alert -->
+                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        title: "Sukses",
+                                        text: "Data Berhasil Disimpan",
+                                        icon: "success",
+                                    }).then(function() {
+                                        window.location.href = "../list-invoice-revisi.php?sort=baru";
+                                    });
+                                    });
+                                </script>
+                                <?php
+                            }else{
+                                unlink($compressed_file1_destination);
+                            }
                         }
                     } catch (Exception $e) {
                     // Rollback transaksi jika terjadi exception
@@ -949,7 +1064,7 @@
                     // Query 1
                     $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima_revisi (id_inv_penerima_revisi, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima_revisi', '$id_inv', '$nama_penerima', '$alamat')");
 
-                    $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
+                    $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
 
                     if ($query_diterima && $query_update_inv) {
                         // Commit transaksi

@@ -305,7 +305,7 @@
                                     </div>
                                     <div class="p-1">
                                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bukti">
-                                            <i class="bi bi-image"></i> Bukti Terima
+                                            <i class="bi bi-image"></i> Bukti Terima Pengiriman
                                         </button>
                                     </div>
                                 </div>

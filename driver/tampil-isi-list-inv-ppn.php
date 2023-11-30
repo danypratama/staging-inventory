@@ -784,21 +784,21 @@ include "../function/class-spk.php";
                         </div> 
                         <div class="mb-3">
                             <label id="labelBukti1"><b>Bukti Terima 1</b></label>
-                            <input type="file" name="fileku1" id="fileku1" accept="image/*"
+                            <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png"
                                 onchange="compressAndPreviewImage(event)" required>
                         </div>
                         <div class="mb-3" id="imagePreview" ></div>
 
                         <div class="mb-3">
                             <label id="labelBukti2"><b>Bukti Terima 2</b></label>
-                            <input type="file" name="fileku2" id="fileku2" accept="image/*"
+                            <input type="file" name="fileku2" id="fileku2" accept=".jpg, .jpeg, .png"
                                 onchange="compressAndPreviewImage2(event)">
                         </div>
                         <div class="mb-3" id="imagePreview2"></div>
 
                         <div class="mb-3">
                             <label id="labelBukti3" for="fileku"><b>Bukti Terima 3</b></label>
-                            <input type="file" name="fileku3" id="fileku3" accept="image/*"
+                            <input type="file" name="fileku3" id="fileku3" accept=".jpg, .jpeg, .png"
                                 onchange="compressAndPreviewImage3(event)">
                         </div>
                         <div class="mb-3" id="imagePreview3"></div> 

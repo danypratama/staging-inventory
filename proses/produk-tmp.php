@@ -190,6 +190,7 @@
                     $id_tmp = base64_decode($_GET['batal_refund']);
                     $id_komplain = $_GET['id_komplain'];
                     $update_status = mysqli_query($connect, "UPDATE tmp_produk_komplain  SET status_br_refund = '0' WHERE id_tmp = '$id_tmp'");
+                    $delete_refund = mysqli_query($connect, "DELETE FROM produk_refund  WHERE id_tmp = '$id_tmp'");
                     if($update_status){
                         $_SESSION['info'] = "Dibatalkan";
                         ?>

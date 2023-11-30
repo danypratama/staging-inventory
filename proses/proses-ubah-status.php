@@ -66,13 +66,53 @@
                             <?php
                         } 
                 } else {
-                    $ekspedisi = $_POST['Ekspedisi'];     
+                    $ekspedisi = $_POST['ekspedisi'];
+                    $jenis_pengiriman = $_POST['jenis_pengiriman'];     
                     $resi = $_POST['resi'];
                     $jenis_ongkir = $_POST['jenis_ongkir'];
                     $ongkir = $_POST['ongkir'];
                     $dikirim = $_POST['dikirim'];
                     $pj = $_POST['pj'];
-                    echo ''.$id_komplain.'<br>'.$id_inv.'<br>'.$ekspedisi.'<br>'.$resi. '<br>' .$jenis_ongkir. '<br>' .$ongkir. '<br>' .$dikirim. '<br>' .$pj. '';
+
+                    mysqli_begin_transaction($connect);
+
+                    try{
+                        $simpan_status_kirim = mysqli_query($connect,"INSERT INTO revisi_status_kirim (id_status_kirim_revisi, id_komplain, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, jenis_ongkir, dikirim_oleh, penanggung_jawab, tgl_kirim) VALUES ('$id_status_kirim_revisi', '$id_komplain', '$jenis_pengiriman', 'Ekspedisi', '$ekspedisi', '$resi', '$jenis_ongkir', '$dikirim', '$pj', '$tgl')");
+
+                        $simpan_inv_revisi = mysqli_query($connect,"INSERT INTO inv_revisi (id_inv_revisi, id_inv, no_inv_revisi, tgl_inv_revisi, pelanggan_revisi, alamat_revisi, total_inv, status_pengiriman, status_trx_komplain, status_trx_selesai) VALUES ('$id_inv_rev', '$id_inv', '$revisi_invoice', '$tgl', '$cs_inv', '$alamat', '$total_inv', '0', '0', '0')");
+
+
+                        if (!$simpan_status_kirim && !$simpan_inv_revisi) {
+                            throw new Exception("Error Insert Data");
+                        }
+                        // // Commit the transaction
+                        mysqli_commit($connect);
+                        // Redirect to the invoice page
+                        $_SESSION['info'] = 'Disimpan';
+                        header("Location:../detail-komplain-revisi.php?id=$id_komplain_encode");
+                        exit();
+                        } catch (Exception $e) {
+                            // Rollback the transaction if an error occurs
+                            mysqli_rollback($connect);
+                            // Handle the error (e.g., display an error message)
+                            $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+                            ?>
+                                <!-- Sweet Alert -->
+                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        title: "Error!",
+                                        text: "<?php echo $error_message; ?>",
+                                        icon: "error",
+                                    }).then(function() {
+                                        window.location.href = "../detail-komplain-revisi.php?id=<?php echo $id_komplain_encode ?>";
+                                    });
+                                    });
+                                </script>
+                            <?php
+                        } 
                 }
             } else if($status_kirim == 'selesai'){
                 $connect->begin_transaction();
