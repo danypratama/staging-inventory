@@ -1,13 +1,7 @@
 <script>
     // Data untuk dropdown
     const options = <?php
-    $server = "localhost"; //nama server
-    $user = "root"; //usernya
-    $password = ""; //password
-    $db = "db_inventory"; //database
-
-    // Koneksi dan memilih database di server
-    $connect = mysqli_connect($server, $user, $password, $db);
+    include "../koneksi.php";
 
     if (!$connect) {
         die("Koneksi gagal: ".mysqli_connect_error());
@@ -34,7 +28,7 @@
     echo json_encode($option_values); 
     ?> ;
 
-const dropdownInput = document.getElementById('dropdown-input');
+  const dropdownInput = document.getElementById('dropdown-input');
   const dropdownList = document.getElementById('dropdown-list');
   const clearSearch = document.getElementById('clear-search');
 

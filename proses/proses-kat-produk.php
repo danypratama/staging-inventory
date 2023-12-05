@@ -9,6 +9,7 @@ if (isset($_POST["simpan-kat-produk"])) {
 	$nama_kategori = $_POST['nama_kat_produk'];
 	$merk = $_POST['merk'];
 	$nie = $_POST['nie'];
+	$expired_date = $_POST['expired_date'];
 	$created = $_POST['created'];
 	$user_created = $_POST['user_created'];
 
@@ -19,9 +20,9 @@ if (isset($_POST["simpan-kat-produk"])) {
 		echo "<script>document.location.href='../kategori-produk.php'</script>";
 	} else {
 		mysqli_query($connect, "INSERT INTO tb_kat_produk
-                      (id_kat_produk, id_user, nama_kategori, id_merk, no_izin_edar, created_date) 
+                      (id_kat_produk, id_user, nama_kategori, id_merk, no_izin_edar, berlaku_sampai, created_date) 
                       VALUES 
-                      ('$id_kat_produk', '$id_user', '$nama_kategori', '$merk', '$nie', '$created')");
+                      ('$id_kat_produk', '$id_user', '$nama_kategori', '$merk', '$nie', '$expired_date', '$created')");
 
 		$_SESSION['info'] = 'Disimpan';
 		echo "<script>document.location.href='../kategori-produk.php'</script>";
@@ -31,10 +32,15 @@ if (isset($_POST["simpan-kat-produk"])) {
 } elseif (isset($_POST["edit-kat-produk"])) {
 	$id_kat_produk = $_POST['id_kat_produk'];
 	$nama_kategori = $_POST['nama_kat_produk'];
-	$merk = $_POST['merk'];
+	$nama_merk = $_POST['merk'];
 	$nie = $_POST['no_izin_edar'];
+	$exp_date = $_POST['exp_date'];
 	$updated = $_POST['updated'];
 	$user_updated = $_POST['user_updated'];
+
+	$query_merk = mysqli_query($connect, "SELECT id_merk, nama_merk FROM tb_merk WHERE nama_merk = '$nama_merk'");
+	$data_merk = mysqli_fetch_array($query_merk);
+	$id_merk = $data_merk['id_merk'];
 
 	// menampilkan data
 	$query = "SELECT * FROM tb_kat_produk WHERE id_kat_produk = '$id_kat_produk'";
@@ -46,8 +52,9 @@ if (isset($_POST["simpan-kat-produk"])) {
 		$update = mysqli_query($connect, "UPDATE tb_kat_produk 
 			SET
 			nama_kategori = '$nama_kategori',
-			id_merk = '$merk',
+			id_merk = '$id_merk',
 			no_izin_edar = '$nie',
+			berlaku_sampai = '$exp_date',
 			updated_date = '$updated',
 			user_updated = '$user_updated'	
 			WHERE id_kat_produk='$id_kat_produk'");
@@ -66,8 +73,9 @@ if (isset($_POST["simpan-kat-produk"])) {
 			$update = mysqli_query($connect, "UPDATE tb_kat_produk 
 	                SET
 					nama_kategori = '$nama_kategori',
-					id_merk = '$merk',
+					id_merk = '$id_merk',
 					no_izin_edar = '$nie',
+					berlaku_sampai = '$exp_date',
 					updated_date = '$updated',
 					user_updated = '$user_updated'
 	                WHERE id_kat_produk='$id_kat_produk'");

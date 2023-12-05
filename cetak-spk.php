@@ -30,7 +30,7 @@ include "function/class-spk.php";
   </style>
 </head>
 
-<body style="font-size: 18px;">
+<body style="font-size: 14px;">
   <div class="sph">
     <?php
         include "koneksi.php";
@@ -83,7 +83,7 @@ include "function/class-spk.php";
     ?>
     <div class="sph-img">
         <br>
-        <h1><b>SURAT PERINTAH KERJA</b></h1>
+        <h2><b>SURAT PERINTAH KERJA</b></h2>
     </div>
     <div class="sph-content mt-3">
       <div class="row">
@@ -237,6 +237,7 @@ include "function/class-spk.php";
                     Penanggung Jawab Teknis
                 </div>
             </div>
+            &nbsp;&nbsp;&nbsp;
             <div class="col" style="border: 1px solid black; padding: 10px;">
                 <div class="content-hormat text-left">
                     <b>Nama Petugas :</b><br>

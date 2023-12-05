@@ -921,140 +921,140 @@ include "../function/class-spk.php";
 
 <!-- Generat UUID -->
 <?php
-function generate_uuid()
-{
-    return sprintf(
-        '%04x%04x%04x',
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0x0fff) | 0x4000,
-        mt_rand(0, 0x3fff) | 0x8000,
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff)
-    );
-}
+    function generate_uuid()
+    {
+        return sprintf(
+            '%04x%04x%04x',
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff)
+        );
+    }
 ?>
 <!-- End Generate UUID -->
 
 <script>
-function refreshPage() {
-    location.reload();
-}
+    function refreshPage() {
+        location.reload();
+    }
 </script>
 
 <script>
-$(document).ready(function() {
-    $('.btn-detail').click(function() {
-        var idSpk = $(this).data('spk');
-        $('#spk').text(idSpk);
+    $(document).ready(function() {
+        $('.btn-detail').click(function() {
+            var idSpk = $(this).data('spk');
+            $('#spk').text(idSpk);
 
-        $('button.btn-pilih').attr('data-spk', idSpk);
+            $('button.btn-pilih').attr('data-spk', idSpk);
 
-        $('#modalBarang').modal('show');
-    });
-
-    $(document).on('click', '.btn-pilih', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var id = $(this).data('id');
-        var spk = $(this).attr('data-spk');
-
-        saveData(id, spk);
-    });
-
-    function saveData(id, spk) {
-        $.ajax({
-            url: 'simpan-data-spk.php',
-            type: 'POST',
-            data: {
-                id: id,
-                spk: spk
-            },
-            success: function(response) {
-                console.log('Data berhasil disimpan.');
-                $('button[data-id="' + id + '"]').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                console.error('Terjadi kesalahan saat menyimpan data:', error);
-            }
+            $('#modalBarang').modal('show');
         });
-    }
-});
+
+        $(document).on('click', '.btn-pilih', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var id = $(this).data('id');
+            var spk = $(this).attr('data-spk');
+
+            saveData(id, spk);
+        });
+
+        function saveData(id, spk) {
+            $.ajax({
+                url: 'simpan-data-spk.php',
+                type: 'POST',
+                data: {
+                    id: id,
+                    spk: spk
+                },
+                success: function(response) {
+                    console.log('Data berhasil disimpan.');
+                    $('button[data-id="' + id + '"]').prop('disabled', true);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Terjadi kesalahan saat menyimpan data:', error);
+                }
+            });
+        }
+    });
 </script>
 
 <!-- Fungsi menonaktifkan kerboard enter -->
 <script>
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        document
-            .getElementById("simpan-data")
-            .click();
-    }
-});
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document
+                .getElementById("simpan-data")
+                .click();
+        }
+    });
 </script>
 
 <!-- Number format untuk harga -->
 
 <script>
-// Mendapatkan referensi elemen input
-var hargaProdukInputs = document.querySelectorAll('.harga_produk');
+    // Mendapatkan referensi elemen input
+    var hargaProdukInputs = document.querySelectorAll('.harga_produk');
 
-// Menambahkan event listener untuk memformat angka saat nilai berubah
-hargaProdukInputs.forEach(function(input) {
-    input.addEventListener('input', function() {
-        formatNumber(input);
+    // Menambahkan event listener untuk memformat angka saat nilai berubah
+    hargaProdukInputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            formatNumber(input);
+        });
     });
-});
 
-// Fungsi untuk memformat angka dengan pemisah ribuan
-function formatNumber(input) {
-    var hargaProdukValue = input
-        .value
-        .replace(/[^0-9.-]+/g, '');
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function formatNumber(input) {
+        var hargaProdukValue = input
+            .value
+            .replace(/[^0-9.-]+/g, '');
 
-    if (hargaProdukValue !== '') {
-        var formattedNumber = numberFormat(hargaProdukValue);
-        input.value = formattedNumber;
+        if (hargaProdukValue !== '') {
+            var formattedNumber = numberFormat(hargaProdukValue);
+            input.value = formattedNumber;
+        }
     }
-}
 
-// Fungsi untuk memformat angka dengan pemisah ribuan
-function numberFormat(number) {
-    return new Intl
-        .NumberFormat('en-US')
-        .format(number);
-}
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function numberFormat(number) {
+        return new Intl
+            .NumberFormat('en-US')
+            .format(number);
+    }
 </script>
 
 <!-- Edit Harga -->
 <script>
-$('#edit-diskon').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('hargadisc');
-    var diskon = button.data('diskon');
-    var qty = button.data('qty');
+    $('#edit-diskon').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('hargadisc');
+        var diskon = button.data('diskon');
+        var qty = button.data('qty');
 
-    $('#id_trxdisc').val(idTrx);
-    $('#harga_produk_disc').val(harga);
-    $('#discc').val(diskon);
-    $('#qtydisc').val(qty);
-});
+        $('#id_trxdisc').val(idTrx);
+        $('#harga_produk_disc').val(harga);
+        $('#discc').val(diskon);
+        $('#qtydisc').val(qty);
+    });
 
-$('#edit').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('harga');
-    var qty = button.data('qty');
+    $('#edit').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('harga');
+        var qty = button.data('qty');
 
-    $('#id_trx').val(idTrx);
-    $('#harga_produk').val(harga);
-    $('#qty').val(qty);
-});
+        $('#id_trx').val(idTrx);
+        $('#harga_produk').val(harga);
+        $('#qty').val(qty);
+    });
 </script>
 
 <!-- date picker with flatpick -->
