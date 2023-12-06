@@ -1,8 +1,8 @@
 <?php
 	$server = "localhost";//nama server
-	$user = "root";//usernya
-	$password = "";//password
-	$db = "db_inventory";//database
+	$user = "mandiria_staging";//usernya
+	$password = "karsa_2023";//password
+	$db = "mandiria_staging";//database
 
 	// Koneksi dan memilih database di server
 	$connect = mysqli_connect($server,$user,$password,$db);

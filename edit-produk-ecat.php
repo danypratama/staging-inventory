@@ -76,7 +76,7 @@ include "akses.php";
 
                   //mengambil nama gambar yang terkait
                   $sql = "SELECT 
-                            pr.id_produk_ecat, pr.kode_produk, pr.nama_produk, pr.satuan, pr.harga_produk, pr.gambar,
+                            pr.id_produk_ecat, pr.kode_produk, pr.nama_produk, pr.kode_katalog, pr.satuan, pr.harga_produk, pr.gambar,
                             mr.id_merk, mr.nama_merk,
                             kp.id_kat_produk, kp.nama_kategori as kat_prod,
                             kj.id_kat_penjualan, kj.nama_kategori as kat_penj,
@@ -100,9 +100,15 @@ include "akses.php";
                     <input type="hidden" class="form-control" name="id_produk" value="<?php echo $row['id_produk_ecat']; ?>">
                     <input type="text" class="form-control" name="kode_produk" value="<?php echo $row['kode_produk'] ?>" readonly>
                   </div>
-                  <div class="mb-3">
-                    <label class="form-label"><strong>Nama Produk</strong></label>
-                    <input type="text" class="form-control" name="nama_produk" value="<?php echo $row['nama_produk'] ?>" required>
+                  <div class="row">
+                    <div class="col-8 mb-3">
+                      <label class="form-label"><strong>Nama Produk</strong></label>
+                      <input type="text" class="form-control" name="nama_produk" value="<?php echo $row['nama_produk'] ?>" required>
+                    </div>
+                    <div class="col-4 mb-3">
+                      <label class="form-label"><strong>Kode Katalog</strong></label>
+                      <input type="text" class="form-control" name="kode_katalog" value="<?php echo $row['kode_katalog'] ?>" required>
+                    </div>
                   </div>
                   <div class="mb-3">
                     <div class="row">

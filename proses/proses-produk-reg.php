@@ -7,20 +7,21 @@
 	if (isset($_POST["simpan-produk-reg"])) {
 		$id_produk = $_POST['id_produk'];
         $kode = $_POST['kode_produk'];
-        $nama = $_POST['nama_produk']; 
+        $nama = htmlspecialchars($_POST['nama_produk']);
+		$kode_katalog = htmlspecialchars($_POST['kode_katalog']);
 		$satuan = $_POST['satuan']; 
         $merk = $_POST['merk'];
         $harga = $_POST['harga'];
-        $lokasi = $_POST['id_lokasi'];
+        $lokasi = htmlspecialchars($_POST['id_lokasi']);
         $kat_produk = $_POST['kategori_produk'];
-        $kat_penjualan = $_POST['kategori_penjualan'];
-        $grade = $_POST['grade'];
+        $kat_penjualan = htmlspecialchars($_POST['kategori_penjualan']);
+        $grade = htmlspecialchars($_POST['grade']);
 		$jenis_produk = $_POST['jenis_produk'];
         $created = $_POST['created'];
 		$created_by = $_POST['id_user'];
 
 		if($jenis_produk == 'reg'){
-			$cek_data = mysqli_query($connect, "SELECT * FROM tb_produk_reguler WHERE kode_produk = '$kode' AND nama_produk = '$nama' AND id_merk = '$merk'");
+			$cek_data = mysqli_query($connect, "SELECT * FROM tb_produk_reguler WHERE kode_produk = '$kode' AND nama_produk = '$nama' AND id_merk = '$merk' AND kode_katalog = '$kode_katalog'");
 
 			if ($cek_data->num_rows > 0) {
 				$_SESSION['info'] = 'Data sudah ada';
@@ -65,9 +66,9 @@
 				move_uploaded_file($tmp_file, $target_file);
 
 				$sql = "INSERT INTO tb_produk_reguler
-				(id_produk_reg, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, satuan, harga_produk, gambar, created_date, created_by)
+				(id_produk_reg, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, kode_katalog, satuan, harga_produk, gambar, created_date, created_by)
 				VALUES
-				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
+				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$kode_katalog', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
 				$query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
 
 				$qr = mysqli_query($connect, "INSERT INTO qr_link
@@ -79,7 +80,7 @@
 				
 			}
 		} else {
-			$cek_data = mysqli_query($connect, "SELECT * FROM tb_produk_ecat WHERE kode_produk = '$kode' AND nama_produk = '$nama' AND id_merk = '$merk'");
+			$cek_data = mysqli_query($connect, "SELECT * FROM tb_produk_ecat WHERE kode_produk = '$kode' AND nama_produk = '$nama' AND id_merk = '$merk' AND kode_katalog = '$kode_katalog'");
 
 			if ($cek_data->num_rows > 0) {
 				$_SESSION['info'] = 'Data sudah ada';
@@ -123,9 +124,9 @@
 				$target_file = $direktori_tujuan . $nama_file_baru;
 				move_uploaded_file($tmp_file, $target_file);
 				$sql = "INSERT INTO tb_produk_ecat
-				(id_produk_ecat, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, satuan, harga_produk, gambar, created_date, created_by)
+				(id_produk_ecat, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, kode_katalog, satuan, harga_produk, gambar, created_date, created_by)
 				VALUES
-				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
+				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$kode_katalog', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
  				$query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
 
 				
@@ -140,16 +141,17 @@
 
 	//Edit
 	}elseif(isset($_POST["edit-produk-reg"])) {
-		$id_produk = $_POST['id_produk'];
-        $kode = $_POST['kode_produk'];
-        $nama = $_POST['nama_produk'];
+		$id_produk = htmlspecialchars($_POST['id_produk']);
+        $kode = htmlspecialchars($_POST['kode_produk']);
+        $nama = htmlspecialchars($_POST['nama_produk']);
+		$kode_katalog = htmlspecialchars($_POST['kode_katalog']);
 		$satuan = $_POST['satuan'];
         $merk = $_POST['merk'];
         $harga = $_POST['harga'];
-        $lokasi = $_POST['id_lokasi'];
-        $kat_produk = $_POST['id_kat_produk'];
-        $kat_penjualan = $_POST['kategori_penjualan'];
-        $grade = $_POST['grade'];
+        $lokasi = htmlspecialchars($_POST['id_lokasi']);
+        $kat_produk = htmlspecialchars($_POST['id_kat_produk']);
+        $kat_penjualan = htmlspecialchars($_POST['kategori_penjualan']);
+        $grade = htmlspecialchars($_POST['grade']);
         $updated_by = $_POST['id_user'];
         $updated = $_POST['updated'];
 		// Convert budget to integer
@@ -173,6 +175,7 @@
 									id_lokasi = '$lokasi',
 									kode_produk = '$kode',
 									nama_produk = '$nama',
+									kode_katalog = '$kode_katalog',
 									satuan = '$satuan',
 									harga_produk = '$harga',
 									updated_date = '$updated',
@@ -205,6 +208,7 @@
 									id_lokasi = '$lokasi',
 									kode_produk = '$kode',
 									nama_produk = '$nama',
+									kode_katalog = '$kode_katalog',
 									satuan = '$satuan',
 									harga_produk = '$harga',
 									gambar = '$nama_file_baru',
@@ -218,16 +222,17 @@
 
 	//Edit Ecat
 	}elseif(isset($_POST["edit-produk-ecat"])) {
-		$id_produk = $_POST['id_produk'];
-		$kode = $_POST['kode_produk'];
-		$nama = $_POST['nama_produk'];
+		$id_produk = htmlspecialchars($_POST['id_produk']);
+		$kode = htmlspecialchars($_POST['kode_produk']);
+		$nama = htmlspecialchars($_POST['nama_produk']);
+		$kode_katalog = htmlspecialchars($_POST['kode_katalog']);
 		$satuan = $_POST['satuan'];
 		$merk = $_POST['merk'];
 		$harga = $_POST['harga'];
-		$lokasi = $_POST['id_lokasi'];
-		$kat_produk = $_POST['id_kat_produk'];
-		$kat_penjualan = $_POST['kategori_penjualan'];
-		$grade = $_POST['grade'];
+		$lokasi = htmlspecialchars($_POST['id_lokasi']);
+		$kat_produk = htmlspecialchars($_POST['id_kat_produk']);
+		$kat_penjualan = htmlspecialchars($_POST['kategori_penjualan']);
+		$grade = htmlspecialchars($_POST['grade']);
 		$updated_by = $_POST['id_user'];
 		$updated = $_POST['updated'];
 		// Convert budget to integer
@@ -251,6 +256,7 @@
 													id_lokasi = '$lokasi',
 													kode_produk = '$kode',
 													nama_produk = '$nama',
+													kode_katalog = '$kode_katalog',
 													satuan = '$satuan',
 													harga_produk = '$harga',
 													updated_date = '$updated',
@@ -283,6 +289,7 @@
 									id_lokasi = '$lokasi',
 									kode_produk = '$kode',
 									nama_produk = '$nama',
+									kode_katalog = '$kode_katalog',
 									satuan = '$satuan',
 									harga_produk = '$harga',
 									gambar = '$nama_file_baru',

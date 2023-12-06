@@ -18,6 +18,7 @@ $sql = "SELECT
             pr.kode_produk,
             pr.harga_produk,
             pr.nama_produk,
+            pr.kode_katalog,
             pr.satuan,
             pr.gambar,
             pr.created_date as produk_created,
@@ -51,7 +52,19 @@ $sql = "SELECT
 // Proses filtering
 if (!empty($_POST['search']['value'])) {
     $searchValue = $_POST['search']['value'];
-    $sql .= " WHERE (nama_produk LIKE '%$searchValue%') ";
+    $keywords = explode(" ", $searchValue);
+    
+    // Inisialisasi array untuk menyimpan kondisi pencarian
+    $conditions = array();
+
+    // Loop melalui setiap kata kunci
+    foreach ($keywords as $keyword) {
+        // Tambahkan kondisi untuk setiap kata kunci
+        $conditions[] = "(nama_produk LIKE '%$keyword%' OR kode_produk LIKE '%$keyword%')";
+    }
+
+    // Gabungkan semua kondisi dengan operator OR
+    $sql .= " WHERE " . implode(" AND ", $conditions);
 }
 // Urutan
 $orderColumn = $columns[$_POST['order'][0]['column']];
@@ -137,6 +150,7 @@ while ($row = mysqli_fetch_assoc($query)) {
             <button class="btn btn-primary btn-sm" title="Detail" data-bs-toggle="modal" data-bs-target="#detailProduk"
                 data-kode-produk="'.$row['kode_produk'].'" 
                 data-nama-produk="'.$row['nama_produk'].'" 
+                data-kode-katalog="'.$row['kode_katalog'].'"
                 data-satuan="'.$row['satuan'].'" 
                 data-merk-produk="'.$row['nama_merk'].'" 
                 data-harga-produk="'.number_format($row['harga_produk'], 0,'.','.').'" 

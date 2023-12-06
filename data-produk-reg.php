@@ -62,7 +62,7 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <a href="tambah-data-produk-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk</a>
+            <a href="tambah-data-produk.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk</a>
             <div class="mt-3">
               <a href="#" class="btn btn-outline-success active"><i class="bi bi-box-seam"></i> Produk Reguler</a>
               <a href="data-produk-ecat.php" class="btn btn-outline-success"><i class="bi bi-box-seam-fill"></i> Produk E-Catalog</a>
@@ -137,6 +137,10 @@ include "akses.php";
                     <tr>
                       <td class="col-md-5">Nama Produk</td>
                       <td id="namaProduk"></td>
+                    </tr>
+                    <tr>
+                      <td class="col-md-5">Kode Katalog</td>
+                      <td id="kodeKatalog"></td>
                     </tr>
                     <tr>
                       <td class="col-md-5">Satuan</td>
@@ -257,6 +261,7 @@ function format_rupiah($angka)
       var kodeProduk = button.data('kode-produk');
       var izinEdar = button.data('izin-edar');
       var namaProduk = button.data('nama-produk');
+      var kodeKatalog = button.data('kode-katalog');
       var satuan = button.data('satuan');
       var merkProduk = button.data('merk-produk');
       var hargaProduk = button.data('harga-produk');
@@ -278,6 +283,7 @@ function format_rupiah($angka)
       modal.find('.modal-body #kodeProduk').text(kodeProduk);
       modal.find('.modal-body #izinEdar').text(izinEdar);
       modal.find('.modal-body #namaProduk').text(namaProduk);
+      modal.find('.modal-body #kodeKatalog').text(kodeKatalog);
       modal.find('.modal-body #satuan').text(satuan);
       modal.find('.modal-body #merkProduk').text(merkProduk);
       modal.find('.modal-body #hargaProduk').text(hargaProduk);

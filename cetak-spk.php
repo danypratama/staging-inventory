@@ -13,6 +13,10 @@ include "function/class-spk.php";
   <meta content="" name="description">
   <meta content="" name="keywords">
   <link rel="stylesheet" href="assets/css/cetak-sph.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
   <style>
     .col-content-1 {
         width: 25%;
@@ -27,11 +31,52 @@ include "function/class-spk.php";
     .col-content-ttd-2 {
         width: 75%;
     }
+    /* Tombol cetak dengan warna biru */
+    .print-button {
+      background-color: #0074e4; /* Warna biru */
+      color: #ffffff; /* Warna teks putih */
+      padding: 10px 20px; /* Ruang bantalan dalam tombol */
+      border: none; /* Tanpa border */
+      border-radius: 5px; /* Tampilan sudut tombol */
+      cursor: pointer; /* Kursor tangan saat mengarahkan ke tombol */
+    }
+
+    /* Tombol cetak dengan warna biru */
+    .back-button {
+      background-color: #FFC107; /* Warna biru */
+      color: #000000; /* Warna teks putih */
+      padding: 10px 20px; /* Ruang bantalan dalam tombol */
+      border: none; /* Tanpa border */
+      border-radius: 5px; /* Tampilan sudut tombol */
+      cursor: pointer; /* Kursor tangan saat mengarahkan ke tombol */
+    }
+
+    /* Efek hover saat kursor berada di atas tombol */
+    .print-button:hover {
+      background-color: #005bbb; /* Warna biru yang berbeda saat di hover */
+    }
+
+    @media print {
+      #printButton {
+        display: none;
+      }
+      #backButton {
+        display: none;
+      }
+    }
   </style>
 </head>
 
 <body style="font-size: 14px;">
   <div class="sph">
+    <div style="text-align: center;">
+        <button id="backButton" class="back-button" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Halaman Sebelumnya
+        </button>
+        <button id="printButton" class="print-button">
+            <i class="fas fa-print"></i> Print
+        </button>
+    </div>
     <?php
         include "koneksi.php";
         $id_spk = base64_decode($_GET['id']);
@@ -254,5 +299,18 @@ include "function/class-spk.php";
     <br><br>
   </div>
 </body>
-
 </html>
+<script>
+    // Fungsi untuk menampilkan dialog pencetakan
+    function showPrintDialog() {
+        window.print();
+    }
+
+    // Menambahkan event listener ke tombol cetak
+    document.getElementById('printButton').addEventListener('click', showPrintDialog);
+
+     //Fungsi untuk kembali ke halaman sebelumnya
+     function goBack() {
+        window.history.back();
+    }
+</script>

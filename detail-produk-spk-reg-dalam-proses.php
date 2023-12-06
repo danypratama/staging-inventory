@@ -71,6 +71,7 @@ include "function/class-spk.php";
                     WHERE sr.id_spk_reg = '$id_spk'";
                 $query = mysqli_query($connect, $sql);
                 $data = mysqli_fetch_array($query);
+                $petugas = $data['petugas'];
                 ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">

@@ -1,5 +1,5 @@
 <?php
-$page = 'transaksi';
+$page = 'transaksi'; 
 $page2 = 'spk';
 include "akses.php";
 include "function/class-spk.php";
@@ -75,7 +75,7 @@ include "function/class-spk.php";
                             nonppn.tgl_tempo,
                             nonppn.ongkir,
                             nonppn.note_inv,
-                            sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                            sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan, sr.petugas,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
                             FROM inv_nonppn AS nonppn
                             JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
@@ -88,6 +88,7 @@ include "function/class-spk.php";
                     $data = mysqli_fetch_array($query);
                     $sp_disc = $data['sp_disc'];
                     $ongkir = $data['ongkir'];
+                    $petugas = $data['petugas'];
                 ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
@@ -483,7 +484,8 @@ include "function/class-spk.php";
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
+                        <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
+                        <table class="table table-striped table-bordered" id="table2">
                             <?php
                                 if ($total_data != 0) {
                                     if ($data_cek['kategori_inv'] != 'Diskon') {

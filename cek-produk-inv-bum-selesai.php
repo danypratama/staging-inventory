@@ -60,7 +60,7 @@ include "function/class-spk.php";
             <div class="card shadow p-2">
                 <div class="card-header text-center">
                     <h5>
-                        <strong>DETAIL INVOICE BUM</strong>
+                        <strong>DETAIL INVOICE NONPPN</strong>
                     </h5>
                 </div>
                 <?php
@@ -77,7 +77,7 @@ include "function/class-spk.php";
                             bum.ongkir,
                             bum.note_inv,
                             bum.total_inv,
-                            sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                            sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan, sr.petugas,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
                             FROM inv_bum AS bum
                             JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
@@ -90,6 +90,7 @@ include "function/class-spk.php";
                     $data = mysqli_fetch_array($query);
                     $sp_disc = $data['sp_disc'];
                     $ongkir = $data['ongkir'];
+                    $petugas = $data['petugas'];
                     $total_inv = $data['total_inv'];
                 ?>
                 <div class="row mt-3">
@@ -415,6 +416,7 @@ include "function/class-spk.php";
                         </div>
                     </div>
                     <div class="table-responsive">
+                        <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
                         <table class="table table-striped table-bordered">
                             <?php
                             if ($total_data != 0) {

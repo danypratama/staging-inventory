@@ -75,7 +75,7 @@ include "function/class-spk.php";
                             bum.tgl_tempo,
                             bum.ongkir,
                             bum.note_inv,
-                            sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan,
+                            sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan, sr.petugas,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
                             FROM inv_bum AS bum
                             JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
@@ -88,6 +88,7 @@ include "function/class-spk.php";
                     $data = mysqli_fetch_array($query);
                     $sp_disc = $data['sp_disc'];
                     $ongkir = $data['ongkir'];
+                    $petugas = $data['petugas'];
                 ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
@@ -280,7 +281,8 @@ include "function/class-spk.php";
                                 $no_resi = $data_status_kirim['no_resi'];
 
 
-                                $ekspedisi_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_ekspedisi, sk.jenis_penerima, ex.nama_ekspedisi
+                                $ekspedisi_kirim =  mysqli_query($connect, "SELECT 
+                                                                            sk.jenis_pengiriman, sk.dikirim_ekspedisi, sk.jenis_penerima, ex.nama_ekspedisi
                                                                             FROM status_kirim AS sk
                                                                             JOIN ekspedisi ex ON (sk.dikirim_ekspedisi = ex.id_ekspedisi)
                                                                             WHERE sk.dikirim_ekspedisi = '$ekspedisi'");
@@ -291,6 +293,15 @@ include "function/class-spk.php";
                                                                             JOIN user us ON (sk.dikirim_driver = us.id_user)
                                                                             WHERE sk.dikirim_driver = '$driver'");
                                 $data_driver_kirim = mysqli_fetch_array($driver_kirim);
+
+                                $penerima =  mysqli_query($connect,"SELECT id_inv, nama_penerima 
+                                                                FROM inv_penerima
+                                                                WHERE id_inv = '$id_inv'");
+                                $data_penerima = mysqli_fetch_array($penerima);
+                                $nama_penerima = "";
+                                if($nama_penerima != ""){
+                                    $nama_penerima = $data_penerima['nama_penerima'];
+                                }
                             ?>
 
                             <?php
@@ -316,7 +327,8 @@ include "function/class-spk.php";
                                     </div>
                                     <?php
                                 } else {
-                                    ?>
+                                    if($data_status_kirim['jenis_penerima'] == "Customer" || $jenis_pengiriman == 'Driver'){
+                                        ?>
                                         <div class="row mt-2">
                                             <div class="col-5">
                                                 <p style="float: left;">Jenis Pengiriman</p>
@@ -326,7 +338,7 @@ include "function/class-spk.php";
                                                 <?php echo $jenis_pengiriman ?> (<?php echo $data_driver_kirim['nama_user'] ?>)
                                             </div>
                                         </div>
-                                    <?php
+                                        <?php
                                         if(!empty($data_status_kirim['jenis_penerima'])){
                                             ?>
                                                 <div class="row">
@@ -335,11 +347,12 @@ include "function/class-spk.php";
                                                         <p style="float: right;"> :</p>
                                                     </div>
                                                     <div class="col-7">
-                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> (<?php echo $nama_penerima ?>)
                                                     </div>
                                                 </div>
                                             <?php
                                         }
+                                    }
                                 }
                             ?>
                             <?php
@@ -433,7 +446,7 @@ include "function/class-spk.php";
                                     ?>
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#ubahDriver">
-                                            <i class="bi bi-arrow-repeat"></i> Ubah Driver
+                                            <i class="bi bi-arrow-repeat"></i> Ubah Pengiriman
                                         </button>
                                     <?php
                                 }
@@ -457,6 +470,8 @@ include "function/class-spk.php";
                                         echo ' 
                                                 <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_bum) . '">
                                                 <a href="cetak-inv-bum-reg.php?id=' . base64_encode($id_inv_bum) . '" class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
+                                                <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
+                                                <a href="cetak-kwitansi.php?id_inv=' . $id_inv_bum . '" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
                                                 <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_bum) . '">
                                                 <a href="generate_pdf_bum.php?id=' . base64_encode($id_inv_bum) . '" class="btn btn-info mb-2"><i class="bi bi-file-pdf"></i> Cetak PDF</a>
                                                 ';
@@ -469,7 +484,8 @@ include "function/class-spk.php";
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
+                        <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
+                        <table class="table table-striped table-bordered" id="table2">
                             <?php
                                 if ($total_data != 0) {
                                     if ($data_cek['kategori_inv'] != 'Diskon') {
@@ -661,6 +677,30 @@ include "function/class-spk.php";
 </body>
 
 </html>
+<!-- Modal Cetak Surat Jalan -->
+<div class="modal fade" id="cetakSuratJalan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Cetak Surat Jalan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="cetak-surat-jalan.php" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                        <input type="text" class="form-control" name="disetujui" placeholder="Input Nama Disetujui" required>
+                    </div> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="cetak">Ya, Cetak Surat Jalan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Dikirim-->
 <div class="modal fade" id="DiterimaEx" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -1197,44 +1237,44 @@ function refreshPage() {
 </script>
 
 <script>
-$(document).ready(function() {
-    $('.btn-detail').click(function() {
-        var idSpk = $(this).data('spk');
-        $('#spk').text(idSpk);
+    $(document).ready(function() {
+        $('.btn-detail').click(function() {
+            var idSpk = $(this).data('spk');
+            $('#spk').text(idSpk);
 
-        $('button.btn-pilih').attr('data-spk', idSpk);
+            $('button.btn-pilih').attr('data-spk', idSpk);
 
-        $('#modalBarang').modal('show');
-    });
-
-    $(document).on('click', '.btn-pilih', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var id = $(this).data('id');
-        var spk = $(this).attr('data-spk');
-
-        saveData(id, spk);
-    });
-
-    function saveData(id, spk) {
-        $.ajax({
-            url: 'simpan-data-spk.php',
-            type: 'POST',
-            data: {
-                id: id,
-                spk: spk
-            },
-            success: function(response) {
-                console.log('Data berhasil disimpan.');
-                $('button[data-id="' + id + '"]').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                console.error('Terjadi kesalahan saat menyimpan data:', error);
-            }
+            $('#modalBarang').modal('show');
         });
-    }
-});
+
+        $(document).on('click', '.btn-pilih', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var id = $(this).data('id');
+            var spk = $(this).attr('data-spk');
+
+            saveData(id, spk);
+        });
+
+        function saveData(id, spk) {
+            $.ajax({
+                url: 'simpan-data-spk.php',
+                type: 'POST',
+                data: {
+                    id: id,
+                    spk: spk
+                },
+                success: function(response) {
+                    console.log('Data berhasil disimpan.');
+                    $('button[data-id="' + id + '"]').prop('disabled', true);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Terjadi kesalahan saat menyimpan data:', error);
+                }
+            });
+        }
+    });
 </script>
 
 <!-- Fungsi menonaktifkan kerboard enter -->
@@ -1284,18 +1324,18 @@ function numberFormat(number) {
 
 <!-- Edit Harga -->
 <script>
-$('#edit-diskon').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('hargadisc');
-    var diskon = button.data('diskon');
-    var qty = button.data('qty');
+    $('#edit-diskon').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('hargadisc');
+        var diskon = button.data('diskon');
+        var qty = button.data('qty');
 
-    $('#id_trxdisc').val(idTrx);
-    $('#harga_produk_disc').val(harga);
-    $('#discc').val(diskon);
-    $('#qtydisc').val(qty);
-});
+        $('#id_trxdisc').val(idTrx);
+        $('#harga_produk_disc').val(harga);
+        $('#discc').val(diskon);
+        $('#qtydisc').val(qty);
+    });
 
 $('#edit').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget);

@@ -18,6 +18,7 @@ $sql = "SELECT
             pr.kode_produk,
             pr.harga_produk,
             pr.nama_produk,
+            pr.kode_katalog,
             pr.satuan,
             pr.gambar,
             pr.created_date as produk_created,
@@ -155,6 +156,7 @@ while ($row = mysqli_fetch_assoc($query)) {
             <button class="btn btn-primary btn-sm" title="Detail" data-bs-toggle="modal" data-bs-target="#detailProduk"
                 data-kode-produk="'.$row['kode_produk'].'" 
                 data-nama-produk="'.$row['nama_produk'].'" 
+                data-kode-katalog="'.$row['kode_katalog'].'" 
                 data-satuan="'.$row['satuan'].'" 
                 data-merk-produk="'.$row['nama_merk'].'" 
                 data-harga-produk="'.number_format($row['harga_produk'], 0,'.','.').'" 

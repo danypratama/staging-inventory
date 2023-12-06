@@ -64,7 +64,7 @@ include "function/class-spk.php";
                     $id_inv = base64_decode($_GET['id']);
                     $sql = "SELECT 
                             ppn.*, 
-                            sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan, sr.note AS note_spk,
+                            sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan, sr.petugas, sr.note AS note_spk,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
                             FROM inv_ppn AS ppn
                             JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
@@ -77,6 +77,7 @@ include "function/class-spk.php";
                     $ongkir = $data['ongkir'];
                     $sp_disc = $data['sp_disc'];
                     $jenis_inv = $data['kategori_inv'];
+                    $petugas = $data['petugas'];
                     ?>
                     <div class="row mt-3">
                         <div class="col-sm-6">
@@ -432,6 +433,7 @@ include "function/class-spk.php";
                     </div>
                     <!-- End Modal -->
                     <div class="table-responsive p-3">
+                        <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
                         <table class="table table-striped table-bordered" id="table3">
                             <?php
                             if ($total_data != 0) {

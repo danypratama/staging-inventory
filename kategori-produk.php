@@ -33,11 +33,11 @@ include "akses.php";
 
   <main id="main" class="main">
     <!-- Loading -->
-    <!-- <div class="loader loader">
+    <div class="loader loader">
       <div class="loading">
         <img src="img/loading.gif" width="200px" height="auto">
       </div>
-    </div> -->
+    </div>
     <!-- ENd Loading -->
     <div class="pagetitle">
       <h1>Kategori Produk</h1>
@@ -68,6 +68,7 @@ include "akses.php";
                     <td class="text-center p-3 text-nowrap">Nama Kategori Produk</td>
                     <td class="text-center p-3 text-nowrap">Merk</td>
                     <td class="text-center p-3 text-nowrap">Nomor Izin Edar</td>
+                    <td class="text-center p-3 text-nowrap">Tgl. Terbit</td>
                     <td class="text-center p-3 text-nowrap">Tgl. Berlaku Sampai</td>
                     <td class="text-center p-3 text-nowrap">Sisa Waktu Perpanjangan</td>
                     <td class="text-center p-3 text-nowrap">Aksi</td>
@@ -82,6 +83,7 @@ include "akses.php";
                                 tkp.id_kat_produk, 
                                 tkp.nama_kategori, 
                                 tkp.no_izin_edar, 
+                                tkp.tgl_terbit,
                                 tkp.berlaku_sampai,
                                 DATE_FORMAT(STR_TO_DATE(tkp.berlaku_sampai, '%d/%m/%Y'), '%Y-%m-%d') AS tanggal_berlaku_sampai,
                                 mr.nama_merk
@@ -119,6 +121,7 @@ include "akses.php";
                       <td class="text-nowrap"><?php echo $data['nama_kategori'] ?></td>
                       <td class="text-center text-nowrap"><?php echo $data['nama_merk'] ?></td>
                       <td class="text-center text-nowrap"><?php echo $data['no_izin_edar'] ?></td>
+                      <td class="text-center text-nowrap"><?php echo $data['tgl_terbit'] ?></td>
                       <td class="text-center text-nowrap">
                         <?php 
                           if ($data['berlaku_sampai'] == '') {
@@ -149,7 +152,7 @@ include "akses.php";
                         ?>
                       </td>
                       <td class="text-center text-nowrap">
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_kat_produk']; ?>" data-nama="<?php echo $data['nama_kategori']; ?>" data-merk="<?php echo $data['nama_merk'] ?>" data-nie="<?php echo $data['no_izin_edar'] ?>" data-exp="<?php echo $data['berlaku_sampai'] ?>">
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_kat_produk']; ?>" data-nama="<?php echo $data['nama_kategori']; ?>" data-merk="<?php echo $data['nama_merk'] ?>" data-nie="<?php echo $data['no_izin_edar'] ?>" data-terbit="<?php echo $data['tgl_terbit'] ?>" data-exp="<?php echo $data['berlaku_sampai'] ?>">
                           <i class="bi bi-pencil"></i>
                         </button>
                         <a href="proses/proses-kat-produk.php?hapus-kat-produk=<?php echo $id_kat ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
@@ -196,6 +199,10 @@ include "akses.php";
             <input type="text" class="form-control" name="no_izin_edar" id="nie" required>
             <input type="hidden" class="form-control" name="updated" value="<?php echo date('d/m/Y, G:i') ?>">
             <input type="hidden" class="form-control" name="user_updated" value="<?php echo $_SESSION['tiket_id'] ?>">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tgl. Terbit</label>
+            <input type="text" class="form-control" name="tgl_terbit" id="terbit">
           </div>
           <div class="mb-3">
             <label class="form-label">Tgl. Berlaku Sampai</label>
@@ -291,6 +298,10 @@ include "akses.php";
                 <input type="text" class="form-control" name="nie" required>
               </div>
               <div class="mb-3">
+                <label class="form-label">Tgl. Terbit</label>
+                <input type="date" class="form-control" name="tgl_terbit" id="terbit" required>
+              </div>
+              <div class="mb-3">
                 <label class="form-label">Berlaku Sampai</label>
                 <input type="date" class="form-control" name="expired_date" id="exp" required>
               </div>
@@ -308,20 +319,20 @@ include "akses.php";
 <!-- Generat UUID -->
 
 <?php
-function generate_uuid()
-{
-  return sprintf(
-    '%04x%04x%04x',
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0x0fff) | 0x4000,
-    mt_rand(0, 0x3fff) | 0x8000,
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff),
-    mt_rand(0, 0xffff)
-  );
-}
+  function generate_uuid()
+  {
+    return sprintf(
+      '%04x%04x%04x',
+      mt_rand(0, 0xffff),
+      mt_rand(0, 0xffff),
+      mt_rand(0, 0xffff),
+      mt_rand(0, 0x0fff) | 0x4000,
+      mt_rand(0, 0x3fff) | 0x8000,
+      mt_rand(0, 0xffff),
+      mt_rand(0, 0xffff),
+      mt_rand(0, 0xffff)
+    );
+  }
 ?>
 <!-- End Generate UUID -->
 
@@ -381,6 +392,9 @@ function generate_uuid()
    flatpickr("#exp", {
         dateFormat: "d/m/Y"
     });
+    flatpickr("#terbit", {
+        dateFormat: "d/m/Y"
+    });
 </script>
 
 <!-- Script untuk modal edit -->
@@ -392,18 +406,21 @@ function generate_uuid()
     var nama = button.data('nama');
     var merk = button.data('merk');
     var nie = button.data('nie');
+    var terbit = button.data('terbit');
     var exp = button.data('exp');
     var modal = $(this);
     var simpanBtn = modal.find('.modal-footer #simpan');
     var namaInput = modal.find('.modal-body #nama_kategori');
     var merkInput = modal.find('.modal-body #merk'); // Corrected ID for merk select
     var nieInput = modal.find('.modal-body #nie');
+    var terbitInput = modal.find('.modal-body #terbit'); // Corrected ID for exp input
     var expInput = modal.find('.modal-body #exp'); // Corrected ID for exp input
 
     modal.find('.modal-body #id_kat_produk').val(id);
     namaInput.val(nama);
     merkInput.val(merk);
     nieInput.val(nie);
+    terbitInput.val(terbit);
     expInput.val(exp);
 
     // Pengecekan data, dan buttun disable or enable saat data di ubah
@@ -411,15 +428,17 @@ function generate_uuid()
     var originalNama = namaInput.val();
     var originalMerk = merkInput.val();
     var originalNie = nieInput.val();
+    var originalTerbit = terbitInput.val();
     var originalExp = expInput.val();
 
     namaInput.on('input', function() {
       var currentNama = $(this).val();
       var currentMerk = merkInput.val();
       var currentNie = nieInput.val();
+      var currentTerbit = terbitInput.val();
       var currentExp = expInput.val();
 
-      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentExp != originalExp) {
+      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
         simpanBtn.prop('disabled', false);
       } else {
         simpanBtn.prop('disabled', true);
@@ -430,9 +449,10 @@ function generate_uuid()
       var currentNie = $(this).val();
       var currentNama = namaInput.val();
       var currentMerk = merkInput.val();
+      var currentTerbit = terbitInput.val();
       var currentExp = expInput.val();
 
-      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentExp != originalExp) {
+      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
         simpanBtn.prop('disabled', false);
       } else {
         simpanBtn.prop('disabled', true);
@@ -443,9 +463,24 @@ function generate_uuid()
       var currentMerk = $(this).val();
       var currentNama = namaInput.val();
       var currentNie = nieInput.val();
+      var currentTerbit = terbitInput.val();
       var currentExp = expInput.val();
 
-      if (currentNama !== originalNama || currentMerk !== originalMerk || currentNie !== originalNie || currentExp !== originalExp) {
+      if (currentNama !== originalNama || currentMerk !== originalMerk || currentNie !== originalNie || currentTerbit != originalTerbit || currentExp !== originalExp) {
+        simpanBtn.prop('disabled', false);
+      } else {
+        simpanBtn.prop('disabled', true);
+      }
+    });
+
+    terbitInput.on('input', function() {
+      var currentTerbit = $(this).val();
+      var currentNama = namaInput.val();
+      var currentNie = nieInput.val();
+      var currentExp = expInput.val();
+      var currentMerk = merkInput.val();
+
+      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
         simpanBtn.prop('disabled', false);
       } else {
         simpanBtn.prop('disabled', true);
@@ -456,9 +491,10 @@ function generate_uuid()
       var currentExp = $(this).val();
       var currentNama = namaInput.val();
       var currentNie = nieInput.val();
+      var currentTerbit = terbitInput.val();
       var currentMerk = merkInput.val();
 
-      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentExp != originalExp) {
+      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
         simpanBtn.prop('disabled', false);
       } else {
         simpanBtn.prop('disabled', true);

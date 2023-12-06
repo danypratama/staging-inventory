@@ -9,6 +9,7 @@ if (isset($_POST["simpan-kat-produk"])) {
 	$nama_kategori = $_POST['nama_kat_produk'];
 	$merk = $_POST['merk'];
 	$nie = $_POST['nie'];
+	$tgl_terbit = $_POST['tgl_terbit'];
 	$expired_date = $_POST['expired_date'];
 	$created = $_POST['created'];
 	$user_created = $_POST['user_created'];
@@ -20,9 +21,9 @@ if (isset($_POST["simpan-kat-produk"])) {
 		echo "<script>document.location.href='../kategori-produk.php'</script>";
 	} else {
 		mysqli_query($connect, "INSERT INTO tb_kat_produk
-                      (id_kat_produk, id_user, nama_kategori, id_merk, no_izin_edar, berlaku_sampai, created_date) 
+                      (id_kat_produk, id_user, nama_kategori, id_merk, no_izin_edar, tgl_terbit, berlaku_sampai, created_date) 
                       VALUES 
-                      ('$id_kat_produk', '$id_user', '$nama_kategori', '$merk', '$nie', '$expired_date', '$created')");
+                      ('$id_kat_produk', '$id_user', '$nama_kategori', '$merk', '$nie', '$tgl_terbit', '$expired_date', '$created')");
 
 		$_SESSION['info'] = 'Disimpan';
 		echo "<script>document.location.href='../kategori-produk.php'</script>";
@@ -34,6 +35,7 @@ if (isset($_POST["simpan-kat-produk"])) {
 	$nama_kategori = $_POST['nama_kat_produk'];
 	$nama_merk = $_POST['merk'];
 	$nie = $_POST['no_izin_edar'];
+	$tgl_terbit = $_POST['tgl_terbit'];
 	$exp_date = $_POST['exp_date'];
 	$updated = $_POST['updated'];
 	$user_updated = $_POST['user_updated'];
@@ -54,6 +56,7 @@ if (isset($_POST["simpan-kat-produk"])) {
 			nama_kategori = '$nama_kategori',
 			id_merk = '$id_merk',
 			no_izin_edar = '$nie',
+			tgl_terbit = '$tgl_terbit',
 			berlaku_sampai = '$exp_date',
 			updated_date = '$updated',
 			user_updated = '$user_updated'	
@@ -75,6 +78,7 @@ if (isset($_POST["simpan-kat-produk"])) {
 					nama_kategori = '$nama_kategori',
 					id_merk = '$id_merk',
 					no_izin_edar = '$nie',
+					berlaku_sampai = '$exp_date',
 					berlaku_sampai = '$exp_date',
 					updated_date = '$updated',
 					user_updated = '$user_updated'
