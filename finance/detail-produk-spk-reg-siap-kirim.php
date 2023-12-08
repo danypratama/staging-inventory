@@ -65,6 +65,7 @@ include "../function/class-spk.php";
                     WHERE sr.id_spk_reg = '$id_spk'";
                 $query = mysqli_query($connect, $sql);
                 $data = mysqli_fetch_array($query);
+                $petugas = $data['petugas'];
                 ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
@@ -171,12 +172,13 @@ include "../function/class-spk.php";
             <!-- Tampil data -->
             <div class="card shadow">
                 <div class="card-body p-3">
+                    <div class="text-start mb-3">
+                        <a href="spk-siap-kirim.php?sort=baru" class="btn btn-warning btn-detail">
+                            <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                        </a>
+                    </div>
+                    <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
                     <div class="table-responsive">
-                        <div class="text-start mb-3">
-                            <a href="spk-siap-kirim.php?sort=baru" class="btn btn-warning btn-detail">
-                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                            </a>
-                        </div>
                         <table class="table table-striped table-bordered" id="table2">
                             <thead>
                                 <tr class="text-white" style="background-color: #051683;">

@@ -100,7 +100,7 @@ include "akses.php";
                           FROM transaksi_produk_sph AS tps
                           LEFT JOIN stock_produk_reguler spr ON (spr.id_produk_reg = tps.id_produk)
                           LEFT JOIN tb_produk_reguler tpr ON (tpr.id_produk_reg = spr.id_produk_reg)
-                          LEFT JOIN tb_merk mr ON (spr.id_merk = mr.id_merk)
+                          LEFT JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
                           LEFT JOIN tb_produk_set_marwa tpsm ON (spr.id_produk_reg = tpsm.id_set_marwa)
                           WHERE status_trx = 1 AND id_sph = '$id_sph_decode'";
               $query_trx = mysqli_query($connect, $sql_trx);
