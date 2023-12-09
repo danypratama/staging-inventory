@@ -9,11 +9,12 @@
         $tgl = $_POST['tgl'];
         $uuid = generate_uuid();
         $year = date('y');
+        $year_komplain = date('Y');
         $day = date('d');
         $month = date('m');
         $id_komplain = "KMPLN" . $year . "". $month . "" . $uuid . "" . $day;
         $id_kondisi = "KNDSI" . $year . "". $month . "" . $uuid . "" . $day;
-        $sql  = mysqli_query($connect, "SELECT max(no_komplain) as maxID, STR_TO_DATE(tgl_komplain, '%d/%m/%Y') AS tgl FROM inv_komplain WHERE MONTH(STR_TO_DATE(tgl_komplain, '%d/%m/%Y')) = '$year'");
+        $sql  = mysqli_query($connect, "SELECT max(no_komplain) as maxID, STR_TO_DATE(tgl_komplain, '%d/%m/%Y') AS tgl FROM inv_komplain WHERE YEAR(STR_TO_DATE(tgl_komplain, '%d/%m/%Y')) = '$year_komplain'");
         $data = mysqli_fetch_array($sql);
         $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
         $kode = $data['maxID'];
@@ -169,11 +170,12 @@
         $tgl = $_POST['tgl'];
         $uuid = generate_uuid();
         $year = date('y');
+        $year_komplain = date('Y');
         $day = date('d');
         $month = date('m');
         $id_komplain = "KMPLN" . $year . "". $month . "" . $uuid . "" . $day;
         $id_kondisi = "KNDSI" . $year . "". $month . "" . $uuid . "" . $day;
-        $sql  = mysqli_query($connect, "SELECT max(no_komplain) as maxID, STR_TO_DATE(tgl_komplain, '%d/%m/%Y') AS tgl FROM inv_komplain WHERE MONTH(STR_TO_DATE(tgl_komplain, '%d/%m/%Y')) = '$year'");
+        $sql  = mysqli_query($connect, "SELECT max(no_komplain) as maxID, STR_TO_DATE(tgl_komplain, '%d/%m/%Y') AS tgl FROM inv_komplain WHERE YEAR(STR_TO_DATE(tgl_komplain, '%d/%m/%Y')) = '$year_komplain'");
         $data = mysqli_fetch_array($sql);
         $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
         $kode = $data['maxID'];
@@ -334,7 +336,7 @@
         $month = date('m');
         $id_komplain = "KMPLN" . $year . "". $month . "" . $uuid . "" . $day;
         $id_kondisi = "KNDSI" . $year . "". $month . "" . $uuid . "" . $day;
-        $sql  = mysqli_query($connect, "SELECT max(no_komplain) as maxID, STR_TO_DATE(tgl_komplain, '%d/%m/%Y') AS tgl FROM inv_komplain WHERE MONTH(STR_TO_DATE(tgl_komplain, '%d/%m/%Y')) = '$year'");
+        $sql  = mysqli_query($connect, "SELECT max(no_komplain) as maxID, STR_TO_DATE(tgl_komplain, '%d/%m/%Y') AS tgl FROM inv_komplain WHERE YEAR(STR_TO_DATE(tgl_komplain, '%d/%m/%Y')) = '$year_komplain'");
         $data = mysqli_fetch_array($sql);
         $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
         $kode = $data['maxID'];
