@@ -36,6 +36,9 @@ include "../function/class-spk.php";
             text-overflow: ellipsis; /* Menggantikan teks yang terpotong dengan elipsis (...) jika terlalu panjang */
         }
         
+        #Diterima{
+            cursor: pointer;
+        }
     
         @media only screen and (max-width: 500px) {
             body {
@@ -90,6 +93,7 @@ include "../function/class-spk.php";
                     $sp_disc = $data['sp_disc'];
                     $ongkir = $data['ongkir'];
                     $id_spk = $data['id_spk_reg'];
+                    $no_inv = $data['no_inv'];
                 ?>
                 <div class="row mt-3">
                     <div class="col-sm-6">
@@ -582,41 +586,6 @@ include "../function/class-spk.php";
 </body>
 
 </html>
-<!-- Modal Diterima-->
-<div class="modal fade" id="DiterimaEx" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
-                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
-            </div>
-            <div class="modal-body">
-                <div class="card-body">
-                    <form action="proses/proses-invoice-bum-diterima.php" method="POST"
-                        enctype="multipart/form-data">
-                        <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv_bum']; ?>">
-                        <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
-                        <div class="mb-3">
-                            <label>Nama Penerima</label>
-                            <input type="text" class="form-control" name="nama_penerima" autocomplete="off" required>
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelDate">Tanggal Penerimaan</label>
-                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
-                                id="date" required="required">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="diterima_ekspedisi"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEkspedisi"><i class="bi bi-x-circle"></i> Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Modal Diterima SPK -->
 
 <!-- Modal Diterima-->
 <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -634,6 +603,10 @@ include "../function/class-spk.php";
                         <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
                         <input type="hidden" name="id_spk" value="<?php echo $id_spk; ?>">
                         <div class="mb-3">
+                            <label><b>No. Invoice</b></label>
+                            <input type="text" class="form-control bg-light" value="<?php echo $no_inv ?>" readonly>
+                        </div>
+                        <div class="mb-3">
                             <label id="labelJenisPenerima"><b>Diterima Oleh</b></label>
                             <select name="diterima_oleh" id="jenis-penerima" class="form-select" required>
                                 <option value="">Pilih...</option>
@@ -650,108 +623,6 @@ include "../function/class-spk.php";
                             <div class="mb-3">
                                 <label id="labelPenerima"><b>Nama Penerima</b></label>
                                 <input type="text" class="form-control" name="nama_penerima" id="penerima" autocomplete="off" required>
-                            </div>
-                            <div class="mb-3">
-                                <label><b>Kondisi Pesanan</b></label><br>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kondisi" id="sesuai" value="sesuai" required>
-                                    <label class="form-check-label" for="inlineRadio1">Sesuai</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kondisi" id="tidak_sesuai" value="tidak sesuai" required>
-                                    <label class="form-check-label" for="inlineRadio2">Tidak Sesuai</label>
-                                </div>
-                            </div>
-                            <div id="tidak_sesuai_form" style="display: none;">
-                                <div class="mb-3">
-                                    <label><b>Pilih Kategori Komplain</b></label>
-                                    <select name="kat_komplain" id="kat_komplain" class="form-select" required>
-                                        <option value="">Pilih Kategori...</option>
-                                        <option value="0">Invoice</option>
-                                        <option value="1">Barang</option>
-                                    </select>
-                                </div>
-                                <label><b>Pilih Kondisi Pesanan</b></label>
-                                <div class="mb-3 border p-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan0" value="0" required>
-                                        <label class="form-check-label" for="kondisi_pesanan0">
-                                            Faktur sesuai, tetapi barang yang diterima adalah jenis yang salah.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan1" value="1" required>
-                                        <label class="form-check-label" for="kondisi_pesanan1">
-                                            Faktur sesuai, namun jumlah barang yang diterima kurang dari yang diharapkan.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan2" value="2" required>
-                                        <label class="form-check-label" for="kondisi_pesanan2">
-                                            Faktur sesuai, tetapi pelanggan meminta revisi harga.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan3" value="3" required>
-                                        <label class="form-check-label" for="kondisi_pesanan3">
-                                            Faktur dan barang sesuai, tetapi barang yang diterima rusak, cacat,atau memiliki masalah kualitas sehingga tidak berfungsi sesuai yang diharapkan.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan4" value="4" required>
-                                        <label class="form-check-label" for="kondisi_pesanan4">
-                                            Faktur tidak sesuai, tetapi barang dan jumlahnya cocok dengan pesanan.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan5" value="5" required>
-                                        <label class="form-check-label" for="kondisi_pesanan5">
-                                            Pelanggan meminta pengembalian barang / uang karena ketidakcocokan pesanan.
-                                        </label>
-                                    </div>
-                                    <!-- <label><b>Pilih Kondisi Pesanan</b></label>
-                                    <select name="kondisi_pesanan" class="form-select form-select-lg mb-3" aria-label="Large select example">
-                                        <option value="">Pilih Kondisi...</option>
-                                        <option value="0"><p>Faktur sesuai, tetapi barang yang diterima adalah jenis yang salah<p></option>
-                                        <option value="1">Faktur sesuai, namun jumlah barang yang diterima kurang dari yang diharapkan</option>
-                                        <option value="2">Faktur sesuai, tetapi pelanggan meminta revisi harga</option>
-                                        <option value="3">Faktur dan barang sesuai, tetapi barang yang diterima rusak, cacat,atau memiliki masalah kualitas sehingga tidak berfungsi sesuai yang diharapkan</option>
-                                        <option value="4">Faktur tidak sesuai, tetapi barang dan jumlahnya cocok dengan pesanan</option>
-                                        <option value="5">Pelanggan meminta pengembalian barang / uang karena ketidakcocokan pesanan</option>
-                                    </select> -->
-                                </div>
-                                <div class="mb-3">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label><b>Retur Barang</b></label><br>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="retur" id="retur_ya" value="1" required>
-                                                <label class="form-check-label" for="inlineRadio1">Ya</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="retur" id="retur_tidak" value="0" required>
-                                                <label class="form-check-label" for="inlineRadio2">Tidak</label>
-                                            </div>
-                                        </div>                                     
-                                        <div class="col-md-6" id="refundDana" style="display: none;">
-                                            <label><b>Refund Dana</b></label><br>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="refund" id="refund_ya" value="1" required>
-                                                <label class="form-check-label" for="inlineRadio1">Ya</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="refund" id="refund_tidak" value="0" required>
-                                                <label class="form-check-label" for="inlineRadio2">Tidak</label>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label><b>Catatan Khusus (*)</b></label>
-                                    <textarea class="form-control" name="catatan" id="catatan" cols="30" rows="5"></textarea>
-                                    <p>Jumlah Karakter: <span id="hitungKarakter">0</span></p>
-                                </div>
                             </div>
                         </div>
 
@@ -916,140 +787,140 @@ include "../function/class-spk.php";
 
 <!-- Generat UUID -->
 <?php
-function generate_uuid()
-{
-    return sprintf(
-        '%04x%04x%04x',
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0x0fff) | 0x4000,
-        mt_rand(0, 0x3fff) | 0x8000,
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff)
-    );
-}
+    function generate_uuid()
+    {
+        return sprintf(
+            '%04x%04x%04x',
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff)
+        );
+    }
 ?>
 <!-- End Generate UUID -->
 
 <script>
-function refreshPage() {
-    location.reload();
-}
+    function refreshPage() {
+        location.reload();
+    }
 </script>
 
 <script>
-$(document).ready(function() {
-    $('.btn-detail').click(function() {
-        var idSpk = $(this).data('spk');
-        $('#spk').text(idSpk);
+    $(document).ready(function() {
+        $('.btn-detail').click(function() {
+            var idSpk = $(this).data('spk');
+            $('#spk').text(idSpk);
 
-        $('button.btn-pilih').attr('data-spk', idSpk);
+            $('button.btn-pilih').attr('data-spk', idSpk);
 
-        $('#modalBarang').modal('show');
-    });
-
-    $(document).on('click', '.btn-pilih', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var id = $(this).data('id');
-        var spk = $(this).attr('data-spk');
-
-        saveData(id, spk);
-    });
-
-    function saveData(id, spk) {
-        $.ajax({
-            url: 'simpan-data-spk.php',
-            type: 'POST',
-            data: {
-                id: id,
-                spk: spk
-            },
-            success: function(response) {
-                console.log('Data berhasil disimpan.');
-                $('button[data-id="' + id + '"]').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                console.error('Terjadi kesalahan saat menyimpan data:', error);
-            }
+            $('#modalBarang').modal('show');
         });
-    }
-});
+
+        $(document).on('click', '.btn-pilih', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var id = $(this).data('id');
+            var spk = $(this).attr('data-spk');
+
+            saveData(id, spk);
+        });
+
+        function saveData(id, spk) {
+            $.ajax({
+                url: 'simpan-data-spk.php',
+                type: 'POST',
+                data: {
+                    id: id,
+                    spk: spk
+                },
+                success: function(response) {
+                    console.log('Data berhasil disimpan.');
+                    $('button[data-id="' + id + '"]').prop('disabled', true);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Terjadi kesalahan saat menyimpan data:', error);
+                }
+            });
+        }
+    });
 </script>
 
 <!-- Fungsi menonaktifkan kerboard enter -->
 <script>
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        document
-            .getElementById("simpan-data")
-            .click();
-    }
-});
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document
+                .getElementById("simpan-data")
+                .click();
+        }
+    });
 </script>
 
 <!-- Number format untuk harga -->
 
 <script>
-// Mendapatkan referensi elemen input
-var hargaProdukInputs = document.querySelectorAll('.harga_produk');
+    // Mendapatkan referensi elemen input
+    var hargaProdukInputs = document.querySelectorAll('.harga_produk');
 
-// Menambahkan event listener untuk memformat angka saat nilai berubah
-hargaProdukInputs.forEach(function(input) {
-    input.addEventListener('input', function() {
-        formatNumber(input);
+    // Menambahkan event listener untuk memformat angka saat nilai berubah
+    hargaProdukInputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            formatNumber(input);
+        });
     });
-});
 
-// Fungsi untuk memformat angka dengan pemisah ribuan
-function formatNumber(input) {
-    var hargaProdukValue = input
-        .value
-        .replace(/[^0-9.-]+/g, '');
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function formatNumber(input) {
+        var hargaProdukValue = input
+            .value
+            .replace(/[^0-9.-]+/g, '');
 
-    if (hargaProdukValue !== '') {
-        var formattedNumber = numberFormat(hargaProdukValue);
-        input.value = formattedNumber;
+        if (hargaProdukValue !== '') {
+            var formattedNumber = numberFormat(hargaProdukValue);
+            input.value = formattedNumber;
+        }
     }
-}
 
-// Fungsi untuk memformat angka dengan pemisah ribuan
-function numberFormat(number) {
-    return new Intl
-        .NumberFormat('en-US')
-        .format(number);
-}
+    // Fungsi untuk memformat angka dengan pemisah ribuan
+    function numberFormat(number) {
+        return new Intl
+            .NumberFormat('en-US')
+            .format(number);
+    }
 </script>
 
 <!-- Edit Harga -->
 <script>
-$('#edit-diskon').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('hargadisc');
-    var diskon = button.data('diskon');
-    var qty = button.data('qty');
+    $('#edit-diskon').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('hargadisc');
+        var diskon = button.data('diskon');
+        var qty = button.data('qty');
 
-    $('#id_trxdisc').val(idTrx);
-    $('#harga_produk_disc').val(harga);
-    $('#discc').val(diskon);
-    $('#qtydisc').val(qty);
-});
+        $('#id_trxdisc').val(idTrx);
+        $('#harga_produk_disc').val(harga);
+        $('#discc').val(diskon);
+        $('#qtydisc').val(qty);
+    });
 
-$('#edit').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('harga');
-    var qty = button.data('qty');
+    $('#edit').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('harga');
+        var qty = button.data('qty');
 
-    $('#id_trx').val(idTrx);
-    $('#harga_produk').val(harga);
-    $('#qty').val(qty);
-});
+        $('#id_trx').val(idTrx);
+        $('#harga_produk').val(harga);
+        $('#qty').val(qty);
+    });
 </script>
 
 <!-- date picker with flatpick -->
