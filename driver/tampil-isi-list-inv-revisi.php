@@ -573,7 +573,7 @@ include "../function/class-spk.php";
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status Kirim</h1>
                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close" id="cancelDriver">X</button>
             </div>
             <div class="modal-body">
@@ -612,108 +612,6 @@ include "../function/class-spk.php";
                                 <label id="labelPenerima"><b>Nama Penerima</b></label>
                                 <input type="text" class="form-control" name="nama_penerima" id="penerima" autocomplete="off" required>
                             </div>
-                            <div class="mb-3">
-                                <label><b>Kondisi Pesanan</b></label><br>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kondisi" id="sesuai" value="sesuai" required>
-                                    <label class="form-check-label" for="inlineRadio1">Sesuai</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kondisi" id="tidak_sesuai" value="tidak sesuai" required>
-                                    <label class="form-check-label" for="inlineRadio2">Tidak Sesuai</label>
-                                </div>
-                            </div>
-                            <div id="tidak_sesuai_form" style="display: none;">
-                                <div class="mb-3">
-                                    <label><b>Pilih Kategori Komplain</b></label>
-                                    <select name="kat_komplain" id="kat_komplain" class="form-select" required>
-                                        <option value="">Pilih Kategori...</option>
-                                        <option value="0">Invoice</option>
-                                        <option value="1">Barang</option>
-                                    </select>
-                                </div>
-                                <label><b>Pilih Kondisi Pesanan</b></label>
-                                <div class="mb-3 border p-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan0" value="0" required>
-                                        <label class="form-check-label" for="kondisi_pesanan0">
-                                            Faktur sesuai, tetapi barang yang diterima adalah jenis yang salah.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan1" value="1" required>
-                                        <label class="form-check-label" for="kondisi_pesanan1">
-                                            Faktur sesuai, namun jumlah barang yang diterima kurang dari yang diharapkan.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan2" value="2" required>
-                                        <label class="form-check-label" for="kondisi_pesanan2">
-                                            Faktur sesuai, tetapi pelanggan meminta revisi harga.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan3" value="3" required>
-                                        <label class="form-check-label" for="kondisi_pesanan3">
-                                            Faktur dan barang sesuai, tetapi barang yang diterima rusak, cacat,atau memiliki masalah kualitas sehingga tidak berfungsi sesuai yang diharapkan.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan4" value="4" required>
-                                        <label class="form-check-label" for="kondisi_pesanan4">
-                                            Faktur tidak sesuai, tetapi barang dan jumlahnya cocok dengan pesanan.
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan5" value="5" required>
-                                        <label class="form-check-label" for="kondisi_pesanan5">
-                                            Pelanggan meminta pengembalian barang / uang karena ketidakcocokan pesanan.
-                                        </label>
-                                    </div>
-                                    <!-- <label><b>Pilih Kondisi Pesanan</b></label>
-                                    <select name="kondisi_pesanan" class="form-select form-select-lg mb-3" aria-label="Large select example">
-                                        <option value="">Pilih Kondisi...</option>
-                                        <option value="0"><p>Faktur sesuai, tetapi barang yang diterima adalah jenis yang salah<p></option>
-                                        <option value="1">Faktur sesuai, namun jumlah barang yang diterima kurang dari yang diharapkan</option>
-                                        <option value="2">Faktur sesuai, tetapi pelanggan meminta revisi harga</option>
-                                        <option value="3">Faktur dan barang sesuai, tetapi barang yang diterima rusak, cacat,atau memiliki masalah kualitas sehingga tidak berfungsi sesuai yang diharapkan</option>
-                                        <option value="4">Faktur tidak sesuai, tetapi barang dan jumlahnya cocok dengan pesanan</option>
-                                        <option value="5">Pelanggan meminta pengembalian barang / uang karena ketidakcocokan pesanan</option>
-                                    </select> -->
-                                </div>
-                                <div class="mb-3">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label><b>Retur Barang</b></label><br>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="retur" id="retur_ya" value="1" required>
-                                                <label class="form-check-label" for="inlineRadio1">Ya</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="retur" id="retur_tidak" value="0" required>
-                                                <label class="form-check-label" for="inlineRadio2">Tidak</label>
-                                            </div>
-                                        </div>                                     
-                                        <div class="col-md-6" id="refundDana" style="display: none;">
-                                            <label><b>Refund Dana</b></label><br>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="refund" id="refund_ya" value="1" required>
-                                                <label class="form-check-label" for="inlineRadio1">Ya</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="refund" id="refund_tidak" value="0" required>
-                                                <label class="form-check-label" for="inlineRadio2">Tidak</label>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label><b>Catatan Khusus (*)</b></label>
-                                    <textarea class="form-control" name="catatan" id="catatan" cols="30" rows="5"></textarea>
-                                    <p>Jumlah Karakter: <span id="hitungKarakter">0</span></p>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Diterima Ekspedisi -->
@@ -733,7 +631,7 @@ include "../function/class-spk.php";
                             <div class="mb-3">
                                 <label id="labelJenisOngkir"><b>Jenis Ongkir</b></label>
                                 <select id="jenis_ongkir" name="jenis_ongkir" class="form-select" required>
-                                    <option>Pilih</option>
+                                    <option value="">Pilih</option>
                                     <option value="0">Non COD</option>
                                     <option value="1">COD</option>
                                 </select>
@@ -764,7 +662,7 @@ include "../function/class-spk.php";
                         </div>
                         <div class="mb-3" id="imagePreview3"></div> 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="diterima_driver" id="diterima" onclick="checkFileName()"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                            <button type="submit" class="btn btn-primary" name="diterima" id="diterima" onclick="checkFileName()"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDriver"><i class="bi bi-x-circle"></i> Cancel</button>
                         </div>
                     </form>

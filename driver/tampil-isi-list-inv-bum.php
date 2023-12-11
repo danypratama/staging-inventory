@@ -593,7 +593,7 @@ include "../function/class-spk.php";
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status Kirim</h1>
                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
@@ -631,7 +631,7 @@ include "../function/class-spk.php";
                             <div class="mb-3">
                                 <label id="labelPenerima"><b>Pilih Ekspedisi</b></label>
                                 <div class="input-group flex-nowrap">
-                                    <input type="text" name="nama_ekspedisi" id="dropdown-input" class="form-control" placeholder="Pilih..." autocomplete="off" required>
+                                    <input type="text" name="nama_ekspedisi" id="dropdown-input" class="form-control" placeholder="Pilih..." autocomplete="off">
                                     <span class="input-group-text" id="clear-search"><i class="bi bi-x-circle"></i></span>
                                 </div>
                                 <div id="dropdown-list" class="form-control"></div> 
@@ -642,8 +642,8 @@ include "../function/class-spk.php";
                             </div>
                             <div class="mb-3">
                                 <label id="labelJenisOngkir"><b>Jenis Ongkir</b></label>
-                                <select id="jenis_ongkir" name="jenis_ongkir" class="form-select" required>
-                                    <option>Pilih</option>
+                                <select id="jenis_ongkir" name="jenis_ongkir" class="form-select">
+                                    <option value="">Pilih</option>
                                     <option value="0">Non COD</option>
                                     <option value="1">COD</option>
                                 </select>

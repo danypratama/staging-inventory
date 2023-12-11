@@ -593,7 +593,7 @@ include "../function/class-spk.php";
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status Kirim</h1>
                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">

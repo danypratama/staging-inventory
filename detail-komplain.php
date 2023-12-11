@@ -1,5 +1,6 @@
     <?php
-    $page  = 'list-cmp';
+    $page  = 'transaksi';
+    $page2  = 'list-cmp';
     include "akses.php";
     include 'function/class-komplain.php';
     ?>

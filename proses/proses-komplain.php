@@ -154,7 +154,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../list-invoice.php";
+                        window.location.href = "../invoice-reguler-diterima.php";
                     });
                     });
                 </script>
@@ -316,7 +316,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../list-invoice.php";
+                        window.location.href = "../invoice-reguler-diterima.php";
                     });
                     });
                 </script>
@@ -334,6 +334,7 @@
         $year = date('y');
         $day = date('d');
         $month = date('m');
+        $year_komplain = date('Y');
         $id_komplain = "KMPLN" . $year . "". $month . "" . $uuid . "" . $day;
         $id_kondisi = "KNDSI" . $year . "". $month . "" . $uuid . "" . $day;
         $sql  = mysqli_query($connect, "SELECT max(no_komplain) as maxID, STR_TO_DATE(tgl_komplain, '%d/%m/%Y') AS tgl FROM inv_komplain WHERE YEAR(STR_TO_DATE(tgl_komplain, '%d/%m/%Y')) = '$year_komplain'");
@@ -476,7 +477,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../list-invoice.php";
+                        window.location.href = "../invoice-reguler-diterima.php";
                     });
                     });
                 </script>

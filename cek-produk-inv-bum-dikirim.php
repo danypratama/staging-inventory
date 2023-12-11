@@ -347,7 +347,7 @@ include "function/class-spk.php";
                                                         <p style="float: right;"> :</p>
                                                     </div>
                                                     <div class="col-7">
-                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> (<?php echo $nama_penerima ?>)
+                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
                                                     </div>
                                                 </div>
                                             <?php

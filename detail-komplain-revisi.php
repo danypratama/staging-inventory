@@ -1,5 +1,6 @@
 <?php
-    $page  = 'list-cmp';
+    $page  = 'transaksi';
+    $page2  = 'list-cmp';
     include "akses.php";
     include 'function/class-komplain.php';
     ?>
@@ -924,7 +925,7 @@
                                             <label class="form-check-label" for="dikirim">Dikirim</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai" disabled>
+                                            <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai">
                                             <label class="form-check-label" for="selesai">Transaksi Selesai</label>
                                         </div>
                                     <?php
@@ -964,7 +965,7 @@
                     <div id="trxKirim" style="display: none;">
                         <div class="mb-3">
                             <label>Jenis Pengiriman</label>
-                            <select class="form-select" name="jenis_pengiriman" id="jenis_pengiriman">
+                            <select class="form-select" name="jenis_pengiriman" id="jenis_pengiriman" required>
                                 <option value="">Pilih</option>
                                 <option value="Driver">Driver</option>
                                 <option value="Ekspedisi">Expedisi</option>
@@ -1082,6 +1083,7 @@
                             jenisEkspedisi.style.display = 'none';
                             bukti.style.display = 'none';
                             tanggal.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
+                            jenisPengiriman.removeAttribute('required');
                         }
                     });
 
@@ -1098,6 +1100,7 @@
                             tanggal.value = '';
                             tanggal.removeAttribute('required');
                             pengirim.style.display = 'block';
+                            pengirim.setAttribute('required', 'true');
                             tanggal.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
                         } else if (this.value === 'Ekspedisi') {
                             jenisEkspedisi.style.display = 'block';

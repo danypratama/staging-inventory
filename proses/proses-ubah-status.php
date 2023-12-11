@@ -140,7 +140,7 @@
 
                     $create_finance = mysqli_query($connect, "INSERT INTO finance(id_finance, id_inv, total_inv, jenis_inv) VALUES ('$id_finance', '$id_inv', '$total_inv', '$jenis_inv')");
 
-                    $update_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_trx_selesai = '1' WHERE id_komplain = '$id_komplain'");
+                    $update_inv_revisi = mysqli_query($connect, "UPDATE inv_revisi SET status_trx_selesai = '1' WHERE id_inv = '$id_inv'");
 
                     $update_inv_komplain = mysqli_query($connect, "UPDATE inv_komplain SET status_komplain = '1' WHERE id_komplain = '$id_komplain'");
 

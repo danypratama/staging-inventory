@@ -4,12 +4,6 @@
     const customer = document.getElementById('cs');
     const ekspedisi = document.getElementById('eks');
     const jenisOngkir = document.getElementById('jenis_ongkir');
-    const kondisi_pesanan0 = document.getElementById('kondisi_pesanan0');
-    const kondisi_pesanan1 = document.getElementById('kondisi_pesanan1');
-    const kondisi_pesanan2 = document.getElementById('kondisi_pesanan2');
-    const kondisi_pesanan3 = document.getElementById('kondisi_pesanan3');
-    const kondisi_pesanan4 = document.getElementById('kondisi_pesanan4');
-    const kondisi_pesanan5 = document.getElementById('kondisi_pesanan5');
     const dropdown_input = document.getElementById('dropdown-input');
     const resi = document.getElementById('resi');
     const ongkir = document.getElementById('ongkir');
@@ -24,6 +18,9 @@
         } else if (this.value === 'Ekspedisi') {
             customer.style.display = 'none'; // Menampilkan Form Input
             ekspedisi.style.display = 'block'; // Menampilkan Form Input
+            dropdown_input.setAttribute('required', 'true');
+            resi.setAttribute('required', 'true');
+            jenisOngkir.setAttribute('required', 'true');
             ongkir.setAttribute('readonly', 'true');
             ongkir.style.backgroundColor = '#f3f3f3';
             penerima.removeAttribute('required');
@@ -39,6 +36,7 @@
         if (this.value === '1') {
             ongkir.setAttribute('readonly', 'true');
             ongkir.style.backgroundColor = '#f3f3f3';
+            ongkir.value = '';
         } else {
             ongkir.style.backgroundColor = '';
             ongkir.removeAttribute('readonly');

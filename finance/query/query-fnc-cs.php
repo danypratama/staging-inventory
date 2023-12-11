@@ -81,13 +81,14 @@ $sql = "SELECT
             SUM(CASE WHEN subq.status_transaksi = 'Transaksi Selesai' THEN 1 ELSE 0 END) AS total_transaksi_selesai,
             SUM(CASE WHEN subq.status_transaksi <> 'Transaksi Selesai' THEN 1 ELSE 0 END) AS total_transaksi_belum_selesai,
             SUM(CASE WHEN subq.status_transaksi = 'Transaksi Selesai' THEN subq.nominal_inv ELSE 0 END) AS total_nominal_inv_selesai,
-            SUM(CASE WHEN subq.status_transaksi <> 'Transaksi Selesai' THEN subq.nominal_inv ELSE 0 END) AS total_nominal_inv_belum_selesai
+            SUM(CASE WHEN subq.status_transaksi <> 'Transaksi Selesai' THEN subq.total_inv ELSE 0 END) AS total_nominal_inv_belum_selesai
             FROM (
             SELECT
                 spk.id_inv, spk.id_customer, cs.nama_cs, SUM(fb.total_bayar) AS total_bayar, fb.id_finance,
                 COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
                 COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv) AS tgl_inv,
                 COALESCE(nonppn.status_transaksi, ppn.status_transaksi, bum.status_transaksi) AS status_transaksi,
+                COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
                 fnc.total_inv AS nominal_inv
             FROM spk_reg AS spk
             LEFT JOIN inv_nonppn nonppn ON spk.id_inv = nonppn.id_inv_nonppn
