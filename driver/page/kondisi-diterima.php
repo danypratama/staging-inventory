@@ -13,6 +13,7 @@
             customer.style.display = 'block'; // Menampilkan Form Input
             ekspedisi.style.display = 'none'; // Menampilkan Form Input
             resi.removeAttribute('required');
+            jenisOngkir.removeAttribute('required');
             ongkir.removeAttribute('required');
             dropdown_input.removeAttribute('required');
         } else if (this.value === 'Ekspedisi') {

@@ -525,7 +525,7 @@
                                                         } else {
                                                             ?>
                                                                 <a href="cetak-inv-revisi-nonppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                                    <i></i> Cetak Invoice
+                                                                    <i></i> Cetak Invoice Nonppn
                                                                 </a> 
                                                             <?php
                                                         }
@@ -538,7 +538,7 @@
                                                         } else {
                                                             ?>
                                                                 <a href="cetak-inv-revisi-ppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                                    <i></i> Cetak Invoice
+                                                                    <i></i> Cetak Invoice PPN
                                                                 </a> 
                                                             <?php
                                                         }
@@ -551,7 +551,7 @@
                                                         } else {
                                                             ?>
                                                                 <a href="cetak-inv-revisi-bum.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                                    <i></i> Cetak Invoice
+                                                                    <i></i> Cetak Invoice BUM
                                                                 </a> 
                                                             <?php
                                                         }

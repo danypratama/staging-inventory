@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/css/style-inv-bum.css">
+    <link rel="stylesheet" href="assets/css/style-inv-nonppn.css">
     <style>
         .print-button-new {
             display: inline-block;
@@ -115,23 +115,47 @@
                 <select class="form-select" name="selectedOption" onchange="this.form.submit()">
                     <option value="" <?php echo empty($selectedOption) ? 'selected' : ''; ?>>Pilih Nomor Invoice</option>
                     <?php 
-                        $sql_revisi = mysqli_query($connect, "SELECT id_komplain, no_inv_revisi FROM inv_revisi WHERE id_komplain = '$id_komplain'");
-                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
-                            $no_inv_revisi = $data_inv_revisi['no_inv_revisi'];
+                        $sql_revisi = mysqli_query($connect, "  SELECT 
+                                                                    id_inv,
+                                                                    no_inv
+                                                                FROM (
+                                                                    SELECT 
+                                                                        ir.id_inv, 
+                                                                        COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv, '') AS no_inv
+                                                                    FROM inv_revisi AS ir
+                                                                    LEFT JOIN inv_nonppn nonppn ON ir.id_inv = nonppn.id_inv_nonppn
+                                                                    LEFT JOIN inv_ppn ppn ON ir.id_inv = ppn.id_inv_ppn
+                                                                    LEFT JOIN inv_bum bum ON ir.id_inv = bum.id_inv_bum
+                                                                    WHERE ir.id_inv = '$id_inv'
+                                                                    
+                                                                    UNION
+                                                                    
+                                                                    SELECT 
+                                                                        id_inv, 
+                                                                        no_inv_revisi
+                                                                    FROM inv_revisi
+                                                                    WHERE id_inv = '$id_inv'
+                                                                ) AS merged_result");
+                                                                    while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
+                                                                        $no_inv = $data_inv_revisi['no_inv'];
                     ?>
-                    <option value="<?php echo $no_inv_revisi ?>" <?php echo ($selectedOption == $no_inv_revisi) ? 'selected' : ''; ?>><?php echo $no_inv_revisi ?></option>
+                    <option value="<?php echo $no_inv ?>" <?php echo ($selectedOption == $no_inv) ? 'selected' : ''; ?>><?php echo $no_inv ?></option>
                     <?php } ?>
                 </select>
             </form>
 
             <!-- PHP Code -->
             <?php 
-                $sql_rev = mysqli_query($connect, "SELECT id_komplain, no_inv_revisi FROM inv_revisi WHERE id_komplain = '$id_komplain' ORDER BY no_inv_revisi DESC LIMIT 1");
+                $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
                 $data_rev = mysqli_fetch_array($sql_rev);
-                $no_inv_rev = $data_rev['no_inv_revisi'];
+                $total_data = mysqli_num_rows($sql_rev);
                 // Inisialisasi $no_inv
-                // $no_rev = $no_inv_rev;
-                $no_inv = $no_inv_rev;
+                $no_inv = "";
+                if($total_data == 0){
+                    $no_inv = $no_inv;
+                } else {
+                    $no_inv = $data_rev['no_inv_revisi'];
+                }
 
                 // Periksa apakah ada data yang dikirimkan dari formulir
                 if (isset($_POST['selectedOption'])) {
@@ -179,15 +203,15 @@
         <!-- Kolom kedua -->
         <?php
         $sql2 = "SELECT 
-                bum.*, 
+                nonppn.*, 
                 sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                 cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
-                FROM inv_bum AS bum
-                JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
+                FROM inv_nonppn AS nonppn
+                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
                 JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                 JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                 JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                WHERE bum.id_inv_bum = '$id_inv'";
+                WHERE nonppn.id_inv_nonppn = '$id_inv'";
         $query2 = mysqli_query($connect, $sql2);
         $rowIndex = 0;
         $totalRows = mysqli_num_rows($query2);
@@ -251,8 +275,6 @@
                                     bum.sp_disc,
                                     bum.note_inv,
                                     bum.total_inv,
-                                    spk.id_inv, 
-                                    spk.no_spk,
                                     trx.id_produk,
                                     trx.nama_produk AS nama_produk_rev,
                                     trx.harga,
@@ -265,7 +287,6 @@
                                     tpsm.harga_set_marwa,
                                     mr_set.nama_merk AS merk_set
                                 FROM inv_bum AS bum
-                                LEFT JOIN spk_reg spk ON bum.id_inv_bum = spk.id_inv
                                 LEFT JOIN inv_komplain ik ON bum.id_inv_bum = ik.id_inv
                                 LEFT JOIN tmp_produk_komplain trx ON trx.id_inv = bum.id_inv_bum
                                 LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
@@ -273,7 +294,7 @@
                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
                                 WHERE bum.id_inv_bum = '$id_bum_decode'
-                                GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk, mr_set.nama_merk, mr_produk.nama_merk, spk.id_inv, spk.no_spk, trx.id_produk, trx.harga, trx.disc, trx.total_harga, tpr.nama_produk, tpsm.harga_set_marwa, mr_set.nama_merk
+                                GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk, mr_set.nama_merk, mr_produk.nama_merk, trx.id_produk, trx.harga, trx.disc, trx.total_harga, tpr.nama_produk, tpsm.harga_set_marwa, mr_set.nama_merk
                                 ORDER BY tpr.nama_produk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
@@ -377,7 +398,7 @@
         <!-- Kode untuk update total harga -->
         <?php
         if ($total_inv != $grand_total_fix) {
-            mysqli_query($connect, "UPDATE inv_bum SET total_inv = '$grand_total_fix' WHERE id_inv_bum = '$id_inv'");
+            mysqli_query($connect, "UPDATE inv_nonppn SET total_inv = '$grand_total_fix' WHERE id_inv_nonppn = '$id_inv'");
         }
 
         ?>
@@ -494,7 +515,7 @@ function terbilang($nilai)
 
       // Kirim data ke PHP menggunakan AJAX
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', 'cetak-inv-revisi-bum.php', true);
+      xhr.open('POST', 'cetak-inv-revisi-nonppn.php', true);
       xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {

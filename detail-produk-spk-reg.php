@@ -190,62 +190,52 @@ include "function/class-spk.php";
                 <div class="card-body p-3">
                     <div class="table-responsive">
                         <form action="proses/proses-produk-spk-reg.php" method="POST">
-                            <div class="row mt-3">
-                                <div class="mb-2 p-2 ms-1" style="width: 235px;">
-                                    <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail">
-                                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                                    </a>
-                                </div>
-                                <div class="mb-2 p-2 ms-1" style="width: 190px;">
-                                    <a class="btn btn-primary btn-detail" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
-                                        <i class="bi bi-plus-circle"></i> Tambah Produk
-                                    </a>
-                                </div>
-                                <?php  
-                                    include 'koneksi.php';
-                                    $sql_cetak = "  SELECT 
-                                                        spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
-                                                    FROM spk_reg AS spk
-                                                    JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
-                                                    WHERE spk.id_spk_reg = '$id_spk'";
-                                    $query_cetak = mysqli_query($connect, $sql_cetak);
-                                    $data_cetak = mysqli_fetch_array($query_cetak);
-                                    $total_query_cetak = mysqli_num_rows($query_cetak);
-                                    $status_tmp = $data_cetak['sum_status'];
+                            <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail mb-2">
+                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                            </a>
+                            <a class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                                <i class="bi bi-plus-circle"></i> Tambah Produk
+                            </a>
+                            <?php  
+                                include 'koneksi.php';
+                                $sql_cetak = "  SELECT 
+                                                    spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
+                                                FROM spk_reg AS spk
+                                                JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
+                                                WHERE spk.id_spk_reg = '$id_spk'";
+                                $query_cetak = mysqli_query($connect, $sql_cetak);
+                                $data_cetak = mysqli_fetch_array($query_cetak);
+                                $total_query_cetak = mysqli_num_rows($query_cetak);
+                                $status_tmp = $data_cetak['sum_status'];
 
-                                    if($total_query_cetak != 0 && $status_tmp != 0){
-                                        ?>
-                                            <div class="mb-2 p-2 ms-1" style="width: 150px;">
-                                                <a class="btn btn-info btn-detail mb-3" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
-                                                    <i class="bi bi-plus-circle"></i> Cetak SPK
-                                                </a>  
-                                            </div> 
-                                        <?php
-                                    }
-                                ?>
-                                <div class="mb-2 p-2 ms-1" style="width: 190px;">
-                                    <?php
-                                        $id_spk_decode = base64_decode($_GET['id']);
-                                        $sql_thead = "SELECT 
-                                                        sr.id_spk_reg,
-                                                        sr.status_cetak,
-                                                        tps.status_tmp
-                                                    FROM spk_reg AS sr
-                                                    JOIN tmp_produk_spk AS tps ON sr.id_spk_reg = tps.id_spk
-                                                    WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1'";
-
-                                        $query_thead = mysqli_query($connect, $sql_thead);
-                                        $data_thead = mysqli_fetch_array($query_thead);
-
-                                        $totalRows = mysqli_num_rows($query_thead); // Menampilkan total baris hasil kueri
-
-                                        if (!empty($data_thead) && $data_thead['status_cetak'] == 1) {
-                                            // Button Hide and show
-                                            echo '<button type="submit" class="btn btn-secondary" name="simpan-trx"><i class="bi bi-send"></i> Proses Pesanan</button>';
-                                        }
+                                if($total_query_cetak != 0 && $status_tmp != 0){
                                     ?>
-                                </div>
-                            </div>
+                                        <a class="btn btn-info btn-detail mb-2" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
+                                            <i class="bi bi-plus-circle"></i> Cetak SPK
+                                        </a>  
+                                    <?php
+                                }
+                            ?>
+                            <?php
+                                $id_spk_decode = base64_decode($_GET['id']);
+                                $sql_thead = "SELECT 
+                                                sr.id_spk_reg,
+                                                sr.status_cetak,
+                                                tps.status_tmp
+                                            FROM spk_reg AS sr
+                                            JOIN tmp_produk_spk AS tps ON sr.id_spk_reg = tps.id_spk
+                                            WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1'";
+
+                                $query_thead = mysqli_query($connect, $sql_thead);
+                                $data_thead = mysqli_fetch_array($query_thead);
+
+                                $totalRows = mysqli_num_rows($query_thead); // Menampilkan total baris hasil kueri
+
+                                if (!empty($data_thead) && $data_thead['status_cetak'] == 1) {
+                                    // Button Hide and show
+                                    echo '<button type="submit" class="btn btn-secondary mb-2" name="simpan-trx"><i class="bi bi-send"></i> Proses Pesanan</button>';
+                                }
+                            ?>
                             <table class="table table-striped table-bordered" id="table2">
                                 <?php
                                 if ($totalRows != 0) {
