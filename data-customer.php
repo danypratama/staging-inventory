@@ -228,7 +228,6 @@ include "akses.php";
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5">Tambah Data Customer</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="proses/proses-cs.php" method="POST">
         <div class="modal-body">
@@ -247,7 +246,8 @@ include "akses.php";
             </div>
             <div class="mb-3">
               <label class="form-label">Telepon</label>
-              <input type="text" class="form-control" name="telp_cs" required>
+              <input type="text" class="form-control" name="telp_cs" id="telp_cs" pattern="\d*" maxlength="13" required>
+              <small class="form-text text-muted">Masukkan hanya angka (maksimal 13 digit).</small>
             </div>
             <div class="mb-3">
               <label class="form-label">Email</label>
@@ -285,14 +285,27 @@ function generate_uuid()
 
 
 <script>
-  // delete button
-  $("#table1").on("click", ".delete-button", function() {
-    $(this).closest("tr").remove();
-    if ($("#table1 tbody tr").length === 0) {
-      $("#table1 tbody").append("<tr><td colspan='5' align='center'>Data not found</td></tr>");
+  var inputElement = document.getElementById('telp_cs');
+
+  // Menambahkan event listener untuk memeriksa panjang input
+  inputElement.addEventListener('input', function(event) {
+    // Menghapus karakter selain angka
+    this.value = this.value.replace(/\D/g, '');
+
+    // Memeriksa panjang input
+    if (this.value.length < 9) {
+      inputElement.setCustomValidity('Nomor telepon harus minimal 9 angka.');
+    } else {
+      inputElement.setCustomValidity('');
+    }
+
+    // Memastikan panjang input tidak melebihi 13 karakter
+    if (this.value.length > 13) {
+      this.value = this.value.slice(0, 13);
     }
   });
 </script>
+
 
 <!-- Modal edit -->
 <script>

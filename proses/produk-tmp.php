@@ -27,7 +27,6 @@
                             <script>window.location.href = "../detail-komplain-revisi.php?id=<?php echo $id_komplain ?>"</script>
                         <?php
                     }
-
                 } else if (isset($_POST['simpan-tmp'])){
                     // Mendapatkan data yang dikirimkan melalui form
                     $id_komplain = base64_encode($_POST['id_komplain']);

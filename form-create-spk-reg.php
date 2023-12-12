@@ -273,6 +273,7 @@ function generate_uuid()
 <script type="text/javascript">
   flatpickr("#date", {
     dateFormat: "d/m/Y",
+    defaultDate: new Date(),
   });
 
   flatpickr("#tgl_kirim", {
