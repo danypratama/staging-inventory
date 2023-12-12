@@ -201,18 +201,9 @@ include "function/class-spk.php";
                             <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
-                            <a id="btnTambahProduk" class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                            <button type="button" id="btnTambahProduk" class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
                                 <i class="bi bi-plus-circle"></i> Tambah Produk
-                            </a>
-                            <script>
-                                $(document).ready(function() {
-                                    // Tambahkan event handler untuk tombol "Tambah Produk"
-                                    $('#btnTambahProduk').click(function() {
-                                        // Tutup modal saat tombol "Tambah Produk" diklik
-                                        $('#modalBarang').modal('hide');
-                                    });
-                                });
-                            </script>
+                            </button>
                             <?php  
                                 include 'koneksi.php';
                                 $sql_cetak = "  SELECT 
@@ -582,8 +573,6 @@ include "function/class-spk.php";
         </div>
     </div>
     <!-- End Modal -->
-
-
     <!-- Footer -->
     <?php include "page/footer.php" ?>
     <!-- End Footer -->
@@ -643,6 +632,9 @@ function generate_uuid()
             return; // Jangan lakukan apa-apa jika tombol sudah diklik sebelumnya
         }
 
+        // Nonaktifkan tombol yang dipilih segera setelah diklik
+        $('button[data-id="' + id + '"]').prop('disabled', true);
+
         // Tampilkan indikator proses saat permintaan AJAX dimulai
         $('#loading-indicator').show();
 
@@ -656,11 +648,9 @@ function generate_uuid()
                 id: id,
                 spk: spk
             },
+            timeout: 7000, // Set timeout ke 7 detik
             success: function(response) {
                 console.log('Data berhasil disimpan.');
-
-                // Nonaktifkan tombol yang dipilih setelah selesai jeda waktu
-                $('button[data-id="' + id + '"]').prop('disabled', true);
 
                 // Berikan jeda waktu 5 detik sebelum menonaktifkan tombol
                 setTimeout(function() {
@@ -672,12 +662,17 @@ function generate_uuid()
                 }, 5000); // Jeda waktu dalam milidetik (5 detik = 5000 milidetik)
             },
             error: function(xhr, status, error) {
-                console.error('Terjadi kesalahan saat menyimpan data:', error);
+                if (status === 'timeout') {
+                    console.error('Koneksi timeout setelah 7 detik.');
+                    // Tindakan yang perlu diambil jika koneksi timeout
+                } else {
+                    console.error('Terjadi kesalahan saat menyimpan data:', error);
+                }
 
-                // Sembunyikan indikator proses jika terjadi kesalahan
+                // Sembunyikan indikator proses jika terjadi kesalahan atau timeout
                 $('#loading-indicator').hide();
 
-                // Hilangkan kelas blur dari tabel jika terjadi kesalahan
+                // Hilangkan kelas blur dari tabel jika terjadi kesalahan atau timeout
                 $('table').removeClass('blur');
             },
             complete: function() {
