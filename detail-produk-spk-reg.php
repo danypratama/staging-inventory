@@ -637,47 +637,55 @@ function generate_uuid()
     });
 
     function saveData(id, spk) {
-    // Tampilkan indikator proses saat permintaan AJAX dimulai
-    $('#loading-indicator').show();
-
-    // Tambahkan kelas blur pada tabel
-    $('table').addClass('blur');
-
-    $.ajax({
-        url: 'simpan-data-spk.php',
-        type: 'POST',
-        data: {
-            id: id,
-            spk: spk
-        },
-        success: function(response) {
-            console.log('Data berhasil disimpan.');
-             // Nonaktifkan tombol yang dipilih setelah selesai jeda waktu
-             $('button[data-id="' + id + '"]').prop('disabled', true);
-            // Berikan jeda waktu 3 detik sebelum menonaktifkan tombol
-            setTimeout(function() {
-                // Sembunyikan indikator proses setelah selesai jeda waktu
-                $('#loading-indicator').hide();
-                // Hilangkan kelas blur dari tabel setelah menonaktifkan tombol
-                $('table').removeClass('blur');
-            }, 5000); // Jeda waktu dalam milidetik (3 detik = 3000 milidetik)
-        },
-        error: function(xhr, status, error) {
-            console.error('Terjadi kesalahan saat menyimpan data:', error);
-
-            // Sembunyikan indikator proses jika terjadi kesalahan
-            $('#loading-indicator').hide();
-
-            // Hilangkan kelas blur dari tabel jika terjadi kesalahan
-            $('table').removeClass('blur');
-        },
-        complete: function() {
-            // Sembunyikan indikator proses setelah selesai
-            $('#loading-indicator').hide();
+        // Periksa apakah tombol sudah diklik sebelumnya
+        if ($('button[data-id="' + id + '"]').prop('disabled')) {
+            console.log('Tombol sudah diklik sebelumnya.');
+            return; // Jangan lakukan apa-apa jika tombol sudah diklik sebelumnya
         }
-    });
-}
 
+        // Tampilkan indikator proses saat permintaan AJAX dimulai
+        $('#loading-indicator').show();
+
+        // Tambahkan kelas blur pada tabel
+        $('table').addClass('blur');
+
+        $.ajax({
+            url: 'simpan-data-spk.php',
+            type: 'POST',
+            data: {
+                id: id,
+                spk: spk
+            },
+            success: function(response) {
+                console.log('Data berhasil disimpan.');
+
+                // Nonaktifkan tombol yang dipilih setelah selesai jeda waktu
+                $('button[data-id="' + id + '"]').prop('disabled', true);
+
+                // Berikan jeda waktu 5 detik sebelum menonaktifkan tombol
+                setTimeout(function() {
+                    // Sembunyikan indikator proses setelah selesai jeda waktu
+                    $('#loading-indicator').hide();
+
+                    // Hilangkan kelas blur dari tabel setelah menonaktifkan tombol
+                    $('table').removeClass('blur');
+                }, 5000); // Jeda waktu dalam milidetik (5 detik = 5000 milidetik)
+            },
+            error: function(xhr, status, error) {
+                console.error('Terjadi kesalahan saat menyimpan data:', error);
+
+                // Sembunyikan indikator proses jika terjadi kesalahan
+                $('#loading-indicator').hide();
+
+                // Hilangkan kelas blur dari tabel jika terjadi kesalahan
+                $('table').removeClass('blur');
+            },
+            complete: function() {
+                // Sembunyikan indikator proses setelah selesai
+                $('#loading-indicator').hide();
+            }
+        });
+    }
 </script>
 
 <!-- Kode Untuk Qty   -->
