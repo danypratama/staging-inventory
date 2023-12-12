@@ -17,6 +17,14 @@ include "function/class-spk.php";
     <?php include "page/head.php"; ?>
 
     <style type="text/css">
+        .disable-click {
+            pointer-events: none;
+        }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
         /* Menghilangkan garis pada input */
         input {
             border: none;
@@ -189,33 +197,42 @@ include "function/class-spk.php";
             <div class="card shadow">
                 <div class="card-body p-3">
                     <div class="table-responsive">
-                        <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail mb-2">
-                            <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                        </a>
-                        <button class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
-                            <i class="bi bi-plus-circle"></i> Tambah Produk
-                        </button>
-                        <?php  
-                            include 'koneksi.php';
-                            $sql_cetak = "  SELECT 
-                                                spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
-                                            FROM spk_reg AS spk
-                                            JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
-                                            WHERE spk.id_spk_reg = '$id_spk'";
-                            $query_cetak = mysqli_query($connect, $sql_cetak);
-                            $data_cetak = mysqli_fetch_array($query_cetak);
-                            $total_query_cetak = mysqli_num_rows($query_cetak);
-                            $status_tmp = $data_cetak['sum_status'];
-
-                            if($total_query_cetak != 0 && $status_tmp != 0){
-                                ?>
-                                    <a class="btn btn-info btn-detail mb-2" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
-                                        <i class="bi bi-plus-circle"></i> Cetak SPK
-                                    </a>  
-                                <?php
-                            }
-                        ?>
                         <form action="proses/proses-produk-spk-reg.php" method="POST">
+                            <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail mb-2">
+                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                            </a>
+                            <a id="btnTambahProduk" class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                                <i class="bi bi-plus-circle"></i> Tambah Produk
+                            </a>
+                            <script>
+                                $(document).ready(function() {
+                                    // Tambahkan event handler untuk tombol "Tambah Produk"
+                                    $('#btnTambahProduk').click(function() {
+                                        // Tutup modal saat tombol "Tambah Produk" diklik
+                                        $('#modalBarang').modal('hide');
+                                    });
+                                });
+                            </script>
+                            <?php  
+                                include 'koneksi.php';
+                                $sql_cetak = "  SELECT 
+                                                    spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
+                                                FROM spk_reg AS spk
+                                                JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
+                                                WHERE spk.id_spk_reg = '$id_spk'";
+                                $query_cetak = mysqli_query($connect, $sql_cetak);
+                                $data_cetak = mysqli_fetch_array($query_cetak);
+                                $total_query_cetak = mysqli_num_rows($query_cetak);
+                                $status_tmp = $data_cetak['sum_status'];
+
+                                if($total_query_cetak != 0 && $status_tmp != 0){
+                                    ?>
+                                        <a class="btn btn-info btn-detail mb-2" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
+                                            <i class="bi bi-plus-circle"></i> Cetak SPK
+                                        </a>  
+                                    <?php
+                                }
+                            ?>
                             <?php
                                 $id_spk_decode = base64_decode($_GET['id']);
                                 $sql_thead = "SELECT 
@@ -473,10 +490,12 @@ include "function/class-spk.php";
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Data Barang</h1>
                     </div>
                     <div class="modal-body">
-                        <div id="loading-indicator" style="display: none;">
-                            Loading...
-                        </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive position-relative"> <!-- Tambahkan class position-relative untuk posisi relatif -->
+                            <div id="loading-indicator" class="position-absolute top-50 start-50 translate-middle" style="display: none;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
                             <table class="table table-striped table-bordered" id="table3">
                                 <thead>
                                     <tr class="text-white" style="background-color: #051683;">
@@ -601,51 +620,64 @@ function generate_uuid()
 </script>
 
 <script>
-    $(document).ready(function() {
-        $('.btn-detail').click(function() {
-            var idSpk = $(this).data('spk');
-            $('#spk').text(idSpk);
+    $(document).on('click', '.btn-pilih', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-            $('button.btn-pilih').attr('data-spk', idSpk);
+        // Tampilkan indikator proses saat tombol diklik
+        $('#loading-indicator').show();
 
-            $('#modalBarang').modal('show');
-        });
+        // Tambahkan kelas blur pada tabel
+        $('table').addClass('blur');
 
-        $(document).on('click', '.btn-pilih', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
+        var id = $(this).data('id');
+        var spk = $(this).data('spk');
 
-            // Tampilkan indikator proses saat tombol diklik
-            $('#loading-indicator').show();
+        saveData(id, spk);
+    });
 
-            var id = $(this).data('id');
-            var spk = $(this).attr('data-spk');
+    function saveData(id, spk) {
+    // Tampilkan indikator proses saat permintaan AJAX dimulai
+    $('#loading-indicator').show();
 
-            saveData(id, spk);
-        });
+    // Tambahkan kelas blur pada tabel
+    $('table').addClass('blur');
 
-        function saveData(id, spk) {
-            $.ajax({
-                url: 'simpan-data-spk.php',
-                type: 'POST',
-                data: {
-                    id: id,
-                    spk: spk
-                },
-                success: function(response) {
-                    console.log('Data berhasil disimpan.');
-                    $('button[data-id="' + id + '"]').prop('disabled', true);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Terjadi kesalahan saat menyimpan data:', error);
-                },
-                complete: function() {
-                    // Sembunyikan indikator proses setelah selesai
-                    $('#loading-indicator').hide();
-                }
-            });
+    $.ajax({
+        url: 'simpan-data-spk.php',
+        type: 'POST',
+        data: {
+            id: id,
+            spk: spk
+        },
+        success: function(response) {
+            console.log('Data berhasil disimpan.');
+             // Nonaktifkan tombol yang dipilih setelah selesai jeda waktu
+             $('button[data-id="' + id + '"]').prop('disabled', true);
+            // Berikan jeda waktu 3 detik sebelum menonaktifkan tombol
+            setTimeout(function() {
+                // Sembunyikan indikator proses setelah selesai jeda waktu
+                $('#loading-indicator').hide();
+                // Hilangkan kelas blur dari tabel setelah menonaktifkan tombol
+                $('table').removeClass('blur');
+            }, 5000); // Jeda waktu dalam milidetik (3 detik = 3000 milidetik)
+        },
+        error: function(xhr, status, error) {
+            console.error('Terjadi kesalahan saat menyimpan data:', error);
+
+            // Sembunyikan indikator proses jika terjadi kesalahan
+            $('#loading-indicator').hide();
+
+            // Hilangkan kelas blur dari tabel jika terjadi kesalahan
+            $('table').removeClass('blur');
+        },
+        complete: function() {
+            // Sembunyikan indikator proses setelah selesai
+            $('#loading-indicator').hide();
         }
     });
+}
+
 </script>
 
 <!-- Kode Untuk Qty   -->
