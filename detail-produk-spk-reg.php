@@ -189,33 +189,33 @@ include "function/class-spk.php";
             <div class="card shadow">
                 <div class="card-body p-3">
                     <div class="table-responsive">
-                        <form action="proses/proses-produk-spk-reg.php" method="POST">
-                            <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail mb-2">
-                                <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                            </a>
-                            <a class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
-                                <i class="bi bi-plus-circle"></i> Tambah Produk
-                            </a>
-                            <?php  
-                                include 'koneksi.php';
-                                $sql_cetak = "  SELECT 
-                                                    spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
-                                                FROM spk_reg AS spk
-                                                JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
-                                                WHERE spk.id_spk_reg = '$id_spk'";
-                                $query_cetak = mysqli_query($connect, $sql_cetak);
-                                $data_cetak = mysqli_fetch_array($query_cetak);
-                                $total_query_cetak = mysqli_num_rows($query_cetak);
-                                $status_tmp = $data_cetak['sum_status'];
+                        <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail mb-2">
+                            <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                        </a>
+                        <button class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                            <i class="bi bi-plus-circle"></i> Tambah Produk
+                        </button>
+                        <?php  
+                            include 'koneksi.php';
+                            $sql_cetak = "  SELECT 
+                                                spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
+                                            FROM spk_reg AS spk
+                                            JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
+                                            WHERE spk.id_spk_reg = '$id_spk'";
+                            $query_cetak = mysqli_query($connect, $sql_cetak);
+                            $data_cetak = mysqli_fetch_array($query_cetak);
+                            $total_query_cetak = mysqli_num_rows($query_cetak);
+                            $status_tmp = $data_cetak['sum_status'];
 
-                                if($total_query_cetak != 0 && $status_tmp != 0){
-                                    ?>
-                                        <a class="btn btn-info btn-detail mb-2" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
-                                            <i class="bi bi-plus-circle"></i> Cetak SPK
-                                        </a>  
-                                    <?php
-                                }
-                            ?>
+                            if($total_query_cetak != 0 && $status_tmp != 0){
+                                ?>
+                                    <a class="btn btn-info btn-detail mb-2" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
+                                        <i class="bi bi-plus-circle"></i> Cetak SPK
+                                    </a>  
+                                <?php
+                            }
+                        ?>
+                        <form action="proses/proses-produk-spk-reg.php" method="POST">
                             <?php
                                 $id_spk_decode = base64_decode($_GET['id']);
                                 $sql_thead = "SELECT 
@@ -473,6 +473,9 @@ include "function/class-spk.php";
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Data Barang</h1>
                     </div>
                     <div class="modal-body">
+                        <div id="loading-indicator" style="display: none;">
+                            Loading...
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered" id="table3">
                                 <thead>
@@ -612,6 +615,9 @@ function generate_uuid()
             event.preventDefault();
             event.stopPropagation();
 
+            // Tampilkan indikator proses saat tombol diklik
+            $('#loading-indicator').show();
+
             var id = $(this).data('id');
             var spk = $(this).attr('data-spk');
 
@@ -632,6 +638,10 @@ function generate_uuid()
                 },
                 error: function(xhr, status, error) {
                     console.error('Terjadi kesalahan saat menyimpan data:', error);
+                },
+                complete: function() {
+                    // Sembunyikan indikator proses setelah selesai
+                    $('#loading-indicator').hide();
                 }
             });
         }
