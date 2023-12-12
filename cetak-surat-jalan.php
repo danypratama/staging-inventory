@@ -34,6 +34,8 @@
                 $disetujui = $_POST['disetujui'];
             }
 
+            $id_inv_substr = substr($id_inv, 0, 3);
+
             include 'koneksi.php';
             $sql_surat_jalan = " SELECT
                                     sk.tgl_kirim, 
@@ -57,7 +59,13 @@
         ?>
         <div class="row p-3">
             <div class="col-sm-8">
-                <img class="img-fluid" src="assets/img/header-kma.jpg">
+                <?php  
+                    if ($id_inv_substr == 'PPN'){
+                        ?>
+                            <img class="img-fluid" src="assets/img/header-kma.jpg">
+                        <?php
+                    }
+                ?>
             </div>
             <div class="col-sm-4 border border-dark">
                 <p class="text-center" style="font-size: 23px; text-decoration: underline;">

@@ -22,31 +22,50 @@
     table{
         font-size: 18px;
         color: black !important;
+        border-collapse: collapse;
     }
+
+    th.col-3, td.col-3 {
+        width: 18%; /* Adjust the value based on your design */
+    }
+
+    th.col-1, td.col-1 {
+        width: 1%; /* Adjust the value based on your design */
+    }
+
     .parallelogram {
-            width: 200px;
-            height: 75px;
-            background-color: #3498db;
-            transform: skew(-20deg);
-            margin: 20px;
-            color: #fff;
-            padding: 10px;
-            box-sizing: border-box;
-            line-height: 50px; /* Sesuaikan dengan tinggi kotak */
+        width: 300px;
+        height: 75px;
+        border: 2px solid black;
+        transform: skew(-20deg);
+        margin: 20px;
+        color: black;
+        font-weight: bold;
+        padding: 5px;
+        box-sizing: border-box;
+        line-height: 50px;
+        display: flex; /* Menambahkan display flex */
+        justify-content: center; /* Menengahkan secara horizontal */
+        align-items: center; /* Menengahkan secara vertikal */
     }
+
   </style>
 </head>
 
 <body>
     <div class="card-body p-2">
         <?php  
-            $id_inv = $_GET['id_inv'];
+            $id_inv = base64_decode($_GET['id_inv']);
+
+           
+            $id_inv_substr = substr($id_inv, 0, 3);
 
             include 'koneksi.php';
             $sql_surat_jalan = " SELECT
                                     sk.tgl_kirim, 
                                     COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
                                     COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
+                                    COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
                                     spk.no_po,
                                     spk.id_inv,
                                     cs.alamat
@@ -64,10 +83,18 @@
             $alamat = $data_surat_jalan['alamat'];
             $no_po = $data_surat_jalan['no_po'];
             $no_inv = $data_surat_jalan['no_inv'];
+            $total_inv = $data_surat_jalan['total_inv'];
+            $total_inv_terbilang = terbilang($total_inv);
         ?>
         <div class="row p-3">
             <div class="col-sm-8">
-                <img class="img-fluid" src="assets/img/header-kma.jpg">
+                <?php  
+                    if ($id_inv_substr == 'PPN'){
+                        ?>
+                            <img class="img-fluid" src="assets/img/header-kma.jpg">
+                        <?php
+                    }
+                ?>
             </div>
             <div class="col-sm-4 border border-dark">
                 <p class="text-center mt-3" style="font-size: 27px;">
@@ -76,23 +103,27 @@
             </div>
         </div>
         <div class="row p-3">
-            <div class="col-sm-7" style="font-size: 18px;">
+            <div class="col-sm-12" style="font-size: 18px;">
                 <table>
                     <tr>
-                        <th class="col-5">Telah Terima Dari :</th>
-                        <th class="col-7">&nbsp;<?php echo $cs_inv ?></th>
+                        <th class="col-3 p-1">Telah Terima Dari</th>
+                        <th class="col-1 p-1 text-end">:</th>
+                        <th class="col-8 p-1"><?php echo $cs_inv ?></th>
                     </tr>
                     <tr>
-                        <th class="col-5"></th>
-                        <th class="col-7">&nbsp;<?php echo $alamat ?></th>
+                        <th class="col-3 p-1">Alamat</th>
+                        <th class="col-1 p-1 text-end">:</th>
+                        <th class="col-8 p-1"><?php echo $alamat ?></th>
                     </tr>
                     <tr>
-                        <th class="col-5">Sebesar :</th>
-                        <th class="col-7">&nbsp;<?php echo $alamat ?></th>
+                        <th class="col-3 p-1">Sebesar</th>
+                        <th class="col-1 p-1 text-end">:</th>
+                        <th class="col-8 p-1"><?php echo ucfirst($total_inv_terbilang) ?> rupiah</th>
                     </tr>
                     <tr>
-                        <th class="col-5">Untuk Pembayaran :</th>
-                        <th class="col-7">&nbsp;No. Invoice : <?php echo $no_inv ?></th>
+                        <th class="col-3 p-1">Untuk Pembayaran</th>
+                        <th class="col-1 p-1 text-end">:</th>
+                        <th class="col-8 p-1">No. Invoice : <?php echo $no_inv ?></th>
                     </tr>
                 </table>
             </div>
@@ -101,7 +132,7 @@
             <div class="col-sm-1"></div>
             <div class="col-sm-3">
                 <div class="parallelogram">
-                    <p>Jumlah : Rp.43.122.335</p>
+                    <p>Jumlah : Rp. <?php echo number_format($total_inv,0,'.','.') ?></p>
                 </div>
                 <p class="text-center">
                    
@@ -120,8 +151,52 @@
             <div class="col-sm-1"></div>
         </div>
     </div>
-   
 
+    <?php
+        function terbilang($angka) {
+            $angka = floatval(preg_replace("/[^0-9]/", "", $angka)); // Menghilangkan karakter non-digit seperti titik atau koma
+        
+            $bilangan = array(
+                '',
+                'satu',
+                'dua',
+                'tiga',
+                'empat',
+                'lima',
+                'enam',
+                'tujuh',
+                'delapan',
+                'sembilan',
+            );
+        
+            $temp = "";
+            if ($angka < 10) {
+                $temp = $bilangan[$angka];
+            } elseif ($angka < 100) {
+                $temp = ($angka < 20) ? 'sebelas' : $bilangan[floor($angka / 10)] . ' puluh ' . $bilangan[$angka % 10];
+            } elseif ($angka < 200) {
+                $temp = 'seratus ' . terbilang($angka - 100);
+            } elseif ($angka < 1000) {
+                $temp = $bilangan[floor($angka / 100)] . ' ratus ' . terbilang($angka % 100);
+            } elseif ($angka < 1000000) {
+                $temp = terbilang(floor($angka / 1000)) . ' ribu ' . terbilang($angka % 1000);
+            } elseif ($angka < 1000000000) {
+                $temp = terbilang(floor($angka / 1000000)) . ' juta ' . terbilang($angka % 1000000);
+            } elseif ($angka < 1000000000000) {
+                $temp = terbilang(floor($angka / 1000000000)) . ' milyar ' . terbilang($angka % 1000000000);
+            } elseif ($angka < 1000000000000000) {
+                $temp = terbilang(floor($angka / 1000000000000)) . ' triliun ' . terbilang($angka % 1000000000000);
+            }
+        
+            return $temp;
+        }
+
+        $total_inv = $data_surat_jalan['total_inv'];
+        $total_terbilang = terbilang($total_inv);
+
+        // Menampilkan hasil
+        // echo "Terbilang: " . ucfirst($total_terbilang) . " rupiah";
+    ?>
     <?php include "page/script.php" ?>
 </body>
 

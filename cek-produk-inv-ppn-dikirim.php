@@ -1,5 +1,5 @@
 <?php
-$page = 'transaksi';
+$page = 'transaksi'; 
 $page2 = 'spk';
 include "akses.php";
 include "function/class-spk.php";
@@ -470,8 +470,6 @@ include "function/class-spk.php";
                                         echo ' 
                                                 <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_ppn) . '">
                                                 <a href="cetak-inv-ppn-reg.php?id=' . base64_encode($id_inv_ppn) . '" class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
-                                                <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
-                                                <a href="cetak-kwitansi.php?id_inv=' . $id_inv_ppn . '" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
                                                 <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_ppn) . '">
                                                 <a href="generate_pdf_ppn.php?id=' . base64_encode($id_inv_ppn) . '" class="btn btn-info mb-2"><i class="bi bi-file-pdf"></i> Cetak PDF</a>
                                                 ';
@@ -479,8 +477,37 @@ include "function/class-spk.php";
                                         // Set variabel $tombolDitampilkan menjadi true
                                         $tombolDitampilkan = true;
                                     }
+                                ?>
+                            <?php } ?>
+
+                            <?php  
+                                $cek_button = mysqli_query($connect, "  SELECT 
+                                                                            id_inv_ppn, kwitansi, surat_jalan
+                                                                        FROM inv_ppn 
+                                                                        WHERE id_inv_ppn = '$id_inv_ppn'");
+                                $data_button = mysqli_fetch_array($cek_button);
+                                $id_inv_ppn = $data_button['id_inv_ppn'];
+                                $kwitansi = $data_button['kwitansi'];
+                                $surat_jalan = $data_button['surat_jalan'];
+                                if($kwitansi == '1' && $surat_jalan == '1'){
                                     ?>
-                                <?php } ?>
+                                         <a href="cetak-kwitansi.php?id_inv=<?php echo base64_encode($id_inv_ppn) ?>" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Kwitansi</a>
+                                        <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
+                                    <?php
+                                } else if($kwitansi == '1' && $surat_jalan == '0'){
+                                    ?>
+                                        <a href="cetak-kwitansi.php?id_inv=<?php echo base64_encode($id_inv_ppn) ?>" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Kwitansi</a>
+                                    <?php
+                                } else if($kwitansi == '0' && $surat_jalan == '1'){
+                                    ?>
+                                        <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
+                                    <?php
+                                } else {
+
+                                }
+
+                            
+                            ?>
                         </div>
                     </div>
                     <div class="table-responsive">
