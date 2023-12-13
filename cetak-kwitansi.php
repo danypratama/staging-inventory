@@ -9,6 +9,7 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
   <?php include "page/head.php"; ?>
+  <?php include "function/terbilang.php" ?>
   <style>
     body{
         width: 1000px;
@@ -118,7 +119,7 @@
                     <tr>
                         <th class="col-3 p-1">Sebesar</th>
                         <th class="col-1 p-1 text-end">:</th>
-                        <th class="col-8 p-1"><?php echo ucfirst($total_inv_terbilang) ?> rupiah</th>
+                        <th class="col-8 p-1"><?php echo ucfirst($total_inv_terbilang) ?> Rupiah</th>
                     </tr>
                     <tr>
                         <th class="col-3 p-1">Untuk Pembayaran</th>
@@ -151,52 +152,6 @@
             <div class="col-sm-1"></div>
         </div>
     </div>
-
-    <?php
-        function terbilang($angka) {
-            $angka = floatval(preg_replace("/[^0-9]/", "", $angka)); // Menghilangkan karakter non-digit seperti titik atau koma
-        
-            $bilangan = array(
-                '',
-                'satu',
-                'dua',
-                'tiga',
-                'empat',
-                'lima',
-                'enam',
-                'tujuh',
-                'delapan',
-                'sembilan',
-            );
-        
-            $temp = "";
-            if ($angka < 10) {
-                $temp = $bilangan[$angka];
-            } elseif ($angka < 100) {
-                $temp = ($angka < 20) ? 'sebelas' : $bilangan[floor($angka / 10)] . ' puluh ' . $bilangan[$angka % 10];
-            } elseif ($angka < 200) {
-                $temp = 'seratus ' . terbilang($angka - 100);
-            } elseif ($angka < 1000) {
-                $temp = $bilangan[floor($angka / 100)] . ' ratus ' . terbilang($angka % 100);
-            } elseif ($angka < 1000000) {
-                $temp = terbilang(floor($angka / 1000)) . ' ribu ' . terbilang($angka % 1000);
-            } elseif ($angka < 1000000000) {
-                $temp = terbilang(floor($angka / 1000000)) . ' juta ' . terbilang($angka % 1000000);
-            } elseif ($angka < 1000000000000) {
-                $temp = terbilang(floor($angka / 1000000000)) . ' milyar ' . terbilang($angka % 1000000000);
-            } elseif ($angka < 1000000000000000) {
-                $temp = terbilang(floor($angka / 1000000000000)) . ' triliun ' . terbilang($angka % 1000000000000);
-            }
-        
-            return $temp;
-        }
-
-        $total_inv = $data_surat_jalan['total_inv'];
-        $total_terbilang = terbilang($total_inv);
-
-        // Menampilkan hasil
-        // echo "Terbilang: " . ucfirst($total_terbilang) . " rupiah";
-    ?>
     <?php include "page/script.php" ?>
 </body>
 

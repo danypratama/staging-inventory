@@ -764,7 +764,7 @@ include "function/class-spk.php";
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label>Jenis Invoice Saat Ini</label>
-                                <input type="text" class="form-control" name="id_inv" value="<?php echo $jenis_inv ?>" readonly>
+                                <input type="text" class="form-control bg-light" name="id_inv" value="<?php echo $jenis_inv ?>" readonly>
                             </div>
                             <form action="proses/proses-invoice-ppn.php" method="POST">
                                 <?php

@@ -81,6 +81,25 @@ $(".delete-data").on("click", function (e) {
   });
 });
 
+$(".update-data").on("click", function (e) {
+  e.preventDefault();
+  var getLink = $(this).attr("href");
+
+  Swal.fire({
+    title: "Anda yakin?",
+    text: "Jenis pengiriman akan di ubah",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ubah Pengiriman",
+  }).then((result) => {
+    if (result.value) {
+      window.location.href = getLink;
+    }
+  });
+});
+
 $(".cancel-data").on("click", function (e) {
   e.preventDefault();
   var form = $(this).closest("form");

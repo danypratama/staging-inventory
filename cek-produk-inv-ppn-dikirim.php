@@ -273,13 +273,13 @@ include "function/class-spk.php";
                             ?>
 
                             <?php  
-                                $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, no_resi,dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
+                                $status_kirim = mysqli_query($connect, "SELECT id_status_kirim, jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, no_resi,dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
                                 $data_status_kirim = mysqli_fetch_array($status_kirim);
+                                $id_status_kirim = $data_status_kirim['id_status_kirim'];
                                 $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
                                 $ekspedisi = $data_status_kirim['dikirim_ekspedisi'];
                                 $driver = $data_status_kirim['dikirim_driver'];
                                 $no_resi = $data_status_kirim['no_resi'];
-
 
                                 $ekspedisi_kirim =  mysqli_query($connect, "SELECT 
                                                                             sk.jenis_pengiriman, sk.dikirim_ekspedisi, sk.jenis_penerima, ex.nama_ekspedisi
@@ -446,11 +446,17 @@ include "function/class-spk.php";
                                     ?>
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#ubahDriver">
-                                            <i class="bi bi-arrow-repeat"></i> Ubah Pengiriman
+                                            <i class="bi bi-arrow-repeat"></i> Ubah Driver
                                         </button>
                                     <?php
                                 }
                             ?>
+                            <!-- Ubah Jenis Pengiriman -->
+                            <!-- Button trigger modal -->
+                            <a href="proses/proses-ubah-pengiriman.php?id_status_kirim=<?php echo base64_encode($id_status_kirim) ?>&&id_inv=<?php echo base64_encode($id_inv) ?>" class="btn btn-warning mb-2 update-data">
+                                <i class="bi bi-arrow-repeat"></i> Ubah Jenis Pengiriman
+                            </a>
+
                             <?php
                                 // Eksekusi query SQL
                                 $result = mysqli_query($connect, "SELECT 
