@@ -57,10 +57,11 @@ include "akses.php";
                             <table class="table table-striped table-bordered" id="table1">
                                 <thead>
                                     <tr class="text-white" style="background-color: #051683;">
-                                        <td class="text-center p-3 col-1">No</td>
-                                        <td class="text-center p-3 col-7">Nama Ekspedisi</td>
-                                        <td class="text-center p-3 col-2">Dibuat Tanggal</td>
-                                        <td class="text-center p-3 col-2">Aksi</td>
+                                        <td class="text-center p-3 col-1 text-nowrap">No</td>
+                                        <td class="text-center p-3 col-5 text-nowrap">Nama Ekspedisi</td>
+                                        <td class="text-center p-3 col-2 text-nowrap">Kategori</td>
+                                        <td class="text-center p-3 col-2 text-nowrap">Dibuat Tanggal</td>
+                                        <td class="text-center p-3 col-2 text-nowrap">Aksi</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,9 +75,19 @@ include "akses.php";
                                     ?>
                                         <tr>
                                             <td class="text-center"><?php echo $no ?></td>
-                                            <td><?php echo $data['nama_ekspedisi']; ?></td>
-                                            <td><?php echo $data['created_date']; ?></td>
-                                            <td class="text-center">
+                                            <td class="text-nowrap"><?php echo $data['nama_ekspedisi']; ?></td>
+                                            <td class="text-center text-nowrap">
+                                                <?php 
+                                                    if($data['kategori'] == '0'){
+                                                        echo "Lokal";
+                                                    }else{
+                                                        echo "Import";
+                                                    }
+                                                
+                                                ?>
+                                            </td>
+                                            <td class="text-center text-nowrap"><?php echo $data['created_date']; ?></td>
+                                            <td class="text-center text-nowrap">
                                                 <a href="proses/proses-ekspedisi.php?hapus=<?php echo base64_encode($data['id_ekspedisi']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                             </td>
                                         </tr>
@@ -112,8 +123,19 @@ include "akses.php";
                             <?php
                             $UUID = generate_uuid();
                             ?>
+                            <label for=""><b>Kategori:</b></label>
+                            <div class="mb-3 mt-1">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="kategori" id="inlineRadio1" value="0">
+                                    <label class="form-check-label" for="inlineRadio1">Local</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="kategori" id="inlineRadio2" value="1">
+                                    <label class="form-check-label" for="inlineRadio2">Import</label>
+                                </div>
+                            </div>
                             <div class="mb-3">
-                                <label class="form-label">Nama Ekspedisi</label>
+                                <label class="form-label"><b>Nama Ekspedisi:</b></label>
                                 <input type="hidden" class="form-control" name="id_ekspedisi" value="EKS<?php echo $UUID; ?>">
                                 <input type="text" class="form-control" name="nama_ekspedisi" required>
                                 <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">

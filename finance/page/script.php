@@ -8,7 +8,9 @@
 <script src="assets/selectize-js/dist/js/selectize.min.js"></script>
 
 <script type="text/javascript">
-	$('.selectize-js').selectize();
+	$('.selectize-js').selectize({
+        plugins: ["clear_button"],
+    });
 </script>
 <!-- End Selectize JS -->
 

@@ -441,7 +441,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                           LEFT JOIN inv_ppn ppn ON (fnc.id_inv = ppn.id_inv_ppn)
                           LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
                           LEFT JOIN finance_tagihan ft ON (fnc.id_tagihan = ft.id_tagihan)
-                          WHERE ($sort_option  OR fnc.status_tagihan = 0)";
+                          WHERE ($sort_option)";
 
                   //Tambahkan kondisi pencarian berdasarkan nama pelanggan jika $_GET['cs'] sudah diset
                   if (isset($_GET['cs'])) {
@@ -471,7 +471,9 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                       <td class="text-center">
                         <?php  
                           if($data['status_tagihan'] == 0){
-                              echo '<input type="checkbox" name="inv_id[]" id="inv" value="' . $id_inv . '" data-customer="' . $cs_inv . '">';
+                            ?>
+                              <input type="checkbox" name="inv_id[]" id="inv" value="<?php echo $id_inv ?>" data-customer="<?php echo $cs_inv ?>" data-jenis="<?php echo $data['jenis_inv'] ?>">
+                            <?php
                           }
                         ?>
                       </td>
@@ -553,8 +555,8 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                   <p id="total-count" style="display: none;">Jumlah data yang ditampilkan: 0</p>
                 </tr>
               </table>
-            </form>       
-
+            </form>   
+            <!-- Export Excel -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
             <script>
                 document.getElementById("export-button").addEventListener("click", function () {
@@ -678,30 +680,30 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
 </div>
 <script>
     // Fungsi untuk memeriksa apakah setidaknya satu checkbox dicentang
-    function isAnyCheckboxChecked() {
-        var checkboxes = document.getElementsByName("inv_id[]");
-        for (var i = 0; i < checkboxes.length; i++) {
-            if (checkboxes[i].checked) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // function isAnyCheckboxChecked() {
+    //     var checkboxes = document.getElementsByName("inv_id[]");
+    //     for (var i = 0; i < checkboxes.length; i++) {
+    //         if (checkboxes[i].checked) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    // Fungsi yang dipanggil ketika ada perubahan pada checkbox
-    function updateButtonState() {
-        var createBillButton = document.getElementById("createBill");
-        createBillButton.disabled = !isAnyCheckboxChecked();
-    }
+    // // Fungsi yang dipanggil ketika ada perubahan pada checkbox
+    // function updateButtonState() {
+    //     var createBillButton = document.getElementById("createBill");
+    //     createBillButton.disabled = !isAnyCheckboxChecked();
+    // }
 
-    // Menambahkan event listener ke setiap checkbox
-    var checkboxes = document.getElementsByName("inv_id[]");
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].addEventListener("change", updateButtonState);
-    }
+    // // Menambahkan event listener ke setiap checkbox
+    // var checkboxes = document.getElementsByName("inv_id[]");
+    // for (var i = 0; i < checkboxes.length; i++) {
+    //     checkboxes[i].addEventListener("change", updateButtonState);
+    // }
 
-    // Memeriksa status awal tombol saat halaman dimuat
-    updateButtonState();
+    // // Memeriksa status awal tombol saat halaman dimuat
+    // updateButtonState();
 </script>
 
 
@@ -979,10 +981,68 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
     }
 
     // Inisialisasi filter pada awal halaman
-    applyFilters();
-});
+    applyFilters();});
 
 
+</script>
+
+<!-- Checkbox saat buat Bill -->
+<script>
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="inv"]');
+    const createBill = document.getElementById("createBill");
+    
+    function updateButtonState() {
+      const checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+      const selectedCustomers = new Set(checkedCheckboxes.map(checkbox => checkbox.getAttribute("data-customer")));
+      const selectedJenis = new Set(checkedCheckboxes.map(checkbox => checkbox.getAttribute("data-jenis")));
+
+      if (checkedCheckboxes.length <= 5 && selectedCustomers.size === 1) {
+          // Check if "nonppn" and "bum" are selected together, and "ppn" is not selected
+          const isNonPPNSelected = selectedJenis.has("nonppn");
+          const isBUMSelected = selectedJenis.has("bum");
+          const isPPNSelected = selectedJenis.has("ppn");
+
+          if ((isNonPPNSelected || isBUMSelected) && !isPPNSelected) {
+              createBill.disabled = false;
+          } else if ((isPPNSelected) && !isNonPPNSelected && !isBUMSelected){
+              createBill.disabled = false;
+          }else{
+            createBill.disabled = true;
+          }
+      } else {
+          createBill.disabled = true;
+      }
+    }
+
+
+    function checkInitialCheckbox() {
+        checkboxes.forEach(checkbox => {
+            if (checkbox.getAttribute("data-customer") === "") {
+                checkbox.checked = true;
+            }
+        });
+        updateButtonState();
+    }
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            // Limit selection to a maximum of 5 checkboxes
+            const checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+            if (checkedCount > 5) {
+                this.checked = false;
+                Swal.fire({
+                    title: '<strong>Batas Maksimum Pemilihan</strong>',
+                    icon: 'info',
+                    html: 'Anda hanya dapat memilih maksimal 5 data.',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            updateButtonState();
+        });
+    });
+
+    checkInitialCheckbox();
 </script>
 
 <script>
@@ -990,99 +1050,6 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
       document.getElementById("invoiceForm").action = action;
       document.getElementById("invoiceForm").submit();
   }
-</script>
-
-<script>
-  
-</script>
-
-<!-- Checkbox saat buat Bill -->
-<script>
-  const form = document.getElementById("invoiceForm");
-  const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="inv"]');
-  const createBill = document.getElementById("createBill");
-
-  form.addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      // Jika Inv yang dipilih sesuai dengan pelanggan yang dipilih, lanjutkan proses invoice
-      if (selectedInv) {
-          console.log("Data Pelanggan:");
-          console.log("Nama Customer:", selectedCustomer);
-          console.log("Invoice yang Dipilih:");
-          checkboxes.forEach(function(checkbox) {
-              if (checkbox.checked && checkbox.getAttribute("data-customer") === selectedCustomer) {
-                  console.log("ID Inv:", checkbox.value);
-              }
-          });
-          // Lakukan tindakan selanjutnya, seperti mengirim data ke server atau melakukan tindakan lainnya
-      }
-  });
-
-  function updateButtonState() {
-      let selectedCustomer = null;
-      let checkedCustomers = new Set(); // Menyimpan nama pelanggan yang dipilih
-
-      checkboxes.forEach(function(checkbox) {
-          if (checkbox.checked) {
-              checkedCustomers.add(checkbox.getAttribute(
-                  "data-customer")); // Tambahkan nama pelanggan yang dipilih ke dalam Set
-          }
-      });
-
-      if (checkedCustomers.size <= 5) { // Cek apakah jumlah data yang dicentang tidak melebihi 5
-          if (checkedCustomers.size === 1) {
-              selectedCustomer = checkedCustomers.values().next().value; // Ambil nama pelanggan dari Set
-
-              createBill.disabled = false;
-          } else {
-              createBill.disabled = true;
-          }
-      } else {
-          // Jika jumlah data yang dicentang melebihi 5, nonaktifkan tombol dan tampilkan peringatan
-          createBill.disabled = true;
-
-          Swal.fire({
-              title: '<strong>HTML <u>example</u></strong>',
-              icon: 'info',
-              html: 'You can use <b>bold text</b>, ' +
-                  '<a href="//sweetalert2.github.io">links</a> ' +
-                  'and other HTML tags',
-              showCloseButton: true,
-              showCancelButton: true,
-              focusConfirm: false,
-              confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
-              confirmButtonAriaLabel: 'Thumbs up, great!',
-              cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
-              cancelButtonAriaLabel: 'Thumbs down'
-          })
-      }
-  }
-
-  checkboxes.forEach(function(checkbox) {
-      checkbox.addEventListener("change", function(event) {
-          updateButtonState();
-
-          // Membatasi pemilihan data hingga maksimal 5
-          let checkedCount = 0;
-          checkboxes.forEach(function(checkbox) {
-              if (checkbox.checked) {
-                  checkedCount++;
-                  if (checkedCount > 5) {
-                      checkbox.checked = false;
-                      Swal.fire({
-                          title: '<strong>Batas Maksimum Pemilihan</strong>',
-                          icon: 'info',
-                          html: 'Anda hanya dapat memilih maksimal 5 data.',
-                          confirmButtonText: 'OK'
-                      })
-                  }
-              }
-          });
-
-          updateButtonState();
-      });
-  });
 </script>
 <!-- End Checkbox Create Bill -->
 

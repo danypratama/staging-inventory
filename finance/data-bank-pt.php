@@ -1,5 +1,5 @@
 <?php
-$page = 'bank';
+$page = 'bank-pt';
 include 'akses.php';
 ?>
 <!DOCTYPE html>
@@ -62,31 +62,33 @@ include 'akses.php';
                         <thead>
                             <tr class="text-white" style="background-color: navy;">
                                 <th class="text-center text-nowrap p-3 text-nowrap" style="width: 100px;">No</th>
-                                <th class="text-center text-nowrap p-3 text-nowrap" style="width: 700px;">Nama Bank</th>
-                                <th class="text-center text-nowrap p-3 text-nowrap" style="width: 200px;">Logo Bank</th>
-                                <th class="text-center text-nowrap p-3 text-nowrap" style="width: 200px;">Aksi</th>
+                                <th class="text-center text-nowrap p-3 text-nowrap" style="width: 350px;">Nama Bank</th>
+                                <th class="text-center text-nowrap p-3 text-nowrap" style="width: 250px;">No. Rekening</th>
+                                <th class="text-center text-nowrap p-3 text-nowrap" style="width: 350px;">Atas Nama</th>
+                                <th class="text-center text-nowrap p-3 text-nowrap" style="width: 150px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php  
                                 include "koneksi.php";
                                 $no = 1;
-                                $sql_bank = "SELECT id_bank, nama_bank, logo FROM bank ORDER BY nama_bank ASC";
+                                $sql_bank = "SELECT 
+                                                pt.id_bank_pt, pt.no_rekening, pt.atas_nama,
+                                                bk.nama_bank
+                                            FROM bank_pt AS pt
+                                            LEFT JOIN bank bk ON (pt.id_bank = bk.id_bank)
+                                            ORDER BY bk.nama_bank ASC";
                                 $query_bank = mysqli_query($connect, $sql_bank);
                                 while($data_bank = mysqli_fetch_array($query_bank)){
-                                    $id_bank = $data_bank['id_bank'];
-                                    $nama_bank = $data_bank['nama_bank'];
-                                    $logo = $data_bank['logo'];
-                                    $tampil_logo = "logo-bank/$logo";
+                                    $id_bank_pt = $data_bank['id_bank_pt'];
                             ?>
                             <tr>
                                 <td class="text-nowrap text-center"><?php echo $no; ?></td>
                                 <td class="text-nowrap"><?php echo $data_bank['nama_bank'] ?></td>
-                                <td class="text-nowrap p-3"> 
-                                    <img src="<?php echo $tampil_logo ?>" width="200px" height="50px" class="img-fluid" alt="logo-bank">
-                                </td>
+                                <td class="text-nowrap"><?php echo $data_bank['no_rekening'] ?></td>
+                                <td class="text-nowrap"><?php echo $data_bank['atas_nama'] ?></td>
                                 <td class="text-nowrap text-center">
-                                    <a href="proses/bank.php?id=<?php echo base64_encode($id_bank)?>&&logo=<?php echo base64_encode($logo)?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i> Hapus</button>
+                                    <a href="proses/bank-pt.php?id=<?php echo base64_encode($id_bank_pt)?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i> Hapus</button>
                                 </td>
                             </tr>
                             <?php $no++ ?>
@@ -105,15 +107,30 @@ include 'akses.php';
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Bank</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="proses/bank.php" method="POST" enctype="multipart/form-data">
+                    <form action="proses/bank-pt.php" method="POST" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label>Nama Bank</label>
-                                <input type="text" name="nama_bank" class="form-control" required>
+                                <label>Pilih Bank</label>
+                                <select name="id_bank" class="form-select selectize-js" required>
+                                    <option value=""></option>
+                                    <?php  
+                                        $sql_bank = "SELECT id_bank, nama_bank FROM bank ORDER BY nama_bank ASC";
+                                        $query_bank = mysqli_query($connect, $sql_bank);
+                                        while($data_bank = mysqli_fetch_array($query_bank)){
+                                            $id_bank = $data_bank['id_bank'];
+                                            $nama_bank = $data_bank['nama_bank'];
+                                    ?>
+                                        <option value="<?php echo $id_bank ?>"><?php echo $nama_bank ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                             <div class="mb-3">
-                                <label>Pilih Gambar</label>
-                                <input type="file" name="fileku" class="form-control" required>
+                                <label>No. Rekening</label>
+                                <input type="text" name="no_rekening" id="numberOnly" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>Atas Nama</label>
+                                <input type="text" name="atas_nama" class="form-control" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -133,5 +150,6 @@ include 'akses.php';
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <?php include "page/script.php" ?>
+  <script src="assets/js/input-number-only.js"></script>
 </body>
 </html>

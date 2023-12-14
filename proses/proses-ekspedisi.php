@@ -5,12 +5,13 @@ include "../koneksi.php";
 if (isset($_POST['simpan'])) {
     $id_ekspedisi = $_POST['id_ekspedisi'];
     $nama_ekspedisi = $_POST['nama_ekspedisi'];
+    $kategori = $_POST['kategori'];
 
-    $cek_data = mysqli_query($connect, "SELECT nama_ekspedisi FROM ekspedisi WHERE nama_ekspedisi = '$nama_ekspedisi'");
+    $cek_data = mysqli_query($connect, "SELECT nama_ekspedisi, kategori FROM ekspedisi WHERE nama_ekspedisi = '$nama_ekspedisi' AND kategori = '$kategori'");
 
     if ($cek_data->num_rows < 1) {
         $simpan_data = "INSERT INTO ekspedisi
-                        (id_ekspedisi, nama_ekspedisi) VALUES ('$id_ekspedisi', '$nama_ekspedisi')";
+                        (id_ekspedisi, nama_ekspedisi, kategori) VALUES ('$id_ekspedisi', '$nama_ekspedisi', '$kategori')";
         $query = mysqli_query($connect, $simpan_data);
         $_SESSION['info'] = 'Disimpan';
         header("Location:../data-ekspedisi.php");

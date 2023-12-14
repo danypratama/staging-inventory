@@ -63,15 +63,15 @@ include "function/class-spk.php";
                     include "koneksi.php";
                     $id_inv = base64_decode($_GET['id']);
                     $sql = "SELECT 
-                            ppn.*, 
+                            bum.*, 
                             sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan, sr.petugas, sr.note AS note_spk,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
-                            FROM inv_ppn AS ppn
-                            JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                            FROM inv_bum AS bum
+                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                             JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                             JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                            WHERE ppn.id_inv_ppn = '$id_inv'";
+                            WHERE bum.id_inv_bum = '$id_inv'";
                     $query = mysqli_query($connect, $sql);
                     $data = mysqli_fetch_array($query);
                     $ongkir = $data['ongkir'];
@@ -102,20 +102,20 @@ include "function/class-spk.php";
                                         $id_inv = base64_decode($_GET['id']);
                                         $no = 1;
                                         $sql = "SELECT 
-                                                    ppn.*, 
+                                                    bum.*, 
                                                     sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                                                     cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
-                                                    FROM inv_ppn AS ppn
-                                                    JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                    FROM inv_bum AS bum
+                                                    JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
                                                     JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                     JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                                                     JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                                                    WHERE ppn.id_inv_ppn = '$id_inv'";
+                                                    WHERE bum.id_inv_bum = '$id_inv'";
                                         $query = mysqli_query($connect, $sql);
                                         $totalData = mysqli_num_rows($query);
 
                                         while ($data2 = mysqli_fetch_array($query)) {
-                                            $id_inv = $data2['id_inv_ppn'];
+                                            $id_inv = $data2['id_inv_bum'];
                                             $kat_inv = $data2['kategori_inv'];
                                             $id_cs = $data2['id_customer'];
                                         ?>
@@ -317,7 +317,7 @@ include "function/class-spk.php";
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                   <form action="proses/proses-invoice-ppn.php" method="POST">
+                                   <form action="proses/proses-invoice-bum.php" method="POST">
                                         <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
                                         <div class="mb-3">
                                             <label>Customer Invoice</label>
@@ -352,15 +352,15 @@ include "function/class-spk.php";
                                     <i class="bi bi-plus-circle"></i> Tambah SPK
                                 </a>
                                 <?php
-                                $id_inv_ppn = base64_decode($_GET['id']);
+                                $id_inv_bum = base64_decode($_GET['id']);
                                 $sql_cek = "SELECT 
-                                            ppn.id_inv_ppn, kategori_inv,
+                                            bum.id_inv_bum, kategori_inv,
                                             sr.id_inv, sr.no_spk,
                                             trx.status_trx 
-                                            FROM inv_ppn AS ppn
-                                            JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                            FROM inv_bum AS bum
+                                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
                                             JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                            WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
+                                            WHERE bum.id_inv_bum = '$id_inv_bum' AND status_trx = '1' ORDER BY no_spk ASC";
                                 $query_cek = mysqli_query($connect, $sql_cek);
                                 $data_cek = mysqli_fetch_array($query_cek);
                                 $total_data = mysqli_num_rows($query_cek);
@@ -374,12 +374,12 @@ include "function/class-spk.php";
                                 <?php
                                 // Eksekusi query SQL
                                 $result = mysqli_query($connect, "SELECT 
-                                                        ppn.id_inv_ppn,
+                                                        bum.id_inv_bum,
                                                         trx.status_trx
-                                                        FROM inv_ppn AS ppn
-                                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                        FROM inv_bum AS bum
+                                                        JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
                                                         JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                        WHERE ppn.id_inv_ppn = '$id_inv_ppn'  ORDER BY no_spk ASC");
+                                                        WHERE bum.id_inv_bum = '$id_inv_bum'  ORDER BY no_spk ASC");
                                 $tombolDitampilkan = false;
                                 // Inisialisasi variabel untuk status kosong
                                 while ($row = mysqli_fetch_array($result)) {
@@ -410,10 +410,10 @@ include "function/class-spk.php";
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="proses/proses-invoice-ppn.php" method="POST">
+                                    <form action="proses/proses-invoice-bum.php" method="POST">
                                         <?php
                                         $id_inv_kat = $id_inv;
-                                        $sql_kat = "SELECT ppn.sp_disc FROM inv_ppn AS ppn WHERE ppn.id_inv_ppn = '$id_inv_kat'";
+                                        $sql_kat = "SELECT bum.sp_disc FROM inv_bum AS bum WHERE bum.id_inv_bum = '$id_inv_kat'";
                                         $query_kat = mysqli_query($connect, $sql_kat);
                                         $data_kat = mysqli_fetch_array($query_kat);
                                         ?>
@@ -477,13 +477,13 @@ include "function/class-spk.php";
                                 $year = date('y');
                                 $day = date('d');
                                 $month = date('m');
-                                $id_ppn_decode = base64_decode($_GET['id']);
+                                $id_bum_decode = base64_decode($_GET['id']);
                                 $no = 1;
                                 $sub_total = 0;
                                 $sql_trx = "SELECT 
-                                                ppn.id_inv_ppn, 
-                                                ppn.kategori_inv,
-                                                ppn.sp_disc,
+                                                bum.id_inv_bum, 
+                                                bum.kategori_inv,
+                                                bum.sp_disc,
                                                 
                                                 spk.id_inv, 
                                                 spk.no_spk,
@@ -501,14 +501,14 @@ include "function/class-spk.php";
                                                 tpsm.nama_set_marwa,
                                                 tpsm.harga_set_marwa,
                                                 mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
-                                            FROM inv_ppn AS ppn
-                                            LEFT JOIN spk_reg spk ON (ppn.id_inv_ppn = spk.id_inv)
+                                            FROM inv_bum AS bum
+                                            LEFT JOIN spk_reg spk ON (bum.id_inv_bum = spk.id_inv)
                                             LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
                                             LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
                                             LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                             LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                             LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                            WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND status_trx = '1' ORDER BY no_spk ASC";
+                                            WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '1' ORDER BY no_spk ASC";
                                 $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                 while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                     $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
@@ -567,9 +567,9 @@ include "function/class-spk.php";
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="proses/proses-invoice-ppn.php" method="POST">
+                                            <form action="proses/proses-invoice-bum.php" method="POST">
                                                 <input type="hidden" name="id_trx" id="id_trx" readonly>
-                                                <input type="hidden" name="id_inv" value="<?php echo $id_ppn_decode ?>" readonly>
+                                                <input type="hidden" name="id_inv" value="<?php echo $id_bum_decode ?>" readonly>
                                                 <div class="mb-3">
                                                     <label><strong>Nama Produk</strong></label>
                                                     <input type="text" class="form-control" name="nama_produk" id="nama_produk" required>
@@ -599,9 +599,9 @@ include "function/class-spk.php";
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="proses/proses-invoice-ppn.php" method="POST">
+                                            <form action="proses/proses-invoice-bum.php" method="POST">
                                                 <input type="hidden" name="id_trx" id="id_trxdisc" readonly>
-                                                <input type="hidden" name="id_inv" value="<?php echo $id_ppn_decode ?>" readonly>
+                                                <input type="hidden" name="id_inv" value="<?php echo $id_bum_decode ?>" readonly>
                                                 <div class="mb-3">
                                                     <label><strong>Nama Produk</strong></label>
                                                     <input type="text" class="form-control" name="nama_produk" id="nama_produk_disc" required>
@@ -638,8 +638,8 @@ include "function/class-spk.php";
                         $hasil_sp_disc = $sp_disc / 100;
                         $total_sp_disc = $sub_total * $hasil_sp_disc;
                         $grand_total = $sub_total - $total_sp_disc;
-                        $grand_total_ppn = $grand_total;
-                        $update_total_inv = mysqli_query($connect, "UPDATE inv_ppn SET total_inv = '$grand_total_ppn' WHERE id_inv_ppn = '$id_inv'")
+                        $grand_total_bum = $grand_total;
+                        $update_total_inv = mysqli_query($connect, "UPDATE inv_bum SET total_inv = '$grand_total_bum' WHERE id_inv_bum = '$id_inv'")
                     ?>
                 <div class="container">
                     <?php
@@ -648,13 +648,13 @@ include "function/class-spk.php";
                     }
                     ?>
                 </div>
-                <form action="proses/proses-invoice-ppn.php" method="POST">
+                <form action="proses/proses-invoice-bum.php" method="POST">
                     <?php
                     $no = 1;
-                    $id_ppn_decode = base64_decode($_GET['id']);
+                    $id_bum_decode = base64_decode($_GET['id']);
                     $sql_cek_harga = "SELECT 
-                                        ppn.id_inv_ppn, 
-                                        ppn.kategori_inv,
+                                        bum.id_inv_bum, 
+                                        bum.kategori_inv,
                                         spk.id_inv, 
                                         spk.no_spk,
                                         trx.id_transaksi,
@@ -670,14 +670,14 @@ include "function/class-spk.php";
                                         tpsm.nama_set_marwa,
                                         tpsm.harga_set_marwa,
                                         mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
-                                    FROM inv_ppn AS ppn
-                                    LEFT JOIN spk_reg spk ON (ppn.id_inv_ppn = spk.id_inv)
+                                    FROM inv_bum AS bum
+                                    LEFT JOIN spk_reg spk ON (bum.id_inv_bum = spk.id_inv)
                                     LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
                                     LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
                                     LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                     LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                     LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                    WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND status_trx = '0' ORDER BY no_spk ASC";
+                                    WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '0' ORDER BY no_spk ASC";
                     $query_cek_harga = mysqli_query($connect, $sql_cek_harga);
                     $total_cek_harga = mysqli_num_rows($query_cek_harga);
                     while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
@@ -700,7 +700,7 @@ include "function/class-spk.php";
                                     <?php $no++ ?>
                                 </div>
                                 <div class="col-sm-3 mb-2">
-                                    <input type="hidden" name="id_inv" value="<?php echo $data_cek_harga['id_inv_ppn'] ?>" readonly>
+                                    <input type="hidden" name="id_inv" value="<?php echo $data_cek_harga['id_inv_bum'] ?>" readonly>
                                     <input type="hidden" name="id_trx[]" id="id_<?php echo $data_cek_harga['id_transaksi'] ?>" value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly>
                                     <input type="text" class="form-control mobile-text" name="nama_produk[]" value="<?php echo $namaProduk ?>" required>
                                 </div>
@@ -766,15 +766,15 @@ include "function/class-spk.php";
                                 <label>Jenis Invoice Saat Ini</label>
                                 <input type="text" class="form-control bg-light" name="id_inv" value="<?php echo $jenis_inv ?>" readonly>
                             </div>
-                            <form action="proses/proses-invoice-ppn.php" method="POST">
+                            <form action="proses/proses-invoice-bum.php" method="POST">
                                 <?php
                                 $id_inv_kat = $id_inv;
                                 $sql_kat = "SELECT 
-                                            ppn.*, 
+                                            bum.*, 
                                             sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan
-                                            FROM inv_ppn AS ppn
-                                            JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                            WHERE ppn.id_inv_ppn = '$id_inv_kat'";
+                                            FROM inv_bum AS bum
+                                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
+                                            WHERE bum.id_inv_bum = '$id_inv_kat'";
                                 $query_kat = mysqli_query($connect, $sql_kat);
                                 $data_kat = mysqli_fetch_array($query_kat);
                                 ?>
@@ -831,7 +831,7 @@ include "function/class-spk.php";
                     $day = date('d');
                     $month = date('m');
                     ?>
-                    <form action="proses/proses-invoice-ppn.php" method="POST" enctype="multipart/form-data" id="form-kirim">
+                    <form action="proses/proses-invoice-bum.php" method="POST" enctype="multipart/form-data" id="form-kirim">
                         <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
                         <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
                         <div class="mb-3">
@@ -898,19 +898,19 @@ include "function/class-spk.php";
                         </div>
                         <div class="mb-3">
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
-                            <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)" style="display: none;">
+                            <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)" style="display: none;">
                         </div>
                         <div class="mb-3 preview-image" id="imagePreview" style="display: none;"></div>
 
                         <div class="mb-3">
                             <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
-                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)" style="display: none;">
+                            <input type="file" name="fileku2" id="fileku2" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage2(event)" style="display: none;">
                         </div>
                         <div class="mb-3" id="imagePreview2" style="display: none;"></div>
                         
                         <div class="mb-3">
                             <label id="labelBukti3" for="fileku" style="display: none;">Bukti Terima 3</label>
-                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)" style="display: none;">
+                            <input type="file" name="fileku3" id="fileku3" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage3(event)" style="display: none;">
                         </div>
                         <div class="mb-3" id="imagePreview3" style="display: none;"></div>
                         <div class="modal-footer">
@@ -1205,7 +1205,7 @@ include "function/class-spk.php";
                             $query = mysqli_query($connect, $sql);
                             $totalData = mysqli_num_rows($query);
                             ?>
-                            <form action="proses/proses-invoice-ppn.php" method="POST">
+                            <form action="proses/proses-invoice-bum.php" method="POST">
                                 <table class="table table-bordered table-striped" id="table2">
                                     <thead>
                                         <tr class="text-white" style="background-color: navy;">

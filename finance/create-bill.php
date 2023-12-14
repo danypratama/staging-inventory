@@ -107,7 +107,7 @@ include 'akses.php';
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-md-2">
-                                <p>Total Tagihan (Dipilih)</p>
+                                <p>Total Tagihan (Dipilih):</p>
                             </div>
                             <div class="col-md-3">
                                 <div class="input-group mb-3">

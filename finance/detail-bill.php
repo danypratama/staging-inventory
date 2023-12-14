@@ -188,21 +188,11 @@ include "akses.php";
                                     $no = 1;
                                     $sql = "SELECT  COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo) AS tgl_tempo,
                                                     STR_TO_DATE(COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo), '%d/%m/%Y') AS tgl_tempo_convert,
-                                                    nonppn.no_inv AS no_inv_nonppn,
-                                                    nonppn.cs_inv AS cs_inv_nonppn,
-                                                    nonppn.tgl_inv AS tgl_inv_nonppn,
-                                                    nonppn.total_inv AS total_inv_nonppn,
-                                                    
-                                                    ppn.no_inv AS no_inv_ppn,
-                                                    ppn.cs_inv AS cs_inv_ppn,
-                                                    ppn.tgl_inv AS tgl_inv_ppn,
-                                                    ppn.total_inv AS total_inv_ppn,
-                                                    
-                                                  
-                                                    bum.no_inv AS no_inv_bum,
-                                                    bum.cs_inv AS cs_inv_bum,
-                                                    bum.tgl_inv AS tgl_inv_bum,
-                                                    bum.total_inv AS total_inv_bum,
+
+                                                    COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
+                                                    COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
+                                                    COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv) AS tgl_inv,
+                                                    COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
                                                     
                                                     fnc.id_finance AS finance_id,
                                                     fnc.id_inv AS inv_id,
@@ -221,53 +211,26 @@ include "akses.php";
                                             LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
                                             WHERE bill.id_tagihan = '$id_bill'
                                             GROUP BY fnc.id_finance
-                                            ORDER BY no_inv_nonppn ASC, no_inv_ppn ASC, no_inv_bum ASC";
+                                            ORDER BY no_inv ASC";
                                 
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)){
                                         $id_finance = $data['finance_id'];
                                         $id_inv = $data['inv_id'];
+                                        $jenis_inv = $data['jenis_inv'];
                                         $tgl_tempo_cek = $data['tgl_tempo'];
                                         $tgl_tempo = $data['tgl_tempo_convert'];
                                         $date_now = date('Y-m-d');
-                                        
+                                        $total_inv = $data['total_inv'];
+                                        $total_bayar = $data['total_pembayaran'];
+                                        $sisa_tagihan = $total_inv - $total_bayar;
                                 ?>
                                 <tr>
                                     <td class="text-center"><?php echo $no; ?></td>
-                                    <td class="text-center text-nowrap">
-                                        <?php
-                                            if (!empty($data['no_inv_nonppn'])) {
-                                                echo $data['no_inv_nonppn'];
-                                            } elseif (!empty($data['no_inv_ppn'])) {
-                                                echo $data['no_inv_ppn'];
-                                            } elseif (!empty($data['no_inv_bum'])) {
-                                                echo $data['no_inv_bum'];
-                                            }
-                                        ?>
-                                    </td>
+                                    <td class="text-center text-nowrap"><?php echo $data['no_inv'] ?></td>
                                     <td class="text-center text-nowrap"><?php echo strtoupper($data['jenis_inv'])?></td>
-                                    <td class="text-center text-nowrap">
-                                        <?php
-                                            if (!empty($data['cs_inv_nonppn'])) {
-                                                echo $data['cs_inv_nonppn'];
-                                            } elseif (!empty($data['cs_inv_ppn'])) {
-                                                echo $data['cs_inv_ppn'];
-                                            } elseif (!empty($data['cs_inv_bum'])) {
-                                                echo $data['cs_inv_bum'];
-                                            }
-                                        ?>
-                                    </td>
-                                    <td class="text-center text-nowrap">
-                                        <?php
-                                            if (!empty($data['tgl_inv_nonppn'])) {
-                                                echo $data['tgl_inv_nonppn'];
-                                            } elseif (!empty($data['tgl_inv_ppn'])) {
-                                                echo $data['tgl_inv_ppn'];
-                                            } elseif (!empty($data['tgl_inv_bum'])) {
-                                                echo $data['tgl_inv_bum'];
-                                            }
-                                        ?>
-                                    </td>
+                                    <td class="text-center text-nowrap"><?php echo $data['cs_inv'] ?></td>
+                                    <td class="text-center text-nowrap"><?php echo $data['tgl_inv'] ?></td>
                                     <td class="text-center text-nowrap">
                                         <?php
                                             if (!empty($tgl_tempo_cek)) {
@@ -287,51 +250,9 @@ include "akses.php";
                                            
                                         ?>
                                     </td>
-                                    <td class="text-end text-nowrap">
-                                        <?php
-                                            if (!empty($data['total_inv_nonppn'])) {
-                                                echo number_format($data['total_inv_nonppn'],0,'.','.');
-                                            } elseif (!empty($data['total_inv_ppn'])) {
-                                                echo number_format($data['total_inv_ppn'],0,'.','.');
-                                            } elseif (!empty($data['total_inv_bum'])) {
-                                                echo number_format($data['total_inv_bum'],0,'.','.');
-                                            }
-                                        ?>
-                                    </td>
-                                    <td class="text-end text-nowrap">
-                                        <?php
-                                            if (!empty($data['total_inv_nonppn'])) {        
-                                                $total_bayar = $data['total_pembayaran']; 
-                                                echo number_format($total_bayar,0,'.','.');
-                                            } elseif (!empty($data['total_inv_ppn'])) {
-                                                $total_bayar = $data['total_pembayaran']; 
-                                                echo number_format($total_bayar,0,'.','.');
-                                            } elseif (!empty($data['total_inv_bum'])) {
-                                                $total_bayar = $data['total_pembayaran']; 
-                                                echo number_format($total_bayar,0,'.','.');
-                                            }
-                                        ?>    
-                                    </td>
-                                    <td class="text-end text-nowrap">
-                                        <?php
-                                            if (!empty($data['total_inv_nonppn'])) {
-                                                $total_inv = $data['total_inv_nonppn'];
-                                                $total_bayar = $data['total_pembayaran'];
-                                                $sisa_tagihan = $total_inv - $total_bayar;
-                                                echo number_format($sisa_tagihan,0,'.','.');
-                                            } elseif (!empty($data['total_inv_ppn'])) {
-                                                $total_inv = $data['total_inv_ppn'];
-                                                $total_bayar = $data['total_pembayaran'];
-                                                $sisa_tagihan = $total_inv - $total_bayar;
-                                                echo number_format($sisa_tagihan,0,'.','.');
-                                            } elseif (!empty($data['total_inv_bum'])) {
-                                                $total_inv = $data['total_inv_bum'];
-                                                $total_bayar = $data['total_pembayaran'];
-                                                $sisa_tagihan = $total_inv - $total_bayar;
-                                                echo number_format($sisa_tagihan,0,'.','.');
-                                            }
-                                        ?>
-                                    </td>
+                                    <td class="text-end text-nowrap"><?php echo number_format($total_inv,0,'.','.') ?></td>
+                                    <td class="text-end text-nowrap"><?php echo number_format($total_bayar,0,'.','.') ?></td>
+                                    <td class="text-end text-nowrap"><?php echo number_format($sisa_tagihan,0,'.','.') ?></td>
                                     <td class="text-center text-nowrap">
                                         <?php 
                                             if($data['status_lunas'] == 0) {
@@ -364,140 +285,22 @@ include "akses.php";
                                         }
                                     ?> 
                                     <td class="text-center text-nowrap">
-                                        <?php
-                                            if (!empty($data['total_inv_nonppn'])) {
-                                                $total_inv = $data['total_inv_nonppn'];
-                                                $total_bayar = $data['total_pembayaran'];
-                                                $sisa_tagihan = $total_inv - $total_bayar;
-
-                                                if ($sisa_tagihan == 0) {
-                                                    echo '<button class="btn btn-secondary btn-sm mb-2"><i class="bi bi-check-circle"></i> Lunas</button>';
-                                                    echo '<br>';
-                                                    echo '<button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="' . $id_finance . '"><i class="bi bi-info-circle"></i> History Payment</button>';
-                                                } else {
-                                                    echo '<button type="button" class="btn btn-warning btn-sm mb-2" data-bs-toggle="modal" 
-                                                    data-id="';
-                                                    echo $id_inv;
-
-                                                    echo '" 
-                                                    data-total="';
-
-                                                    if (!empty($data['total_inv_nonppn'])) {
-                                                        $total_inv = $data['total_inv_nonppn'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    } elseif (!empty($data['total_inv_ppn'])) {
-                                                        $total_inv = $data['total_inv_ppn'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    } elseif (!empty($data['total_inv_bum'])) {
-                                                        $total_inv = $data['total_inv_bum'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    }
-
-                                                    echo '"
-                                                    data-jenis="' . $data['jenis_inv'] . '"
-                                                    data-finance="' . $data['finance_id'] . '"
-                                                    data-bs-target="#sudahBayar">
+                                       <?php  
+                                            if ($sisa_tagihan == 0) {
+                                                ?>
+                                                    <button class="btn btn-secondary btn-sm mb-2"><i class="bi bi-check-circle"></i> Lunas</button>
+                                                    <br>
+                                                    <button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="<?php echo $data['$id_finance'] ?> "><i class="bi bi-info-circle"></i> History Payment</button>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                    <button type="button" class="btn btn-warning btn-sm mb-2" data-bs-toggle="modal"        data-bs-target="#sudahBayar" data-id ="<?php echo $id_inv ?>" data-jenis ="<?php echo $jenis_inv ?>" data-finance ="<?php echo $id_finance ?>" data-total ="<?php echo number_format($sisa_tagihan, 0, '.', '.') ?>">
                                                         <i class="bi bi-cash-coin"> Bayar</i>
-                                                    </button>';
-                                                    echo '<br>';
-                                                    echo '<button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="' . $id_finance . '"><i class="bi bi-info-circle"></i> History Payment</button>';
-                                                }
-                                            
-                                            } elseif (!empty($data['total_inv_ppn'])) {
-                                                $total_inv = $data['total_inv_ppn'];
-                                                $total_bayar = $data['total_pembayaran'];
-                                                $sisa_tagihan = $total_inv - $total_bayar;
-
-                                                if ($sisa_tagihan == 0) {
-                                                    echo '<button class="btn btn-secondary btn-sm mb-2"><i class="bi bi-check-circle"></i> Lunas</button>';
-                                                    echo '<br>';
-                                                    echo '<button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="' . $id_finance . '"><i class="bi bi-info-circle"></i> History Payment</button>';
-                                                } else {
-                                                    echo '<button type="button" class="btn btn-warning btn-sm mb-2" data-bs-toggle="modal" 
-                                                    data-id="';
-                                                    echo $id_inv;
-
-                                                    echo '" 
-                                                    data-total="';
-
-                                                    if (!empty($data['total_inv_nonppn'])) {
-                                                        $total_inv = $data['total_inv_nonppn'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    } elseif (!empty($data['total_inv_ppn'])) {
-                                                        $total_inv = $data['total_inv_ppn'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    } elseif (!empty($data['total_inv_bum'])) {
-                                                        $total_inv = $data['total_inv_bum'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    }
-
-                                                    echo '"
-                                                    data-jenis="' . $data['jenis_inv'] . '"
-                                                    data-finance="' . $data['finance_id'] . '"
-                                                    data-bs-target="#sudahBayar">
-                                                        <i class="bi bi-cash-coin"> Bayar</i>
-                                                    </button>';
-                                                    echo '<br>';
-                                                    echo '<button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="' . $id_finance . '"><i class="bi bi-info-circle"></i> History Payment</button>';
-                                                }
-                                               
-                                            } elseif (!empty($data['total_inv_bum'])) {
-                                                $total_inv = $data['total_inv_bum'];
-                                                $total_bayar = $data['total_pembayaran'];
-                                                $sisa_tagihan = $total_inv - $total_bayar;
-
-                                                if ($sisa_tagihan == 0) {
-                                                    echo '<button class="btn btn-secondary btn-sm mb-2"><i class="bi bi-check-circle"></i> Lunas</button>';
-                                                    echo '<br>';
-                                                    echo '<button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="' . $id_finance . '"><i class="bi bi-info-circle"></i> History Payment</button>';
-                                                } else {
-                                                    echo '<button type="button" class="btn btn-warning btn-sm mb-2" data-bs-toggle="modal" 
-                                                    data-id="';
-                                                    echo $id_inv;
-
-                                                    echo '" 
-                                                    data-total="';
-
-                                                    if (!empty($data['total_inv_nonppn'])) {
-                                                        $total_inv = $data['total_inv_nonppn'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    } elseif (!empty($data['total_inv_ppn'])) {
-                                                        $total_inv = $data['total_inv_ppn'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    } elseif (!empty($data['total_inv_bum'])) {
-                                                        $total_inv = $data['total_inv_bum'];
-                                                        $total_bayar = $data['total_pembayaran'];
-                                                        $sisa_tagihan = $total_inv - $total_bayar;
-                                                        echo number_format($sisa_tagihan, 0, '.', '.');
-                                                    }
-
-                                                    echo '"
-                                                    data-jenis="' . $data['jenis_inv'] . '"
-                                                    data-finance="' . $data['finance_id'] . '"
-                                                    data-bs-target="#sudahBayar">
-                                                        <i class="bi bi-cash-coin"> Bayar</i>
-                                                    </button>';
-                                                    echo '<br>';
-                                                    echo '<button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="' . $id_finance . '"><i class="bi bi-info-circle"></i> History Payment</button>';
-                                                }      
+                                                    </button>
+                                                <?php
                                             }
-                                        ?>
+                                       
+                                       ?>
                                     </td>
                                 </tr>
                                 <?php $no++ ?>
@@ -611,15 +414,20 @@ include "akses.php";
                                     include "koneksi.php";
                                     include "../function/function-enkripsi.php";
                                     $no = 1;
-                                    $key = "IT@Support";
-                                    $sql_bank = "SELECT * FROM finance_bank ORDER BY nama_bank ASC";
+                                    $sql_bank ="SELECT 
+                                                    bt.id_bank,
+                                                    bt.no_rekening,
+                                                    bt.atas_nama,
+                                                    bk.nama_bank,
+                                                    bk.logo
+                                                FROM bank_pt AS bt
+                                                LEFT JOIN bank bk ON (bk.id_bank = bt.id_bank)
+                                                ORDER BY nama_bank ASC";
                                     $query_bank = mysqli_query($connect, $sql_bank);
                                     $total_data_bank = mysqli_num_rows($query_bank);
                                     while($data_bank = mysqli_fetch_array($query_bank)){
                                         $no_rek = $data_bank['no_rekening'];
-                                        $dekripsi_no_rek = decrypt($no_rek, $key);
                                         $atas_nama = $data_bank['atas_nama'];
-                                        $dekripsi_atas_nama = decrypt($atas_nama, $key);
                                         $logo = $data_bank['logo'];
                                         $logo_img = "logo-bank/$logo";
                                     ?>
@@ -633,7 +441,7 @@ include "akses.php";
                                                     <div class="mb-2">
                                                         <div class="row">
                                                             <div class="col md-11">
-                                                                <?php echo $dekripsi_no_rek; ?> (<?php echo $dekripsi_atas_nama ?>)
+                                                                <?php echo $no_rek; ?> (<?php echo $atas_nama ?>)
                                                             </div>
                                                             <div class="col md-1 text-end">
                                                                 <input class="form-check-input" type="radio" id="id_bank" name="id_bank" value="<?php echo $data_bank['id_bank']; ?>" required>
@@ -791,24 +599,30 @@ include "akses.php";
 
 <!-- Untuk Menampilkan Data Bayar -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Menangkap semua tombol dengan atribut data-total dan data-id
-        var totalButtons = document.querySelectorAll('[data-total][data-id][data-jenis][data-finance]');
+    // Wait for the DOM to be ready
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all buttons with the data-bs-target attribute equal to #sudahBayar
+        var totalButtons = document.querySelectorAll('[data-bs-target="#sudahBayar"]');
 
-        totalButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                var total = button.getAttribute('data-total'); // Mendapatkan nilai data-total
-                var id = button.getAttribute('data-id'); // Mendapatkan nilai data-id
-                var jenis = button.getAttribute('data-jenis'); // Mendapatkan nilai data-jenis
-                var idFnc = button.getAttribute('data-finance'); // Mendapatkan nilai data-jenis
-                
-                document.getElementById('total_tagihan').value = total; // Mengatur nilai total_tagihan
-                document.getElementById('id_inv').value = id; // Mengatur nilai id_inv
-                document.getElementById('jenis_inv').value = jenis; // Mengatur nilai jenis inv
-                document.getElementById('id_finance').value = idFnc; // Mengatur nilai jenis inv
+        // Iterate through each button and attach an event listener
+        totalButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Get the data-id attribute value from the clicked button
+                var idInv = button.getAttribute('data-id');
+                var jenisInv = button.getAttribute('data-jenis');
+                var idFinance = button.getAttribute('data-finance');
+                var totalInv = button.getAttribute('data-total');
+
+                // Set the value of the id_inv input field in the modal
+                document.getElementById('id_inv').value = idInv;
+                document.getElementById('jenis_inv').value = jenisInv;
+                document.getElementById('id_finance').value = idFinance;
+                document.getElementById('total_tagihan').value = totalInv;
             });
         });
     });
+</script>
+
 </script>
 <!-- End Untuk Menampilkan Data Bayar -->
 

@@ -15,6 +15,30 @@
     </li>
     <!-- End Data Bank -->
 
+    <!-- Data Bank PT-->
+    <li class="nav-item">
+      <a class="nav-link <?php if ($page == 'bank-pt') { echo 'collapsed'; } ?>" href="data-bank-pt.php">
+        <i class="bi bi-bank"></i><span>Data Bank KMA</span>
+      </a>
+    </li>
+    <!-- End Data Bank -->
+
+    <!-- Data Bank SP-->
+    <li class="nav-item">
+      <a class="nav-link <?php if ($page == 'bank-sp') { echo 'collapsed'; } ?>" href="data-bank-pt.php">
+        <i class="bi bi-bank"></i><span>Data Bank Supplier</span>
+      </a>
+    </li>
+    <!-- End Data Bank -->
+
+    <!-- Data Bank CS -->
+    <li class="nav-item">
+      <a class="nav-link <?php if ($page == 'bank-cs') { echo 'collapsed'; } ?>" href="data-bank-cs.php">
+        <i class="bi bi-bank"></i><span>Data Bank Customer</span>
+      </a>
+    </li>
+    <!-- End Data Bank -->
+
     <!-- Data SPK -->
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'transaksi') { echo 'collapsed'; } ?>" href="spk-reg.php">

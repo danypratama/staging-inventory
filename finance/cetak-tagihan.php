@@ -25,7 +25,6 @@ include "akses.php";
         padding: 0; /* Hapus padding */
         font-size: 13px;
         font-family: 'Maiandra GD';
-        font-weight: bold;
     }
 
     .sph-img {
@@ -54,29 +53,30 @@ include "akses.php";
         display: block;
         margin: 0 auto;
     }
-    .table {
+    .table-custom {
       border-collapse: collapse;
       width: 100%;
     }
 
-    .table th, .table td {  
+    .table-custom th, .table-custom td {  
         border: 1px black solid;
-        padding: 8px;
         text-align: left;
+        padding: 3px;
     }
 
-    .table tr:nth-child(even) {
+    .table-custom tr:nth-child(even) {
         background-color: #f2f2f2;
     }
 
-    .table tr:hover {
+    .table-custom tr:hover {
         background-color: #ddd;
     }
   </style>
   <?php include "page/head.php" ?>
+  <?php include "function/tanggal-indo.php" ?>
 </head>
 
-<body>
+<body style="color: black;">
   <div class="sph">
     <?php 
       include "koneksi.php";        
@@ -86,7 +86,7 @@ include "akses.php";
                     spk.id_customer,  -- Menampilkan kolom id_customer dari tabel spk_reg
                     cs.nama_cs AS nama_cs,  -- Menampilkan kolom nama_cs dari tabel tb_customer
                     cs.alamat AS alamat_cs,  -- Menampilkan kolom alamat_cs dari tabel tb_customer
-                    ft.tgl_tagihan,
+                    STR_TO_DATE(ft.tgl_tagihan, '%d/%m/%Y') AS tgl_tagihan,
                     ft.no_tagihan,
                     COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                     COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
@@ -104,41 +104,50 @@ include "akses.php";
       $query = mysqli_query($connect, $sql_data);
       $query_data = mysqli_query($connect, $sql_data);
       $data = mysqli_fetch_array($query);
+      $id_inv = $data['id_inv'];
       $update_status_cetak = mysqli_query($connect, "UPDATE finance_tagihan SET status_cetak = '1' WHERE id_tagihan = '$id_bill'");
     ?>
-    <div class="sph-img">
-      <img src="assets/img/header-sph.jpg" class="card-img-top">
-    </div>
+    <?php  
+      $id_inv_substr = substr($id_inv, 0,3);
+      if( $id_inv_substr == "PPN"){
+        ?>
+          <div class="sph-img">
+            <img src="assets/img/header-sph.jpg" class="card-img-top">
+          </div>
+        <?php
+      }
+    ?>
     <div class="sph-content mt-3">
       <div class="row">
         <div class="col-sm-6 p-3">
             <div class="col-10 border border-dark text-start p-2">
-                <b>Kepada, Yth</b><br>
-                <b><?php echo $data['nama_cs'] ?><br>
-                <?php echo $data['alamat_cs'] ?></b>
+                Kepada, Yth<br>
+                <b style="color: black;"><?php echo $data['nama_cs'] ?></b><br>
+                <?php echo $data['alamat_cs'] ?>
             </div>
         </div>
         <div class="col-sm-6 p-3">
             <div class="col-10 border border-dark p-2 float-end">
-               <b>TUKAR FAKTUR</b>
+               <b style="color: black;">TUKAR FAKTUR</b>
             </div>
             <br><br>
             <div class="col-10 border border-dark p-2 float-end text-start">
             <div class="row">
-                <div class="col-4"><strong>Tanggal</strong></div>
-                <div class="col-8"><strong>: <?php echo date('d F Y', strtotime($data['tgl_tagihan'])) ?></strong></div>
+                <div class="col-5">Tanggal Tagihan</div>
+                <div class="col-7">: <?php echo tgl_indo($data['tgl_tagihan']) ?></strong></div>
             </div>
             <div class="row">
-                <div class="col-4"><strong>No. Tagihan </strong></div>
-                <div class="col-8"><strong>: <?php echo $data['no_tagihan'] ?></strong></div>
+                <div class="col-5">No. Tagihan</div>
+                <div class="col-7">: <?php echo $data['no_tagihan'] ?></div>
             </div>
         </div>
 
         </div>
       </div>
       <!-- Table -->
-      <div class="table-reponsive mt-4">
-        <table class="table">
+      <p class="text-start">Berikut rincian nota nota untuk tukar faktur :</p>
+      <div class="table-reponsive">
+        <table class="table-custom">
           <thead>
             <tr>
               <th class="text-center">No</th>
@@ -172,14 +181,14 @@ include "akses.php";
       <div class="row">
         <div class="col-7 ms-4 m-2 text-start">
           <b>PT. Karsa Mandiri Alkesindo</b>
-          <br><br><br> <br><br><br><br>
+          <br><br><br> <br><br><br>
           <b style="text-decoration: underline;">
           <?php echo $_SESSION['tiket_nama'] ?>
           </b><br>
           <?php echo 'Finance' ?>
         </div>
         <div class="col-4 m-2">
-          <table class="table">
+          <table class="table-custom">
             <tr>
               <th class="text-center" style="width: 200px;">Tanggal Kembali</th>
             </tr>
@@ -187,7 +196,7 @@ include "akses.php";
               <th><br></th>
             </tr>
           </table>
-          <br><br><br>
+          <br><br><br><br>
           <p>(Paraf & Nama Penerima)</p>
         </div>
       </div>

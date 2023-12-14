@@ -898,19 +898,19 @@ include "function/class-spk.php";
                         </div>
                         <div class="mb-3">
                             <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
-                            <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)" style="display: none;">
+                            <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)" style="display: none;">
                         </div>
                         <div class="mb-3 preview-image" id="imagePreview" style="display: none;"></div>
 
                         <div class="mb-3">
                             <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
-                            <input type="file" name="fileku2" id="fileku2" accept="image/*" onchange="compressAndPreviewImage2(event)" style="display: none;">
+                            <input type="file" name="fileku2" id="fileku2" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage2(event)" style="display: none;">
                         </div>
                         <div class="mb-3" id="imagePreview2" style="display: none;"></div>
                         
                         <div class="mb-3">
                             <label id="labelBukti3" for="fileku" style="display: none;">Bukti Terima 3</label>
-                            <input type="file" name="fileku3" id="fileku3" accept="image/*" onchange="compressAndPreviewImage3(event)" style="display: none;">
+                            <input type="file" name="fileku3" id="fileku3" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage3(event)" style="display: none;">
                         </div>
                         <div class="mb-3" id="imagePreview3" style="display: none;"></div>
                         <div class="modal-footer">

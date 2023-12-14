@@ -33,4 +33,15 @@
 	    $plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
 	    return $plaintext;
 	}
+
+	// Contoh penggunaan
+	// include "../function/function-enkripsi.php";
+
+	// enkripsi
+	// $key = "IT@Support";
+    // $enkripsi_atas_nama = encrypt($atas_nama, $key);
+
+	// Dekripsi
+	// $atas_nama = $data_bank['atas_nama'];
+    // $dekripsi_atas_nama = decrypt($atas_nama, $key);
 ?>

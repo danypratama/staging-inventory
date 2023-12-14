@@ -513,117 +513,102 @@ $(document).ready(function() {
 </script>
 
 <script>
-const form = document.getElementById("invoiceForm");
-const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="spk"]');
-const nonPpnButton = document.getElementById("nonPpnButton");
-const ppnButton = document.getElementById("ppnButton");
-const bumButton = document.getElementById("bumButton");
+    const form = document.getElementById("invoiceForm");
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="spk"]');
+    const nonPpnButton = document.getElementById("nonPpnButton");
+    const ppnButton = document.getElementById("ppnButton");
+    const bumButton = document.getElementById("bumButton");
 
-form.addEventListener("submit", function(event) {
-    event.preventDefault();
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
 
-    // Jika SPK yang dipilih sesuai dengan pelanggan yang dipilih, lanjutkan proses invoice
-    if (selectedSpk) {
-        console.log("Data Pelanggan:");
-        console.log("Nama Customer:", selectedCustomer);
-        console.log("SPK yang Dipilih:");
-        checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked && checkbox.getAttribute("data-customer") === selectedCustomer) {
-                console.log("ID SPK:", checkbox.value);
-            }
-        });
-        // Lakukan tindakan selanjutnya, seperti mengirim data ke server atau melakukan tindakan lainnya
-    }
-});
-
-function updateButtonState() {
-    let selectedCustomer = null;
-    let checkedCustomers = new Set(); // Menyimpan nama pelanggan yang dipilih
-
-    checkboxes.forEach(function(checkbox) {
-        if (checkbox.checked) {
-            checkedCustomers.add(checkbox.getAttribute(
-                "data-customer")); // Tambahkan nama pelanggan yang dipilih ke dalam Set
+        // Jika SPK yang dipilih sesuai dengan pelanggan yang dipilih, lanjutkan proses invoice
+        if (selectedSpk) {
+            console.log("Data Pelanggan:");
+            console.log("Nama Customer:", selectedCustomer);
+            console.log("SPK yang Dipilih:");
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked && checkbox.getAttribute("data-customer") === selectedCustomer) {
+                    console.log("ID SPK:", checkbox.value);
+                }
+            });
+            // Lakukan tindakan selanjutnya, seperti mengirim data ke server atau melakukan tindakan lainnya
         }
     });
 
-    if (checkedCustomers.size <= 5) { // Cek apakah jumlah data yang dicentang tidak melebihi 5
-        if (checkedCustomers.size === 1) {
-            selectedCustomer = checkedCustomers.values().next().value; // Ambil nama pelanggan dari Set
+    function updateButtonState() {
+        let selectedCustomer = null;
+        let checkedCustomers = new Set(); // Menyimpan nama pelanggan yang dipilih
 
-            nonPpnButton.disabled = false;
-            ppnButton.disabled = false;
-            bumButton.disabled = false;
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                checkedCustomers.add(checkbox.getAttribute(
+                    "data-customer")); // Tambahkan nama pelanggan yang dipilih ke dalam Set
+            }
+        });
+
+        if (checkedCustomers.size <= 5) { // Cek apakah jumlah data yang dicentang tidak melebihi 5
+            if (checkedCustomers.size === 1) {
+                selectedCustomer = checkedCustomers.values().next().value; // Ambil nama pelanggan dari Set
+
+                nonPpnButton.disabled = false;
+                ppnButton.disabled = false;
+                bumButton.disabled = false;
+            } else {
+                nonPpnButton.disabled = true;
+                ppnButton.disabled = true;
+                bumButton.disabled = true;
+            }
         } else {
+            // Jika jumlah data yang dicentang melebihi 5, nonaktifkan tombol dan tampilkan peringatan
             nonPpnButton.disabled = true;
             ppnButton.disabled = true;
             bumButton.disabled = true;
         }
-    } else {
-        // Jika jumlah data yang dicentang melebihi 5, nonaktifkan tombol dan tampilkan peringatan
-        nonPpnButton.disabled = true;
-        ppnButton.disabled = true;
-        bumButton.disabled = true;
-
-        Swal.fire({
-            title: '<strong>HTML <u>example</u></strong>',
-            icon: 'info',
-            html: 'You can use <b>bold text</b>, ' +
-                '<a href="//sweetalert2.github.io">links</a> ' +
-                'and other HTML tags',
-            showCloseButton: true,
-            showCancelButton: true,
-            focusConfirm: false,
-            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
-            confirmButtonAriaLabel: 'Thumbs up, great!',
-            cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
-            cancelButtonAriaLabel: 'Thumbs down'
-        })
     }
-}
 
-checkboxes.forEach(function(checkbox) {
-    checkbox.addEventListener("change", function(event) {
-        updateButtonState();
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener("change", function(event) {
+            updateButtonState();
 
-        // Membatasi pemilihan data hingga maksimal 5
-        let checkedCount = 0;
-        checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                checkedCount++;
-                if (checkedCount > 5) {
-                    checkbox.checked = false;
-                    Swal.fire({
-                        title: '<strong>Batas Maksimum Pemilihan</strong>',
-                        icon: 'info',
-                        html: 'Anda hanya dapat memilih maksimal 5 data.',
-                        confirmButtonText: 'OK'
-                    })
+            // Membatasi pemilihan data hingga maksimal 5
+            let checkedCount = 0;
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    checkedCount++;
+                    if (checkedCount > 5) {
+                        checkbox.checked = false;
+                        Swal.fire({
+                            title: '<strong>Batas Maksimum Pemilihan</strong>',
+                            icon: 'info',
+                            html: 'Anda hanya dapat memilih maksimal 5 data.',
+                            confirmButtonText: 'OK'
+                        })
+                    }
                 }
+            });
+
+            updateButtonState();
+        });
+    });
+
+
+
+
+    function checkInitialCheckbox() {
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.getAttribute("data-customer") === "agung") {
+                checkbox.checked = true;
             }
         });
-
         updateButtonState();
-    });
-});
+    }
 
-
-
-
-function checkInitialCheckbox() {
     checkboxes.forEach(function(checkbox) {
-        if (checkbox.getAttribute("data-customer") === "agung") {
-            checkbox.checked = true;
-        }
+        checkbox.addEventListener("change", updateButtonState);
     });
-    updateButtonState();
-}
 
-checkboxes.forEach(function(checkbox) {
-    checkbox.addEventListener("change", updateButtonState);
-});
-
-checkInitialCheckbox();
+    checkInitialCheckbox();
 </script>
 <script>
 function submitForm(action) {
