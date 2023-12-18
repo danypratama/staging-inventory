@@ -49,7 +49,7 @@
     
     <!-- Data Finance -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'finance') { echo 'collapsed'; } ?>" href="finance-inv.php?date_range=weekly">
+      <a class="nav-link <?php if ($page == 'finance') { echo 'collapsed'; } ?>" href="finance-inv.php?date_range=monthly">
         <i class="bi bi-cash-stack"></i><span>Finance</span>
       </a>
     </li>

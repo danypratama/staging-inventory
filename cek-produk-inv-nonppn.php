@@ -808,10 +808,9 @@ include "function/class-spk.php";
 
     <!-- Footer -->
     <?php include "page/footer.php" ?>
+    <?php include "page/script.php" ?>
     <!-- End Footer -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-    <?php include "page/script.php" ?>
 </body>
 
 </html>
@@ -858,7 +857,7 @@ include "function/class-spk.php";
                         <div class="mb-3">
                             <label id="labelEkspedisi" style="display: none;">Pilih Ekspedisi</label>
                             <select id="ekspedisi" name="ekspedisi" class="form-select" style="display: none;">
-                                <option value="">Pilih...</option>
+                                <option value=""></option>
                                 <?php
                                 include "koneksi.php";
                                 $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
@@ -1062,7 +1061,7 @@ include "function/class-spk.php";
                 imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
                 imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
                 imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
-                dikirim.disabled = false;
+                dikirim.disabled = false;       
             } else if (this.value === '') {
                 pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
                 ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong

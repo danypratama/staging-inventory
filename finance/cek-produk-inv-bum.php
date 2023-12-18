@@ -313,9 +313,9 @@ include "../function/class-spk.php";
                             <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                         </a>
                     </div>
-                </div>     
-                <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>         
+                </div>              
                 <div class="table-responsive p-3">
+                    <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
                     <table class="table table-striped table-bordered" id="table3">
                         <?php
                             $id_inv_bum = base64_decode($_GET['id']);

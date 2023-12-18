@@ -337,7 +337,7 @@ include "akses.php";
 <!-- End Generate UUID -->
 
 
-<!-- Script Untuk Modal History -->
+<!-- Script Untuk Modal Edit -->
 <script>
     $('#editModal').on('show.bs.modal', function () {
         $('#modal2').modal('hide');

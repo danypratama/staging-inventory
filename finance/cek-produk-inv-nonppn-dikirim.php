@@ -409,8 +409,8 @@ include "../function/class-spk.php";
                             ?>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
                     <div class="table-responsive mt-2">
+                        <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
                         <table class="table table-striped table-bordered" id="table2">
                             <?php
                                 if ($total_data != 0) {

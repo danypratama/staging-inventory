@@ -1,6 +1,7 @@
 <?php  
 include "../koneksi.php";
 include "../page/resize-image.php";
+session_start();
 
 if(isset($_POST['simpan-pembayaran'])){
     date_default_timezone_set('Asia/Jakarta');
@@ -11,7 +12,9 @@ if(isset($_POST['simpan-pembayaran'])){
     $month = date('m');
     $year = date('y');
     $id_bayar = "BYR" . $year . "" . $month . "" . $uuid . "" . $day ;
+    $id_bank_cs = "BANK_CS" . $year . "" . $month . "" . $uuid . "" . $day ;
     $id_bukti = "BUKTI" . $year . "" . $month . "" . $uuid . "" . $day ;
+    $id_cs = $_POST['id_cs'];
     $metode_bayar = $_POST['metode_pembayaran'];
     $nominal = str_replace('.', '', $_POST['nominal']); // Menghapus tanda ribuan (,)
     $nominal = intval($nominal); // Mengubah string harga menjadi integer
@@ -29,7 +32,7 @@ if(isset($_POST['simpan-pembayaran'])){
     $nama_pengirim = $_POST['nama_pengirim'];
     $rek_pengirim = $_POST['rek_pengirim'];
     $bank_pengirim = $_POST['bank_pengirim'];
-    echo $rek_pengirim;
+    $created_by = $_SESSION['tiket_nama'];
 
     if($metode_bayar == 'transfer'){
         $id_bank = $_POST['id_bank'];
@@ -127,8 +130,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         } while (true);
         
                         if($sisa_tagihan == 0 ){
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -139,7 +155,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
         
         
-                            if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                            if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                                 throw new Exception("Error updating data");
                             }
         
@@ -150,8 +166,21 @@ if(isset($_POST['simpan-pembayaran'])){
                             exit();
         
                         } else {
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -162,7 +191,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
         
         
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                             // Commit the transaction
@@ -248,8 +277,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         } while (true);
         
                         if($sisa_tagihan == 0 ){
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterengan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterengan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -260,7 +302,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
         
         
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                         // Commit the transaction
@@ -284,8 +326,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         <?php
         
                         } else {
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -296,7 +351,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
         
         
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank &&!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                             // Commit the transaction
@@ -444,9 +499,22 @@ if(isset($_POST['simpan-pembayaran'])){
                             $no++; // Jika nama file sudah ada, tambahkan nomor dan coba lagi
                         } while (true);
         
-                        if($sisa_tagihan == 0 ){
+                        if($sisa_tagihan == 0){
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -457,7 +525,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
         
         
-                            if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                            if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                                 throw new Exception("Error updating data");
                             }
         
@@ -483,8 +551,21 @@ if(isset($_POST['simpan-pembayaran'])){
                             exit(); 
         
                         } else {
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -495,7 +576,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
         
         
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                             // Commit the transaction
@@ -582,8 +663,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         } while (true);
         
                         if($sisa_tagihan == 0 ){
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -594,7 +688,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
         
         
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                         // Commit the transaction
@@ -604,8 +698,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         exit();
         
                         } else {
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                                (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                                (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                                 VALUES 
                                                                 ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -616,7 +723,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
         
         
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                             // Commit the transaction
@@ -766,8 +873,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         } while (true);
     
                         if($sisa_tagihan == 0 ){
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -778,7 +898,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
     
     
-                            if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                            if (!$sql_cs_bank &&!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                                 throw new Exception("Error updating data");
                             }
     
@@ -804,8 +924,21 @@ if(isset($_POST['simpan-pembayaran'])){
                             exit(); 
     
                         } else {
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                                (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                                (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                                 VALUES 
                                                                 ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -816,7 +949,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
     
     
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                             // Commit the transaction
@@ -903,8 +1036,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         } while (true);
     
                         if($sisa_tagihan == 0 ){
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -915,7 +1061,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
     
     
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                         // Commit the transaction
@@ -940,8 +1086,21 @@ if(isset($_POST['simpan-pembayaran'])){
                         exit(); 
     
                         } else {
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+
+                            $sql_cs_bank = '';
+
+                            if($cek_data->num_rows == 0){
+                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                                            (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
+                                                            VALUES 
+                                                            ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
+                            } else {
+                                $sql_cs_bank = '';
+                            }
+
                             $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
@@ -952,7 +1111,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
     
     
-                        if (!$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
+                        if (!$sql_cs_bank && !$sql_bayar && !$sql_bukti_tf && !$sql_finance) {
                             throw new Exception("Error updating data");
                         }
                             // Commit the transaction

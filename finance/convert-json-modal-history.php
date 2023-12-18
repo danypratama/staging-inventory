@@ -29,12 +29,10 @@
             <tbody>
                 <?php  
                     include "koneksi.php";
-                    include "function/function-enkripsi.php";
                     $no = 1;
-                    $key = "IT@Support";
                     $sql_history = "SELECT 
                                     byr.id_bayar,
-                                    byr.id_bank AS byr_bank, 
+                                    byr.id_bank_pt AS byr_bank, 
                                     byr.id_tagihan, 
                                     byr.id_finance, 
                                     byr.id_bukti, 
@@ -45,20 +43,20 @@
                                     byr.created_date,
 
                                     bnk.nama_bank,
-                                    bnk.no_rekening,
-                                    bnk.atas_nama,
+                                    pt.id_bank,
+                                    pt.no_rekening,
+                                    pt.atas_nama,
 
                                     fnc.id_inv
                                     FROM finance_bayar AS byr
-                                    LEFT JOIN finance_bank bnk ON (byr.id_bank = bnk.id_bank)
+                                    LEFT JOIN bank_pt pt ON (byr.id_bank_pt = pt.id_bank_pt)
+                                    LEFT JOIN bank bnk ON (pt.id_bank = bnk.id_bank)
                                     LEFT JOIN finance fnc ON (byr.id_finance = fnc.id_finance)
                                     WHERE byr.id_finance = '$finance_id' ORDER BY byr.created_date ASC";
                     $query_history = mysqli_query($connect, $sql_history);
                     while($data_history = mysqli_fetch_array($query_history)){
                         $no_rek = $data_history['no_rekening'];
-                        $dekripsi_no_rek = decrypt($no_rek, $key);
                         $atas_nama = $data_history['atas_nama'];
-                        $dekripsi_atas_nama = decrypt($atas_nama, $key);
                         $id_bayar = $data_history['id_bayar'];
                       
                 ?>
@@ -83,7 +81,7 @@
                             if($data_history['byr_bank'] == ''){
                                 echo '-';
                             } else {
-                                echo $dekripsi_no_rek;
+                                echo $no_rek;
                             }
                         ?>
                     </td>
@@ -92,7 +90,7 @@
                             if($data_history['byr_bank'] == ''){
                                 echo '-';
                             } else {
-                                echo $dekripsi_atas_nama;
+                                echo $atas_nama;
                             }
                         ?>
                     </td>

@@ -270,7 +270,7 @@ include 'akses.php';
                         </table>
                     </div>
                     <div class="text-end">
-                        <a href="inv-nonppn.php?date_range=weekly" class="btn btn-secondary btn-md">Cancel</a>
+                        <a href="finance-inv.php?date_range=monthly" class="btn btn-secondary btn-md">Cancel</a>
                         <button class="btn btn-primary btn-md" id="simpanButton" name="simpan-bill">Simpan</button>
                     </div>
                 </div>

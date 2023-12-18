@@ -63,6 +63,7 @@ include "akses.php";
                     $no_tagihan = $data_bill_cs['no_tagihan'];
                     $status_cetak = $data_bill_cs['status_cetak'];
                     $id_driver = $data_bill_cs['id_driver'];
+                    $id_customer = $data_bill_cs['id_customer'];
                 ?>
                 <div class="card-header text-center">
                     <h5><strong>DETAIL TAGIHAN</strong></h5>
@@ -290,12 +291,16 @@ include "akses.php";
                                                 ?>
                                                     <button class="btn btn-secondary btn-sm mb-2"><i class="bi bi-check-circle"></i> Lunas</button>
                                                     <br>
-                                                    <button class="btn btn-warning btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="<?php echo $data['$id_finance'] ?> "><i class="bi bi-info-circle"></i> History Payment</button>
+                                                    <button class="btn btn-primary btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="<?php echo $id_finance ?>"><i class="bi bi-info-circle"></i> History Payment</button>
                                                 <?php
                                             } else {
                                                 ?>
                                                     <button type="button" class="btn btn-warning btn-sm mb-2" data-bs-toggle="modal"        data-bs-target="#sudahBayar" data-id ="<?php echo $id_inv ?>" data-jenis ="<?php echo $jenis_inv ?>" data-finance ="<?php echo $id_finance ?>" data-total ="<?php echo number_format($sisa_tagihan, 0, '.', '.') ?>">
                                                         <i class="bi bi-cash-coin"> Bayar</i>
+                                                    </button>
+                                                    <br>
+                                                    <button class="btn btn-primary btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="<?php echo $id_finance ?>">
+                                                        <i class="bi bi-info-circle"></i> History Payment
                                                     </button>
                                                 <?php
                                             }
@@ -312,6 +317,322 @@ include "akses.php";
         </section>
     </main><!-- End #main -->
 
+    <!-- Modal Bayar -->
+    <div class="modal fade" id="sudahBayar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <style>
+                .img-bank{
+                    height: 60px;
+                    width: 140px;
+                }
+            </style>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Sudah Bayar</h1>
+                </div>
+                <div class="modal-body">
+                    <form action="proses/bayar.php" method="POST" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <input type="hidden" name="id_cs" value="<?php echo $id_customer ?>">
+                            <input type="hidden" id="id_inv" name="id_inv">
+                            <input type="hidden" id="jenis_inv" name="jenis_inv">
+                            <input type="hidden" name="user" value="<?php echo $_SESSION['tiket_nama'] ?>">
+                            <input type="hidden" name="id_bill" value="<?php echo $id_bill ?>">
+                            <input type="hidden" name="id_finance" id="id_finance">
+                            <div class="mb-3">
+                                <label>Total Tagihan</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Rp</span>
+                                    <input type="text" class="form-control" name="total_tagihan"  id="total_tagihan"  readonly>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label>Metode Pembayaran :</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <div class="input-group-text">
+                                                <input class="form-check-input mt-0" type="radio" id="cash" name="metode_pembayaran" value="cash" onclick="checkRadio()">
+                                            </div>
+                                            <input type="text" class="form-control" value="Cash" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <div class="input-group-text">
+                                                <input class="form-check-input mt-0" type="radio" id="transfer" name="metode_pembayaran" value="transfer" onclick="checkRadio()">
+                                            </div>
+                                            <input type="text" class="form-control" value="Transfer" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="metode" style="display: none;">
+                                <div class="mb-3">
+                                    <label>Pilih Bank :</label>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between flex-wrap p-3">
+                                            <?php  
+                                                include "koneksi.php";
+                                                $no = 1;
+                                                $sql_bank ="SELECT 
+                                                                bt.id_bank_pt,
+                                                                bt.no_rekening,
+                                                                bt.atas_nama,
+                                                                bk.nama_bank,
+                                                                bk.logo
+                                                            FROM bank_pt AS bt
+                                                            LEFT JOIN bank bk ON (bk.id_bank = bt.id_bank)
+                                                            ORDER BY nama_bank ASC";
+                                                $query_bank = mysqli_query($connect, $sql_bank);
+                                                $total_data_bank = mysqli_num_rows($query_bank);
+                                                while($data_bank = mysqli_fetch_array($query_bank)){
+                                                    $no_rek = $data_bank['no_rekening'];
+                                                    $atas_nama = $data_bank['atas_nama'];
+                                                    $logo = $data_bank['logo'];
+                                                    $logo_img = "logo-bank/$logo";
+                                                ?>
+                                                <div class="card" style="width: 20rem;">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-10">
+                                                                <img src="<?php echo $logo_img ?>" class="img-bank" alt="...">
+                                                            </div>
+                                                            <div class="col-2 text-end">
+                                                                <input class="form-check-input mt-3" type="radio" id="id_bank_<?php echo $row['id_bank']; ?>" name="id_bank" value="<?php echo $data_bank['id_bank_pt']; ?>">
+                                                            </div>
+                                                        </div>
+                                                        <p class="card-text">
+                                                            <?php echo $no_rek; ?><br>
+                                                            <b><?php echo $atas_nama ?></b>
+                                                        </p>
+                                                    </div>
+                                                </div> 
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb3">
+                                    <label>Nama Pengirim(*)</label>
+                                    <div class="input-group mb-3">
+                                        <!-- <input type="text" class="form-control" name="id_rek_pengirim" id="id_rek_prngirim"> -->
+                                        <input type="text" class="form-control" name="nama_pengirim" id="nama_pengirim">
+                                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#pilihRek">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Rekening Pengirim(*)</label>
+                                    <input type="number" class="form-control" name="rek_pengirim" id="rek_pengirim">
+                                </div>
+                                <div class="mb-3">
+                                    <label>Bank Pengirim(*)</label>
+                                    <input type="text" class="form-control" name="bank_pengirim_modal" id="bank_pengirim_modal" style="display: none;">
+                                    <select id="bank_pengirim" name="bank_pengirim" class="form-select selectize-js" required>
+                                        <option value=""></option>
+                                        <?php  
+                                            $sql_bank = "SELECT id_bank, nama_bank FROM bank ORDER BY nama_bank ASC";
+                                            $query_bank = mysqli_query($connect, $sql_bank);
+                                            while($data_bank = mysqli_fetch_array($query_bank)){
+                                                $id_bank = $data_bank['id_bank'];
+                                                $nama_bank = $data_bank['nama_bank'];
+                                        ?>
+                                            <option value="<?php echo $id_bank ?>"><?php echo $nama_bank ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Bukti Transfer :</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)">
+                                </div>
+                                <div class="mb-3 preview-image" id="imagePreview"></div>
+                            </div>
+                            <div id="nominalDisplay" style="display: none">
+                                <div class="mb-3">
+                                    <label>Tanggal Bayar</label>
+                                    <input type="text" class="form-control" name="tgl_bayar" id="date" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Keterangan Bayar(*)</label>
+                                    <input type="text" class="form-control" name="keterangan_bayar">
+                                </div>
+                                <div class="mb-3">
+                                    <label>Nominal</label>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="basic-addon1">Rp</span>
+                                        <input type="text" class="form-control" name="nominal" id="nominal" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Sisa Tagihan</label>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="basic-addon1">Rp</span>
+                                        <input type="text" class="form-control" name="sisa_tagihan" id="sisa_tagihan" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnTutup">Tutup</button>
+                                    <?php  
+                                        if($total_data_bank != 0){
+                                            ?>
+                                                <button type="submit" class="btn btn-primary" name="simpan-pembayaran">Simpan</button>
+                                            <?php
+                                        }else{
+                                            ?>
+                                                <button type="submit" class="btn btn-primary" name="simpan-pembayaran" disabled>Simpan</button>
+                                            <?php
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <p><b>NB: Jika data Bank kosong maka button simpan tidak dapat digunakan</b></p>
+                </div>
+            </div>
+        </div>
+        <script>
+            function checkRadio() {
+                var idBankRadios = document.getElementsByName("id_bank");
+                var transferCheck = document.getElementById('transfer');
+                var cashCheck = document.getElementById('cash');
+                var namaPengirim = document.getElementById('nama_pengirim');
+                var rekPengirim = document.getElementById('rek_pengirim');
+                var bankPengirim = document.getElementById('bank_pengirim');
+                var fileku = document.getElementById('fileku1');
+                var metode = document.getElementById('metode');
+                var nominalDisplay = document.getElementById('nominalDisplay');
+                var totalTagihanInput = document.getElementById('total_tagihan');
+                var sisaTagihanInput = document.getElementById('sisa_tagihan');
+                var tombolSimpan = document.querySelector('button[name="simpan-pembayaran"]');
+                var nominalInput = document.getElementById('nominal');
+
+                // Jika "cash" dicentang, set status checked pada setiap "id_bank" menjadi false
+                if (cashCheck.checked) {
+                    // console.log("Cash selected, clearing id_bank selection.");
+                    for (var i = 0; i < idBankRadios.length; i++) {
+                        idBankRadios[i].checked = false;
+                        idBankRadios[i].required = false;
+                    }
+                    metode.style.display = 'none';
+                    nominalDisplay.style.display = 'block';
+                    namaPengirim.value = '';
+                    namaPengirim.removeAttribute('required');
+                    rekPengirim.value = '';
+                    rekPengirim.removeAttribute('required');
+                    bankPengirim.value = '';
+                    bankPengirim.removeAttribute('required');
+                    sisaTagihanInput.value = totalTagihanInput.value;
+                    fileku.removeAttribute('required');
+                    if (parseFloat(sisaTagihanInput.value) < 0) {
+                        tombolSimpan.disabled = true;
+                    }
+                }
+
+                // Jika "transfer" dicentang, jalankan loop untuk mengecek status setiap "id_bank"
+                else if (transferCheck.checked) {
+                    // console.log("Transfer selected!");
+                    for (var i = 0; i < idBankRadios.length; i++) {
+                        console.log("id_bank" + (i + 1) + " checked:", idBankRadios[i].checked);
+                        idBankRadios[i].required = true;
+                    }
+                    metode.style.display = 'block';
+                    nominalDisplay.style.display = 'block';
+                    sisaTagihanInput.value = totalTagihanInput.value; // Set nilai sisa tagihan sama dengan total tagihan
+                    namaPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
+                    rekPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
+                    bankPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
+                    fileku.setAttribute('required', 'true'); // Membuat Atribut Required
+                    // Menonaktifkan tombol "Simpan" jika nilai sisa tagihan negatif
+                    if (parseFloat(sisaTagihanInput.value) < 0) {
+                        tombolSimpan.disabled = true;
+                    }
+                    nominalInput.value = ''; // Reset nilai input nominal saat beralih ke opsi "Transfer"
+                }
+            }
+        </script>
+
+        <script>
+            // Get the input elements
+            const totalTagihanInput = document.getElementById("total_tagihan");
+            const nominalInput = document.getElementById("nominal");
+            const sisaTagihanInput = document.getElementById("sisa_tagihan");
+            const btnTutup = document.getElementById("btnTutup");
+
+            // Function to format number with Indonesian format
+            function formatNumber(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+            }
+
+            // Function to parse Indonesian formatted number into a valid number
+            function parseNumber(str) {
+            const parsedValue = parseFloat(str.replace(/\./g, "").replace(",", "."));
+            return isNaN(parsedValue) ? 0 : parsedValue;
+            }
+
+            // Function to update input "nominal" with formatted number
+            function formatInputNominal() {
+            let value = nominalInput.value;
+            value = value.replace(/\./g, ""); // Remove all dots as thousand separators
+            value = value.replace(/,/g, "."); // Replace comma with dot as decimal separator
+            nominalInput.value = formatNumber(value);
+            }
+
+            // Function to perform subtraction and update the result
+            function calculateSisaTagihan() {
+            const totalTagihan = parseNumber(totalTagihanInput.value);
+            let nominal = parseNumber(nominalInput.value);
+
+            // Ensure nominal does not exceed totalTagihan
+            if (nominal > totalTagihan) {
+                nominal = totalTagihan;
+                nominalInput.value = formatNumber(nominal);
+            }
+
+            const sisaTagihan = totalTagihan - nominal;
+
+            // Update the "sisa_tagihan" input value with the result formatted in Indonesian format
+            sisaTagihanInput.value = formatNumber(sisaTagihan);
+            }
+
+            // Function to reload modal content
+            btnTutup.addEventListener("click", () => {
+            location.reload(); // Reload the page
+            });
+
+            // Function to attach event listener to the "nominal" input
+            function initializeModal() {
+            // Attach event listener to the "nominal" input to trigger calculation and format on input change
+            nominalInput.addEventListener("input", () => {
+                // Get the input value
+                let inputValue = nominalInput.value;
+
+                // Remove non-numeric characters using a regular expression
+                inputValue = inputValue.replace(/[^\d]/g, "");
+
+                // Update the input value with the sanitized value
+                nominalInput.value = inputValue;
+
+                // Format input "nominal"
+                formatInputNominal();
+
+                // Perform calculation
+                calculateSisaTagihan();
+            });
+            }
+
+            // Initialize modal when the script is loaded
+            initializeModal();
+        </script>
+
+    </div>
+    <!-- End Modal Bayar -->
+
     <!-- Footer -->
     <?php include "page/footer.php" ?>
     <!-- End Footer -->
@@ -320,7 +641,7 @@ include "akses.php";
     <?php include "page/script.php" ?>
 </body>
 </html>
-<!-- Modal -->
+<!-- Modal Pilih Driver-->
 <div class="modal fade" id="pilihDriver" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -357,172 +678,45 @@ include "akses.php";
   </div>
 </div>
 
-<!-- Modal Bayar -->
-<div class="modal fade" id="sudahBayar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <style>
-            .img-bank{
-                height: 20px;
-                width: 80px;
-            }
-        </style>
+<!-- Modal -->
+<div class="modal fade" id="pilihRek" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Sudah Bayar</h1>
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Rekening Customer</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table2">
+                    <thead>
+                        <tr>
+                            <th>Merk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php  
+                        include "koneksi.php";
+                        $no = 1;
+                        $sql_merk = mysqli_query($connect, "SELECT nama_merk FROM tb_merk");
+                        while($data_merk = mysqli_fetch_array($sql_merk)){
+                        ?>
+                        <tr data-merk="<?php echo $data_merk['nama_merk']; ?>">
+                            <td><?php echo $data_merk['nama_merk']; ?></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
-            <div class="modal-body">
-                <form action="proses/bayar.php" method="POST" enctype="multipart/form-data">
-                    <div class="card-body">
-                        <input type="hidden" id="id_inv" name="id_inv">
-                        <input type="hidden" id="jenis_inv" name="jenis_inv">
-                        <input type="hidden" name="user" value="<?php echo $_SESSION['tiket_nama'] ?>">
-                        <input type="hidden" name="id_bill" value="<?php echo $id_bill ?>">
-                        <input type="hidden" name="id_finance" id="id_finance">
-                        <div class="mb-3">
-                            <label>Total Tagihan</label>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">Rp</span>
-                                <input type="text" class="form-control" name="total_tagihan"  id="total_tagihan"  readonly>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label>Metode Pembayaran :</label>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <input class="form-check-input mt-0" type="radio" id="cash" name="metode_pembayaran" value="cash">
-                                        </div>
-                                        <input type="text" class="form-control" value="Cash" readonly>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <input class="form-check-input mt-0" type="radio" id="transfer" name="metode_pembayaran" value="transfer">
-                                        </div>
-                                        <input type="text" class="form-control" value="Transfer" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="metode" style="display: none;">
-                            <div class="mb-3">
-                                <label>Pilih Bank :</label>
-                                <div class="mb-3">
-                                <?php  
-                                    include "koneksi.php";
-                                    include "../function/function-enkripsi.php";
-                                    $no = 1;
-                                    $sql_bank ="SELECT 
-                                                    bt.id_bank,
-                                                    bt.no_rekening,
-                                                    bt.atas_nama,
-                                                    bk.nama_bank,
-                                                    bk.logo
-                                                FROM bank_pt AS bt
-                                                LEFT JOIN bank bk ON (bk.id_bank = bt.id_bank)
-                                                ORDER BY nama_bank ASC";
-                                    $query_bank = mysqli_query($connect, $sql_bank);
-                                    $total_data_bank = mysqli_num_rows($query_bank);
-                                    while($data_bank = mysqli_fetch_array($query_bank)){
-                                        $no_rek = $data_bank['no_rekening'];
-                                        $atas_nama = $data_bank['atas_nama'];
-                                        $logo = $data_bank['logo'];
-                                        $logo_img = "logo-bank/$logo";
-                                    ?>
-                                    <div class="card mb-3">
-                                        <div class="row g-0">
-                                            <div class="col-md-4 p-3">
-                                                <img src="<?php echo $logo_img ?>" class="img-bank" alt="...">
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="card-body p-3">
-                                                    <div class="mb-2">
-                                                        <div class="row">
-                                                            <div class="col md-11">
-                                                                <?php echo $no_rek; ?> (<?php echo $atas_nama ?>)
-                                                            </div>
-                                                            <div class="col md-1 text-end">
-                                                                <input class="form-check-input" type="radio" id="id_bank" name="id_bank" value="<?php echo $data_bank['id_bank']; ?>" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>       
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label>Nama Pengirim(*)</label>
-                                <input type="text" class="form-control" name="nama_pengirim" id="nama_pengirim">
-                            </div>
-                            <div class="mb-3">
-                                <label>Rekening Pengirim(*)</label>
-                                <input type="number" class="form-control" name="rek_pengirim" id="rek_pengirim">
-                            </div>
-                            <div class="mb-3">
-                                <label>Bank Pengirim(*)</label>
-                                <input type="text" class="form-control" name="bank_pengirim" id="bank_pengirim">
-                            </div>
-                            <div>
-                                <label>Bukti Transfer :</label>
-                            </div>
-                            <div class="mb-3">
-                                <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)">
-                            </div>
-                            <div class="mb-3 preview-image" id="imagePreview"></div>
-                        </div>
-                        <div id="nominalDisplay" style="display: none">
-                            <div class="mb-3">
-                                <label>Tanggal Bayar</label>
-                                <input type="text" class="form-control" name="tgl_bayar" id="date" required>
-                            </div>
-                            <div class="mb-3">
-                                <label>Keterangan Bayar(*)</label>
-                                <input type="text" class="form-control" name="keterangan_bayar">
-                            </div>
-                            <div class="mb-3">
-                                <label>Nominal</label>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text" id="basic-addon1">Rp</span>
-                                    <input type="text" class="form-control" name="nominal" id="nominal" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label>Sisa Tagihan</label>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text" id="basic-addon1">Rp</span>
-                                    <input type="text" class="form-control" name="sisa_tagihan" id="sisa_tagihan" readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnTutup">Tutup</button>
-                                <?php  
-                                    if($total_data_bank != 0){
-                                        ?>
-                                            <button type="submit" class="btn btn-primary" name="simpan-pembayaran">Simpan</button>
-                                        <?php
-                                    }else{
-                                        ?>
-                                            <button type="submit" class="btn btn-primary" name="simpan-pembayaran" disabled>Simpan</button>
-                                        <?php
-                                    }
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <p><b>NB: Jika data Bank kosong maka button simpan tidak dapat digunakan</b></p>
-            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
         </div>
     </div>
 </div>
-<!-- End Modal Bayar -->
+
 <!-- Modal utama History -->
 <div class="modal fade" id="history" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -558,6 +752,44 @@ include "akses.php";
     </div>
 </div>
 <!-- End Modal gambar History -->
+
+<!-- Script untuk  -->
+<script>
+    $('#ceRek').on('show.bs.modal', function () {
+        $('#sudahBayar').modal('hide');
+    });
+
+    $('#pilihRek').on('show.bs.modal', function () {
+        // Check if sudahBayar is open, if yes, hide it
+        if ($('#sudahBayar').hasClass('show')) {
+            $('#sudahBayar').modal('hide');
+        }
+    });
+
+    $('#sudahBayar').on('hide.bs.modal', function (e) {
+        // Prevent #sudahBayar from closing
+        e.preventDefault();
+    });
+
+    $('#pilihRek').on('hidden.bs.modal', function () {
+        // Show sudahBayar when pilihRek is hidden
+        $('#sudahBayar').modal('show');
+    });
+
+   
+    document.getElementById('tutupModal2').addEventListener('click', function() {
+      // Reload halaman
+      location.reload();
+    });
+
+    // select lokasi
+    $(document).on('click', '#table2 tbody tr', function (e) {
+      var selectedMerk = $(this).data('id-rek');
+      $('#id_rek_pengirim').val(selectedMerk).trigger('input'); // Trigger event input setelah mengubah nilai
+      $('#pilihRek').modal('hide');
+    });
+</script>
+<!-- End SCript -->
 
 <!-- Script Untuk Modal History -->
 <script>
@@ -642,125 +874,26 @@ include "akses.php";
     document.addEventListener('DOMContentLoaded', function() {
         var cash = document.getElementById('cash');
         var transfer = document.getElementById('transfer');
-        var idBank = document.getElementById('id_bank');
-        var namaPengirim = document.getElementById('nama_pengirim');
-        var rekPengirim = document.getElementById('rek_pengirim');
-        var bankPengirim = document.getElementById('bank_pengirim');
-        var fileku = document.getElementById('fileku1');
-        var metode = document.getElementById('metode');
-        var nominalDisplay = document.getElementById('nominalDisplay');
-        var totalTagihanInput = document.getElementById('total_tagihan');
-        var sisaTagihanInput = document.getElementById('sisa_tagihan');
-        var tombolSimpan = document.querySelector('button[name="simpan-pembayaran"]');
-        var nominalInput = document.getElementById('nominal');
+        var idBank = document.getElementsByName("id_bank");
 
         // Tambahkan event listener untuk menangani perubahan pada radio button "Cash"
         cash.addEventListener('change', function() {
             if (cash.checked) {
-                metode.style.display = 'none';
-                nominalDisplay.style.display = 'block';
-                sisaTagihanInput.value = totalTagihanInput.value; // Set nilai sisa tagihan sama dengan total tagihan
-                idBank.removeAttribute('required'); // Membuat Atribut Required
-
-                // Menonaktifkan tombol "Simpan" jika nilai sisa tagihan negatif
-                if (parseFloat(sisaTagihanInput.value) < 0) {
-                    tombolSimpan.disabled = true;
-                }
+               
+                idBank.checked = false; // Menonaktifkan radio button "id_bank"
+                // idBank.removeAttribute('required');
+                
             }
         });
 
         // Tambahkan event listener untuk menangani perubahan pada radio button "Transfer"
         transfer.addEventListener('change', function() {
             if (transfer.checked) {
-                metode.style.display = 'block';
-                nominalDisplay.style.display = 'block';
-                sisaTagihanInput.value = totalTagihanInput.value; // Set nilai sisa tagihan sama dengan total tagihan
-                idBank.setAttribute('required', 'true'); // Membuat Atribut Required
-                namaPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
-                rekPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
-                bankPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
-                fileku.setAttribute('required', 'true'); // Membuat Atribut Required
-
-                // Menonaktifkan tombol "Simpan" jika nilai sisa tagihan negatif
-                if (parseFloat(sisaTagihanInput.value) < 0) {
-                    tombolSimpan.disabled = true;
-                }
-                
-                nominalInput.value = ''; // Reset nilai input nominal saat beralih ke opsi "Transfer"
+             
+                idBank.checked = false;
+                // idBank.setAttribute('required', 'true'); // Membuat Atribut Required
+            
             }
         });
     });
-</script>
-
-<script>
-    // Get the input elements
-    const totalTagihanInput = document.getElementById("total_tagihan");
-    const nominalInput = document.getElementById("nominal");
-    const sisaTagihanInput = document.getElementById("sisa_tagihan");
-    const btnTutup = document.getElementById("btnTutup");
-
-    // Function to format number with Indonesian format
-    function formatNumber(number) {
-    return new Intl.NumberFormat('id-ID').format(number);
-    }
-
-    // Function to parse Indonesian formatted number into a valid number
-    function parseNumber(str) {
-    const parsedValue = parseFloat(str.replace(/\./g, "").replace(",", "."));
-    return isNaN(parsedValue) ? 0 : parsedValue;
-    }
-
-    // Function to update input "nominal" with formatted number
-    function formatInputNominal() {
-    let value = nominalInput.value;
-    value = value.replace(/\./g, ""); // Remove all dots as thousand separators
-    value = value.replace(/,/g, "."); // Replace comma with dot as decimal separator
-    nominalInput.value = formatNumber(value);
-    }
-
-    // Function to perform subtraction and update the result
-    function calculateSisaTagihan() {
-    const totalTagihan = parseNumber(totalTagihanInput.value);
-    let nominal = parseNumber(nominalInput.value);
-
-    // Ensure nominal does not exceed totalTagihan
-    if (nominal > totalTagihan) {
-        nominal = totalTagihan;
-        nominalInput.value = formatNumber(nominal);
-    }
-
-    const sisaTagihan = totalTagihan - nominal;
-
-    // Update the "sisa_tagihan" input value with the result formatted in Indonesian format
-    sisaTagihanInput.value = formatNumber(sisaTagihan);
-    }
-
-    // Function to reload modal content
-    btnTutup.addEventListener("click", () => {
-    location.reload(); // Reload the page
-    });
-
-    // Function to attach event listener to the "nominal" input
-    function initializeModal() {
-    // Attach event listener to the "nominal" input to trigger calculation and format on input change
-    nominalInput.addEventListener("input", () => {
-        // Get the input value
-        let inputValue = nominalInput.value;
-
-        // Remove non-numeric characters using a regular expression
-        inputValue = inputValue.replace(/[^\d]/g, "");
-
-        // Update the input value with the sanitized value
-        nominalInput.value = inputValue;
-
-        // Format input "nominal"
-        formatInputNominal();
-
-        // Perform calculation
-        calculateSisaTagihan();
-    });
-    }
-
-    // Initialize modal when the script is loaded
-    initializeModal();
 </script>
