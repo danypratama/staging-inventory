@@ -49,6 +49,9 @@
 <!-- animation load data -->
 <link rel="stylesheet" type="text/css" href="assets/css/loading.css">
 
+<!-- Animation CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
 <!-- Nonaktifkan Go Back -->
 <script>
     // Menonaktifkan fungsi "Go Back" saat tombol kembali ditekan atau perintah "history.back()" dipanggil

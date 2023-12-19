@@ -694,16 +694,22 @@ function generate_uuid()
     }
 
     function checkStock(inputId) {
-        var stock = parseInt(document.getElementById('stock_' + inputId).value.replace(/,/g, '')); // Menggunakan ID yang sesuai untuk elemen stock
-        var qtyInput = document.getElementById('qtyInput_' + inputId); // Menggunakan ID yang sesuai untuk elemen qtyInput
-        var qty = qtyInput.value.replace(/,/g, '');
+        var stockElement = document.getElementById('stock_' + inputId);
+        var qtyInput = document.getElementById('qtyInput_' + inputId);
 
-        qtyInput.value = formatInputValue(qty);
+        var stock = parseInt(stockElement.value.replace(/,/g, ''), 10);
+        var qty = parseInt(qtyInput.value.replace(/,/g, ''), 10);
 
-        if (parseInt(qty) > stock) {
+        // Handle NaN by defaulting to 1
+        qty = isNaN(qty) ? 1 : Math.max(1, qty);
+
+        qtyInput.value = formatNumber(qty);
+
+        if (qty > stock) {
             qtyInput.value = formatNumber(stock);
         }
     }
+
 </script>
 
 <!-- Fungsi menonaktifkan kerboard enter -->
@@ -757,7 +763,7 @@ function generate_uuid()
             var stockValue = parseFloat($('#stockTmpValue').val().replace(/,/g, ''));
 
             if (isNaN(qtyValue)) {
-                qtyValue = 0;
+                qtyValue = 1;
             }
 
             if (qtyValue > stockValue) {
