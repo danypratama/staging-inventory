@@ -19,6 +19,10 @@
                                                     WHERE byr.id_bayar = '$id_bayar'");
             $data_bukti = mysqli_fetch_array($sql_bukti);
             $id_inv = $data_bukti['id_inv'];
+            $an = $data_bukti['tf_an'];
+            $rek = $data_bukti['rek_pengirim'];
+            $bank = $data_bukti['nama_bank'];
+            $gambar_bukti = $data_bukti['bukti_tf'];
             // Kondisi Berdasarkan Jenis Invoice
             if($data_bukti['jenis_inv'] == 'nonppn'){
                 $sql_inv = mysqli_query($connect, " SELECT  
@@ -75,12 +79,8 @@
                     // Set the path for the customer's folder
                     $customer_folder_path = "../Customer/" . $cs . "/" . $year_inv . "/" . $month_inv . "/" . $day_inv . "/" . ucwords(strtolower(str_replace('_', ' ', $nama_invoice))) . "/" . $encoded_folder_name ."/". $bukti_pembayaran ."/";
                     // Menampilkan Gambar Bukti Transfer
-                   
-                    $an = $data_bukti['tf_an'];
-                    $rek = $data_bukti['rek_pengirim'];
-                    $bank = $data_bukti['nama_bank'];
-                    $gambar_bukti = $data_bukti['bukti_tf'];
                     $bukti_tf = $customer_folder_path . $gambar_bukti;
+                   
                     echo '
                         <div class="card mb-3">
                             <div class="row g-0">
@@ -158,11 +158,6 @@
                     // Set the path for the customer's folder
                     $customer_folder_path = "../Customer/" . $cs . "/" . $year_inv . "/" . $month_inv . "/" . $day_inv . "/" . ucwords(strtolower(str_replace('_', ' ', $nama_invoice))) . "/" . $encoded_folder_name ."/". $bukti_pembayaran ."/";
                     // Menampilkan Gambar Bukti Transfer
-                   
-                    $an = $data_bukti['tf_an'];
-                    $rek = $data_bukti['rek_pengirim'];
-                    $bank = $data_bukti['nama_bank'];
-                    $gambar_bukti = $data_bukti['bukti_tf'];
                     $bukti_tf = $customer_folder_path . $gambar_bukti;
                     echo '
                         <div class="card mb-3">
