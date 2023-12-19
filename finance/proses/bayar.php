@@ -518,9 +518,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
         
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
         
@@ -569,9 +569,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
         
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
         
@@ -681,9 +681,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
         
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
         
@@ -716,9 +716,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                                 VALUES 
                                                                 ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
         
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
         
@@ -891,9 +891,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
     
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
     
@@ -942,9 +942,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                                 VALUES 
                                                                 ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
     
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
     
@@ -1054,9 +1054,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
     
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 1  WHERE id_finance = '$id_finance'");
     
@@ -1104,9 +1104,9 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
-                                                                (id_bukti_tf, tf_bank, tf_an, bukti_tf, created_by) 
+                                                                (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
-                                                                ('$id_bukti', '$bank_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
+                                                                ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
     
                             $sql_finance = mysqli_query($connect, "UPDATE finance SET status_pembayaran = 1, status_lunas = 0 WHERE id_finance = '$id_finance'");
     
