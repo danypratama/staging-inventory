@@ -61,10 +61,10 @@ if (isset($_POST["simpan-cs"])) {
 		// Nama tidak berubah, simpan data langsung
 		$update = mysqli_query($connect, "UPDATE tb_customer 
 	                SET
-					jenis_usaha = '$jenis_usaha';
+					jenis_usaha = '$jenis_usaha',
 					nama_cs = '$nama_cs', 
 					alamat = '$alamat',
-					nama_cp = '$nama_cp';
+					nama_cp = '$nama_cp',
 					no_telp = '$telp',
                     email = '$email',
 					npwp = '$npwp',
