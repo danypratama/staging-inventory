@@ -678,7 +678,7 @@ include "akses.php";
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal Pilih Rekening CS -->
 <div class="modal fade" id="pilihRek" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -753,7 +753,7 @@ include "akses.php";
 </div>
 <!-- End Modal gambar History -->
 
-<!-- Script untuk  -->
+<!-- Script untuk popup ganda tanpa close popup awal  -->
 <script>
     $('#ceRek').on('show.bs.modal', function () {
         $('#sudahBayar').modal('hide');
@@ -777,7 +777,7 @@ include "akses.php";
     });
 
    
-    document.getElementById('tutupModal2').addEventListener('click', function() {
+    document.getElementById('btnTutup').addEventListener('click', function() {
       // Reload halaman
       location.reload();
     });

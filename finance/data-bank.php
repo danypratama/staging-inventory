@@ -86,7 +86,7 @@ include 'akses.php';
                                     <img src="<?php echo $tampil_logo ?>" width="200px" height="50px" class="img-fluid" alt="logo-bank">
                                 </td>
                                 <td class="text-nowrap text-center">
-                                    <a href="proses/bank.php?id=<?php echo base64_encode($id_bank)?>&&logo=<?php echo base64_encode($logo)?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i> Hapus</button>
+                                    <a href="proses/bank.php?id=<?php echo base64_encode($id_bank)?>&&logo=<?php echo base64_encode($logo)?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                             <?php $no++ ?>

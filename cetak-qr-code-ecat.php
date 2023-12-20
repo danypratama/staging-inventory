@@ -51,15 +51,15 @@ include "akses.php";
 
 <body>
     <div style=" max-width: 21cm;">
-        <?php  
+        <?php
         include "koneksi.php";
         $id = base64_decode($_GET['id']);
         $sql = "SELECT pr.nama_produk, qr.id_produk_qr, qr.qr_img, kp.no_izin_edar,  mr.nama_merk
                 FROM tb_produk_ecat AS pr
-                JOIN qr_link_ecat qr ON (pr.id_produk_ecat = qr.id_produk_qr)
-                JOIN tb_kat_produk kp ON (pr.id_kat_produk = kp.id_kat_produk)
-                JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                WHERE pr.id_produk_ecat = '$id'";
+                LEFT JOIN qr_link_ecat qr ON (pr.id_produk_ecat = qr.id_produk_qr)
+                LEFT JOIN tb_kat_produk kp ON (pr.id_kat_produk = kp.id_kat_produk)
+                LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
+                WHERE qr.id_produk_qr = '$id'";
         $query = mysqli_query($connect, $sql);
         $data = mysqli_fetch_array($query);
         $img = $data['qr_img'];

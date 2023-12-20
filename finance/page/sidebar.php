@@ -25,7 +25,7 @@
 
     <!-- Data Bank SP-->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'bank-sp') { echo 'collapsed'; } ?>" href="data-bank-pt.php">
+      <a class="nav-link <?php if ($page == 'bank-sp') { echo 'collapsed'; } ?>" href="data-bank-sp.php">
         <i class="bi bi-bank"></i><span>Data Bank Supplier</span>
       </a>
     </li>

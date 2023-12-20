@@ -199,10 +199,7 @@ include "akses.php";
             <form action="proses/proses-cs.php" method="POST">
               <div class="modal-body">
                 <div class="mb-3">
-                  <!-- <div class="mb-3">
-                    <label>Jenis Usaha Saat Ini</label>
-                    <input type="text" class="form-control bg-light" id="jenisUsaha" readonly>
-                  </div> -->
+                  <input type="text" class="form-control" id="id">
                   <div class="mb-3">
                     <label for="jenisUsaha" class="form-label">Jenis Usaha :</label><br>
                     <div class="form-check form-check-inline">
