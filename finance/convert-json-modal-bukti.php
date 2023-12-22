@@ -102,7 +102,78 @@
 
 
             }else if($data_bukti['jenis_inv'] == 'ppn'){
-                echo 'PPN';
+                $sql_inv = mysqli_query($connect, " SELECT  
+                                                            ppn.id_inv_ppn, 
+                                                            ppn.no_inv, 
+                                                            DAY(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) AS day_inv, 
+                                                            LPAD(MONTH(STR_TO_DATE(tgl_inv, '%d/%m/%Y')), 2, '0') AS month_inv,
+                                                            YEAR(STR_TO_DATE(ppn.tgl_inv, '%d/%m/%Y')) AS year_inv,
+
+                                                            fnc.id_inv,
+                                                            fnc.id_tagihan,
+
+                                                            bill.id_tagihan,
+                                                            bill.no_tagihan,
+
+                                                            cs.id_cs,
+                                                            cs.nama_cs,
+
+                                                            spk.id_inv,
+                                                            spk.id_customer
+                                                    FROM inv_ppn AS ppn
+                                                    LEFT JOIN finance fnc ON (ppn.id_inv_ppn = fnc.id_inv)
+                                                    LEFT JOIN finance_tagihan bill ON (fnc.id_tagihan = bill.id_tagihan)
+                                                    LEFT JOIN spk_reg spk ON (ppn.id_inv_ppn = spk.id_inv)
+                                                    LEFT JOIN tb_customer cs ON (spk.id_customer = cs.id_cs)
+                                                    WHERE ppn.id_inv_ppn = '$id_inv'");
+                    $data_inv = mysqli_fetch_array($sql_inv);
+
+                    $no_inv_ppn = $data_inv['no_inv'];
+                    $no_tagihan = $data_inv['no_tagihan'];
+                    $day_inv = $data_inv['day_inv'];
+                    $month_inv =  $data_inv['month_inv'];
+                    $year_inv =  $data_inv['year_inv'];
+                    $cs = $data_inv['nama_cs'];
+
+
+                    $nama_invoice = 'Invoice_Ppn';
+
+                    // Convert $no_inv_ppn to the desired format
+                    $no_inv_ppn_converted = str_replace('/', '_', $no_inv_ppn);
+
+                    // Generate folder name based on invoice details
+                    $folder_name = $no_inv_ppn_converted;
+
+                    // Encode a portion of the folder name
+                    $encoded_portion = base64_encode($folder_name);
+
+                    // Combine the original $no_inv_ppn, encoded portion, and underscore
+                    $encoded_folder_name = $no_inv_ppn_converted . '_' . $encoded_portion;
+
+                    // untuk Membuat Folder Bukti Pembayaran
+                    $bukti_pembayaran = "Bukti_Transfer";
+
+                    // Set the path for the customer's folder
+                    $customer_folder_path = "../Customer/" . $cs . "/" . $year_inv . "/" . $month_inv . "/" . $day_inv . "/" . ucwords(strtolower(str_replace('_', ' ', $nama_invoice))) . "/" . $encoded_folder_name ."/". $bukti_pembayaran ."/";
+                    // Menampilkan Gambar Bukti Transfer
+                    $bukti_tf = $customer_folder_path . $gambar_bukti;
+                    echo '
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                            <div class="col-md-5">
+                                <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <h5 class="card-title">Bukti Transfer</h5>
+                                    <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
+                                    <p class="card-text" style="font-size: 16px">Rek Pengirim : '.$rek.'</p>
+                                    <p class="card-text" style="font-size: 16px">Bank Pengirim : '.$bank.'</p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>  
+                    ';
             }else if($data_bukti['jenis_inv'] == 'bum'){
                 $sql_inv = mysqli_query($connect, " SELECT  
                                                             bum.id_inv_bum, 

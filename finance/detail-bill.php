@@ -399,7 +399,7 @@ include "akses.php";
                                                                 <img src="<?php echo $logo_img ?>" class="img-bank" alt="...">
                                                             </div>
                                                             <div class="col-2 text-end">
-                                                                <input class="form-check-input mt-3" type="radio" id="id_bank_<?php echo $row['id_bank']; ?>" name="id_bank" value="<?php echo $data_bank['id_bank_pt']; ?>">
+                                                                <input class="form-check-input mt-3" type="radio" id="id_bank_<?php echo $row['id_bank']; ?>" name="id_bank_pt" value="<?php echo $data_bank['id_bank_pt']; ?>">
                                                             </div>
                                                         </div>
                                                         <p class="card-text">
@@ -412,13 +412,15 @@ include "akses.php";
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb3">
+                                <div class="mb-3">
                                     <label>Nama Pengirim(*)</label>
                                     <div class="input-group mb-3">
-                                        <!-- <input type="text" class="form-control" name="id_rek_pengirim" id="id_rek_prngirim"> -->
                                         <input type="text" class="form-control" name="nama_pengirim" id="nama_pengirim">
-                                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#pilihRek">
+                                        <button class="btn btn-primary" type="button" id="cari" data-bs-toggle="modal" data-bs-target="#pilihRek" style="display: block;">
                                             <i class="bi bi-search"></i>
+                                        </button>
+                                        <button class="btn btn-danger" id="reset" type="button" style="display: none;">
+                                            <i class="bi bi-x"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -428,8 +430,11 @@ include "akses.php";
                                 </div>
                                 <div class="mb-3">
                                     <label>Bank Pengirim(*)</label>
-                                    <input type="text" class="form-control" name="bank_pengirim_modal" id="bank_pengirim_modal" style="display: none;">
-                                    <select id="bank_pengirim" name="bank_pengirim" class="form-select selectize-js" required>
+                                    <input type="hidden" class="form-control bg-light" name="id_bank_pengirim" id="id_bank_pengirim">
+                                    <input type="text" class="form-control bg-light" name="bank_pengirim" id="bank_pengirim" style="display: none;">
+                                </div>
+                                <div id="selectData" class="mb-3" style="display: block;">
+                                    <select name="id_bank_select" class="form-select selectize-js">
                                         <option value=""></option>
                                         <?php  
                                             $sql_bank = "SELECT id_bank, nama_bank FROM bank ORDER BY nama_bank ASC";
@@ -446,14 +451,14 @@ include "akses.php";
                                     <label>Bukti Transfer :</label>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="file" name="fileku1" id="fileku1" accept="image/*" onchange="compressAndPreviewImage(event)">
+                                    <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)">
                                 </div>
                                 <div class="mb-3 preview-image" id="imagePreview"></div>
                             </div>
                             <div id="nominalDisplay" style="display: none">
-                                <div class="mb-3">
+                                <div id="date-picker-wrapper" class="mb-3">
                                     <label>Tanggal Bayar</label>
-                                    <input type="text" class="form-control" name="tgl_bayar" id="date" required>
+                                    <input type="text" class="form-control" name="tgl_bayar" id="date">
                                 </div>
                                 <div class="mb-3">
                                     <label>Keterangan Bayar(*)</label>
@@ -498,7 +503,7 @@ include "akses.php";
         </div>
         <script>
             function checkRadio() {
-                var idBankRadios = document.getElementsByName("id_bank");
+                var idBankRadios = document.getElementsByName("id_bank_pt");
                 var transferCheck = document.getElementById('transfer');
                 var cashCheck = document.getElementById('cash');
                 var namaPengirim = document.getElementById('nama_pengirim');
@@ -512,9 +517,9 @@ include "akses.php";
                 var tombolSimpan = document.querySelector('button[name="simpan-pembayaran"]');
                 var nominalInput = document.getElementById('nominal');
 
-                // Jika "cash" dicentang, set status checked pada setiap "id_bank" menjadi false
+                // Jika "cash" dicentang, set status checked pada setiap "id_bank_pt" menjadi false
                 if (cashCheck.checked) {
-                    // console.log("Cash selected, clearing id_bank selection.");
+                    // console.log("Cash selected, clearing id_bank_pt selection.");
                     for (var i = 0; i < idBankRadios.length; i++) {
                         idBankRadios[i].checked = false;
                         idBankRadios[i].required = false;
@@ -534,11 +539,11 @@ include "akses.php";
                     }
                 }
 
-                // Jika "transfer" dicentang, jalankan loop untuk mengecek status setiap "id_bank"
+                // Jika "transfer" dicentang, jalankan loop untuk mengecek status setiap "id_bank_pt"
                 else if (transferCheck.checked) {
                     // console.log("Transfer selected!");
                     for (var i = 0; i < idBankRadios.length; i++) {
-                        console.log("id_bank" + (i + 1) + " checked:", idBankRadios[i].checked);
+                        console.log("id_bank_pt" + (i + 1) + " checked:", idBankRadios[i].checked);
                         idBankRadios[i].required = true;
                     }
                     metode.style.display = 'block';
@@ -546,7 +551,6 @@ include "akses.php";
                     sisaTagihanInput.value = totalTagihanInput.value; // Set nilai sisa tagihan sama dengan total tagihan
                     namaPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
                     rekPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
-                    bankPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
                     fileku.setAttribute('required', 'true'); // Membuat Atribut Required
                     // Menonaktifkan tombol "Simpan" jika nilai sisa tagihan negatif
                     if (parseFloat(sisaTagihanInput.value) < 0) {
@@ -629,9 +633,44 @@ include "akses.php";
             // Initialize modal when the script is loaded
             initializeModal();
         </script>
-
     </div>
     <!-- End Modal Bayar -->
+
+    <!-- Modal utama History -->
+    <div class="modal fade" id="history" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="historyLabel">History Payment</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card">
+            <div class="card-body" id="detail_id">
+            </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        </div>
+        </div>
+    </div>
+    </div>
+    <!-- End Modal utama History -->
+    <!-- Modal gambar History -->
+    <div class="modal fade" id="bukti" data-bs-keyboard="false" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Bukti Transfer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detail_bukti">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal gambar History -->
 
     <!-- Footer -->
     <?php include "page/footer.php" ?>
@@ -680,7 +719,7 @@ include "akses.php";
 
 <!-- Modal Pilih Rekening CS -->
 <div class="modal fade" id="pilihRek" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
         <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Rekening Customer</h1>
@@ -690,72 +729,56 @@ include "akses.php";
             <div class="table-responsive">
                 <table class="table table-bordered table-striped" id="table2">
                     <thead>
-                        <tr>
-                            <th>Merk</th>
+                        <tr class="text-white" style="background-color: navy;">
+                            <th class="text-center text-nowrap p-3 text-nowrap" style="width: 100px;">No</th>
+                            <th class="text-center text-nowrap p-3 text-nowrap" style="width: 350px;">Nama Customer</th>
+                            <th class="text-center text-nowrap p-3 text-nowrap" style="width: 150px;">Nama Bank</th>
+                            <th class="text-center text-nowrap p-3 text-nowrap" style="width: 250px;">No. Rekening</th>
+                            <th class="text-center text-nowrap p-3 text-nowrap" style="width: 350px;">Atas Nama</th>
+                            <th class="text-center text-nowrap p-3 text-nowrap" style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php  
-                        include "koneksi.php";
-                        $no = 1;
-                        $sql_merk = mysqli_query($connect, "SELECT nama_merk FROM tb_merk");
-                        while($data_merk = mysqli_fetch_array($sql_merk)){
+                            include "koneksi.php";
+                            $no = 1;
+                            $sql_bank = "SELECT 
+                                            csb.id_bank_cs, csb.id_bank, csb.no_rekening, csb.atas_nama,
+                                            bk.nama_bank, cs.nama_cs
+                                        FROM bank_cs AS csb
+                                        LEFT JOIN bank bk ON (csb.id_bank = bk.id_bank)
+                                        LEFT JOIN tb_customer cs ON (cs.id_cs = csb.id_cs)
+                                        WHERE cs.id_cs = '$id_customer'
+                                        ORDER BY cs.nama_cs ASC";
+                            $query_bank = mysqli_query($connect, $sql_bank);
+                            while($data_bank = mysqli_fetch_array($query_bank)){
+                                $id_bank_cs = $data_bank['id_bank_cs'];
                         ?>
-                        <tr data-merk="<?php echo $data_merk['nama_merk']; ?>">
-                            <td><?php echo $data_merk['nama_merk']; ?></td>
+                        <tr>
+                            <td class="text-nowrap text-center"><?php echo $no; ?></td>
+                            <td class="text-nowrap"><?php echo $data_bank['nama_cs'] ?></td>
+                            <td class="text-nowrap text-center"><?php echo $data_bank['nama_bank'] ?></td>
+                            <td class="text-nowrap text-center"><?php echo $data_bank['no_rekening'] ?></td>
+                            <td class="text-nowrap"><?php echo $data_bank['atas_nama'] ?></td>
+                            <td class="text-nowrap text-center">
+                                <button type="button" id="pilih" class="btn btn-primary btn-sm" data-id="<?php echo $id_bank_cs ?>" data-id-bank="<?php echo $data_bank['id_bank'] ?>"  data-bank="<?php echo $data_bank['nama_bank'] ?>" data-rek="<?php echo $data_bank['no_rekening'] ?>" data-an="<?php echo $data_bank['atas_nama'] ?>">
+                                    Pilih
+                                </button>
+                            </td>
                         </tr>
+                        <?php $no++ ?>
                         <?php } ?>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-        </div>
     </div>
 </div>
-
-<!-- Modal utama History -->
-<div class="modal fade" id="history" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="historyLabel">History Payment</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="card">
-          <div class="card-body" id="detail_id">
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End Modal utama History -->
-<!-- Modal gambar History -->
-<div class="modal fade" id="bukti" data-bs-keyboard="false" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">Bukti Transfer</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="detail_bukti">
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Modal gambar History -->
+<!-- End Pilih Rek CS -->
 
 <!-- Script untuk popup ganda tanpa close popup awal  -->
 <script>
-    $('#ceRek').on('show.bs.modal', function () {
+    $('#cekRek').on('show.bs.modal', function () {
         $('#sudahBayar').modal('hide');
     });
 
@@ -775,18 +798,78 @@ include "akses.php";
         // Show sudahBayar when pilihRek is hidden
         $('#sudahBayar').modal('show');
     });
-
-   
+  
     document.getElementById('btnTutup').addEventListener('click', function() {
       // Reload halaman
       location.reload();
     });
 
-    // select lokasi
-    $(document).on('click', '#table2 tbody tr', function (e) {
-      var selectedMerk = $(this).data('id-rek');
-      $('#id_rek_pengirim').val(selectedMerk).trigger('input'); // Trigger event input setelah mengubah nilai
-      $('#pilihRek').modal('hide');
+    // select data bank CS
+    $(document).on('click', '#pilih', function (e) {
+        var atasNama = $(this).data('an');
+        var noRek = $(this).data('rek');
+        var idBank = $(this).data('id-bank');
+        var namaBank = $(this).data('bank');
+        // Trigger event input setelah mengubah nilai
+        $('#nama_pengirim').val(atasNama).trigger('input'); 
+        $('#rek_pengirim').val(noRek).trigger('input'); 
+        $('#id_bank_pengirim').val(idBank).trigger('input'); 
+        $('#bank_pengirim').val(namaBank).trigger('input'); 
+
+        // Memeriksa nilai elemen input setelah diatur
+        var namaPengirimValue = $('#nama_pengirim').val();
+        var rekPengirimValue = $('#rek_pengirim').val();
+        var idBankPengirimValue = $('#id_bank_pengirim').val();
+        var bankPengirimValue = $('#bank_pengirim').val();
+
+        if (namaPengirimValue && rekPengirimValue && bankPengirimValue) {
+            // Jika semua nilai ada, ubah display menjadi block
+            $('#bank_pengirim').css('display', 'block');
+
+            $('#reset').css('display', 'block');
+            
+            // Sembunyikan elemen <div> dengan id "selectData"
+            $('#selectData').css('display', 'none');
+
+            $('#cari').css('display', 'none');
+
+            // console.log("Nilai input nama_pengirim:", namaPengirimValue);
+            // console.log("Nilai input rek_pengirim:", rekPengirimValue);
+            // console.log("Nilai input bank_pengirim:", bankPengirimValue);
+        } else {
+            // Jika salah satu atau lebih nilai tidak ada, ubah display menjadi none
+            $('#bank_pengirim').css('display', 'none');
+            $('#reset').css('display', 'none');
+            
+            // Tampilkan kembali elemen <div> dengan id "selectData"
+            $('#selectData').css('display', 'block');
+            $('#cari').css('display', 'block');
+
+            // console.log("Salah satu atau lebih input tidak memiliki nilai.");
+        }
+
+        $('#pilihRek').modal('hide');
+    });
+
+    // Reset Button
+    $(document).on('click', '#reset', function (e) {
+        // Mengosongkan nilai input
+        $('#nama_pengirim').val('').trigger('input');
+        $('#rek_pengirim').val('').trigger('input');
+        $('#id_bank_pengirim').val('').trigger('input');
+        $('#bank_pengirim').val('').trigger('input');
+
+        // Menampilkan kembali elemen <div> dengan id "selectData"
+        $('#selectData').css('display', 'block');
+        $('#cari').css('display', 'block');
+
+        // Sembunyikan elemen <div> dengan id "bank_pengirim"
+        $('#bank_pengirim').css('display', 'none');
+        $('#reset').css('display', 'none');
+
+        // console.log("Nilai input nama_pengirim:", $('#nama_pengirim').val());
+        // console.log("Nilai input rek_pengirim:", $('#rek_pengirim').val());
+        // console.log("Nilai input bank_pengirim:", $('#bank_pengirim').val());
     });
 </script>
 <!-- End SCript -->
@@ -823,10 +906,12 @@ include "akses.php";
 
 <!-- date picker with flatpick -->
 <script type="text/javascript">
-  flatpickr("#date", {
+    flatpickr("#date", {
     dateFormat: "d/m/Y",
+    defaultDate: new Date(),
   });
 </script>
+
 <!-- end date picker -->
 
 <!-- Untuk Menampilkan Data Bayar -->
@@ -868,32 +953,3 @@ include "akses.php";
 </style>
 <!-- kode JS Dikirim -->
 <!-- End Modal Bukti Terima -->
-
-<!-- Fitur Hide and Show Bank -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var cash = document.getElementById('cash');
-        var transfer = document.getElementById('transfer');
-        var idBank = document.getElementsByName("id_bank");
-
-        // Tambahkan event listener untuk menangani perubahan pada radio button "Cash"
-        cash.addEventListener('change', function() {
-            if (cash.checked) {
-               
-                idBank.checked = false; // Menonaktifkan radio button "id_bank"
-                // idBank.removeAttribute('required');
-                
-            }
-        });
-
-        // Tambahkan event listener untuk menangani perubahan pada radio button "Transfer"
-        transfer.addEventListener('change', function() {
-            if (transfer.checked) {
-             
-                idBank.checked = false;
-                // idBank.setAttribute('required', 'true'); // Membuat Atribut Required
-            
-            }
-        });
-    });
-</script>
