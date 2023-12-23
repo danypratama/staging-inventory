@@ -1,5 +1,6 @@
 <?php
-$page = 'bank-sp';
+$page = 'bank';
+$page2 = 'bank-sp';
 include 'akses.php';
 ?>
 <!DOCTYPE html>
@@ -39,11 +40,11 @@ include 'akses.php';
         </div>
         <!-- End Loading -->
         <div class="pagetitle">
-            <h1>Data Bank</h1>
+            <h1>Data Bank Supplier</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item active">Data Bank</li>
+                    <li class="breadcrumb-item active">Data Bank Supplier</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -53,8 +54,8 @@ include 'akses.php';
             <!-- END SWEET ALERT -->
             <div class="card p-3">
                 <div class="row">
-                    <div class="col-md-2 mb-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bank"><i class="bi bi-plus-circle"></i> Tambah Data Bank</button>
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bank"><i class="bi bi-plus-circle"></i> Tambah Data Bank Supplier</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -105,12 +106,12 @@ include 'akses.php';
             </div>
         </section>
     </main><!-- End #main -->
-    <!-- Modal Tambah Data Bank SP-->
+    <!-- Modal Tambah Data Bank Supplier SP-->
     <div class="modal fade animate__animated animate__rollIn" id="bank" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Bank</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Bank Supplier</h1>
                 </div>
                 <div class="modal-body">
                     <form action="proses/bank-sp.php" method="POST" enctype="multipart/form-data">
@@ -163,14 +164,14 @@ include 'akses.php';
             </div>
         </div>
     </div>
-    <!-- End Modal Data Bank SP -->
+    <!-- End Modal Data Bank Supplier SP -->
 
      <!-- Modal Edit-->
      <div class="modal fade animate__animated animate__flipInX" id="edit" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Bank SP</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Bank Supplier SP</h1>
                 </div>
                 <div class="modal-body">
                     <form action="proses/bank-sp.php" method="post">
@@ -235,6 +236,9 @@ include 'akses.php';
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"> Tutup</button>
                 </div>
             </div>
         </div>

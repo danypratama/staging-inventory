@@ -1,5 +1,6 @@
 <?php
-$page = 'bank-cs';
+$page = 'bank';
+$page2 = 'bank-cs';
 include 'akses.php';
 ?>
 <!DOCTYPE html>
@@ -39,11 +40,11 @@ include 'akses.php';
         </div>
         <!-- End Loading -->
         <div class="pagetitle">
-            <h1>Data Bank</h1>
+            <h1>Data Bank Customer</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item active">Data Bank</li>
+                    <li class="breadcrumb-item active">Data Bank Customer</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -106,7 +107,7 @@ include 'akses.php';
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Bank SP</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Bank Customer</h1>
                 </div>
                 <div class="modal-body">
                     <form action="proses/bank-cs.php" method="post">
@@ -171,6 +172,9 @@ include 'akses.php';
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"> Tutup</button>
                 </div>
             </div>
         </div>

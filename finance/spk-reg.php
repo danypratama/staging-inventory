@@ -1,6 +1,5 @@
 <?php
-$page  = 'transaksi';
-$page2 = 'spk';
+$page = 'spk';
 include "akses.php";
 ?>
 <!DOCTYPE html>

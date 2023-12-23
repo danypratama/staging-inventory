@@ -1,5 +1,6 @@
 <?php
 $page = 'bank';
+$page2 = 'bank-master';
 include 'akses.php';
 ?>
 <!DOCTYPE html>

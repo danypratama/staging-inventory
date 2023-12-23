@@ -9,39 +9,37 @@
 
     <!-- Data Bank -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'bank') { echo 'collapsed'; } ?>" href="data-bank.php">
-        <i class="bi bi-bank"></i><span>Data Bank</span>
+      <a class="nav-link <?php if ($page == 'bank') { echo 'active-link'; } ?>" data-bs-target="#bank" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bank"></i><span>Data Bank</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-    </li>
-    <!-- End Data Bank -->
-
-    <!-- Data Bank PT-->
-    <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'bank-pt') { echo 'collapsed'; } ?>" href="data-bank-pt.php">
-        <i class="bi bi-bank"></i><span>Data Bank KMA</span>
-      </a>
-    </li>
-    <!-- End Data Bank -->
-
-    <!-- Data Bank SP-->
-    <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'bank-sp') { echo 'collapsed'; } ?>" href="data-bank-sp.php">
-        <i class="bi bi-bank"></i><span>Data Bank Supplier</span>
-      </a>
-    </li>
-    <!-- End Data Bank -->
-
-    <!-- Data Bank CS -->
-    <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'bank-cs') { echo 'collapsed'; } ?>" href="data-bank-cs.php">
-        <i class="bi bi-bank"></i><span>Data Bank Customer</span>
-      </a>
+      <ul id="bank" class="nav-content collapse " data-bs-parent="#bank">
+        <li>
+          <a class="<?php if ($page2 == 'bank-master') { echo 'active'; } ?>" href="data-bank.php">
+            <i class="bi bi-circle"></i><span>Bank</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'bank-pt') { echo 'active'; } ?>" href="data-bank-pt.php">
+            <i class="bi bi-circle"></i><span>Perusahaan</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'bank-cs') { echo 'active'; } ?>" href="data-bank-cs.php">
+            <i class="bi bi-circle"></i><span>Customer</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'bank-sp') { echo 'active'; } ?>" href="data-bank-sp.php">
+            <i class="bi bi-circle"></i><span>Supplier</span>
+          </a>
+        </li>
+      </ul>
     </li>
     <!-- End Data Bank -->
 
     <!-- Data SPK -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'transaksi') { echo 'collapsed'; } ?>" href="spk-reg.php">
+      <a class="nav-link <?php if ($page == 'spk') { echo 'active-link'; } ?>" href="spk-reg.php">
         <i class="bi bi-bar-chart"></i><span>Data SPK</span>
       </a>
     </li>
@@ -50,23 +48,33 @@
     <!-- Data Finance -->
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'finance') { echo 'collapsed'; } ?>" href="finance-inv.php?date_range=monthly">
-        <i class="bi bi-cash-stack"></i><span>Finance</span>
+        <i class="bi bi-cash-stack"></i><span>Invoice Penjualan</span>
       </a>
     </li>
     <!-- End Finance -->
 
-    <!-- Data Finance -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'list-tagihan') { echo 'collapsed'; } ?>" href="list-tagihan.php">
-        <i class="bi bi-cash-stack"></i><span>List Tagihan</span>
+      <a class="nav-link <?php if ($page == 'list-tagihan') { echo 'active-link'; } ?>" data-bs-target="#tagihan" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-file-earmark-text"></i><span>List Tagihan</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
+      <ul id="tagihan" class="nav-content collapse " data-bs-parent="#tagihan">
+        <li>
+          <a class="<?php if ($page2 == 'tagihan-penjualan') { echo 'active'; } ?>" href="list-tagihan-penjualan.php">
+            <i class="bi bi-circle"></i><span>Penjualan</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'tagihan-pembelian') { echo 'active'; } ?>" href="list-tagihan-pembelian.php">
+            <i class="bi bi-circle"></i><span>Pembelian</span>
+          </a>
+        </li>
+      </ul>
     </li>
-    <!-- End Finance -->
 
     <!-- Data Customer -->
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'list-cs') { echo 'collapsed'; } ?>" href="finance-customer.php?date_range=weekly">
-        <i class="bi bi-cash-stack"></i><span>List Customer</span>
+        <i class="bi bi-cash-stack"></i><span>Transaksi Customer</span>
       </a>
     </li>
     <!-- End Finance -->

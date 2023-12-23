@@ -140,7 +140,7 @@ include "akses.php";
                 <div class="card-body p-3">
                     <div class="table-responsive">
                         <div class="text-start mb-3">
-                            <a href="list-tagihan.php?date_range=weekly" class="btn btn-warning btn-detail mb-2">
+                            <a href="list-tagihan-penjualan.php?date_range=weekly" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
                             <a href="cetak-tagihan.php?id=<?php echo base64_encode($id_bill)?>" class="btn btn-secondary btn-detail mb-2">

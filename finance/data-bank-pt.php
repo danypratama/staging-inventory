@@ -1,5 +1,6 @@
 <?php
-$page = 'bank-pt';
+$page = 'bank';
+$page2 = 'bank-pt';
 include 'akses.php';
 ?>
 <!DOCTYPE html>
@@ -40,11 +41,11 @@ include 'akses.php';
         </div>
         <!-- End Loading -->
         <div class="pagetitle">
-            <h1>Data Bank</h1>
+            <h1>Data Bank Perusahaan</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item active">Data Bank</li>
+                    <li class="breadcrumb-item active">Data Bank Perusahaan</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -54,8 +55,8 @@ include 'akses.php';
             <!-- END SWEET ALERT -->
             <div class="card p-3">
                 <div class="row">
-                    <div class="col-md-2 mb-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bank"><i class="bi bi-plus-circle"></i> Tambah Data Bank</button>
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bank"><i class="bi bi-plus-circle"></i> Tambah Data Bank Perusahaan</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -110,7 +111,7 @@ include 'akses.php';
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Bank</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Bank Perusahaan</h1>
                 </div>
                 <div class="modal-body">
                     <form action="proses/bank-pt.php" method="POST" enctype="multipart/form-data">
@@ -155,7 +156,7 @@ include 'akses.php';
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Bank PT</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data Bank Perusahaan</h1>
                 </div>
                 <div class="modal-body">
                     <form action="proses/bank-pt.php" method="post">
