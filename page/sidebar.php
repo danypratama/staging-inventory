@@ -45,12 +45,22 @@
         </li>
         <li>
             <a class="<?php if ($page2 == 'data-stock-reg') { echo 'active'; } ?>" href="stock-produk-reg.php">
-              <i class="bi bi-circle"></i><span>Stok Produk</span>
+              <i class="bi bi-circle"></i><span>Stok Produk Reguler</span>
+            </a>
+        </li>
+        <li>
+            <a class="<?php if ($page2 == 'data-stock-ecat') { echo 'active'; } ?>" href="stock-produk-ecat.php">
+              <i class="bi bi-circle"></i><span>Stok Produk Ecat</span>
             </a>
         </li>
         <li>
           <a class="<?php if ($page2 == 'data-produk-set-marwa') { echo 'active'; } ?>" href="data-produk-set-marwa.php">
             <i class="bi bi-circle"></i><span>Set Produk Reguler</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'data-produk-set-ecat') { echo 'active'; } ?>" href="data-produk-set-ecat.php">
+            <i class="bi bi-circle"></i><span>Set Produk Ecat</span>
           </a>
         </li>
         <li>
@@ -98,9 +108,7 @@
       </a>
       <ul id="barang-masuk" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a class="<?php if ($page2 == 'br-masuk-reg') {
-                      echo 'active';
-                    } ?>" href="barang-masuk-reg.php">
+          <a class="<?php if ($page2 == 'br-masuk-reg') { echo 'active'; } ?>" href="barang-masuk-reg.php">
             <i class="bi bi-circle"></i><span>Reguler</span>
           </a>
           <a href="barang-masuk-set-reg.php">
@@ -111,7 +119,7 @@
           <a href="#">
             <i class="bi bi-circle"></i><span>E-Cat</span>
           </a>
-          <a href="#">
+          <a class="<?php if ($page2 == 'br-masuk-ecat') { echo 'active'; } ?>" href="barang-masuk-set-ecat.php">
             <i class="bi bi-circle"></i><span>Set Produk E-Cat</span>
           </a>
         </li>

@@ -638,8 +638,10 @@ include "function/class-spk.php";
                     $hasil_sp_disc = $sp_disc / 100;
                     $total_sp_disc = $sub_total * $hasil_sp_disc;
                     $grand_total = $sub_total - $total_sp_disc;
-                    $grand_total_ppn = $grand_total + $ongkir;
-                    $update_total_inv = mysqli_query($connect, "UPDATE inv_ppn SET total_inv = '$grand_total_ppn' WHERE id_inv_ppn = '$id_inv'")
+                    $grand_total_ppn = ($grand_total * 1.11) + $ongkir;
+                    $update_total_inv = mysqli_query($connect, "UPDATE inv_ppn SET total_inv = '$grand_total_ppn' WHERE id_inv_ppn = '$id_inv'");
+
+                    echo $grand_total_ppn;
                 ?>
             </div>
         </section>

@@ -281,6 +281,7 @@
                                     SUM(trx.qty) AS total_qty,
                                     trx.disc,
                                     trx.total_harga,
+                                    trx.status_br_refund,
                                     tpr.nama_produk,
                                     mr_produk.nama_merk AS merk_produk,
                                     tpsm.nama_set_marwa,
@@ -293,7 +294,7 @@
                                 LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
-                                WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode'
+                                WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND trx.status_br_refund = '0'
                                 GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk, mr_set.nama_merk, mr_produk.nama_merk, trx.id_produk, trx.harga, trx.disc, trx.total_harga, tpr.nama_produk, tpsm.harga_set_marwa, mr_set.nama_merk
                                 ORDER BY tpr.nama_produk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);

@@ -193,7 +193,7 @@ include "function/class-list-inv.php";
                         </div>
                         <div class="mb-3" id="imagePreview"></div>
                         <div class="mt-3 text-end">
-                            <button type="button" class="btn btn-secondary btn-md">Tutup</button>
+                            <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary btnnd" name="update-tagihan">Simpan Data</button>
                         </div>
                     </form>

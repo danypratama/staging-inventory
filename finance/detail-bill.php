@@ -1,5 +1,6 @@
 <?php
-$page  = 'list-tagihan';
+$page = 'list-tagihan';
+$page2 = 'tagihan-penjualan';
 include "akses.php";
 ?>
 <!DOCTYPE html>

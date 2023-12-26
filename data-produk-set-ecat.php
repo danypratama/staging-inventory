@@ -1,6 +1,6 @@
 <?php
 $page = 'produk';
-$page2 = 'data-produk-set-marwa';
+$page2 = 'data-produk-set-ecat';
 include "akses.php";
 ?>
 <!DOCTYPE html>
@@ -27,11 +27,11 @@ include "akses.php";
 
   <main id="main" class="main">
     <!-- Loading -->
-    <div class="loader loader">
+    <!-- <div class="loader loader">
       <div class="loading">
         <img src="img/loading.gif" width="200px" height="auto">
       </div>
-    </div>
+    </div> -->
     <!-- ENd Loading -->
     <div class="pagetitle">
       <h1>Data Produk Set Reguler</h1>
@@ -53,7 +53,7 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <a href="tambah-data-produk-set-marwa.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk set</a>
+            <a href="tambah-data-produk-set-ecat.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk set</a>
             <div class="table-responsive mt-3">
               <table class="table table-striped table-bordered" id="table1">
                 <thead>
@@ -73,38 +73,33 @@ include "akses.php";
                   include "koneksi.php";
 
                   $no = 1;
-                  $sql = "SELECT prs.*,
-                              prs.created_date as 'produk_created',
-                              prs.created_date as 'produk_updated',    
-                              uc.nama_user as user_created, 
-                              uu.nama_user as user_updated,
-                              kj.nama_kategori as nama_kat,
-                              mr.*,
-                              lok.*
-                              FROM tb_produk_set_marwa as prs
-                              LEFT JOIN user uc ON (prs.id_user = uc.id_user)
-                              LEFT JOIN user uu ON (prs.user_updated = uu.id_user)
-                              LEFT JOIN tb_merk mr ON (prs.id_merk = mr.id_merk)
-                              LEFT JOIN tb_kat_penjualan kj ON (prs.id_kat_penjualan = kj.id_kat_penjualan)
-                              LEFT JOIN tb_lokasi_produk lok ON (prs.id_lokasi = lok.id_lokasi)
-                              ";
+                  $sql = "SELECT 
+                            prs.id_set_ecat,
+                            prs.kode_set_ecat,
+                            prs.nama_set_ecat,
+                            prs.harga_set_ecat,
+                            kj.nama_kategori as nama_kat,
+                            mr.nama_merk
+                          FROM tb_produk_set_ecat as prs
+                          LEFT JOIN tb_merk mr ON (prs.id_merk = mr.id_merk)
+                          LEFT JOIN tb_kat_penjualan kj ON (prs.id_kat_penjualan = kj.id_kat_penjualan)";
                   $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
                   while ($data = mysqli_fetch_array($query)) {
-                    $id_set = base64_encode($data['id_set_marwa']);
+                    $id_set = base64_encode($data['id_set_ecat']);
                   ?>
                     <tr>
                       <td class="text-center"><?php echo $no; ?></td>
-                      <td><?php echo $data['kode_set_marwa']; ?></td>
-                      <td><?php echo $data['nama_set_marwa']; ?></td>
+                      <td><?php echo $data['kode_set_ecat']; ?></td>
+                      <td><?php echo $data['nama_set_ecat']; ?></td>
                       <td class="text-center"><?php echo $data['nama_merk']; ?></td>
                       <td class="text-center"><?php echo $data['nama_kat']; ?></td>
                       <?php
-                      $id = $data['id_set_marwa'];
+                      $id = $data['id_set_ecat'];
                       $grand_total = 0;
-                      $sql_data = "SELECT ipsm.id_produk, ipsm.qty, tpr.nama_produk, tpr.harga_produk FROM isi_produk_set_marwa ipsm
-                                     LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
-                                     LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)
-                                     WHERE tpsm.id_set_marwa = '$id'";
+                      $sql_data = "SELECT ipsm.id_produk, ipsm.qty, tpr.nama_produk, tpr.harga_produk FROM isi_produk_set_ecat ipsm
+                                     LEFT JOIN tb_produk_ecat tpr ON (ipsm.id_produk = tpr.id_produk_ecat)
+                                     LEFT JOIN tb_produk_set_ecat tpsm ON (ipsm.id_set_ecat = tpsm.id_set_ecat)
+                                     WHERE tpsm.id_set_ecat = '$id'";
                       $query_data = mysqli_query($connect, $sql_data) or die(mysqli_error($connect, $sql_data));
                       while ($row = mysqli_fetch_array($query_data)) {
                         $harga = $row['harga_produk'];
@@ -115,15 +110,14 @@ include "akses.php";
                       <?php } ?>
 
                       <td class="text-end"><?php echo number_format($grand_total, 0, '.', '.'); ?></td>
-                      <td class="text-end"><?php echo number_format($data['harga_set_marwa'], 0, '.', '.'); ?></td>
-                      <!-- <td class="text-end"><?php echo number_format($data['stock'], 0, '.', '.'); ?></td> -->
+                      <td class="text-end"><?php echo number_format($data['harga_set_ecat'], 0, '.', '.'); ?></td>
                       <td class="text-center">
                         <!-- Lihat Data -->
-                        <a href="detail-set-marwa.php?detail-id=<?php echo $id_set ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
+                        <a href="detail-set-ecat.php?detail-id=<?php echo $id_set ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
                         <!-- Edit Data -->
-                        <a href="edit-data-set-marwa.php?edit-set-marwa=<?php echo $id_set ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                        <a href="edit-data-set-ecat.php?edit-set-ecat=<?php echo $id_set ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
                         <!-- Hapus Data -->
-                        <a href="proses/proses-produk-set-marwa.php?hapus-set-marwa=<?php echo $id_set ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                        <a href="proses/proses-produk-set-ecat.php?hapus-set-ecat=<?php echo $id_set ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                       </td>
                     </tr>
                     <?php $no++; ?>

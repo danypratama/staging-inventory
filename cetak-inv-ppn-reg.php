@@ -257,10 +257,10 @@
             $sp_disc = $data_inv['sp_disc'] / 100;
             $ongkir = $data_inv['ongkir'];
             $sub_total_spdisc = $grand_total * $sp_disc;
-            $grand_total_fix = $grand_total - $sub_total_spdisc + $ongkir;
+            $grand_total_fix = $grand_total - $sub_total_spdisc;
             $ppn_input = 11 / 100;
             $ppn = $grand_total_fix * $ppn_input;
-            $grand_total_ppn = $grand_total_fix * 1.11;
+            $grand_total_ppn = $grand_total_fix * 1.11 + $ongkir;
             ?>
             <div class="col-payment-1">
                 <!-- Kolom pertama -->
@@ -272,12 +272,6 @@
                 <!-- Kolom kedua -->
                 <div class="grand-total">
                     Sub total (Rp):<br>
-                    <?php
-                    if ($ongkir != 0) {
-                        echo "Ongkir (Rp):";
-                        echo "<br>";
-                    }
-                    ?>
 
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
@@ -286,18 +280,17 @@
                     }
                     ?>
                     PPN 11% :<br>
+                    <?php
+                    if ($ongkir != 0) {
+                        echo "Ongkir (Rp):";
+                        echo "<br>";
+                    }
+                    ?>
                     Grand Total (Rp):
                 </div>
                 <div class="amount">
                     <?php echo number_format($sub_total_tampil, 0, '.', '.') ?>
                     <br>
-                    <?php
-                    if ($ongkir != 0) {
-                        echo number_format($ongkir, 0, '.', '.');
-                        echo "<br>";
-                    }
-                    ?>
-
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
                         echo $data_inv['sp_disc'] . '(%)';
@@ -306,6 +299,12 @@
                     ?>
                     <?php echo number_format($ppn, 0, '.', '.') ?>
                     <br>
+                    <?php
+                    if ($ongkir != 0) {
+                        echo number_format($ongkir, 0, '.', '.');
+                        echo "<br>";
+                    }
+                    ?>
                     <?php echo number_format($grand_total_ppn, 0, '.', '.') ?>
                 </div>
             </div>

@@ -56,7 +56,7 @@ include 'akses.php';
             <div class="card p-3">
                 <div class="row">
                     <div class="col-md-3 mb-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bank"><i class="bi bi-plus-circle"></i> Tambah Data Bank Perusahaan</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBank"><i class="bi bi-plus-circle"></i> Tambah Data Bank Perusahaan</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -107,7 +107,7 @@ include 'akses.php';
         </section>
     </main><!-- End #main -->
     <!-- Modal Tambah Data Bank-->
-    <div class="modal fade animate__animated animate__jackInTheBox" id="bank" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade animate__animated animate__jackInTheBox" id="addBank" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div class="modal-header">

@@ -231,31 +231,28 @@
                                     ppn.sp_disc,
                                     ppn.note_inv,
                                     ppn.total_inv,
-                                    spk.id_inv, 
-                                    spk.no_spk,
-                                    trx.id_transaksi,
                                     trx.id_produk,
-                                    trx.nama_produk_spk,
+                                    trx.nama_produk AS nama_produk_rev,
                                     trx.harga,
                                     SUM(trx.qty) AS total_qty,
                                     trx.disc,
                                     trx.total_harga,
-                                    trx.status_trx,
+                                    trx.status_br_refund,
                                     tpr.nama_produk,
-                                    mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
+                                    mr_produk.nama_merk AS merk_produk,
                                     tpsm.nama_set_marwa,
                                     tpsm.harga_set_marwa,
-                                    mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                    mr_set.nama_merk AS merk_set
                                 FROM inv_ppn AS ppn
-                                LEFT JOIN spk_reg spk ON (ppn.id_inv_ppn = spk.id_inv)
-                                LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
+                                LEFT JOIN inv_komplain ik ON ppn.id_inv_ppn = ik.id_inv
+                                LEFT JOIN tmp_produk_komplain trx ON trx.id_inv = ppn.id_inv_ppn
                                 LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
                                 LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
-                                LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
-                                LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                WHERE ppn.id_inv_ppn = '$id_ppn_decode'
-                                GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk_spk, mr_set.nama_merk, mr_produk.nama_merk
-                                ORDER BY no_spk ASC";
+                                LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
+                                LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
+                                WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
+                                GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk, mr_set.nama_merk, mr_produk.nama_merk, trx.id_produk, trx.harga, trx.disc, trx.total_harga, tpr.nama_produk, tpsm.harga_set_marwa, mr_set.nama_merk
+                                ORDER BY tpr.nama_produk ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
@@ -276,7 +273,7 @@
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
-                            <td><?php echo $data_trx['nama_produk_spk'] ?></td>
+                            <td><?php echo $data_trx['nama_produk_rev'] ?></td>
                             <td align="right"><?php echo number_format($data_trx['total_qty'], 0, '.', '.') ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga'], 0, '.', '.') ?></td>
                             <?php

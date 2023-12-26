@@ -447,20 +447,45 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="card-body text-end">
-                                    <button class="btn border-dark">
-                                        <?php  
-                                        $total_harga_revisi = 0;
-                                        while($data_total = mysqli_fetch_array($query_produk_total)){
-                                            $total_harga =  $data_total['harga'] * $data_total['qty'];
-                                            $discount = $data_total['disc'] / 100; // 50% diskon
-                                            $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon   
-                                            $total_harga_revisi += $total_harga;
-                                            } 
-                                            $grand_total_revisi = $total_harga_revisi + $data_detail['ongkir'];
-                                        ?>
-                                        <b>Total Invoice Revisi</b><br>
-                                        Rp. <?php echo number_format($grand_total_revisi); ?>
-                                    </button>  
+                                    <?php  
+                                        if($jenis_inv == 'ppn'){
+                                            ?>
+                                                <button class="btn border-dark">
+                                                    <?php  
+                                                    $total_harga_revisi = 0;
+                                                    while($data_total = mysqli_fetch_array($query_produk_total)){
+                                                        $total_harga =  $data_total['harga'] * $data_total['qty'];
+                                                        $discount = $data_total['disc'] / 100; // 50% diskon
+                                                        $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon   
+                                                        $total_harga_revisi += $total_harga;
+                                                        } 
+                                                        $grand_total_revisi = $total_harga_revisi * 1.11 + $data_detail['ongkir'];
+                                                    ?>
+                                                    <b>Total Invoice Revisi</b><br>
+                                                    Rp. <?php echo number_format($grand_total_revisi); ?>
+                                                </button> 
+                                            <?php
+                                        } else {
+                                            ?>
+                                                 <button class="btn border-dark">
+                                                    <?php  
+                                                    $total_harga_revisi = 0;
+                                                    while($data_total = mysqli_fetch_array($query_produk_total)){
+                                                        $total_harga =  $data_total['harga'] * $data_total['qty'];
+                                                        $discount = $data_total['disc'] / 100; // 50% diskon
+                                                        $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon   
+                                                        $total_harga_revisi += $total_harga;
+                                                        } 
+                                                        $grand_total_revisi = $total_harga_revisi + $data_detail['ongkir'];
+                                                    ?>
+                                                    <b>Total Invoice Revisi</b><br>
+                                                    Rp. <?php echo number_format($grand_total_revisi); ?>
+                                                </button> 
+                                            <?php
+                                        }
+                                    
+                                    
+                                    ?> 
                                 </div>
                             </div>
                             <!-- Default Tabs -->

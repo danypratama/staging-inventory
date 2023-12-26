@@ -61,9 +61,6 @@ include "akses.php";
             <div class="mb-4" style="width: 180px;">
               <a href="form-create-spk-reg.php" class="btn btn-primary btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK Reguler</a>
             </div>
-            <div class="mb-4" style="width: 160px;">
-              <a href="form-create-spk-ecat.php" class="btn btn-success btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK E-cat</a>
-            </div>
           </div>
         </div>
       </div>
