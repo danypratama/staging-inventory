@@ -58,172 +58,199 @@ include "akses.php";
   <?php include "page/sidebar.php"; ?>
   <!-- end sidebar -->
 
+  <?php  
+    include "koneksi.php";
+    $id_role = $_SESSION['tiket_role'];
+    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+    $data_role = mysqli_fetch_array($query_role);
+    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+      ?>
+          <main id="main" class="main">
+            <section>
+              <div class="container">
+                <div class="card">
+                  <div class="card-header text-center">
+                    <h5>Edit Produk Reguler</h5>
+                  </div>
+                  <div class="card-body">
+                    <form action="proses/proses-produk-reg.php" method="POST" enctype="multipart/form-data">
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <?php
+                          //tangkap URL dengan $_GET
+                          $ide = base64_decode($_GET['edit-data']);
 
-  <main id="main" class="main">
-    <section>
-      <div class="container">
-        <div class="card">
-          <div class="card-header text-center">
-            <h5>Edit Produk Reguler</h5>
-          </div>
-          <div class="card-body">
-            <form action="proses/proses-produk-reg.php" method="POST" enctype="multipart/form-data">
-              <div class="modal-body">
-                <div class="mb-3">
-                  <?php
-                  //tangkap URL dengan $_GET
-                  $ide = base64_decode($_GET['edit-data']);
-
-                  //mengambil nama gambar yang terkait
-                  $sql = "SELECT 
-                            pr.id_produk_reg, pr.kode_produk, pr.nama_produk, pr.kode_katalog, pr.satuan, pr.harga_produk, pr.gambar,
-                            mr.id_merk, mr.nama_merk,
-                            kp.id_kat_produk, kp.nama_kategori as kat_prod,
-                            kj.id_kat_penjualan, kj.nama_kategori as kat_penj,
-                            gr.id_grade, gr.nama_grade,
-                            lok.id_lokasi, lok.nama_lokasi,
-                            lok.no_lantai, lok.nama_area, lok.no_rak
-                          FROM tb_produk_reguler as pr
-                          LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                          LEFT JOIN tb_kat_produk kp ON (pr.id_kat_produk = kp.id_kat_produk)
-                          LEFT JOIN tb_kat_penjualan kj ON (pr.id_kat_penjualan = kj.id_kat_penjualan)
-                          LEFT JOIN tb_produk_grade gr ON (pr.id_grade = gr.id_grade)
-                          LEFT JOIN tb_lokasi_produk lok ON (pr.id_lokasi = lok.id_lokasi)
-                          WHERE pr.id_produk_reg = '$ide'";
-                  $result = mysqli_query($connect, $sql);
-                  $row = mysqli_fetch_array($result);
-                  $img = $row['gambar'];
-                  $no_img = $row["gambar"] == "" ? "gambar/upload-produk-reg/no-image.png" : "gambar/upload-produk-reg/$img";
-                  ?>
-                  <div class="mb-3">
-                    <label class="form-label"><strong>Kode Produk</strong></label>
-                    <input type="hidden" class="form-control" name="id_produk" value="<?php echo $row['id_produk_reg']; ?>">
-                    <input type="text" class="form-control" name="kode_produk" value="<?php echo $row['kode_produk'] ?>" readonly>
+                          //mengambil nama gambar yang terkait
+                          $sql = "SELECT 
+                                    pr.id_produk_reg, pr.kode_produk, pr.nama_produk, pr.kode_katalog, pr.satuan, pr.harga_produk, pr.gambar,
+                                    mr.id_merk, mr.nama_merk,
+                                    kp.id_kat_produk, kp.nama_kategori as kat_prod,
+                                    kj.id_kat_penjualan, kj.nama_kategori as kat_penj,
+                                    gr.id_grade, gr.nama_grade,
+                                    lok.id_lokasi, lok.nama_lokasi,
+                                    lok.no_lantai, lok.nama_area, lok.no_rak
+                                  FROM tb_produk_reguler as pr
+                                  LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
+                                  LEFT JOIN tb_kat_produk kp ON (pr.id_kat_produk = kp.id_kat_produk)
+                                  LEFT JOIN tb_kat_penjualan kj ON (pr.id_kat_penjualan = kj.id_kat_penjualan)
+                                  LEFT JOIN tb_produk_grade gr ON (pr.id_grade = gr.id_grade)
+                                  LEFT JOIN tb_lokasi_produk lok ON (pr.id_lokasi = lok.id_lokasi)
+                                  WHERE pr.id_produk_reg = '$ide'";
+                          $result = mysqli_query($connect, $sql);
+                          $row = mysqli_fetch_array($result);
+                          $img = $row['gambar'];
+                          $no_img = $row["gambar"] == "" ? "gambar/upload-produk-reg/no-image.png" : "gambar/upload-produk-reg/$img";
+                          ?>
+                          <div class="mb-3">
+                            <label class="form-label"><strong>Kode Produk</strong></label>
+                            <input type="hidden" class="form-control" name="id_produk" value="<?php echo $row['id_produk_reg']; ?>">
+                            <input type="text" class="form-control" name="kode_produk" value="<?php echo $row['kode_produk'] ?>" readonly>
+                          </div>
+                          <div class="row">
+                            <div class="col-8 mb-3">
+                              <label class="form-label"><strong>Nama Produk</strong></label>
+                              <input type="text" class="form-control" name="nama_produk" value="<?php echo $row['nama_produk'] ?>" required>
+                            </div>
+                            <div class="col-4 mb-3">
+                              <label class="form-label"><strong>Kode Katalog</strong></label>
+                              <input type="text" class="form-control" name="kode_katalog" value="<?php echo $row['kode_katalog'] ?>" required>
+                            </div>
+                          </div>
+                          <div class="mb-3">
+                            <div class="row">
+                              <div class="col mb-3">
+                                <label class="form-label"><strong>Satuan</strong></label>
+                                <select name="satuan" class="form-control">
+                                  <option value=""><?php echo $row['satuan'] ?></option>
+                                  <option value="Pcs">Pcs</option>
+                                  <option value="Set">Set</option>
+                                </select>
+                              </div>
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>Merk</strong></label>
+                                <select class="form-select" name="merk" required>
+                                  <option value="<?php echo $row['id_merk'] ?>"><?php echo $row['nama_merk'] ?></option>
+                                  <?php
+                                  include "koneksi.php";
+                                  $sql = "SELECT * FROM tb_merk ";
+                                  $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                                  while ($data = mysqli_fetch_array($query)) { ?>
+                                    <option value="<?php echo $data['id_merk']; ?>"><?php echo $data['nama_merk']; ?></option>
+                                  <?php } ?>
+                                </select>
+                              </div>
+                              <div class="col-sm">
+                                <label class="form-label"><strong>Harga Produk</strong></label>
+                                <input type="text" class="form-control" name="harga" id="inputBudget" value="<?php echo $row['harga_produk'] ?>" required>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-3">
+                            <div class="row">
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>Lokasi Produk</strong></label>
+                                <input type="hidden" class="form-control" name="id_lokasi" id="id_lokasi" value="<?php echo $row['id_lokasi'] ?>">
+                                <input type="text" class="form-control" name="lokasi" id="nama_lokasi" data-bs-toggle="modal" data-bs-target="#modalLokasi" value="<?php echo $row['nama_lokasi'] ?>" readonly>
+                              </div>
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>No. Lantai</strong></label>
+                                <input type="text" class="form-control" name="no_lantai" id="no_lantai" value="<?php echo $row['no_lantai'] ?>" readonly>
+                              </div>
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>Area</strong></label>
+                                <input type="text" class="form-control" name="area" id="area" value="<?php echo $row['nama_area'] ?>" readonly>
+                              </div>
+                              <div class="col-sm">
+                                <label class="form-label"><strong>No. Rak</strong></label>
+                                <input type="text" class="form-control" name="no_rak" id="no_rak" value="<?php echo $row['no_rak'] ?>" readonly>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-3">
+                            <div class="row">
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>Kategori Produk</strong></label>
+                                <input type="hidden" class="form-control" name="id_kat_produk" id="idKatProduk" value="<?php echo $row['id_kat_produk'] ?>">
+                                <input type="text" class="form-control" name="nama_kat_produk" id="namaKatProduk" data-bs-toggle="modal" data-bs-target="#modalkatprod" value="<?php echo $row['kat_prod'] ?> - <?php echo $row['nama_merk'] ?>" readonly>
+                              </div>
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>Kategori Penjualan</strong></label>
+                                <select class="form-select" name="kategori_penjualan" required>
+                                  <option value="<?php echo $row['id_kat_penjualan']; ?>"><?php echo $row['kat_penj']; ?></option>
+                                  <?php
+                                  include "koneksi.php";
+                                  $sql = "SELECT * FROM tb_kat_penjualan ";
+                                  $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                                  while ($data = mysqli_fetch_array($query)) { ?>
+                                    <option value="<?php echo $data['id_kat_penjualan']; ?>"><?php echo $data['nama_kategori']; ?></option>
+                                  <?php } ?>
+                                </select>
+                              </div>
+                              <div class="col-sm">
+                                <label class="form-label"><strong>Grade Produk</strong></label>
+                                <select class="form-select" name="grade" required>
+                                  <option value="<?php echo $row['id_grade']; ?>"><?php echo $row['nama_grade']; ?></option>
+                                  <?php
+                                  include "koneksi.php";
+                                  $sql = "SELECT * FROM tb_produk_grade ";
+                                  $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                                  while ($data = mysqli_fetch_array($query)) { ?>
+                                    <option value="<?php echo $data['id_grade']; ?>"><?php echo $data['nama_grade']; ?></option>
+                                  <?php } ?>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-3 col-sm-6">
+                            <img id="imagePreview" src="<?php echo $no_img; ?>" id="output" height="300" width="300">
+                            <div id="console-output"></div>
+                          </div>
+                          <div class="mb-3 col-sm-6">
+                            <div class="input-group">
+                              <div class="fileUpload btn btn-primary" id="fileUpload">
+                                <span><i class="bi bi-upload"></i> Ubah Gambar</span>
+                                <input class="upload" type="file" name="fileku" id="formFile" accept="image/*" onchange="compressImage(event)">
+                              </div>
+                              <div class="fileUpload btn btn-danger" id="resetButton">
+                                <span><i class="bi bi-arrow-repeat"></i> Reset File</span>
+                                <input class="upload" type="button">
+                              </div>
+                            </div>
+                          </div>
+                          <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
+                          <input type="hidden" class="form-control" name="updated" id="datetime-input">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" name="edit-produk-reg" id="ubahData" class="btn btn-primary btn-md m-1" onclick="ubahData()"><i class="bx bx-save"></i> Ubah Data</button>
+                          <a href="data-produk-reg.php" class="btn btn-secondary btn-md m-1"><i class="bi bi-x"></i> Tutup</a>
+                        </div>
+                    </form>
                   </div>
-                  <div class="row">
-                    <div class="col-8 mb-3">
-                      <label class="form-label"><strong>Nama Produk</strong></label>
-                      <input type="text" class="form-control" name="nama_produk" value="<?php echo $row['nama_produk'] ?>" required>
-                    </div>
-                    <div class="col-4 mb-3">
-                      <label class="form-label"><strong>Kode Katalog</strong></label>
-                      <input type="text" class="form-control" name="kode_katalog" value="<?php echo $row['kode_katalog'] ?>" required>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <div class="row">
-                      <div class="col mb-3">
-                        <label class="form-label"><strong>Satuan</strong></label>
-                        <select name="satuan" class="form-control">
-                          <option value=""><?php echo $row['satuan'] ?></option>
-                          <option value="Pcs">Pcs</option>
-                          <option value="Set">Set</option>
-                        </select>
-                      </div>
-                      <div class="col-sm mb-3">
-                        <label class="form-label"><strong>Merk</strong></label>
-                        <select class="form-select" name="merk" required>
-                          <option value="<?php echo $row['id_merk'] ?>"><?php echo $row['nama_merk'] ?></option>
-                          <?php
-                          include "koneksi.php";
-                          $sql = "SELECT * FROM tb_merk ";
-                          $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
-                          while ($data = mysqli_fetch_array($query)) { ?>
-                            <option value="<?php echo $data['id_merk']; ?>"><?php echo $data['nama_merk']; ?></option>
-                          <?php } ?>
-                        </select>
-                      </div>
-                      <div class="col-sm">
-                        <label class="form-label"><strong>Harga Produk</strong></label>
-                        <input type="text" class="form-control" name="harga" id="inputBudget" value="<?php echo $row['harga_produk'] ?>" required>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <div class="row">
-                      <div class="col-sm mb-3">
-                        <label class="form-label"><strong>Lokasi Produk</strong></label>
-                        <input type="hidden" class="form-control" name="id_lokasi" id="id_lokasi" value="<?php echo $row['id_lokasi'] ?>">
-                        <input type="text" class="form-control" name="lokasi" id="nama_lokasi" data-bs-toggle="modal" data-bs-target="#modalLokasi" value="<?php echo $row['nama_lokasi'] ?>" readonly>
-                      </div>
-                      <div class="col-sm mb-3">
-                        <label class="form-label"><strong>No. Lantai</strong></label>
-                        <input type="text" class="form-control" name="no_lantai" id="no_lantai" value="<?php echo $row['no_lantai'] ?>" readonly>
-                      </div>
-                      <div class="col-sm mb-3">
-                        <label class="form-label"><strong>Area</strong></label>
-                        <input type="text" class="form-control" name="area" id="area" value="<?php echo $row['nama_area'] ?>" readonly>
-                      </div>
-                      <div class="col-sm">
-                        <label class="form-label"><strong>No. Rak</strong></label>
-                        <input type="text" class="form-control" name="no_rak" id="no_rak" value="<?php echo $row['no_rak'] ?>" readonly>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <div class="row">
-                      <div class="col-sm mb-3">
-                        <label class="form-label"><strong>Kategori Produk</strong></label>
-                        <input type="hidden" class="form-control" name="id_kat_produk" id="idKatProduk" value="<?php echo $row['id_kat_produk'] ?>">
-                        <input type="text" class="form-control" name="nama_kat_produk" id="namaKatProduk" data-bs-toggle="modal" data-bs-target="#modalkatprod" value="<?php echo $row['kat_prod'] ?> - <?php echo $row['nama_merk'] ?>" readonly>
-                      </div>
-                      <div class="col-sm mb-3">
-                        <label class="form-label"><strong>Kategori Penjualan</strong></label>
-                        <select class="form-select" name="kategori_penjualan" required>
-                          <option value="<?php echo $row['id_kat_penjualan']; ?>"><?php echo $row['kat_penj']; ?></option>
-                          <?php
-                          include "koneksi.php";
-                          $sql = "SELECT * FROM tb_kat_penjualan ";
-                          $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
-                          while ($data = mysqli_fetch_array($query)) { ?>
-                            <option value="<?php echo $data['id_kat_penjualan']; ?>"><?php echo $data['nama_kategori']; ?></option>
-                          <?php } ?>
-                        </select>
-                      </div>
-                      <div class="col-sm">
-                        <label class="form-label"><strong>Grade Produk</strong></label>
-                        <select class="form-select" name="grade" required>
-                          <option value="<?php echo $row['id_grade']; ?>"><?php echo $row['nama_grade']; ?></option>
-                          <?php
-                          include "koneksi.php";
-                          $sql = "SELECT * FROM tb_produk_grade ";
-                          $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
-                          while ($data = mysqli_fetch_array($query)) { ?>
-                            <option value="<?php echo $data['id_grade']; ?>"><?php echo $data['nama_grade']; ?></option>
-                          <?php } ?>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mb-3 col-sm-6">
-                    <img id="imagePreview" src="<?php echo $no_img; ?>" id="output" height="300" width="300">
-                    <div id="console-output"></div>
-                  </div>
-                  <div class="mb-3 col-sm-6">
-                    <div class="input-group">
-                      <div class="fileUpload btn btn-primary" id="fileUpload">
-                        <span><i class="bi bi-upload"></i> Ubah Gambar</span>
-                        <input class="upload" type="file" name="fileku" id="formFile" accept="image/*" onchange="compressImage(event)">
-                      </div>
-                      <div class="fileUpload btn btn-danger" id="resetButton">
-                        <span><i class="bi bi-arrow-repeat"></i> Reset File</span>
-                        <input class="upload" type="button">
-                      </div>
-                    </div>
-                  </div>
-                  <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id']; ?>">
-                  <input type="hidden" class="form-control" name="updated" id="datetime-input">
                 </div>
-                <div class="modal-footer">
-                  <button type="submit" name="edit-produk-reg" id="ubahData" class="btn btn-primary btn-md m-1" onclick="ubahData()"><i class="bx bx-save"></i> Ubah Data</button>
-                  <a href="data-produk-reg.php" class="btn btn-secondary btn-md m-1"><i class="bi bi-x"></i> Tutup</a>
-                </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main><!-- End #main -->
+              </div>
+            </section>
+          </main><!-- End #main -->
+      <?php 
+    } else {
+      ?>
+        <!-- Sweet Alert -->
+        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+        <script src="assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                title: "Error!",
+                text: "Maaf Anda Tidak Memiliki Akses Fitur Ini",
+                icon: "error",
+            }).then(function() {
+                window.location.href = "data-produk-reg.php";
+            });
+            });
+        </script>
+      <?php
+    }
+  ?>
 
   <!-- Modal Lokasi -->
   <div class="modal fade" id="modalLokasi" tabindex="-1" aria-hidden="true">

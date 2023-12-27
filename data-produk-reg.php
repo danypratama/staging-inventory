@@ -62,7 +62,18 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <a href="tambah-data-produk.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk</a>
+          <?php  
+              include "koneksi.php";
+              $id_role = $_SESSION['tiket_role'];
+              $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+              $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+              $data_role = mysqli_fetch_array($query_role);
+              if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                ?>
+                    <a href="tambah-data-produk.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk</a>
+                <?php 
+              }
+            ?>
             <div class="mt-3">
               <a href="#" class="btn btn-outline-success active"><i class="bi bi-box-seam"></i> Produk Reguler</a>
               <a href="data-produk-ecat.php" class="btn btn-outline-success"><i class="bi bi-box-seam-fill"></i> Produk E-Catalog</a>
@@ -79,7 +90,7 @@ include "akses.php";
                     <td class="text-center p-3" style="width: 100px">Harga</td>
                     <td class="text-center p-3" style="width: 80px">Stock</td>
                     <td class="text-center p-3" style="width: 80px">Level</td>
-                    <td class="text-center p-3" style="width: 50px">Aksi</td>
+                    <td class="text-center p-3" style="width: 50px">Aksi</td>   
                   </tr>
                 </thead>
                 <tbody>
@@ -92,23 +103,45 @@ include "akses.php";
     </section>
   </main><!-- End #main -->
 
-<!-- Modal Hapus -->
-<div class="modal fade" id="hapusData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <form action="proses/proses-produk-reg.php" method="POST" enctype="multipart/form-data">
-        <div class="modal-body">
-            Apakah anda yakin hapus data <b id="nama_produk"></b>-<b id="merk"></b>?
-            <input type="hidden" name="id_produk" id="id_produk">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-danger" name="hapus-produk-reg">Ya, Hapus data</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+  <?php  
+    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+      ?>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="hapusData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form action="proses/proses-produk-reg.php" method="POST" enctype="multipart/form-data">
+                  <div class="modal-body">
+                      Apakah anda yakin hapus data <b id="nama_produk"></b>-<b id="merk"></b>?
+                      <input type="hidden" name="id_produk" id="id_produk">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger" name="hapus-produk-reg">Ya, Hapus data</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+      <?php 
+    } else {
+      ?>
+        <!-- Modal Hapus -->
+        <div class="modal fade" id="hapusData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-body">
+                     Maaf Anda Tidak Memiliki Akses Fitur Ini
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+      <?php
+    }
+  ?>
 
   <!-- Modal Detail -->
   <div class="modal fade" id="detailProduk" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
