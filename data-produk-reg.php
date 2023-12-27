@@ -116,7 +116,7 @@ include "akses.php";
                       <input type="hidden" name="id_produk" id="id_produk">
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-danger" name="hapus-produk-reg">Ya, Hapus data</button>
                   </div>
                 </form>
