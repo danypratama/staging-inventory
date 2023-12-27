@@ -54,7 +54,18 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <a href="#" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modal1"><i class="bi bi-plus-circle"></i> Tambah data customer SPH</a>
+            <?php  
+              include "koneksi.php";
+              $id_role = $_SESSION['tiket_role'];
+              $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+              $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+              $data_role = mysqli_fetch_array($query_role);
+              if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                ?>
+                   <a href="#" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modal1"><i class="bi bi-plus-circle"></i> Tambah data customer SPH</a>
+                <?php 
+              }
+            ?>
             <div class="table-responsive mt-3">
               <table class="table table-striped table-bordered" id="table1">
                 <thead>
@@ -64,7 +75,13 @@ include "akses.php";
                     <td class="text-center text-nowrap p-3 col-3">Alamat</td>
                     <td class="text-center text-nowrap p-3 col-2">Telepon</td>
                     <td class="text-center text-nowrap p-3 col-2">Email</td>
-                    <td class="text-center text-nowrap p-3 col-2">Aksi</td>
+                    <?php  
+                      if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                        ?>
+                           <td class="text-center text-nowrap p-3 col-2">Aksi</td>
+                        <?php 
+                      }
+                    ?>
                   </tr>
                 </thead>
                 <tbody>
@@ -83,12 +100,18 @@ include "akses.php";
                       <td class="wrap-text"><?php echo $data['alamat']; ?></td>
                       <td><?php echo $data['no_telp']; ?></td>
                       <td><?php echo $data['email']; ?></td>
-                      <td class="text-center text-nowrap">
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_cs']; ?>" data-nama="<?php echo $data['nama_cs']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-email="<?php echo $data['email']; ?>">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <a href="proses/proses-cs-sph.php?hapus-cs=<?php echo $id_cs ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                      </td>
+                      <?php  
+                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                          ?>
+                            <td class="text-center text-nowrap">
+                              <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_cs']; ?>" data-nama="<?php echo $data['nama_cs']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-email="<?php echo $data['email']; ?>">
+                                <i class="bi bi-pencil"></i>
+                              </button>
+                              <a href="proses/proses-cs-sph.php?hapus-cs=<?php echo $id_cs ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                            </td>
+                          <?php 
+                        }
+                      ?>
                       <!-- Modal Edit CS -->
                       <div class="modal" id="modal2" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">

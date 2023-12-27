@@ -28,11 +28,11 @@ include "akses.php";
 
   <main id="main" class="main">
     <!-- Loading -->
-    <!-- <div class="loader loader">
+    <div class="loader loader">
       <div class="loading">
         <img src="img/loading.gif" width="200px" height="auto">
       </div>
-    </div> -->
+    </div>
     <!-- ENd Loading -->
     <div class="pagetitle">
       <h1>Data Supplier</h1>
@@ -54,7 +54,18 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <a href="#" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modal1"><i class="bi bi-plus-circle"></i> Tambah data supllier</a>
+            <?php  
+              include "koneksi.php";
+              $id_role = $_SESSION['tiket_role'];
+              $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+              $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+              $data_role = mysqli_fetch_array($query_role);
+              if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                ?>
+                  <a href="#" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modal1"><i class="bi bi-plus-circle"></i> Tambah data supllier</a>
+                <?php 
+              }
+            ?>
             <div class="table-responsive mt-3">
               <table class="table table-striped table-bordered" id="table1">
                 <thead>
@@ -64,7 +75,13 @@ include "akses.php";
                     <td class="text-center p-3 col-3">Alamat</td>
                     <td class="text-center p-3 col-2">Telepon</td>
                     <td class="text-center p-3 col-2">Email</td>
-                    <td class="text-center p-3 col-2">Aksi</td>
+                    <?php
+                      if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                        ?>
+                        <td class="text-center p-3 col-2">Aksi</td>
+                        <?php 
+                      }
+                    ?>
                   </tr>
                 </thead>
                 <tbody>
@@ -98,17 +115,27 @@ include "akses.php";
                       <td><?php echo $data['alamat']; ?></td>
                       <td><?php echo $data['no_telp']; ?></td>
                       <td><?php echo $data['email']; ?></td>
-                      <td class="text-center">
-                        <!-- Button  modal detail -->
-                        <button type="button" class="btn btn-primary btn-sm btn-detail" data-bs-toggle="modal" data-bs-target="#detailSp" title="Detail" data-cs="<?php echo $data['nama_sp']; ?>" data-email="<?php echo $data['email']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-createdby="<?php echo $data['user_created']; ?>" data-created="<?php echo $data['created_date']; ?>" data-updated="<?php echo $data['updated_date']; ?>" data-updatedby="<?php echo $data['user_updated']; ?>">
-                          <i class="bi bi-eye-fill"></i>
-                        </button>
-                        <!-- End Modal Detail -->
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_sp']; ?>" data-nama="<?php echo $data['nama_sp']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-email="<?php echo $data['email']; ?>">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <a href="proses/proses-sp.php?hapus-sp=<?php echo $id_sp ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                      </td>
+                      <?php
+                        $id_role = $_SESSION['tiket_role'];
+                        $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                        $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                        $data_role = mysqli_fetch_array($query_role);
+                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                          ?>
+                            <td class="text-center">
+                              <!-- Button  modal detail -->
+                              <button type="button" class="btn btn-primary btn-sm btn-detail" data-bs-toggle="modal" data-bs-target="#detailSp" title="Detail" data-cs="<?php echo $data['nama_sp']; ?>" data-email="<?php echo $data['email']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-createdby="<?php echo $data['user_created']; ?>" data-created="<?php echo $data['created_date']; ?>" data-updated="<?php echo $data['updated_date']; ?>" data-updatedby="<?php echo $data['user_updated']; ?>">
+                                <i class="bi bi-eye-fill"></i>
+                              </button>
+                              <!-- End Modal Detail -->
+                              <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_sp']; ?>" data-nama="<?php echo $data['nama_sp']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-email="<?php echo $data['email']; ?>">
+                                <i class="bi bi-pencil"></i>
+                              </button>
+                              <a href="proses/proses-sp.php?hapus-sp=<?php echo $id_sp ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                            </td>
+                          <?php 
+                        }
+                      ?>
                     </tr>
                     <?php $no++; ?>
                   <?php } ?>

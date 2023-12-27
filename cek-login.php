@@ -103,7 +103,7 @@ if (isset($_POST['login'])) {
             } else if ($role == 'Driver'){
                 header("Location: driver/dashboard.php");
             } else if ($role == 'Admin Gudang'){
-                header("Location: gudang/dashboard.php");
+                header("Location: dashboard.php");
             } else {
                 header("Location: dashboard.php");
             }
