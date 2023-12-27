@@ -16,7 +16,7 @@
         $sql = "SELECT pr.*,
                 pr.created_date as 'produk_created',
                 pr.created_date as 'produk_updated',
-                pr.id_produk_reg as 'produk_id',    
+                pr.id_produk_ecat as 'produk_id',    
                 uc.nama_user as user_created, 
                 uu.nama_user as user_updated,
                 mr.*,

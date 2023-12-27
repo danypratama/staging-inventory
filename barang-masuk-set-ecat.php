@@ -1,6 +1,6 @@
 <?php
 $page = 'br-masuk';
-$page2 = 'br-masuk-ecat';
+$page2 = 'br-masuk-set-ecat';
 include "akses.php";
 ?>
 <!DOCTYPE html>
@@ -35,11 +35,11 @@ include "akses.php";
         </div>
         <!-- ENd Loading -->
         <div class="pagetitle">
-            <h1>Data Update Stock Set Ecat</h1>
+            <h1>Data Update Stock Set E-Cat</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item active">Data update stock set ecat</li>
+                    <li class="breadcrumb-item active">Data update stock set E-Cat</li>
                 </ol>
             </nav>
         </div>

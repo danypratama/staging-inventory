@@ -84,7 +84,7 @@ include "akses.php";
                         </div>
                         <div class="mb-3">
                             <label class="form-label"><strong>Kode Produk</strong></label>
-                            <input type="hidden" class="form-control" name="id_produk" value="BR-REG<?php echo $UUID; ?>">
+                            <input type="hidden" class="form-control" name="id_produk" id="id_produk" value="">
                             <input type="text" class="form-control" name="kode_produk" required>
                         </div>
                         <div class="row">
@@ -209,6 +209,27 @@ include "akses.php";
                  </div>
             </div>
         </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            var regRadio = document.getElementById("inlineRadio1");
+            var ecatRadio = document.getElementById("inlineRadio2");
+            var idProdukInput = document.getElementById("id_produk");
+
+            regRadio.addEventListener("change", function() {
+              if (regRadio.checked) {
+                idProdukInput.value = "BR-REG<?php echo $UUID;?>";
+                console.log("Nilai id_produk diubah menjadi: " + idProdukInput.value);
+              }
+            });
+
+            ecatRadio.addEventListener("change", function() {
+              if (ecatRadio.checked) {
+                idProdukInput.value = "BR-ECAT<?php echo $UUID;?>";
+                console.log("Nilai id_produk diubah menjadi: " + idProdukInput.value);
+              }
+            });
+          });
+        </script>
     </section>
   </main><!-- End #main -->
  

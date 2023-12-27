@@ -160,42 +160,97 @@ function generate_uuid()
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered" id="table2">
-            <thead>
-              <tr class="text-white" style="background-color: #051683;">
-                <td class="text-center p-3" style="width: 50px">No</td>
-                <td class="text-center p-3" style="width: 350px">Nama Produk</td>
-                <td class="text-center p-3" style="width: 100px">Merk</td>
-                <td class="text-center p-3" style="width: 100px">Stock</td>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              date_default_timezone_set('Asia/Jakarta');
-              include "koneksi.php";
-              $id = $_GET['id'];
-              $no = 1;
-              $sql = "SELECT pr.id_produk_reg, pr.nama_produk, mr.nama_merk, spr.stock
-                      FROM stock_produk_reguler as spr
-                      LEFT JOIN tb_produk_reguler pr ON (spr.id_produk_reg = pr.id_produk_reg)
-                      LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
-                      WHERE pr.nama_produk IS NOT NULL
-                      ORDER BY nama_produk ASC";
-              $query = mysqli_query($connect, $sql);
-              while ($data = mysqli_fetch_array($query)) {
-              ?>
-                <tr data-idprod="<?php echo $data['id_produk_reg']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
-                  <td class="text-center"><?php echo $no; ?></td>
-                  <td><?php echo $data['nama_produk']; ?></td>
-                  <td class="text-center"><?php echo $data['nama_merk']; ?></td>
-                  <td class="text-center"><?php echo $data['stock']; ?></td>
-                </tr>
-                <?php $no++; ?>
-              <?php } ?>
-            </tbody>
-          </table>
-        </div>
+        <!-- Pills Tabs -->
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Produk Reguler</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Produk ECat</button>
+          </li>
+        </ul>
+        <div class="tab-content pt-2" id="myTabContent">
+          <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered" id="table2">
+                <thead>
+                  <tr class="text-white" style="background-color: #051683;">
+                    <td class="text-center text-nowrap p-3">No</td>
+                    <td class="text-center text-nowrap p-3">Kode Produk</td>
+                    <td class="text-center text-nowrap p-3">Nama Produk</td>
+                    <td class="text-center text-nowrap p-3">Merk</td>
+                    <td class="text-center text-nowrap p-3">Stock</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  date_default_timezone_set('Asia/Jakarta');
+                  include "koneksi.php";
+                  $id = $_GET['id'];
+                  $no = 1;
+                  $sql = "SELECT pr.id_produk_reg, pr.kode_produk, pr.nama_produk, mr.nama_merk, spr.stock
+                          FROM stock_produk_reguler as spr
+                          LEFT JOIN tb_produk_reguler pr ON (spr.id_produk_reg = pr.id_produk_reg)
+                          LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
+                          WHERE pr.nama_produk IS NOT NULL
+                          ORDER BY nama_produk ASC";
+                  $query = mysqli_query($connect, $sql);
+                  while ($data = mysqli_fetch_array($query)) {
+                  ?>
+                    <tr data-idprod="<?php echo $data['id_produk_reg']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                      <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                      <td class="text-center text-nowrap"><?php echo $data['kode_produk']; ?></td>
+                      <td class="text-start text-nowrap"><?php echo $data['nama_produk']; ?></td>
+                      <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
+                      <td class="text-center text-nowrap"><?php echo $data['stock']; ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                  <?php } ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered" id="table3">
+                <thead>
+                  <tr class="text-white" style="background-color: #051683;">
+                    <td class="text-center text-nowrap p-3">No</td>
+                    <td class="text-center text-nowrap p-3">Kode Produk</td>
+                    <td class="text-center text-nowrap p-3">Nama Produk</td>
+                    <td class="text-center text-nowrap p-3">Merk</td>
+                    <td class="text-center text-nowrap p-3">Stock</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  date_default_timezone_set('Asia/Jakarta');
+                  include "koneksi.php";
+                  $id = $_GET['id'];
+                  $no = 1;
+                  $sql = "SELECT pr.id_produk_ecat, pr.kode_produk, pr.nama_produk, mr.nama_merk, spr.stock
+                          FROM stock_produk_ecat as spr
+                          LEFT JOIN tb_produk_ecat pr ON (spr.id_produk_ecat = pr.id_produk_ecat)
+                          LEFT JOIN tb_merk mr ON (pr.id_merk = mr.id_merk)
+                          WHERE pr.nama_produk IS NOT NULL
+                          ORDER BY nama_produk ASC";
+                  $query = mysqli_query($connect, $sql);
+                  while ($data = mysqli_fetch_array($query)) {
+                  ?>
+                    <tr data-idprod="<?php echo $data['id_produk_ecat']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                      <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                      <td class="text-center text-nowrap"><?php echo $data['kode_produk']; ?></td>
+                      <td class="text-start text-nowrap"><?php echo $data['nama_produk']; ?></td>
+                      <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
+                      <td class="text-center text-nowrap"><?php echo $data['stock']; ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                  <?php } ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div><!-- End Pills Tabs -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -213,6 +268,16 @@ function generate_uuid()
 
   // select Produk Reguler
   $(document).on('click', '#table2 tbody tr', function(e) {
+    $('#idProduk').val($(this).data('idprod'));
+    $('#namaProduk').val($(this).data('namaprod'));
+    $('#merkProduk').val($(this).data('merkprod'));
+    $('#modalBarang').modal('hide');
+
+    // Aktifkan input qtyActual
+    enableQtyActual();
+  });
+
+  $(document).on('click', '#table3 tbody tr', function(e) {
     $('#idProduk').val($(this).data('idprod'));
     $('#namaProduk').val($(this).data('namaprod'));
     $('#merkProduk').val($(this).data('merkprod'));

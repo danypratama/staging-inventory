@@ -329,7 +329,7 @@ include "akses.php";
             </style>
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Sudah Bayar</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Form Pembayaran <?php echo $nama_cs ?></h1>
                 </div>
                 <div class="modal-body">
                     <form action="proses/bayar.php" method="POST" enctype="multipart/form-data">

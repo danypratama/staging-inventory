@@ -109,10 +109,11 @@ include "akses.php";
                 <table class="table table-striped table-bordered" id="table2">
                   <thead>
                     <tr class="text-white" style="background-color: #051683;">
-                      <td class="text-center p-3" style="width: 50px">No</td>
-                      <td class="text-center p-3" style="width: 350px">Nama Produk</td>
-                      <td class="text-center p-3" style="width: 100px">Merk</td>
-                      <td class="text-center p-3" style="width: 100px">Stock</td>
+                      <td class="text-center text-nowrap p-3" style="width: 50px">No</td>
+                      <td class="text-center text-nowrap p-3">Kode Produk</td>
+                      <td class="text-center text-nowrap p-3">Nama Produk</td>
+                      <td class="text-center text-nowrap p-3">Merk</td>
+                      <td class="text-center text-nowrap p-3">Stock</td>
                     </tr>
                   </thead>
                   <tbody>
@@ -122,6 +123,7 @@ include "akses.php";
                     include "koneksi.php";
                     $no = 1;
                     $sql = "SELECT  pr.id_produk_ecat AS 'produk_id',
+                                    pr.kode_produk,
                                     pr.nama_produk,
                                     pr.id_merk,
                                     pr.id_kat_penjualan,
@@ -135,10 +137,11 @@ include "akses.php";
                     while ($data = mysqli_fetch_array($query)) {
                     ?>
                       <tr data-idprod="<?php echo $data['produk_id']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkid="<?php echo $data['id_merk']; ?>" data-katjualid="<?php echo $data['id_kat_penjualan']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
-                        <td class="text-center"><?php echo $no; ?></td>
-                        <td><?php echo $data['nama_produk']; ?></td>
-                        <td class="text-center"><?php echo $data['nama_merk']; ?></td>
-                        <td class="text-center"><?php echo $data['stock']; ?></td>
+                        <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                        <td class="text-center text-nowrap"><?php echo $data['kode_produk']; ?></td>
+                        <td class="text-start text-nowrap"><?php echo $data['nama_produk']; ?></td>
+                        <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
+                        <td class="text-center text-nowrap"><?php echo $data['stock']; ?></td>
                       </tr>
                       <?php $no++; ?>
                     <?php } ?>
@@ -151,10 +154,11 @@ include "akses.php";
                   <table class="table table-striped table-bordered" id="table3">
                     <thead>
                       <tr class="text-white" style="background-color: #051683;">
-                        <td class="text-center p-3" style="width: 50px">No</td>
-                        <td class="text-center p-3" style="width: 350px">Nama Produk</td>
-                        <td class="text-center p-3" style="width: 100px">Merk</td>
-                        <td class="text-center p-3" style="width: 100px">Stock</td>
+                        <td class="text-center text-nowrap p-3">No</td>
+                        <td class="text-center text-nowrap p-3">Kode Produk Set</td>
+                        <td class="text-center text-nowrap p-3">Nama Produk Set</td>
+                        <td class="text-center text-nowrap p-3">Merk</td>
+                        <td class="text-center text-nowrap p-3">Stock</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -163,12 +167,14 @@ include "akses.php";
 
                       include "koneksi.php";
                       $no = 1;
-                      $sql_set = "SELECT tpsm.id_set_ecat AS 'produk_id',
-                                         tpsm.nama_set_ecat,
-                                         tpsm.id_merk,
-                                         tpsm.id_kat_penjualan,
-                                         mr.nama_merk,
-                                         spr.stock
+                      $sql_set = "SELECT 
+                                    tpsm.id_set_ecat AS 'produk_id',
+                                    tpsm.kode_set_ecat,
+                                    tpsm.nama_set_ecat,
+                                    tpsm.id_merk,
+                                    tpsm.id_kat_penjualan,
+                                    mr.nama_merk,
+                                    spr.stock
                                 FROM tb_produk_set_ecat as tpsm
                                 LEFT JOIN tb_merk mr ON (tpsm.id_merk = mr.id_merk)
                                 LEFT JOIN stock_produk_ecat spr ON (tpsm.id_set_ecat = spr.id_produk_ecat)
@@ -177,10 +183,11 @@ include "akses.php";
                       while ($data_set = mysqli_fetch_array($query_set)) {
                       ?>
                         <tr data-idprod="<?php echo $data_set['produk_id']; ?>" data-namaprod="<?php echo $data_set['nama_set_ecat']; ?>" data-merkid="<?php echo $data_set['id_merk']; ?>" data-katjualid="<?php echo $data_set['id_kat_penjualan']; ?>" data-merkprod="<?php echo $data_set['nama_merk']; ?>" data-bs-dismiss="modal">
-                          <td class="text-center"><?php echo $no; ?></td>
-                          <td><?php echo $data_set['nama_set_ecat']; ?></td>
-                          <td class="text-center"><?php echo $data_set['nama_merk']; ?></td>
-                          <td class="text-center"><?php echo $data_set['stock']; ?></td>
+                          <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                          <td class="text-center text-nowrap"><?php echo $data_set['kode_set_ecat']; ?></td>
+                          <td class="text-start text-nowrap"><?php echo $data_set['nama_set_ecat']; ?></td>
+                          <td class="text-center text-nowrap"><?php echo $data_set['nama_merk']; ?></td>
+                          <td class="text-center text-nowrap"><?php echo $data_set['stock']; ?></td>
                         </tr>
                         <?php $no++; ?>
                       <?php } ?>

@@ -1,6 +1,6 @@
 <?php
     $page = 'br-masuk';
-    $page2 = 'br-masuk-reg';
+    $page2 = 'br-masuk-tambahan';
     include "akses.php";
 ?>
 <!DOCTYPE html>
@@ -65,12 +65,20 @@
                                     <?php
                                     $no = 1;
                                     include "koneksi.php";
-                                    $sql = "SELECT ibt.*, ibt.created_date AS created, pr.*, mr.*, us.nama_user, ket_in.*
+                                    $sql = "SELECT  
+                                                ibt.id_isi_br_tambahan,
+                                                ibt.qty,
+                                                ibt.created_date AS created, 
+                                                COALESCE(pr.nama_produk, ecat.nama_produk) AS nama_produk,
+                                                mr.nama_merk, 
+                                                us.nama_user, 
+                                                ket.ket_in
                                             FROM isi_br_tambahan AS ibt
                                             LEFT JOIN tb_produk_reguler pr ON(ibt.id_produk_reg = pr.id_produk_reg)
-                                            LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
+                                            LEFT JOIN tb_produk_ecat ecat ON(ibt.id_produk_reg = ecat.id_produk_ecat)
+                                            LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk OR mr.id_merk = ecat.id_merk)
                                             LEFT JOIN user us ON(ibt.id_user = us.id_user)
-                                            LEFT JOIN keterangan_in ket_in ON(ibt.id_ket_in = ket_in.id_ket_in)";
+                                            LEFT JOIN keterangan_in ket ON(ibt.id_ket_in = ket.id_ket_in)";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>

@@ -29,13 +29,13 @@
 			}else{
 				// Untuk proses simpan QR Code
 
-				$url_qr = "https://karsa-inventory.mandirialkesindo.com/detail-produk.php?id=$id_produk";
+				$url_qr = "https://$_SERVER[HTTP_HOST]/detail-produk-ecat.php?id=$id_produk";
 
 				// Nama file output
 				$nama_qr_image = preg_replace('/[^\w]+/', '_', $nama) . '.png';
 				$outputFile = "../gambar/QRcode/$nama_qr_image";
 
-
+ 
 				// Ukuran QR code (pixels)
 				$size = 300;
 
@@ -87,7 +87,7 @@
 				echo "<script>document.location.href='../data-produk-reg.php'</script>";
 			}else{
 				// Untuk proses simpan QR Code
-				$url_qr = "https://karsa-inventory.mandirialkesindo.com/detail-produk-ecat.php?id=$id_produk";
+				$url_qr = "https://$_SERVER[HTTP_HOST]/detail-produk-ecat.php?id=$id_produk";
 
 				// Nama file output
 				$nama_qr_image = preg_replace('/[^\w]+/', '_', $nama) . '.png';
@@ -262,6 +262,24 @@
 													updated_date = '$updated',
 													updated_by = '$updated_by'
 												WHERE id_produk_ecat = '$id_produk'");
+
+			$url_qr = "https://$_SERVER[HTTP_HOST]/detail-produk-ecat.php?id=$id_produk";
+
+			// Nama file output
+			$nama_qr_image = preg_replace('/[^\w]+/', '_', $nama) . '.png';
+			$outputFile = "../gambar/QRcode-ecat/$nama_qr_image";
+
+
+
+			// Ukuran QR code (pixels)
+			$size = 300;
+
+			// Tingkat koreksi kesalahan: L (Low), M (Medium), Q (Quartile), H (High)
+			$correctionLevel = 'M';
+
+			// Membuat QR code
+			QRcode::png($url_qr, $outputFile, $correctionLevel, $size);
+
 			$_SESSION['info'] = 'Disimpan';
 			echo "<script>document.location.href='../data-produk-ecat.php'</script>";
 		} else {

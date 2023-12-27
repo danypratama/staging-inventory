@@ -45,7 +45,7 @@ include "akses.php";
         </div>
         <!-- ENd Loading -->
         <div class="pagetitle">
-            <h1>Dashboard</h1>
+            <h1>Data SPK</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
@@ -67,26 +67,11 @@ include "akses.php";
                         <div class="mb-4" style="width: 180px;">
                             <a href="form-create-spk-reg.php" class="btn btn-primary btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK Reguler</a>
                         </div>
-                        <div class="mb-4" style="width: 160px;">
-                            <a href="form-create-spk-ecat.php" class="btn btn-success btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK E-cat</a>
-                        </div>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="mt-4">
-                    <div class="ps-4">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <nav>
-                                    <ol class="breadcrumb" style="font-size: 18px;">
-                                        <li class="breadcrumb-item active">SPK Reguler</li>
-                                        <li class="breadcrumb-item"><a style="color: blue;" href="spk-ecat.php">SPK E-Cat</a></li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
                     <ul class="nav nav-tabs d-flex ms-3 me-3 justify-content-between" role="tablist" id="myTab" role="tablist">
                         <li class="nav-item flex-fill" role="presentation">
                             <?php

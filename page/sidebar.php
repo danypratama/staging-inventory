@@ -108,18 +108,16 @@
       </a>
       <ul id="barang-masuk" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a class="<?php if ($page2 == 'br-masuk-reg') { echo 'active'; } ?>" href="barang-masuk-reg.php">
-            <i class="bi bi-circle"></i><span>Reguler</span>
+          <a class="<?php if ($page2 == 'br-masuk-import') { echo 'active'; } ?>" href="barang-masuk-reg-import.php">
+            <i class="bi bi-circle"></i><span>Import</span> 
           </a>
-          <a href="barang-masuk-set-reg.php">
+          <a class="<?php if ($page2 == 'br-masuk-tambahan') { echo 'active'; } ?>" href="barang-masuk-tambahan.php">
+            <i class="bi bi-circle"></i><span>Tambahan</span>
+          </a>
+          <a class="<?php if ($page2 == 'br-masuk-set-reg') { echo 'active'; } ?>" href="barang-masuk-set-reg.php">
             <i class="bi bi-circle"></i><span>Set Produk Reguler</span>
           </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="bi bi-circle"></i><span>E-Cat</span>
-          </a>
-          <a class="<?php if ($page2 == 'br-masuk-ecat') { echo 'active'; } ?>" href="barang-masuk-set-ecat.php">
+          <a class="<?php if ($page2 == 'br-masuk-set-ecat') { echo 'active'; } ?>" href="barang-masuk-set-ecat.php">
             <i class="bi bi-circle"></i><span>Set Produk E-Cat</span>
           </a>
         </li>
@@ -146,20 +144,11 @@
     </li>
     <!-- End Barang Keluar Nav -->
 
+    <!-- Perubahan Merk -->
     <li class="nav-item">
-      <a class="nav-link collapsed <?php if ($page == 'perubahan-merk') { echo 'active-link'; } ?>" data-bs-target="#perubahan-merk" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-arrow-left-right"></i><span>Perubahan Merk</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed <?php if ($page == 'perubahan-merk') { echo 'active-link'; } ?>" href="ganti-merk-reg.php">
+        <i class="bi bi-arrow-left-right"></i><span>Perubahan Merk</span>
       </a>
-      <ul id="perubahan-merk" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
-          <a class="<?php if ($page2 == 'ganti-merk') {  echo 'active'; } ?>" href="ganti-merk-reg.php">
-            <i class="bi bi-circle"></i><span>Reguler</span>
-          </a>
-          <a href="#">
-            <i class="bi bi-circle"></i><span>E-Cat</span>
-          </a>
-        </li>
-      </ul>
     </li>
     <!-- End Perubahan Merk -->
 

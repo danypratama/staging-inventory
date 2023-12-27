@@ -1,6 +1,6 @@
 <?php
 $page = 'br-masuk';
-$page2 = 'br-masuk-reg';
+$page2 = 'br-masuk-import';
 include "akses.php";
 ?>
 <!DOCTYPE html>
