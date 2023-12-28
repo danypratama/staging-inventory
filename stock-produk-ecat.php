@@ -61,8 +61,18 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <a href="tambah-stock-produk-ecat.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data stock produk ecat</a>
-
+            <?php  
+               include "koneksi.php";
+               $id_role = $_SESSION['tiket_role'];
+               $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+               $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+               $data_role = mysqli_fetch_array($query_role);
+               if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                 ?>
+                   <a href="tambah-stock-produk-ecat.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data stock produk ecat</a>
+                 <?php 
+               }
+            ?>
             <!-- Pills Tabs -->
             <ul class="nav nav-pills mb-3 mt-3" id="pills-tab" role="tablist">
               <li class="nav-item" role="presentation">
@@ -83,7 +93,13 @@ include "akses.php";
                         <td class="text-center p-3" style="width: 100px">Merk</td>
                         <td class="text-center p-3" style="width: 80px">Stock</td>
                         <td class="text-center p-3" style="width: 80px">Level</td>
-                        <td class="text-center p-3" style="width: 50px">Aksi</td>
+                        <?php  
+                          if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                            ?>
+                              <td class="text-center p-3" style="width: 50px">Aksi</td>
+                            <?php 
+                          }
+                        ?>
                       </tr>
                     </thead>
                     <tbody>
@@ -123,9 +139,15 @@ include "akses.php";
                           <td class="text-center"> <?php echo $data['nama_merk'] ?> </td>
                           <?php echo "<td class='text-end " . $stockData['textColor'] . "' style='background-color: " . $stockData['backgroundColor'] . "'>" . $stockData['formattedStock'] . "</td>";  ?>
                           <?php echo "<td class='text-end'>" . $stockData['status'] . "</td>"; ?>
-                          <td class="text-center">
-                            <a href="proses/proses-stock-ecat.php?hapus-stock-ecat=<?php echo $id_stock ?>&id_produk=<?php echo $id_produk ?>" class="btn btn-sm btn-danger delete-data"><i class="bi bi-trash"></i></a>
-                          </td>
+                          <?php  
+                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                              ?>
+                                <td class="text-center">
+                                  <a href="proses/proses-stock-ecat.php?hapus-stock-ecat=<?php echo $id_stock ?>&id_produk=<?php echo $id_produk ?>" class="btn btn-sm btn-danger delete-data"><i class="bi bi-trash"></i></a>
+                                </td>
+                              <?php 
+                            }
+                          ?>
                         </tr>
                         <?php $no++; ?>
                       <?php } ?>
@@ -143,7 +165,13 @@ include "akses.php";
                         <td class="text-center p-3" style="width: 100px">Merk</td>
                         <td class="text-center p-3" style="width: 80px">Stock</td>
                         <td class="text-center p-3" style="width: 80px">Level</td>
-                        <td class="text-center p-3" style="width: 50px">Aksi</td>
+                        <?php  
+                          if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                            ?>
+                              <td class="text-center p-3" style="width: 50px">Aksi</td>
+                            <?php 
+                          }
+                        ?>
                       </tr>
                     </thead>
                     <tbody>
@@ -181,9 +209,15 @@ include "akses.php";
                           <td class="text-center"> <?php echo $data_set['nama_merk'] ?> </td>
                           <?php echo "<td class='text-end " . $stockDataSet['textColor'] . "' style='background-color: " . $stockDataSet['backgroundColor'] . "'>" . $stockDataSet['formattedStock'] . "</td>";  ?>
                           <?php echo "<td class='text-end'>" . $stockDataSet['status'] . "</td>"; ?>
-                          <td class="text-center">
-                            <a href="proses/proses-stock-ecat.php?hapus-stock-ecat=<?php echo $id_stock ?>&id_produk=<?php echo $id_produk ?>" class="btn btn-sm btn-danger delete-data"><i class="bi bi-trash"></i></a>
-                          </td>
+                          <?php  
+                          if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                              ?>
+                                <td class="text-center">
+                                  <a href="proses/proses-stock-ecat.php?hapus-stock-ecat=<?php echo $id_stock ?>&id_produk=<?php echo $id_produk ?>" class="btn btn-sm btn-danger delete-data"><i class="bi bi-trash"></i></a>
+                                </td>
+                              <?php 
+                            }
+                          ?>
                         </tr>
                         <?php $no++; ?>
                       <?php } ?>

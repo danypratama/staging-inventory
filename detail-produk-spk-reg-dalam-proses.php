@@ -193,26 +193,39 @@ include "function/class-spk.php";
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
                             <?php
-                            $id_spk = base64_decode($_GET['id']);
-                            ?>
-                            <input type="hidden" name="id_spk_reg" value="<?php echo $id_spk ?>">
-                            <?php  
-                                $sql_cek_empty = mysqli_query($connect,"SELECT sr.id_spk_reg, sr.id_inv, trx.id_transaksi
-                                                                        FROM  transaksi_produk_reg AS trx
-                                                                        LEFT JOIN spk_reg sr ON sr.id_spk_reg = trx.id_spk
-                                                                        WHERE sr.id_spk_reg = '$id_spk'");
-                                $data_cek_empty = mysqli_num_rows($sql_cek_empty);
+                                $id_spk = base64_decode($_GET['id']);
                             ?>
                             <?php  
-                                if ($data_cek_empty != 0) {
+                                include "koneksi.php";
+                                $id_role = $_SESSION['tiket_role'];
+                                $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                                $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                $data_role = mysqli_fetch_array($query_role);
+                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
                                     ?>
-                                        
-                                        <button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#siapKirim"><i class="bi bi-send"></i> Siap Kirim</button>
+                                        <input type="hidden" name="id_spk_reg" value="<?php echo $id_spk ?>">
+                                        <?php  
+                                            $sql_cek_empty = mysqli_query($connect,"SELECT sr.id_spk_reg, sr.id_inv, trx.id_transaksi
+                                                                                    FROM  transaksi_produk_reg AS trx
+                                                                                    LEFT JOIN spk_reg sr ON sr.id_spk_reg = trx.id_spk
+                                                                                    WHERE sr.id_spk_reg = '$id_spk'");
+                                            $data_cek_empty = mysqli_num_rows($sql_cek_empty);
+                                        ?>
+                                        <?php  
+                                            if ($data_cek_empty != 0) {
+                                                ?>
+                                                    
+                                                    <button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#siapKirim"><i class="bi bi-send"></i> Siap Kirim</button>
+                                                <?php
+                                            } else {
+                                                $update_spk = mysqli_query($connect,"UPDATE spk_reg SET status_spk = 'Belum Diproses' WHERE id_spk_reg = '$id_spk'");
+                                            }
+                                        ?>
                                     <?php
-                                } else {
-                                    $update_spk = mysqli_query($connect,"UPDATE spk_reg SET status_spk = 'Belum Diproses' WHERE id_spk_reg = '$id_spk'");
                                 }
+                            
                             ?>
+                            
                         </div>
                         <table class="table table-striped table-bordered">
                             <thead>
@@ -223,7 +236,14 @@ include "function/class-spk.php";
                                     <th class="text-center p-3 text-nowrap" style="width:100px">Merk</th>
                                     <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
                                     <th class="text-center p-3 text-nowrap" style="width:80px">Qty Order</th>
-                                    <th class="text-center p-3 text-nowrap" style="width:80px">Aksi</th>
+                                    <?php  
+                                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
+                                            ?>
+                                                <th class="text-center p-3 text-nowrap" style="width:80px">Aksi</th>
+                                            <?php
+                                        }
+                                    
+                                    ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -278,9 +298,15 @@ include "function/class-spk.php";
                                         <td class="text-center"><?php echo $nama_merk ?></td>
                                         <td class="text-end"><?php echo number_format($harga) ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
-                                        <td class="text-center">
-                                            <a href="proses/proses-produk-spk-reg.php?hapus_trx=<?php echo base64_encode($data_trx['id_transaksi']) ?> && id_spk=<?php echo base64_encode($data_trx['id_spk_reg']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                                        </td>
+                                        <?php  
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
+                                                ?>
+                                                    <td class="text-center">
+                                                        <a href="proses/proses-produk-spk-reg.php?hapus_trx=<?php echo base64_encode($data_trx['id_transaksi']) ?> && id_spk=<?php echo base64_encode($data_trx['id_spk_reg']) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                    </td>
+                                                <?php
+                                            }                               
+                                        ?>
                                     </tr>
                                     <?php $no++; ?>
                                 <?php } ?>

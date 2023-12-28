@@ -62,16 +62,6 @@ include "akses.php";
                                                     unset($_SESSION['info']); ?>"></div>
             <!-- END SWEET ALERT -->
             <div class="card">
-                <div class="card-body mt-3">
-                    <div class="row mt-4 text-center">
-                        <div class="mb-4" style="width: 180px;">
-                            <a href="form-create-spk-reg.php" class="btn btn-primary btn-sm p-2"><i
-                                    class="bi bi-plus-circle"></i> Buat SPK Reguler</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
                 <div class="mt-4">
                     <ul class="nav nav-tabs d-flex ms-3 me-3 justify-content-between" role="tablist" id="myTab"
                         role="tablist">
@@ -321,47 +311,56 @@ include "akses.php";
                                                         </select>
                                                     </form>
                                                 </div>
-                                                <div class="col-6">
-                                                    <div class="row">
-                                                        <div class="mb-3" style="width: 220px;">
-                                                            <input id="nonPpnButton" type="button" name="inv-nonppn"
-                                                                class="btn btn-primary btn-md"
-                                                                value="Buat Invoice Non PPN"
-                                                                onclick="submitForm('form-invoice-nonppn.php')">
-                                                        </div>
-                                                        <div class="mb-3" style="width: 190px;">
-                                                            <input id="ppnButton" type="button"
-                                                                class="btn btn-secondary btn-md"
-                                                                value="Buat Invoice PPN"
-                                                                onclick="submitForm('form-invoice-ppn.php')">
-                                                        </div>
-                                                        <div class="mb-3" style="width: 200px;">
-                                                            <input id="bumButton" type="button" id="Invoice-BUM"
-                                                                class="btn btn-warning btn-md" value="Buat Invoice BUM"
-                                                                onclick="submitForm('form-invoice-bum.php')">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <?php  
+                                                    include "koneksi.php";
+                                                    $id_role = $_SESSION['tiket_role'];
+                                                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                                                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                                    $data_role = mysqli_fetch_array($query_role);
+                                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
+                                                        ?>
+                                                            <div class="col-6">
+                                                                <div class="row">
+                                                                    <div class="mb-3" style="width: 220px;">
+                                                                        <input id="nonPpnButton" type="button" name="inv-nonppn"
+                                                                            class="btn btn-primary btn-md"
+                                                                            value="Buat Invoice Non PPN"
+                                                                            onclick="submitForm('form-invoice-nonppn.php')">
+                                                                    </div>
+                                                                    <div class="mb-3" style="width: 190px;">
+                                                                        <input id="ppnButton" type="button"
+                                                                            class="btn btn-secondary btn-md"
+                                                                            value="Buat Invoice PPN"
+                                                                            onclick="submitForm('form-invoice-ppn.php')">
+                                                                    </div>
+                                                                    <div class="mb-3" style="width: 200px;">
+                                                                        <input id="bumButton" type="button" id="Invoice-BUM"
+                                                                            class="btn btn-warning btn-md" value="Buat Invoice BUM"
+                                                                            onclick="submitForm('form-invoice-bum.php')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php
+                                                    }
+                                                ?>
                                             </div>
                                             <table class="table table-bordered table-striped" id="table2">
                                                 <thead>
                                                     <tr class="text-white" style="background-color: navy;">
-                                                        <th class="text-center p-3 text-nowrap" style="width: 20px">
-                                                            Pilih</th>
-                                                        <th class="text-center p-3 text-nowrap" style="width: 30px">No
-                                                        </th>
-                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">No.
-                                                            SPK</th>
-                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">
-                                                            Tgl. SPK</th>
-                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">No.
-                                                            PO</th>
-                                                        <th class="text-center p-3 text-nowrap" style="width: 200px">
-                                                            Nama Customer</th>
-                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">
-                                                            Note SPK</th>
-                                                        <th class="text-center p-3 text-nowrap" style="width: 70px">
-                                                            Aksi</th>
+                                                        <?php  
+                                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
+                                                                ?>
+                                                                    <th class="text-center p-3 text-nowrap" style="width: 20px">Pilih</th>
+                                                                <?php
+                                                            }
+                                                        ?>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">No.SPK</th>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. SPK</th>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">No.PO</th>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 200px">Nama Customer</th>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">Note SPK</th>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 70px">Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -384,10 +383,16 @@ include "akses.php";
                                                     while ($data = mysqli_fetch_array($query)) {
                                                     ?>
                                                     <tr>
-                                                        <td class="text-center text-nowrap"><input type="checkbox"
+                                                        <?php  
+                                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
+                                                                ?>
+                                                                   <td class="text-center text-nowrap"><input type="checkbox"
                                                                 name="spk_id[]" id="spk"
                                                                 value="<?php echo $data['id_spk_reg'] ?>"
                                                                 data-customer="<?php echo $data['nama_cs'] ?>"></td>
+                                                                <?php
+                                                            }
+                                                        ?>
                                                         <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                                         <td class="text-center text-nowrap"><?php echo $data['no_spk'] ?></td>
                                                         <td class="text-center text-nowrap"><?php echo $data['tgl_spk'] ?></td>
@@ -416,15 +421,30 @@ include "akses.php";
                                                                 }
                                                             ?>
                                                         </td>
-                                                        <td class="text-center text-nowrap">
-                                                            <a href="detail-produk-spk-reg-siap-kirim.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>"
-                                                                class="btn btn-primary btn-sm mb-2" title="Lihat Produk">
-                                                                <i class="bi bi-eye-fill"></i>
-                                                            </a>
-                                                            <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm mb-2" title="Cancel Order">
-                                                                <i class="bi bi-x-circle"></i>
-                                                            </a>
-                                                        </td>
+                                                        <?php  
+                                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
+                                                                ?>
+                                                                   <td class="text-center text-nowrap">
+                                                                        <a href="detail-produk-spk-reg-siap-kirim.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>"
+                                                                            class="btn btn-primary btn-sm mb-2" title="Lihat Produk">
+                                                                            <i class="bi bi-eye-fill"></i>
+                                                                        </a>
+                                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm mb-2" title="Cancel Order">
+                                                                            <i class="bi bi-x-circle"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                <?php
+                                                            } else {
+                                                                ?>
+                                                                    <td class="text-center text-nowrap">
+                                                                        <a href="detail-produk-spk-reg-siap-kirim.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>"
+                                                                            class="btn btn-primary btn-sm mb-2" title="Lihat Produk">
+                                                                            <i class="bi bi-eye-fill"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                <?php
+                                                            }
+                                                        ?>
                                                         <!-- Modal Cancel -->
                                                         <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered">

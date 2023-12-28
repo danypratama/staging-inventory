@@ -201,30 +201,7 @@ include "function/class-spk.php";
                             <a href="spk-reg.php?sort=baru" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
-                            <button type="button" id="btnTambahProduk" class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
-                                <i class="bi bi-plus-circle"></i> Tambah Produk
-                            </button>
                             <?php  
-                                include 'koneksi.php';
-                                $sql_cetak = "  SELECT 
-                                                    spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
-                                                FROM spk_reg AS spk
-                                                JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
-                                                WHERE spk.id_spk_reg = '$id_spk'";
-                                $query_cetak = mysqli_query($connect, $sql_cetak);
-                                $data_cetak = mysqli_fetch_array($query_cetak);
-                                $total_query_cetak = mysqli_num_rows($query_cetak);
-                                $status_tmp = $data_cetak['sum_status'];
-
-                                if($total_query_cetak != 0 && $status_tmp != 0){
-                                    ?>
-                                        <a class="btn btn-info btn-detail mb-2" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
-                                            <i class="bi bi-plus-circle"></i> Cetak SPK
-                                        </a>  
-                                    <?php
-                                }
-                            ?>
-                            <?php
                                 $id_spk_decode = base64_decode($_GET['id']);
                                 $sql_thead = "SELECT 
                                                 sr.id_spk_reg,
@@ -236,18 +213,52 @@ include "function/class-spk.php";
 
                                 $query_thead = mysqli_query($connect, $sql_thead);
                                 $data_thead = mysqli_fetch_array($query_thead);
-
                                 $totalRows = mysqli_num_rows($query_thead); // Menampilkan total baris hasil kueri
+                            ?>
+                            <?php  
+                                include "koneksi.php";
+                                $id_role = $_SESSION['tiket_role'];
+                                $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                                $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                $data_role = mysqli_fetch_array($query_role);
+                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
+                                    ?>
+                                        <button type="button" id="btnTambahProduk" class="btn btn-primary btn-detail mb-2" data-spk="<?php echo $data['id_spk_reg'] ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                                            <i class="bi bi-plus-circle"></i> Tambah Produk
+                                        </button>
+                                        <?php  
+                                            include 'koneksi.php';
+                                            $sql_cetak = "  SELECT 
+                                                                spk.id_spk_reg, tmp.id_spk, SUM(tmp.status_tmp) AS sum_status 
+                                                            FROM spk_reg AS spk
+                                                            JOIN tmp_produk_spk tmp ON (spk.id_spk_reg = tmp.id_spk) 
+                                                            WHERE spk.id_spk_reg = '$id_spk'";
+                                            $query_cetak = mysqli_query($connect, $sql_cetak);
+                                            $data_cetak = mysqli_fetch_array($query_cetak);
+                                            $total_query_cetak = mysqli_num_rows($query_cetak);
+                                            $status_tmp = $data_cetak['sum_status'];
 
-                                if (!empty($data_thead) && $data_thead['status_cetak'] == 1) {
-                                    // Button Hide and show
-                                    echo '<button type="submit" class="btn btn-secondary mb-2" name="simpan-trx"><i class="bi bi-send"></i> Proses Pesanan</button>';
+                                            if($total_query_cetak != 0 && $status_tmp != 0){
+                                                ?>
+                                                    <a class="btn btn-info btn-detail mb-2" href="cetak-spk.php?id=<?php echo base64_encode($id_spk) ?>">
+                                                        <i class="bi bi-plus-circle"></i> Cetak SPK
+                                                    </a>  
+                                                <?php
+                                            }
+                                        ?>
+                                        <?php
+                                            if (!empty($data_thead) && $data_thead['status_cetak'] == 1) {
+                                                // Button Hide and show
+                                                echo '<button type="submit" class="btn btn-secondary mb-2" name="simpan-trx"><i class="bi bi-send"></i> Proses Pesanan</button>';
+                                            }
+                                        ?>
+                                    <?php 
                                 }
                             ?>
                             <table class="table table-striped table-bordered" id="table2">
                                 <?php
                                 if ($totalRows != 0) {
-                                    echo ' 
+                                    ?>
                                         <thead>
                                             <tr class="text-white" style="background-color: #051683;">
                                                 <th class="text-center p-3 text-nowrap" style="width:20px">No</th>
@@ -256,9 +267,16 @@ include "function/class-spk.php";
                                                 <th class="text-center p-3 text-nowrap" style="width:100px">Merk</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:80px">Qty Order</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:80px">Aksi</th>
+                                                <?php  
+                                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
+                                                        ?>
+                                                            <th class="text-center p-3 text-nowrap" style="width:80px">Aksi</th>
+                                                        <?php
+                                                    }
+                                                ?>
                                             </tr>
-                                        </thead>  ';
+                                        </thead> 
+                                    <?php
                                 }
                                 ?>
                                 <tbody>
@@ -321,10 +339,16 @@ include "function/class-spk.php";
                                             <td class="text-nowrap"><input type="text" class="text-center" value="<?php echo $nama_merk ?>" readonly></td>
                                             <td class="text-nowrap"><input type="text" class="text-end" name="harga[]" value="<?php echo number_format($harga) ?>" readonly></td>
                                             <td class="text-nowrap"><input type="text" class="text-end" name="qty[]" value="<?php echo number_format($data_trx['qty']) ?>" readonly></td>
-                                            <td class="text-center text-nowrap">
-                                                <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?php echo $data_trx['id_tmp'] ?>" data-spk="<?php echo $id_spk_decode ?>" data-nama="<?php echo $namaProduk ?>" data-merk="<?php echo $nama_merk ?>" data-stock="<?php echo $stock_edit ?>" data-qty="<?php echo $data_trx['qty'] ?>"><i class="bi bi-pencil"></i></a>
-                                                <a href="proses/proses-produk-spk-reg.php?hapus_tmp=<?php echo base64_encode($data_trx['id_tmp']) ?>&&id_spk=<?php echo base64_encode($id_spk_decode) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                                            </td>
+                                            <?php  
+                                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
+                                                    ?>
+                                                        <td class="text-center text-nowrap">
+                                                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?php echo $data_trx['id_tmp'] ?>" data-spk="<?php echo $id_spk_decode ?>" data-nama="<?php echo $namaProduk ?>" data-merk="<?php echo $nama_merk ?>" data-stock="<?php echo $stock_edit ?>" data-qty="<?php echo $data_trx['qty'] ?>"><i class="bi bi-pencil"></i></a>
+                                                            <a href="proses/proses-produk-spk-reg.php?hapus_tmp=<?php echo base64_encode($data_trx['id_tmp']) ?>&&id_spk=<?php echo base64_encode($id_spk_decode) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                        </td>
+                                                    <?php
+                                                }
+                                            ?>
                                             <!-- Modal Edit -->
                                             <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">

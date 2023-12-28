@@ -144,7 +144,17 @@
 
                     $update_inv_komplain = mysqli_query($connect, "UPDATE inv_komplain SET status_komplain = '1' WHERE id_komplain = '$id_komplain'");
 
-                    if ($update_inv && $create_finance && $create_finance && $update_inv_revisi && $update_inv_komplain) {
+                    $query_history_produk = mysqli_query($connect, "INSERT IGNORE INTO 
+                                                            history_produk_terjual (id_trx_history, id_inv, id_produk, qty)
+                                                        SELECT
+                                                            tpr.id_transaksi,
+                                                            tpr.id_inv,
+                                                            tpr.id_produk,
+                                                            tpr.qty
+                                                        FROM tmp_produk_komplain AS tpr
+                                                        WHERE tpr.id_inv = '$id_inv'");
+
+                    if ($update_inv && $create_finance && $create_finance && $update_inv_revisi && $update_inv_komplain && $query_history_produk) {
                         // Commit transaksi
                         $connect->commit();
                         ?>

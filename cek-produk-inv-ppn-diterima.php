@@ -411,11 +411,26 @@ include "function/class-spk.php";
                             </button>
                             <!-- End Button Modal Bukti Terima -->
                             
-                            <!-- Trx Selesai -->
-                            <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#trxSelesai">
-                                <i class="bi bi-check2-circle"></i> Ubah Status
-                            </button>
-                            <!-- End Trx Selesai -->  
+                            <?php  
+                                include "koneksi.php";
+                                $id_role = $_SESSION['tiket_role'];
+                                $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                                $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                $data_role = mysqli_fetch_array($query_role);
+                            ?>
+
+                            <?php  
+                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
+                                    ?>
+                                         <!-- Trx Selesai -->
+                                        <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#trxSelesai">
+                                            <i class="bi bi-check2-circle"></i> Ubah Status
+                                        </button>
+                                        <!-- End Trx Selesai --> 
+                                    <?php
+                                }
+                            
+                            ?> 
 
                             <?php
                             $id_inv_ppn = base64_decode($_GET['id']);

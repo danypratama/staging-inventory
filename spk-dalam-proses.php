@@ -62,15 +62,6 @@ include "akses.php";
                                                     unset($_SESSION['info']); ?>"></div>
             <!-- END SWEET ALERT -->
             <div class="card">
-                <div class="card-body mt-3">
-                    <div class="row mt-4 text-center">
-                        <div class="mb-4" style="width: 180px;">
-                            <a href="form-create-spk-reg.php" class="btn btn-primary btn-sm p-2"><i class="bi bi-plus-circle"></i> Buat SPK Reguler</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
                 <div class="mt-4">
                     <ul class="nav nav-tabs d-flex ms-3 me-3 justify-content-between" role="tablist" id="myTab" role="tablist">
                         <li class="nav-item flex-fill" role="presentation">
@@ -376,10 +367,28 @@ include "akses.php";
                                                             }
                                                         ?>
                                                     </td>
-                                                    <td class="text-center text-nowrap">
-                                                        <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm"  title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
-                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order"><i class="bi bi-x-circle"></i></a>
-                                                    </td>
+                                                    <?php  
+                                                        include "koneksi.php";
+                                                        $id_role = $_SESSION['tiket_role'];
+                                                        $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                                                        $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                                        $data_role = mysqli_fetch_array($query_role);
+                                                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
+                                                            ?>
+                                                               <td class="text-center text-nowrap">
+                                                                    <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm"  title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order"><i class="bi bi-x-circle"></i></a>
+                                                                </td>
+                                                            <?php
+                                                        } else {
+                                                            ?>
+                                                                <td class="text-center text-nowrap">
+                                                                    <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm"  title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                                </td>
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                    
                                                     <!-- Modal -->
                                                     <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog modal-dialog-centered">

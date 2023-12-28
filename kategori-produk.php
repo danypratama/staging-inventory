@@ -59,7 +59,18 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-3">
-            <a href="#" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modal1"><i class="bi bi-plus-circle"></i> Tambah data kategori produk</a>
+            <?php  
+               include "koneksi.php";
+               $id_role = $_SESSION['tiket_role'];
+               $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+               $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+               $data_role = mysqli_fetch_array($query_role);
+               if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                ?>
+                  <a href="#" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modal1"><i class="bi bi-plus-circle"></i> Tambah data kategori produk</a>
+                <?php 
+               }
+            ?>
             <div class="table-responsive mt-3">
               <table class="table table-striped table-bordered" id="table1">
                 <thead>
@@ -71,7 +82,14 @@ include "akses.php";
                     <td class="text-center p-3 text-nowrap">Tgl. Terbit</td>
                     <td class="text-center p-3 text-nowrap">Tgl. Berlaku Sampai</td>
                     <td class="text-center p-3 text-nowrap">Sisa Waktu Perpanjangan</td>
-                    <td class="text-center p-3 text-nowrap">Aksi</td>
+                    <?php  
+                      if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                        ?>
+                            <td class="text-center p-3 text-nowrap">Aksi</td>
+                        <?php 
+                       }
+                    ?>
+                  
                   </tr>
                 </thead>
                 <tbody>
@@ -151,12 +169,18 @@ include "akses.php";
                           }
                         ?>
                       </td>
-                      <td class="text-center text-nowrap">
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_kat_produk']; ?>" data-nama="<?php echo $data['nama_kategori']; ?>" data-merk="<?php echo $data['nama_merk'] ?>" data-nie="<?php echo $data['no_izin_edar'] ?>" data-terbit="<?php echo $data['tgl_terbit'] ?>" data-exp="<?php echo $data['berlaku_sampai'] ?>">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <a href="proses/proses-kat-produk.php?hapus-kat-produk=<?php echo $id_kat ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                      </td>
+                      <?php  
+                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                          ?>
+                            <td class="text-center text-nowrap">
+                              <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-id="<?php echo $data['id_kat_produk']; ?>" data-nama="<?php echo $data['nama_kategori']; ?>" data-merk="<?php echo $data['nama_merk'] ?>" data-nie="<?php echo $data['no_izin_edar'] ?>" data-terbit="<?php echo $data['tgl_terbit'] ?>" data-exp="<?php echo $data['berlaku_sampai'] ?>">
+                                <i class="bi bi-pencil"></i>
+                              </button>
+                              <a href="proses/proses-kat-produk.php?hapus-kat-produk=<?php echo $id_kat ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                            </td>
+                          <?php 
+                         }
+                      ?>
                     </tr>
                     <?php $no++; ?>
                   <?php } ?>

@@ -394,6 +394,13 @@ include "function/class-spk.php";
                                 <i class="bi bi-arrow-left"></i>
                                 Halaman Sebelumnya
                             </a>
+                            <?php  
+                                include "koneksi.php";
+                                $id_role = $_SESSION['tiket_role'];
+                                $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                                $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                $data_role = mysqli_fetch_array($query_role);
+                            ?>
                             <?php
                             $id_inv_ppn = base64_decode($_GET['id']);
                             $sql_cek = "SELECT
@@ -408,111 +415,116 @@ include "function/class-spk.php";
                             $total_data = mysqli_num_rows($query_cek);
                             ?>
                             <?php
-                                include "koneksi.php";
-                                $sql_bukti_kirim = "SELECT id_inv FROM inv_bukti_terima WHERE id_inv = '$id_inv_ppn'";
-                                $query_bukti_kirim = mysqli_query($connect, $sql_bukti_kirim);
-                                $total_row = mysqli_num_rows($query_bukti_kirim);
-                                if ($total_row > 0 && $data_cek['jenis_pengiriman'] == 'Ekspedisi' && $data_cek['jenis_penerima'] == 'Ekspedisi') {
-                                    echo '
-                                    <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
-                                        <i class="bi bi-file-earmark-image"></i> Bukti Kirim
-                                    </button>
-
-                                    <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
-                                        data-bs-target="#DiterimaEx">
-                                        <i class="bi bi-send"></i>
-                                        Diterima
-                                    </button>
-
-                                    <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal"
-                                        data-bs-target="#editOngkir">
-                                        <i class="bi bi-pencil"></i>
-                                        Edit Ongkir Dan No. Resi
-                                    </button>
-                                    ';
-                                } else if ($total_row > 0 && $data_cek['jenis_pengiriman'] == 'Driver' && $data_cek['jenis_penerima'] == 'Ekspedisi'){
-                                    echo '
-                                    <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
-                                        <i class="bi bi-file-earmark-image"></i> Bukti Kirim
-                                    </button>
-
-                                    <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
-                                        data-bs-target="#DiterimaEx">
-                                        <i class="bi bi-send"></i>
-                                        Diterima
-                                    </button>
-                                    ';
-                                } else {
-                                    ?>
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#ubahDriver">
-                                            <i class="bi bi-arrow-repeat"></i> Ubah Driver
-                                        </button>
-                                    <?php
-                                }
-                            ?>
-                            <!-- Ubah Jenis Pengiriman -->
-                            <!-- Button trigger modal -->
-                            <a href="proses/proses-ubah-pengiriman.php?id_status_kirim=<?php echo base64_encode($id_status_kirim) ?>&&id_inv=<?php echo base64_encode($id_inv) ?>" class="btn btn-warning mb-2 update-data">
-                                <i class="bi bi-arrow-repeat"></i> Ubah Jenis Pengiriman
-                            </a>
-
-                            <?php
-                                // Eksekusi query SQL
-                                $result = mysqli_query($connect, "SELECT 
-                                                        ppn.id_inv_ppn,
-                                                        trx.status_trx
-                                                        FROM inv_ppn AS ppn
-                                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                        WHERE ppn.id_inv_ppn = '$id_inv_ppn'  ORDER BY no_spk ASC");
-                                $tombolDitampilkan = false;
-                                // Inisialisasi variabel untuk status kosong
-                                while ($row = mysqli_fetch_array($result)) {
-                                    $status_trx = $row['status_trx'];
+                              if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
                                 ?>
                                     <?php
-                                    if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
-                                        echo ' 
-                                                <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_ppn) . '">
-                                                <a href="cetak-inv-ppn-reg.php?id=' . base64_encode($id_inv_ppn) . '" class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
-                                                <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_ppn) . '">
-                                                <a href="generate_pdf_ppn.php?id=' . base64_encode($id_inv_ppn) . '" class="btn btn-info mb-2"><i class="bi bi-file-pdf"></i> Cetak PDF</a>
-                                                ';
+                                        include "koneksi.php";
+                                        $sql_bukti_kirim = "SELECT id_inv FROM inv_bukti_terima WHERE id_inv = '$id_inv_ppn'";
+                                        $query_bukti_kirim = mysqli_query($connect, $sql_bukti_kirim);
+                                        $total_row = mysqli_num_rows($query_bukti_kirim);
+                                        if ($total_row > 0 && $data_cek['jenis_pengiriman'] == 'Ekspedisi' && $data_cek['jenis_penerima'] == 'Ekspedisi') {
+                                            echo '
+                                            <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
+                                                <i class="bi bi-file-earmark-image"></i> Bukti Kirim
+                                            </button>
 
-                                        // Set variabel $tombolDitampilkan menjadi true
-                                        $tombolDitampilkan = true;
-                                    }
-                                ?>
-                            <?php } ?>
+                                            <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
+                                                data-bs-target="#DiterimaEx">
+                                                <i class="bi bi-send"></i>
+                                                Diterima
+                                            </button>
 
-                            <?php  
-                                $cek_button = mysqli_query($connect, "  SELECT 
-                                                                            id_inv_ppn, kwitansi, surat_jalan
-                                                                        FROM inv_ppn 
-                                                                        WHERE id_inv_ppn = '$id_inv_ppn'");
-                                $data_button = mysqli_fetch_array($cek_button);
-                                $id_inv_ppn = $data_button['id_inv_ppn'];
-                                $kwitansi = $data_button['kwitansi'];
-                                $surat_jalan = $data_button['surat_jalan'];
-                                if($kwitansi == '1' && $surat_jalan == '1'){
+                                            <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal"
+                                                data-bs-target="#editOngkir">
+                                                <i class="bi bi-pencil"></i>
+                                                Edit Ongkir Dan No. Resi
+                                            </button>
+                                            ';
+                                        } else if ($total_row > 0 && $data_cek['jenis_pengiriman'] == 'Driver' && $data_cek['jenis_penerima'] == 'Ekspedisi'){
+                                            echo '
+                                            <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
+                                                <i class="bi bi-file-earmark-image"></i> Bukti Kirim
+                                            </button>
+
+                                            <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
+                                                data-bs-target="#DiterimaEx">
+                                                <i class="bi bi-send"></i>
+                                                Diterima
+                                            </button>
+                                            ';
+                                        } else {
+                                            ?>
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#ubahDriver">
+                                                    <i class="bi bi-arrow-repeat"></i> Ubah Driver
+                                                </button>
+                                            <?php
+                                        }
                                     ?>
-                                         <a href="cetak-kwitansi.php?id_inv=<?php echo base64_encode($id_inv_ppn) ?>" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Kwitansi</a>
-                                        <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
-                                    <?php
-                                } else if($kwitansi == '1' && $surat_jalan == '0'){
-                                    ?>
-                                        <a href="cetak-kwitansi.php?id_inv=<?php echo base64_encode($id_inv_ppn) ?>" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Kwitansi</a>
-                                    <?php
-                                } else if($kwitansi == '0' && $surat_jalan == '1'){
-                                    ?>
-                                        <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
-                                    <?php
-                                } else {
 
-                                }
+                                    <!-- Ubah Jenis Pengiriman -->
+                                    <a href="proses/proses-ubah-pengiriman.php?id_status_kirim=<?php echo base64_encode($id_status_kirim) ?>&&id_inv=<?php echo base64_encode($id_inv) ?>" class="btn btn-warning mb-2 update-data">
+                                        <i class="bi bi-arrow-repeat"></i> Ubah Jenis Pengiriman
+                                    </a>
 
-                            
+                                    <?php
+                                        // Eksekusi query SQL
+                                        $result = mysqli_query($connect, "SELECT 
+                                                                ppn.id_inv_ppn,
+                                                                trx.status_trx
+                                                                FROM inv_ppn AS ppn
+                                                                JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                                WHERE ppn.id_inv_ppn = '$id_inv_ppn'  ORDER BY no_spk ASC");
+                                        $tombolDitampilkan = false;
+                                        // Inisialisasi variabel untuk status kosong
+                                        while ($row = mysqli_fetch_array($result)) {
+                                            $status_trx = $row['status_trx'];
+                                        ?>
+                                            <?php
+                                            if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
+                                                echo ' 
+                                                        <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_ppn) . '">
+                                                        <a href="cetak-inv-ppn-reg.php?id=' . base64_encode($id_inv_ppn) . '" class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
+                                                        <input type="hidden" name="id_spk_reg" value="' . base64_encode($id_inv_ppn) . '">
+                                                        <a href="generate_pdf_ppn.php?id=' . base64_encode($id_inv_ppn) . '" class="btn btn-info mb-2"><i class="bi bi-file-pdf"></i> Cetak PDF</a>
+                                                        ';
+
+                                                // Set variabel $tombolDitampilkan menjadi true
+                                                $tombolDitampilkan = true;
+                                            }
+                                        ?>
+                                    <?php } ?>
+                                    <?php  
+                                        $cek_button = mysqli_query($connect, "  SELECT 
+                                                                                    id_inv_ppn, kwitansi, surat_jalan
+                                                                                FROM inv_ppn 
+                                                                                WHERE id_inv_ppn = '$id_inv_ppn'");
+                                        $data_button = mysqli_fetch_array($cek_button);
+                                        $id_inv_ppn = $data_button['id_inv_ppn'];
+                                        $kwitansi = $data_button['kwitansi'];
+                                        $surat_jalan = $data_button['surat_jalan'];
+                                        if($kwitansi == '1' && $surat_jalan == '1'){
+                                            ?>
+                                                <a href="cetak-kwitansi.php?id_inv=<?php echo base64_encode($id_inv_ppn) ?>" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Kwitansi</a>
+                                                <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
+                                            <?php
+                                        } else if($kwitansi == '1' && $surat_jalan == '0'){
+                                            ?>
+                                                <a href="cetak-kwitansi.php?id_inv=<?php echo base64_encode($id_inv_ppn) ?>" class="btn btn-success mb-2"><i class="bi bi-printer-fill"></i> Cetak Kwitansi</a>
+                                            <?php
+                                        } else if($kwitansi == '0' && $surat_jalan == '1'){
+                                            ?>
+                                                <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#cetakSuratJalan"><i class="bi bi-printer-fill"></i> Cetak Surat Jalan</button>
+                                            <?php
+                                        } else {
+
+                                        }
+
+                                    
+                                    ?>
+                                <?php
+                              }
                             ?>
                         </div>
                     </div>
@@ -638,10 +650,8 @@ include "function/class-spk.php";
                     $hasil_sp_disc = $sp_disc / 100;
                     $total_sp_disc = $sub_total * $hasil_sp_disc;
                     $grand_total = $sub_total - $total_sp_disc;
-                    $grand_total_ppn = ($grand_total * 1.11) + $ongkir;
-                    $update_total_inv = mysqli_query($connect, "UPDATE inv_ppn SET total_inv = '$grand_total_ppn' WHERE id_inv_ppn = '$id_inv'");
-
-                    echo $grand_total_ppn;
+                    $grand_total_ppn = $grand_total + $ongkir;
+                    $update_total_inv = mysqli_query($connect, "UPDATE inv_ppn SET total_inv = '$grand_total_ppn' WHERE id_inv_ppn = '$id_inv'")
                 ?>
             </div>
         </section>
