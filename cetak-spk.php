@@ -166,9 +166,9 @@ include "function/class-spk.php";
                 <tr>
                     <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>
                     <td class="text-center p-3 text-nowrap" style="width: 350px">Nama Produk</td>
+                    <td class="text-center p-3 text-nowrap" style="width: 100px">Qty Order</td>
                     <td class="text-center p-3 text-nowrap" style="width: 100px">Satuan</td>
                     <td class="text-center p-3 text-nowrap" style="width: 100px">Merk</td>
-                    <td class="text-center p-3 text-nowrap" style="width: 100px">Qty Order</td>
                 </tr>
             </thead>
             <tbody>
@@ -186,6 +186,7 @@ include "function/class-spk.php";
                                 tps.id_produk,
                                 tps.qty,
                                 tps.status_tmp, 
+                                tps.created_date,
                                 spr.stock, 
                                 tpr.nama_produk, 
                                 tpr.satuan,
@@ -201,7 +202,7 @@ include "function/class-spk.php";
                             LEFT JOIN tb_produk_set_marwa tpsm ON tps.id_produk = tpsm.id_set_marwa
                             LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                             LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                            WHERE sr.id_spk_reg = '$id_spk' AND tps.status_tmp = '1'";
+                            WHERE sr.id_spk_reg = '$id_spk' AND tps.status_tmp = '1' ORDER BY tps.created_date ASC";
                 $trx_produk_reg = mysqli_query($connect, $sql_trx);
                 $total_rows = mysqli_num_rows($trx_produk_reg);
                 while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
@@ -222,9 +223,9 @@ include "function/class-spk.php";
                     <tr>
                         <td class="text-nowrap"><?php echo $no; ?></td>
                         <td class="text-left"><?php echo $namaProduk ?></td>
+                        <td class="text-nowrap"><?php echo number_format($data_trx['qty']) ?></td>
                         <td class="text-center text-nowrap"><?php echo $satuan_produk ?></td>
                         <td class="text-nowrap"><?php echo $nama_merk ?></td>
-                        <td class="text-nowrap"><?php echo number_format($data_trx['qty']) ?></td>
                     </tr>
                     <?php $no++; ?>
                 <?php } ?>

@@ -255,7 +255,7 @@ include "function/class-spk.php";
                                     <?php 
                                 }
                             ?>
-                            <table class="table table-striped table-bordered" id="table2">
+                            <table class="table table-striped table-bordered">
                                 <?php
                                 if ($totalRows != 0) {
                                     ?>
@@ -293,7 +293,8 @@ include "function/class-spk.php";
                                                     tps.id_tmp,
                                                     tps.id_produk,
                                                     tps.qty,
-                                                    tps.status_tmp, 
+                                                    tps.status_tmp,
+                                                    tps.created_date, 
                                                     spr.stock, 
                                                     tpr.nama_produk, 
                                                     tpr.satuan,
@@ -309,7 +310,7 @@ include "function/class-spk.php";
                                                 LEFT JOIN tb_produk_set_marwa tpsm ON tps.id_produk = tpsm.id_set_marwa
                                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                                WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1'";
+                                                WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1' ORDER BY tps.created_date ASC";
                                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                         $uuid = generate_uuid();
@@ -331,6 +332,7 @@ include "function/class-spk.php";
                                             <input type="hidden" name="id_inv[]" value="<?php echo $data_trx['id_inv'] ?>" readonly>
                                             <input type="hidden" name="id_transaksi[]" id="id_<?php echo $data_trx['id_tmp'] ?>" value="TRX-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>" readonly>
                                             <input type="hidden" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>">
+                                            <input type="hidden" name="created_date[]" value="<?php echo $data_trx['created_date'] ?>" readonly>
                                             <input type="hidden" class="form-control" name="id_spk_reg[]" value="<?php echo $id_spk_decode ?>" readonly>
                                             <input type="hidden" class="form-control" name="id_produk[]" value="<?php echo $data_trx['id_produk'] ?>" readonly>
                                             <td class="text-nowrap"><input type="text" class="text-center" value="<?php echo $no; ?>" readonly></td>
@@ -404,7 +406,8 @@ include "function/class-spk.php";
                                             sr.id_spk_reg,
                                             tps.id_tmp,
                                             tps.id_produk,
-                                            tps.status_tmp, 
+                                            tps.status_tmp,
+                                            tps.created_date,
                                             spr.stock, 
                                             tpr.nama_produk, 
                                             tpr.satuan,
@@ -420,7 +423,7 @@ include "function/class-spk.php";
                                         LEFT JOIN tb_produk_set_marwa tpsm ON tps.id_produk = tpsm.id_set_marwa
                                         LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                         LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                        WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0'";
+                                        WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0' ORDER BY tps.created_date ASC";
                                 $query = mysqli_query($connect, $sql);
                                 $totalRows = mysqli_num_rows($query);
                                 if ($totalRows != 0) {
@@ -454,19 +457,19 @@ include "function/class-spk.php";
                                                 <input type="text" class="form-control text-center bg-light mobile" value="<?php echo $no; ?>" readonly>
                                                 <?php $no++ ?>
                                             </div>
-                                            <div class="col-sm-3 mb-2">
+                                            <div class="col-sm-5 mb-2">
                                                 <input type="hidden" name="id_tmp[]" id="id_<?php echo $data['id_tmp'] ?>" value="<?php echo $data['id_tmp'] ?>" readonly>
                                                 <input type="hidden" class="form-control" name="id_spk_reg_tmp[]" value="<?php echo $id_spk_reg ?>" readonly>
                                                 <input type="hidden" class="form-control" name="id_produk_tmp[]" value="<?php echo $data['id_produk'] ?>" readonly>
-                                                <input type="text" class="form-control bg-light" value="<?php echo $namaProduk; ?>" readonly>
+                                                <input type="text" class="form-control bg-light text-wrap" value="<?php echo $namaProduk; ?>" readonly>
                                             </div>
                                             <div class="col-sm-1 mb-2">
                                                 <input type="text" class="form-control bg-light text-center mobile-text" value="<?php echo $satuan_produk; ?>" readonly>
                                             </div>
-                                            <div class="col-sm-2 mb-2">
-                                                <input type="text" class="form-control bg-light text-center mobile-text" value="<?php echo $nama_merk ?>" readonly>
+                                            <div class="col-sm-1 mb-2">
+                                                <input type="text" class="form-control bg-light text-center text-wrap mobile-text" value="<?php echo $nama_merk ?>" readonly>
                                             </div>
-                                            <div class="col-sm-2 mb-2">
+                                            <div class="col-sm-1 mb-2">
                                                 <input type="text" class="form-control bg-light text-end mobile-text" value="<?php echo number_format($harga) ?>" readonly>
                                             </div>
                                             <div class="col-sm-1 mb-2">
@@ -515,6 +518,7 @@ include "function/class-spk.php";
                                 <thead>
                                     <tr class="text-white" style="background-color: #051683;">
                                         <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>
+                                        <td class="text-center p-3 text-nowrap" style="width: 350px">Kode Produk</td>
                                         <td class="text-center p-3 text-nowrap" style="width: 350px">Nama Produk</td>
                                         <td class="text-center p-3 text-nowrap" style="width: 100px">Satuan</td>
                                         <td class="text-center p-3 text-nowrap" style="width: 100px">Merk</td>
@@ -538,6 +542,7 @@ include "function/class-spk.php";
 
                                     $sql = "SELECT 
                                                 COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
+                                                COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
                                                 COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
                                                 COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
                                                 tpr.satuan,
@@ -567,6 +572,7 @@ include "function/class-spk.php";
                                     ?>
                                         <tr>
                                             <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                                            <td class="text-nowrap text-center"><?php echo $data['kode_produk']; ?></td>
                                             <td class="text-nowrap"><?php echo $data['nama_produk']; ?></td>
                                             <td class="text-center text-nowrap">
                                                 <?php 

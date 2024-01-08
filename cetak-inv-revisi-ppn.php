@@ -238,7 +238,9 @@
                                     trx.disc,
                                     trx.total_harga,
                                     trx.status_br_refund,
+                                    trx.created_date,
                                     tpr.nama_produk,
+                                    tpr.satuan,
                                     mr_produk.nama_merk AS merk_produk,
                                     tpsm.nama_set_marwa,
                                     tpsm.harga_set_marwa,
@@ -252,7 +254,7 @@
                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
                                 WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
                                 GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk, mr_set.nama_merk, mr_produk.nama_merk, trx.id_produk, trx.harga, trx.disc, trx.total_harga, tpr.nama_produk, tpsm.harga_set_marwa, mr_set.nama_merk
-                                ORDER BY tpr.nama_produk ASC";
+                                ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
@@ -261,6 +263,7 @@
                         $kat_inv = $data_trx['kategori_inv'];
                         $qty = $data_trx['total_qty'];
                         $harga = $data_trx['harga'];
+                        $satuan = $data_trx['satuan'];
                         $disc = $data_trx['disc'] / 100;
                         $tampil_disc = $data_trx['disc'];
                         $tampil_spdisc = $data_trx['sp_disc'];
@@ -270,11 +273,19 @@
                         $sub_total_tampil += $sub_total;
                         $sub_total_fix = floor($sub_total - $sub_total_spdisc);
                         $grand_total += floor($sub_total_fix);
+                        $id_produk = $data_trx['id_produk'];
+                        $satuan_produk = '';
+                        $id_produk_substr = substr($id_produk, 0, 2);
+                        if ($id_produk_substr == 'BR') {
+                            $satuan_produk = $satuan;
+                        } else {
+                            $satuan_produk = 'Set';
+                        }
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
                             <td><?php echo $data_trx['nama_produk_rev'] ?></td>
-                            <td align="right"><?php echo number_format($data_trx['total_qty'], 0, '.', '.') ?></td>
+                            <td align="right"> <?php echo number_format($data_trx['total_qty'], 0, '.', '') . ' ' . $satuan_produk; ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga'], 0, '.', '.') ?></td>
                             <?php
                             if ($data_trx['kategori_inv'] == 'Diskon') {

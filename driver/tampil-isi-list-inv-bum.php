@@ -656,7 +656,7 @@ include "../function/class-spk.php";
                         <div class="mb-3">
                             <label id="labelBukti1"><b>Bukti Terima 1</b></label>
                             <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png"
-                                onchange="compressAndPreviewImage(event)" required>
+                                onchange="compressAndPreviewImage(event)">
                         </div>
                         <div class="mb-3" id="imagePreview" ></div>
 

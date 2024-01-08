@@ -92,27 +92,8 @@ include "function/class-list-inv.php";
                                 <tbody>
                                     <?php
                                         date_default_timezone_set('Asia/Jakarta');
-                                        include "koneksi.php";
-                                        $sql = "SELECT
-                                                    COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
-                                                    cs.nama_cs,
-                                                    cs.alamat,
-                                                    bill.id_tagihan,
-                                                    bill.no_tagihan, 
-                                                    bill.tgl_tagihan, 
-                                                    bill.total_tagihan, 
-                                                    bill.id_driver,
-                                                    bill.nama_penerima
-                                                FROM spk_reg AS spk
-                                                LEFT JOIN inv_nonppn nonppn ON (spk.id_inv = nonppn.id_inv_nonppn)
-                                                LEFT JOIN inv_ppn ppn ON (spk.id_inv = ppn.id_inv_ppn)
-                                                LEFT JOIN inv_bum bum ON (spk.id_inv = bum.id_inv_bum)
-                                                LEFT JOIN finance fnc ON (spk.id_inv = fnc.id_inv)
-                                                LEFT JOIN finance_tagihan bill ON (fnc.id_tagihan = bill.id_tagihan)
-                                                LEFT JOIN tb_customer cs ON (spk.id_customer = cs.id_cs)
-                                                WHERE id_driver = '$id_user'
-                                                GROUP BY bill.no_tagihan";
-                                        $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                                        include 'query/list-tagihan.php';
+                                        $query = mysqli_query($connect, $sql_tagihan) or die(mysqli_error($connect));
                                         $no = 1; // Definisikan $no di sini
                                         while ($data = mysqli_fetch_array($query)) {   
                                             $id_tagihan = $data['id_tagihan'];

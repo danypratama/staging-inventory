@@ -350,9 +350,9 @@ include "akses.php";
                                             $filter = '';
                                             if (isset($_GET['sort'])) {
                                                 if ($_GET['sort'] == "baru") {
-                                                    $filter = "ORDER BY tgl_inv DESC";
+                                                    $filter = "ORDER BY no_inv DESC";
                                                 } elseif ($_GET['sort'] == "lama") {
-                                                    $filter = "ORDER BY tgl_inv ASC";
+                                                    $filter = "ORDER BY no_inv ASC";
                                                 }
                                             }
                                             $sql = "SELECT 
@@ -453,9 +453,9 @@ include "akses.php";
                                             $filter = '';
                                             if (isset($_GET['sort'])) {
                                                 if ($_GET['sort'] == "baru") {
-                                                    $filter = "ORDER BY tgl_inv DESC";
+                                                    $filter = "ORDER BY no_inv DESC";
                                                 } elseif ($_GET['sort'] == "lama") {
-                                                    $filter = "ORDER BY tgl_inv ASC";
+                                                    $filter = "ORDER BY no_inv ASC";
                                                 }
                                             }
                                             $sql = "SELECT 
@@ -556,9 +556,9 @@ include "akses.php";
                                             $filter = '';
                                             if (isset($_GET['sort'])) {
                                                 if ($_GET['sort'] == "baru") {
-                                                    $filter = "ORDER BY tgl_inv DESC";
+                                                    $filter = "ORDER BY no_inv DESC";
                                                 } elseif ($_GET['sort'] == "lama") {
-                                                    $filter = "ORDER BY tgl_inv ASC";
+                                                    $filter = "ORDER BY no_inv ASC";
                                                 }
                                             }
                                             $sql = "SELECT 
@@ -574,7 +574,7 @@ include "akses.php";
                                                     LEFT JOIN spk_reg sr ON(bum.id_inv_bum = sr.id_inv)
                                                     JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                     LEFT JOIN status_kirim sk ON(bum.id_inv_bum = sk.id_inv)
-                                                    WHERE status_transaksi = 'Dikirim' GROUP BY no_inv  $filter";
+                                                    WHERE status_transaksi = 'Dikirim' GROUP BY no_inv $filter";
                                             $query = mysqli_query($connect, $sql);
                                             while ($data = mysqli_fetch_array($query)) {
                                             ?>

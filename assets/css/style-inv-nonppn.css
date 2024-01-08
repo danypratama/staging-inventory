@@ -1,13 +1,16 @@
 body {
-  font-family: "Lato", sans-serif;
-  letter-spacing: 0.8px;
+  font-family: "PT Sans", sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .invoice {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 1.5cm;
+  padding-top: 0.5cm;
+  padding-left: 1.5cm;
+  padding-right: 1.5cm;
+  padding-bottom: 0.5cm;
   background-color: #ffffff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }

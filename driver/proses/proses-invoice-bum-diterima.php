@@ -52,67 +52,75 @@
                     move_uploaded_file($file3_tmp, $file3_destination);
 
 
-                    if($file1_name != ''){
-                        // Kompres dan ubah ukuran gambar bukti terima 1
-                        $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
-                        $compressed_file1_destination = "../../gambar/bukti1/$new_file1_name";
-                        compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
-                        unlink($file1_destination);
-                    }else{
-                        $new_file1_name = "";
-                    }
-                    
-                    if($file2_name != ''){
-                        // Kompres dan ubah ukuran gambar bukti terima 2
-                        $new_file2_name = "Bukti_Dua". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
-                        $compressed_file2_destination = "../../gambar/bukti2/$new_file2_name";
-                        compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
-                        unlink($file2_destination);
-                    }else{
-                        $new_file2_name = "";
-                    }
-                    
-                    if($file3_name != ''){
-                         // Kompres dan ubah ukuran gambar bukti terima 3
-                        $new_file3_name = "Bukti_Tiga". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
-                        $compressed_file3_destination = "../../gambar/bukti3/$new_file3_name";
-                        compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
-                        unlink($file3_destination);
-                    }else{
-                        $new_file3_name = "";
-                    }
+                    $uploadSuccess = file_exists($file1_destination) && file_exists($file2_destination) && file_exists($file3_destination);
 
-                    $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_bukti', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
+                    if ($uploadSuccess) {
+                        if($file1_name != ''){
+                            // Kompres dan ubah ukuran gambar bukti terima 1
+                            $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+                            $compressed_file1_destination = "../../gambar/bukti1/$new_file1_name";
+                            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
+                            unlink($file1_destination);
+                        }else{
+                            $new_file1_name = "";
+                        }
+                        
+                        if($file2_name != ''){
+                            // Kompres dan ubah ukuran gambar bukti terima 2
+                            $new_file2_name = "Bukti_Dua". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+                            $compressed_file2_destination = "../../gambar/bukti2/$new_file2_name";
+                            compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
+                            unlink($file2_destination);
+                        }else{
+                            $new_file2_name = "";
+                        }
+                        
+                        if($file3_name != ''){
+                             // Kompres dan ubah ukuran gambar bukti terima 3
+                            $new_file3_name = "Bukti_Tiga". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+                            $compressed_file3_destination = "../../gambar/bukti3/$new_file3_name";
+                            compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
+                            unlink($file3_destination);
+                        }else{
+                            $new_file3_name = "";
+                        }
 
-                    $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat')");
+                        $compressSuccess = file_exists($compressed_file1_destination) || file_exists($compressed_file2_destination) || file_exists($compressed_file3_destination);
+
+                        if($compressSuccess){
+                            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_bukti', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
+
+                            $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat')");
+                
+                            $query_update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Diterima' WHERE id_inv_bum = '$id_inv'");
+
+                            $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
         
-                    $query_update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Diterima' WHERE id_inv_bum = '$id_inv'");
-
-                    $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
-        
-                    if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
-                        // Commit transaksi
-                        $connect->commit();
-                        ?>
-                        <!-- Sweet Alert -->
-                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-                            Swal.fire({
-                                title: "Sukses",
-                                text: "Data Berhasil Disimpan",
-                                icon: "success",
-                            }).then(function() {
-                                window.location.href = "../list-invoice.php";
-                            });
-                            });
-                        </script>
-                        <?php
-                    } else {
-                        unlink($compressed_file1_destination);
-                        unlink($compressed_file2_destination);
-                        unlink($compressed_file3_destination);
+                            if ( $bukti_terima && $query_diterima && $query_update_inv && $query_update_status) {
+                                // Commit transaksi
+                                $connect->commit();
+                                ?>
+                                <!-- Sweet Alert -->
+                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        title: "Sukses",
+                                        text: "Data Berhasil Disimpan",
+                                        icon: "success",
+                                    }).then(function() {
+                                        window.location.href = "../list-invoice.php";
+                                    });
+                                    });
+                                </script>
+                                <?php
+                            } else {
+                                unlink($compressed_file1_destination);
+                                unlink($compressed_file2_destination);
+                                unlink($compressed_file3_destination);
+                            }
+                        }
                     }
                 } catch (Exception $e) {
                 // Rollback transaksi jika terjadi exception

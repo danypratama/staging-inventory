@@ -80,7 +80,7 @@
     <!-- End Finance -->
     <!-- Data Customer -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'list-cmp') { echo 'collapsed'; } ?>" href="invoice-komplain.php?date_range=weekly">
+      <a class="nav-link <?php if ($page == 'list-cmp') { echo 'collapsed'; } ?>" href="invoice-komplain.php?date_range=monthly">
         <i class="bi bi-clipboard-x"></i><span>Invoice Komplain</span>
       </a>
     </li>

@@ -2,7 +2,7 @@
   <div class="copyright">
     &copy; 2023 <strong><span>PT.Karsa Mandiri Alkesindo</span></strong>. All Rights Reserved
     <br>
-    Version 3.1
+    Version 3.0
   </div>
   <div class="credits">
     <!-- All the links in the footer should remain intact. -->

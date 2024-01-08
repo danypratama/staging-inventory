@@ -359,6 +359,7 @@ include "akses.php";
                                                         <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. SPK</th>
                                                         <th class="text-center p-3 text-nowrap" style="width: 150px">No.PO</th>
                                                         <th class="text-center p-3 text-nowrap" style="width: 200px">Nama Customer</th>
+                                                        <th class="text-center p-3 text-nowrap" style="width: 150px">Total SPK</th>
                                                         <th class="text-center p-3 text-nowrap" style="width: 150px">Note SPK</th>
                                                         <th class="text-center p-3 text-nowrap" style="width: 70px">Aksi</th>
                                                     </tr>
@@ -375,7 +376,15 @@ include "akses.php";
                                                             $filter = "ORDER BY tgl_spk ASC";
                                                         }
                                                     }
-                                                    $sql = "SELECT sr.id_spk_reg, sr.no_spk, sr.tgl_spk, sr.no_po, sr.note, cs.nama_cs, cs.alamat
+                                                    $sql = "SELECT 
+                                                                sr.id_spk_reg, 
+                                                                sr.no_spk, 
+                                                                sr.tgl_spk, 
+                                                                sr.no_po,
+                                                                sr.total_spk,
+                                                                sr.note, 
+                                                                cs.nama_cs, 
+                                                                cs.alamat
                                                             FROM spk_reg AS sr
                                                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                                                             WHERE status_spk = 'Siap Kirim'  $filter";
@@ -406,6 +415,7 @@ include "akses.php";
                                                             ?>
                                                         </td>
                                                         <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
+                                                        <td class="text-nowrap text-end"><?php echo number_format($data['total_spk'],0,'.','.') ?></td>
                                                         <td class="text-nowrap">
                                                             <?php
                                                                 $note = $data['note'];

@@ -254,6 +254,7 @@ include "function/class-spk.php";
                                     $month = date('m');
                                     $id_spk_decode = base64_decode($_GET['id']);
                                     $no = 1;
+                                    $total_spk = 0;
                                     $sql_trx = "SELECT 
                                                     sr.id_spk_reg,
                                                     sr.id_inv,
@@ -283,6 +284,8 @@ include "function/class-spk.php";
                                         $satuan = $data_trx['satuan'];
                                         $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
                                         $harga = detailSpk::getHarga($data_trx['harga_produk'], $data_trx['harga_set_marwa']);
+                                        $sub_total =  $harga * $data_trx['qty'];
+                                        $total_spk += $sub_total;
                                         $satuan_produk = '';
                                         $id_produk_substr = substr($id_produk, 0, 2);
                                         if ($id_produk_substr == 'BR') {
@@ -312,6 +315,9 @@ include "function/class-spk.php";
                                 <?php } ?>
                             </tbody>
                         </table>   
+                        <?php  
+                            $update_total = mysqli_query($connect, "UPDATE spk_reg SET total_spk = '$total_spk' WHERE id_spk_reg = '$id_spk_decode'");
+                        ?>
                     </div>
                 </div>
             </div>

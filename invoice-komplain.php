@@ -1,5 +1,5 @@
 <?php
-$page  = 'transaksi';
+$page  = 'transaksi'; 
 $page2  = 'list-cmp';
 include "akses.php";
 include 'function/class-komplain.php';
@@ -50,11 +50,11 @@ include 'function/class-komplain.php';
 
     <main id="main" class="main">
         <!-- Loading -->
-        <!-- <div class="loader loader">
+        <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div> -->
+        </div>
         <!-- ENd Loading -->
         <div class="pagetitle">
             <h1>Invoice Komplain</h1>

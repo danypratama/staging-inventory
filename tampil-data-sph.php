@@ -648,7 +648,7 @@
                                             COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
                                             COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
                                             COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
-                                            COALESCE(tpr.harga_produk, tpsm.harga_set_marwa) AS harga_produk,
+                                            tpr.satuan,
                                             spr.id_stock_prod_reg,
                                             spr.stock,
                                             tkp.min_stock, 

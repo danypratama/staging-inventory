@@ -36,7 +36,7 @@
                 $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
 
                 $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp)
+                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
                                                             SELECT
                                                                 tpr.id_transaksi,
                                                                 spk.id_inv,
@@ -46,7 +46,8 @@
                                                                 tpr.qty,
                                                                 tpr.disc,
                                                                 tpr.total_harga,
-                                                                1 as status_tmp
+                                                                1 as status_tmp,
+                                                                tpr.created_date
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
@@ -104,7 +105,7 @@
                 $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
 
                 $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp)
+                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
                                                             SELECT
                                                                 tpr.id_transaksi,
                                                                 spk.id_inv,
@@ -114,7 +115,8 @@
                                                                 tpr.qty,
                                                                 tpr.disc,
                                                                 tpr.total_harga,
-                                                                1 as status_tmp
+                                                                1 as status_tmp,
+                                                                tpr.created_date
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
@@ -198,7 +200,7 @@
                 komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
 
                 $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp)
+                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
                                                             SELECT
                                                                 tpr.id_transaksi,
                                                                 spk.id_inv,
@@ -208,7 +210,8 @@
                                                                 tpr.qty,
                                                                 tpr.disc,
                                                                 tpr.total_harga,
-                                                                1 as status_tmp
+                                                                1 as status_tmp,
+                                                                tpr.created_date
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
@@ -266,7 +269,7 @@
                 $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
 
                 $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp)
+                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
                                                             SELECT
                                                                 tpr.id_transaksi,
                                                                 spk.id_inv,
@@ -276,7 +279,8 @@
                                                                 tpr.qty,
                                                                 tpr.disc,
                                                                 tpr.total_harga,
-                                                                1 as status_tmp
+                                                                1 as status_tmp,
+                                                                tpr.created_date
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
@@ -359,7 +363,7 @@
                 $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
 
                 $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp)
+                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
                                                             SELECT
                                                                 tpr.id_transaksi,
                                                                 spk.id_inv,
@@ -369,7 +373,8 @@
                                                                 tpr.qty,
                                                                 tpr.disc,
                                                                 tpr.total_harga,
-                                                                1 as status_tmp
+                                                                1 as status_tmp,
+                                                                tpr.created_date
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
@@ -427,7 +432,7 @@
                 $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
 
                 $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp)
+                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
                                                             SELECT
                                                                 tpr.id_transaksi,
                                                                 spk.id_inv,
@@ -437,7 +442,8 @@
                                                                 tpr.qty,
                                                                 tpr.disc,
                                                                 tpr.total_harga,
-                                                                1 as status_tmp
+                                                                1 as status_tmp,
+                                                                tpr.created_date
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");

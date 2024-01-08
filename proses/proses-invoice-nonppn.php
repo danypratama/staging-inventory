@@ -235,47 +235,6 @@ if (isset($_POST['simpan-inv'])) {
         $month = date('m');
         $id_inv_penerima = "BKTI" . $year . "" . $uuid . "" . $day;
         $id_inv = $_POST['id_inv'];
-
-        // Mendapatkan informasi file bukti terima 1
-        $file1_name = $_FILES['fileku1']['name'];
-        $file1_tmp = $_FILES['fileku1']['tmp_name'];
-        $file1_destination = "../gambar/bukti1/" . $file1_name;
-
-        // Mendapatkan informasi file bukti terima 2
-        $file2_name = $_FILES['fileku2']['name'];
-        $file2_tmp = $_FILES['fileku2']['tmp_name'];
-        $file2_destination = "../gambar/bukti2/" . $file2_name;
-
-        // Mendapatkan informasi file bukti terima 3
-        $file3_name = $_FILES['fileku3']['name'];
-        $file3_tmp = $_FILES['fileku3']['tmp_name'];
-        $file3_destination = "../gambar/bukti3/" . $file3_name;
-
-        // Pindahkan file bukti terima ke lokasi tujuan
-        move_uploaded_file($file1_tmp, $file1_destination);
-        move_uploaded_file($file2_tmp, $file2_destination);
-        move_uploaded_file($file3_tmp, $file3_destination);
-
-        if($file1_name != ''){
-            // Kompres dan ubah ukuran gambar bukti terima 1
-            $new_file1_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
-            $compressed_file1_destination = "../gambar/bukti1/$new_file1_name";
-            compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
-            unlink($file1_destination);
-        }elseif($file2_name != ''){
-             // Kompres dan ubah ukuran gambar bukti terima 2
-            $new_file1_name = "Bukti_Dua". $year . "" . $img_uuid . "" . $day . ".jpg";
-            $compressed_file2_destination = "../gambar/bukti2/$new_file2_name";
-            compressAndResizeImage($file2_destination, $compressed_file2_destination, 500, 500, 100);
-            unlink($file2_destination);
-        }elseif($file3_name != ''){
-            // Kompres dan ubah ukuran gambar bukti terima 3
-            $new_file1_name = "Bukti_Tiga". $year . "" . $img_uuid . "" . $day . ".jpg";
-            $compressed_file3_destination = "../gambar/bukti3/$nem_file3_name";
-            compressAndResizeImage($file3_destination, $compressed_file3_destination, 500, 500, 100);
-            unlink($file3_destination);
-        }
-
        
 
         if ($jenis_pengiriman == 'Driver') { 
@@ -293,6 +252,35 @@ if (isset($_POST['simpan-inv'])) {
                 mysqli_commit($connect);
                 header("Location:../invoice-reguler.php?sort=baru");
             }
+        } else if ($jenis_pengiriman == 'Diambil Langsung'){
+            $diambil = $_POST['diambil'];
+            $uuid = generate_uuid();
+            $year = date('y');
+            $day = date('d');
+            $month = date('m');
+            $id_inv_penerima = "PNMR" . $year . "". $month . "" . $uuid . "" . $day;
+
+            // $proses_update_bukti = mysqli_query($connect, "UPDATE inv_bukti_terima SET bukti_satu = '$new_file1_name',  bukti_dua = '$new_file2_name',  bukti_tiga = '$new_file3_name' WHERE id_inv = '$id_inv'");
+
+            $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim' WHERE id_inv_nonppn = '$id_inv'");
+
+            $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
+                                                    (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, jenis_penerima, tgl_kirim)
+                                                    VALUES 
+                                                    ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', 'Customer', '$tgl')");
+            
+            $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima 
+                                                        (id_inv_penerima, id_inv, alamat) 
+                                                        VALUES 
+                                                        ('$id_inv_penerima', '$id_inv', 'PT. Karsa Mandiri Alkesindo')");
+        
+
+            if ($ubah_status && $status_kirim && $query_diterima) {
+                // Commit transaksi jika berhasil
+                mysqli_commit($connect);
+                header("Location:../invoice-reguler.php?sort=baru");
+            }
+
         } else {
             $ekspedisi = $_POST['ekspedisi'];
             $resi = $_POST['resi'];
@@ -302,40 +290,40 @@ if (isset($_POST['simpan-inv'])) {
             $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
             $dikirim = $_POST['dikirim'];
             $pj = $_POST['pj'];
+
             $ubah_status = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Dikirim', ongkir = '$ongkir' WHERE id_inv_nonppn = '$id_inv'");
 
             $status_kirim = mysqli_query($connect, "INSERT INTO status_kirim
-                                                        (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, jenis_ongkir, dikirim_oleh, penanggung_jawab, tgl_kirim) 
-                                                        VALUES 
-                                                        ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$jenis_penerima', '$ekspedisi', '$resi', '$jenis_ongkir', '$dikirim', '$pj', '$tgl')");
-
-            $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_penerima', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
-
-            if ($ubah_status && $status_kirim && $bukti_terima) {
+                                                            (id_status_kirim, id_inv, jenis_inv, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, dikirim_oleh, penanggung_jawab, tgl_kirim) 
+                                                            VALUES 
+                                                            ('$id_status', '$id_inv', '$jenis_inv', '$jenis_pengiriman', '$jenis_penerima', '$ekspedisi', '$dikirim', '$pj', '$tgl')");
+            
+            if ($ubah_status && $status_kirim) {
                 // Commit transaksi jika berhasil
                 mysqli_commit($connect);
                 header("Location:../invoice-reguler.php?sort=baru");
             }
+
         }
     } catch (Exception $e) {
         $connect->rollback();
         $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
-?>
-<!-- Sweet Alert -->
-<link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-<script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    Swal.fire({
-        title: "Error!",
-        text: "<?php echo $error_message; ?>",
-        icon: "error",
-    }).then(function() {
-        window.location.href = "../invoice-reguler.php?sort=baru";
-    });
-});
-</script>
-<?php
+        ?>
+        <!-- Sweet Alert -->
+        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                title: "Error!",
+                text: "<?php echo $error_message; ?>",
+                icon: "error",
+            }).then(function() {
+                window.location.href = "../invoice-reguler.php?sort=baru";
+            });
+        });
+        </script>
+        <?php
     }
 } else if (isset($_POST['update-ongkir'])) {
     $id_inv = $_POST['id_inv'];

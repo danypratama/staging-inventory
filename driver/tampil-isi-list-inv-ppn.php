@@ -656,7 +656,7 @@ include "../function/class-spk.php";
                         <div class="mb-3">
                             <label id="labelBukti1"><b>Bukti Terima 1</b></label>
                             <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png"
-                                onchange="compressAndPreviewImage(event)" required>
+                                onchange="compressAndPreviewImage(event)">
                         </div>
                         <div class="mb-3" id="imagePreview" ></div>
 
@@ -699,6 +699,36 @@ include "../function/class-spk.php";
     <?php include "page/cek-upload.php"; ?>
     <?php include "page/search-ekspedisi.php"; ?>
     <?php include "page/kondisi-diterima.php"; ?>
+
+    <script>
+        function compressAndUpload() {
+            var input = document.getElementById('imageInput');
+            var file = input.files[0];
+
+            if (file) {
+                new ImageCompressor(file, {
+                    quality: 0.6, // Adjust the quality as needed
+                    success(result) {
+                        var formData = new FormData();
+                        formData.append('compressedImage', result, 'compressed_' + file.name);
+
+                        // Now, you can send formData using AJAX or submit a form
+                        // Example using fetch API:
+                        fetch('page/resize-image.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => console.log(data))
+                        .catch(error => console.error(error));
+                    },
+                    error(e) {
+                        console.error(e.message);
+                    },
+                });
+            }
+        }
+    </script>
 
     <!-- End JS Dikirim -->
     <style>

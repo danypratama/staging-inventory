@@ -1,6 +1,7 @@
 <?php
 // simpan_data.php
 include "koneksi.php";
+date_default_timezone_set('Asia/Jakarta');
 // Ambil ID dari permintaan Ajax
 $year = date('y');
 $day = date('d');
@@ -12,6 +13,7 @@ $id_produk = $_POST['produk'];
 $nama_produk = $_POST['namaProduk'];
 $harga = $_POST['hargaProduk'];
 $status = 0;
+$created_date = date('Y-m-d H:i:s');
 
 
 // Simpan data ke dalam database
@@ -20,7 +22,7 @@ $status = 0;
 // Contoh koneksi ke database dan penyimpanan data
 
 // Lakukan operasi penyimpanan ke database sesuai dengan tabel dan struktur database Anda
-$sql = mysqli_query($connect, "INSERT INTO tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, status_tmp) VALUES ('$id_tmp', '$id_inv', '$id_produk', '$nama_produk', '$harga', '$status')");
+$sql = mysqli_query($connect, "INSERT INTO tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, status_tmp, created_date) VALUES ('$id_tmp', '$id_inv', '$id_produk', '$nama_produk', '$harga', '$status', '$created_date')");
 
 if (mysqli_query($connect, $sql)) {
     echo 'Data berhasil disimpan.';

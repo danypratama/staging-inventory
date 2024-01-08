@@ -48,5 +48,14 @@ class listInvoice {
             return $status_trx_bum;
         }
     }
+    public static function getCreated($created_date_nonppn, $created_date_ppn, $created_date_bum) {
+        if(!empty($created_date_nonppn)){
+            return $created_date_nonppn;
+        } else if(!empty($created_date_ppn)){
+            return $created_date_ppn;
+        } else {
+            return $created_date_bum;
+        }
+    }
 }
 ?>

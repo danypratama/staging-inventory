@@ -89,6 +89,7 @@ include "akses.php";
                     <thead>
                       <tr class="text-white" style="background-color: #051683;">
                         <td class="text-center p-3" style="width: 50px">No</td>
+                        <td class="text-center p-3" style="width: 250px">Kode Produk</td>
                         <td class="text-center p-3" style="width: 450px">Nama Produk</td>
                         <td class="text-center p-3" style="width: 100px">Merk</td>
                         <td class="text-center p-3" style="width: 80px">Stock</td>
@@ -110,6 +111,7 @@ include "akses.php";
                       $no = 1;
                       $sql = "SELECT 
                                   COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
+                                  COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
                                   COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
                                   COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
                                   spr.id_stock_prod_reg,
@@ -134,15 +136,16 @@ include "akses.php";
                         $stockData = StockStatus::getStatus($data['stock'], $data['min_stock'], $data['max_stock']);
                       ?>
                         <tr>
-                          <td class="text-center"><?php echo $no; ?></td>
-                          <td><?php echo $data['nama_produk'] ?></td>
-                          <td class="text-center"> <?php echo $data['nama_merk'] ?> </td>
-                          <?php echo "<td class='text-end " . $stockData['textColor'] . "' style='background-color: " . $stockData['backgroundColor'] . "'>" . $stockData['formattedStock'] . "</td>";  ?>
-                          <?php echo "<td class='text-end'>" . $stockData['status'] . "</td>"; ?>
+                          <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                          <td class="text-center text-nowrap"><?php echo $data['kode_produk'] ?></td>
+                          <td class="text-nowrap"><?php echo $data['nama_produk'] ?></td>
+                          <td class="text-center text-nowrap"> <?php echo $data['nama_merk'] ?> </td>
+                          <?php echo "<td class='text-end text-nowrap" . $stockData['textColor'] . "' style='background-color: " . $stockData['backgroundColor'] . "'>" . $stockData['formattedStock'] . "</td>";  ?>
+                          <?php echo "<td class='text-end text-nowrap'>" . $stockData['status'] . "</td>"; ?>
                           <?php  
                           if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
                               ?>
-                                <td class="text-center">
+                                <td class="text-center text-nowrap">
                                   <a href="proses/proses-stock-reg.php?hapus-stock-reg=<?php echo $id_stock ?>&id_produk=<?php echo $id_produk ?>" class="btn btn-sm btn-danger delete-data"><i class="bi bi-trash"></i></a>
                                 </td>
                               <?php 
@@ -161,6 +164,7 @@ include "akses.php";
                     <thead>
                       <tr class="text-white" style="background-color: #051683;">
                         <td class="text-center p-3" style="width: 50px">No</td>
+                        <td class="text-center p-3" style="width: 250px">Kode Produk</td>
                         <td class="text-center p-3" style="width: 450px">Nama Produk</td>
                         <td class="text-center p-3" style="width: 100px">Merk</td>
                         <td class="text-center p-3" style="width: 80px">Stock</td>
@@ -182,6 +186,7 @@ include "akses.php";
                       $no = 1;
                       $sql_set = "SELECT 
                                       COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
+                                      COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
                                       COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
                                       COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
                                       spr.id_stock_prod_reg,
@@ -204,11 +209,12 @@ include "akses.php";
                         $stockDataSet = StockStatusSet::getStatusSet($data_set['stock'], $data_set['min_stock'], $data_set['max_stock']);
                       ?>
                         <tr>
-                          <td class="text-center"><?php echo $no; ?></td>
-                          <td><?php echo $data_set['nama_produk'] ?></td>
-                          <td class="text-center"> <?php echo $data_set['nama_merk'] ?> </td>
-                          <?php echo "<td class='text-end " . $stockDataSet['textColor'] . "' style='background-color: " . $stockDataSet['backgroundColor'] . "'>" . $stockDataSet['formattedStock'] . "</td>";  ?>
-                          <?php echo "<td class='text-end'>" . $stockDataSet['status'] . "</td>"; ?>
+                          <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                          <td class="text-center text-nowrap"><?php echo $data_set['kode_produk'] ?></td>
+                          <td class="text-nowrap"><?php echo $data_set['nama_produk'] ?></td>
+                          <td class="text-center text-nowrap"> <?php echo $data_set['nama_merk'] ?> </td>
+                          <?php echo "<td class='text-end  text-nowrap" . $stockDataSet['textColor'] . "' style='background-color: " . $stockDataSet['backgroundColor'] . "'>" . $stockDataSet['formattedStock'] . "</td>";  ?>
+                          <?php echo "<td class='text-end text-nowrap'>" . $stockDataSet['status'] . "</td>"; ?>
                           <?php  
                             if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
                               ?>

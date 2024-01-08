@@ -46,6 +46,7 @@ if (isset($_POST['simpan-tmp'])) {
     $nama_produk = $_POST['id_produk'];
     $harga = $_POST['harga'];
     $qty = $_POST['qty'];
+    $created_date = $_POST['created_date'];
 
     mysqli_begin_transaction($connect);
 
@@ -60,9 +61,10 @@ if (isset($_POST['simpan-tmp'])) {
             $jml =  str_replace(',', '', $qty[$i]);
             $jml = intval($jml);
             $total_harga = $hrg * $jml;
+            $created = $created_date[$i];
 
             // Query INSERT
-            $sql = "INSERT INTO transaksi_produk_reg (id_transaksi, id_spk, id_produk, harga, qty, total_harga) VALUES ('$id_trx', '$spk_reg', '$produk', '$hrg', '$jml', '$total_harga')";
+            $sql = "INSERT INTO transaksi_produk_reg (id_transaksi, id_spk, id_produk, harga, qty, total_harga, created_date) VALUES ('$id_trx', '$spk_reg', '$produk', '$hrg', '$jml', '$total_harga', '$created')";
             $query1 = mysqli_query($connect, $sql);
 
             $sql_spk = "UPDATE spk_reg SET status_spk = 'Dalam Proses' WHERE id_spk_reg = '$spk_reg'";

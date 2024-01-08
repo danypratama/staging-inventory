@@ -217,6 +217,7 @@ include "function/class-spk.php";
                                                     trx.id_transaksi,
                                                     trx.id_produk,
                                                     trx.qty,
+                                                    trx.created_date,
                                                     spr.stock, 
                                                     tpr.nama_produk, 
                                                     tpr.satuan,
@@ -232,7 +233,7 @@ include "function/class-spk.php";
                                                 LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                                WHERE sr.id_spk_reg = '$id_spk_decode'";
+                                                WHERE sr.id_spk_reg = '$id_spk_decode' ORDER BY trx.created_date ASC";
                                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                         $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);

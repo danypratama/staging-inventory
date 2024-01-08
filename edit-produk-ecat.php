@@ -115,7 +115,7 @@ include "akses.php";
                       <div class="col mb-3">
                         <label class="form-label"><strong>Satuan</strong></label>
                         <select name="satuan" class="form-control">
-                          <option value=""><?php echo $row['satuan'] ?></option>
+                          <option value="<?php echo $row['satuan'] ?>"><?php echo $row['satuan'] ?></option>
                           <option value="Pcs">Pcs</option>
                           <option value="Set">Set</option>
                         </select>

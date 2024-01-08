@@ -10,26 +10,53 @@
         mysqli_begin_transaction($connect);
         try {
             // Kode yang mungkin menyebabkan kesalahan
-            $update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Belum Dikirim' WHERE id_inv_nonppn = '$id_inv'");
-            $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
-            if($update_inv){
-                mysqli_commit($connect);
-                ?>
-                    <!-- Sweet Alert -->
-                    <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                    <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                        Swal.fire({
-                            title: "Sukses",
-                            text: "Data Berhasil Diupdate",
-                            icon: "success",
-                        }).then(function() {
-                            window.location.href = "../invoice-reguler-dikirim.php";
-                        });
-                        });
-                    </script>
-                <?php
+            $cek_inv_penerima = mysqli_query($connect, "SELECT id_inv FROM inv_penerima WHERE id_inv = '$id_inv'");
+
+            if($cek_inv_penerima->num_rows > 0){
+                $update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Belum Dikirim' WHERE id_inv_nonppn = '$id_inv'");
+                $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
+                $delete_inv_penerima = mysqli_query($connect, "DELETE FROM inv_penerima WHERE id_inv = '$id_inv'"); 
+                if($update_inv && $delete_status_kirim && $delete_inv_penerima){
+                    mysqli_commit($connect);
+                    ?>
+                        <!-- Sweet Alert -->
+                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                            Swal.fire({
+                                title: "Sukses",
+                                text: "Data Berhasil Diupdate",
+                                icon: "success",
+                            }).then(function() {
+                                window.location.href = "../invoice-reguler-dikirim.php";
+                            });
+                            });
+                        </script>
+                    <?php
+                }
+            } else {
+                $update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Belum Dikirim' WHERE id_inv_nonppn = '$id_inv'");
+                $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
+                if($update_inv && $delete_status_kirim){
+                    mysqli_commit($connect);
+                    ?>
+                        <!-- Sweet Alert -->
+                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                            Swal.fire({
+                                title: "Sukses",
+                                text: "Data Berhasil Diupdate",
+                                icon: "success",
+                            }).then(function() {
+                                window.location.href = "../invoice-reguler-dikirim.php";
+                            });
+                            });
+                        </script>
+                    <?php
+                }
             }
 
         } catch (Exception $e) {
@@ -57,26 +84,53 @@
         mysqli_begin_transaction($connect);
         try {
             // Kode yang mungkin menyebabkan kesalahan
-            $update_inv = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Belum Dikirim' WHERE id_inv_ppn = '$id_inv'");
-            $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
-            if($update_inv){
-                mysqli_commit($connect);
-                ?>
-                    <!-- Sweet Alert -->
-                    <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                    <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                        Swal.fire({
-                            title: "Sukses",
-                            text: "Data Berhasil Diupdate",
-                            icon: "success",
-                        }).then(function() {
-                            window.location.href = "../invoice-reguler-dikirim.php";
-                        });
-                        });
-                    </script>
-                <?php
+            $cek_inv_penerima = mysqli_query($connect, "SELECT id_inv FROM inv_penerima WHERE id_inv = '$id_inv'");
+
+            if($cek_inv_penerima->num_rows > 0){
+                $update_inv = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Belum Dikirim' WHERE id_inv_ppn = '$id_inv'");
+                $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
+                $delete_inv_penerima = mysqli_query($connect, "DELETE FROM inv_penerima WHERE id_inv = '$id_inv'"); 
+                if($update_inv && $delete_status_kirim && $delete_inv_penerima){
+                    mysqli_commit($connect);
+                    ?>
+                        <!-- Sweet Alert -->
+                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                            Swal.fire({
+                                title: "Sukses",
+                                text: "Data Berhasil Diupdate",
+                                icon: "success",
+                            }).then(function() {
+                                window.location.href = "../invoice-reguler-dikirim.php";
+                            });
+                            });
+                        </script>
+                    <?php
+                }
+            } else {
+                $update_inv = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Belum Dikirim' WHERE id_inv_ppn = '$id_inv'");
+                $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
+                if($update_inv && $delete_status_kirim){
+                    mysqli_commit($connect);
+                    ?>
+                        <!-- Sweet Alert -->
+                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                            Swal.fire({
+                                title: "Sukses",
+                                text: "Data Berhasil Diupdate",
+                                icon: "success",
+                            }).then(function() {
+                                window.location.href = "../invoice-reguler-dikirim.php";
+                            });
+                            });
+                        </script>
+                    <?php
+                }
             }
 
         } catch (Exception $e) {
@@ -104,26 +158,53 @@
         mysqli_begin_transaction($connect);
         try {
             // Kode yang mungkin menyebabkan kesalahan
-            $update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Belum Dikirim' WHERE id_inv_bum = '$id_inv'");
-            $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
-            if($update_inv){
-                mysqli_commit($connect);
-                ?>
-                    <!-- Sweet Alert -->
-                    <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                    <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                        Swal.fire({
-                            title: "Sukses",
-                            text: "Data Berhasil Diupdate",
-                            icon: "success",
-                        }).then(function() {
-                            window.location.href = "../invoice-reguler-dikirim.php";
-                        });
-                        });
-                    </script>
-                <?php
+            $cek_inv_penerima = mysqli_query($connect, "SELECT id_inv FROM inv_penerima WHERE id_inv = '$id_inv'");
+
+            if($cek_inv_penerima->num_rows > 0){
+                $update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Belum Dikirim' WHERE id_inv_bum = '$id_inv'");
+                $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
+                $delete_inv_penerima = mysqli_query($connect, "DELETE FROM inv_penerima WHERE id_inv = '$id_inv'"); 
+                if($update_inv && $delete_status_kirim && $delete_inv_penerima){
+                    mysqli_commit($connect);
+                    ?>
+                        <!-- Sweet Alert -->
+                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                            Swal.fire({
+                                title: "Sukses",
+                                text: "Data Berhasil Diupdate",
+                                icon: "success",
+                            }).then(function() {
+                                window.location.href = "../invoice-reguler-dikirim.php";
+                            });
+                            });
+                        </script>
+                    <?php
+                }
+            } else {
+                $update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Belum Dikirim' WHERE id_inv_bum = '$id_inv'");
+                $delete_status_kirim = mysqli_query($connect, "DELETE FROM status_kirim WHERE id_status_kirim = '$id_status_kirim'");
+                if($update_inv && $delete_status_kirim){
+                    mysqli_commit($connect);
+                    ?>
+                        <!-- Sweet Alert -->
+                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                            Swal.fire({
+                                title: "Sukses",
+                                text: "Data Berhasil Diupdate",
+                                icon: "success",
+                            }).then(function() {
+                                window.location.href = "../invoice-reguler-dikirim.php";
+                            });
+                            });
+                        </script>
+                    <?php
+                }
             }
 
         } catch (Exception $e) {

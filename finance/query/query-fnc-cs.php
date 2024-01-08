@@ -100,7 +100,7 @@ $sql = "SELECT
             WHERE $sort_option
             GROUP BY spk.id_inv, spk.id_customer, cs.nama_cs, fb.id_finance, cs_inv, tgl_inv, status_transaksi, nominal_inv
             ) AS subq
-            GROUP BY subq.nama_cs";
+            GROUP BY subq.nama_cs ORDER BY subq.nama_cs ASC";
 
 $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
 $query2 = mysqli_query($connect, $sql) or die(mysqli_error($connect));

@@ -23,6 +23,10 @@
             .label-mobile{
                 display: none;
             }
+
+            .disable-click {
+                pointer-events: none;
+            }
             @media (max-width: 767px) {
 
                 body {
@@ -57,6 +61,32 @@
                 background-color: black;
                 color: white;
                 border-color: 1px solid white;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+                /* Menghilangkan garis pada input */
+            input {
+                border: none;
+                outline: none;
+                background: none;
+                width: 100%;
+            }
+
+            @media only screen and (max-width: 500px) {
+                body {
+                    font-size: 14px;
+                }
+
+                .mobile {
+                    display: none;
+                }
+
+                .mobile-text {
+                    text-align: left !important;
+                }
             }
         </style>
     </head>
@@ -617,13 +647,13 @@
                                                 <td class="text-nowrap"><?php echo $data_tmp['nama_produk'] ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $satuan ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $data_tmp['merk'] ?></td>
-                                                <td class="text-center text-nowrap"><?php echo $data_tmp['qty'] ?></td>
+                                                <td class="text-center text-nowrap"><?php echo number_format($data_tmp['qty']) ?></td>
                                                 <td class="text-end text-nowrap"><?php echo number_format($data_tmp['harga']) ?></td>
                                                 <td class="text-end text-nowrap"><?php echo $data_tmp['disc'] ?></td>
                                                 <td class="text-end text-nowrap"><?php echo number_format($harga_final) ?></td>
                                                 <td class="text-center">
                                                     <div class="text-center aksi" style="display: none;">
-                                                        <button class="btn btn-warning btn-sm mb-2" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editData" data-id="<?php echo $data_tmp['id_tmp'] ?>" data-id-produk="<?php echo $data_tmp['id_produk'] ?>" data-nama="<?php echo $data_tmp['nama_produk'] ?>" data-merk="<?php echo $data_tmp['merk'] ?>" data-harga="<?php echo $data_tmp['harga']  ?>" data-disc="<?php echo $data_tmp['disc'] ?>" data-stock="<?php if($data_tmp['stock'] == 0){echo '0';}else{echo $data_tmp['stock'] + $data_tmp['qty'];} ?>" data-qty="<?php echo $data_tmp['qty'] ?>" data-qty-edit="<?php echo $data_tmp['qty'] ?>">
+                                                        <button class="btn btn-warning btn-sm" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editData" data-id="<?php echo $data_tmp['id_tmp'] ?>" data-id-produk="<?php echo $data_tmp['id_produk'] ?>" data-nama="<?php echo $data_tmp['nama_produk'] ?>" data-merk="<?php echo $data_tmp['merk'] ?>" data-harga="<?php echo $data_tmp['harga']  ?>" data-disc="<?php echo $data_tmp['disc'] ?>" data-stock="<?php if($data_tmp['stock'] == 0){echo '0';}else{echo $data_tmp['stock'] + $data_tmp['qty'];} ?>" data-qty="<?php echo $data_tmp['qty'] ?>" data-qty-edit="<?php echo $data_tmp['qty'] ?>">
                                                             <i class="bi bi-pencil"></i>  
                                                         </button>
                                                         <?php  
@@ -758,7 +788,7 @@
                                                 </div>
                                                 <div class="col-sm-1 mb-2">
                                                     <label class="form-control mobile-text fw-bold label-mobile" style="border: none;">Stock</label> 
-                                                    <input type="text" class="form-control bg-light text-end mobile-text" name="stock" id="stock_<?php echo $data['id_tmp'] ?>" value="<?php echo number_format($data['stock']) ?>" readonly>
+                                                    <input type="text" class="form-control bg-light text-end mobile-text" name="stock[]" id="stock_<?php echo $data['id_tmp'] ?>" value="<?php echo number_format($data['stock']) ?>" readonly>
                                                 </div>
                                                 <div class="col-sm-1 mb-2">
                                                     <label class="form-control mobile-text fw-bold label-mobile" style="border: none;">Qty</label> 
@@ -1297,7 +1327,7 @@
 
 <!-- Modal Add Produk -->
 <div class="modal fade" id="tambahData" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <form method="post" action=""> <!-- Tambahkan form dengan method POST -->
                 <div class="modal-header">
@@ -1305,16 +1335,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
+                    <div class="table-responsive position-relative"> <!-- Tambahkan class position-relative untuk posisi relatif -->
+                        <div id="loading-indicator" class="position-absolute top-50 start-50 translate-middle" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
                         <table class="table table-striped table-bordered" id="table3">
                             <thead>
                                 <tr class="text-white" style="background-color: #051683;">
-                                    <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>
-                                    <td class="text-center p-3 text-nowrap" style="width: 350px">Nama Produk</td>
-                                    <td class="text-center p-3 text-nowrap" style="width: 100px">Satuan</td>
-                                    <td class="text-center p-3 text-nowrap" style="width: 100px">Merk</td>
-                                    <td class="text-center p-3 text-nowrap" style="width: 100px">Stock</td>
-                                    <td class="text-center p-3 text-nowrap" style="width: 100px">Aksi</td>
+                                    <td class="text-center p-3 text-nowrap">No</td>
+                                    <td class="text-center p-3 text-nowrap">Kode Produk</td>
+                                    <td class="text-center p-3 text-nowrap">Nama Produk</td>
+                                    <td class="text-center p-3 text-nowrap">Satuan</td>
+                                    <td class="text-center p-3 text-nowrap">Merk</td>
+                                    <td class="text-center p-3 text-nowrap">Stock</td>
+                                    <td class="text-center p-3 text-nowrap">Aksi</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1332,6 +1368,7 @@
 
                                 $sql = "SELECT 
                                             COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
+                                            COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
                                             COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
                                             COALESCE(tpr.harga_produk, tpsm.harga_set_marwa) AS harga_produk,
                                             COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
@@ -1361,6 +1398,7 @@
                                 ?>
                                     <tr>
                                         <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                                        <td class="text-center text-nowrap"><?php echo $data['kode_produk']; ?></td>
                                         <td class="text-nowrap"><?php echo $data['nama_produk']; ?></td>
                                         <td class="text-center text-nowrap">
                                             <?php 
@@ -1374,7 +1412,7 @@
                                         <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
                                         <td class="text-center text-nowrap"><?php echo number_format($data['stock']); ?></td>
                                         <td class="text-center text-nowrap">
-                                            <button class="btn-pilih btn btn-primary btn-sm"  data-inv="<?php echo $id_inv; ?>" data-id-produk="<?php echo $id_produk; ?>" data-nama-produk="<?php echo $data['nama_produk']; ?>" data-harga="<?php echo $data['harga_produk']; ?>"  <?php echo ($isChecked || $isDisabled) ? 'disabled' : ''; ?>>Pilih</button>
+                                            <button class="btn-pilih btn btn-primary btn-sm"  data-inv="<?php echo $id_inv; ?>" data-id-produk="<?php echo $id_produk; ?>" data-nama-produk="<?php echo $data['nama_produk']; ?>" data-harga="<?php echo $data['harga_produk']; ?>" <?php echo ($isChecked || $isDisabled) ? 'disabled' : ''; ?>>Pilih</button>
                                         </td>
                                     </tr>
                                     <?php $no++; ?>
@@ -1655,51 +1693,72 @@
 
 <!-- Kode untuk tambah data -->
 <script>
-    $(document).ready(function() {
-        $('.btn-detail').click(function() {
-            var idInv = $(this).data('inv');
-            $('#inv').text(idInv);
+    $(document).on('click', '.btn-pilih', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-            $('button.btn-pilih').attr('data-inv', idInv);
+        // Tampilkan indikator proses saat tombol diklik
+        $('#loading-indicator').show();
 
-            $('#tambahData').modal('show');
-        });
+        // Tambahkan kelas blur pada tabel
+        $('table').addClass('blur');
 
-        $(document).on('click', '.btn-pilih', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
+        var inv = $(this).data('inv'); // Ganti 'data-id-produk' menjadi 'data-inv'
+        var produk = $(this).data('id-produk');
+        var namaProduk = $(this).data('nama-produk');
+        var hargaProduk = $(this).data('harga');
 
-            var inv = $(this).attr('data-inv');
-            var produk = $(this).data('id-produk');
-            var namaProduk = $(this).data('nama-produk');
-            var hargaProduk = $(this).data('harga');
-           
+        saveData(inv, produk, namaProduk, hargaProduk);
+    });
 
+    function saveData(inv, produk, namaProduk, hargaProduk) {
+        // Nonaktifkan tombol yang dipilih segera setelah diklik
+        $('.btn-pilih[data-id-produk="' + produk + '"]').prop('disabled', true);
 
-            saveData(inv, produk, namaProduk, hargaProduk);
-        });
+        $.ajax({
+            url: 'simpan-data-tmp.php',
+            type: 'POST',
+            data: {
+                inv: inv,
+                produk: produk,
+                namaProduk: namaProduk,
+                hargaProduk: hargaProduk
+            },
+            timeout: 7000,
+            success: function(response) {
+                console.log('Data berhasil disimpan.');
 
-        function saveData(inv, produk, namaProduk, hargaProduk) {
-            $.ajax({
-                url: 'simpan-data-tmp.php',
-                type: 'POST',
-                data: {
-                    inv:inv,
-                    produk:produk,
-                    namaProduk:namaProduk,
-                    hargaProduk:hargaProduk
-                },
-                success: function(response) {
-                    console.log('Data berhasil disimpan.');
-                    $('button[data-inv="' + inv + '"]').prop('disabled', true);
-                },
-                error: function(xhr, status, error) {
+                // Berikan jeda waktu 5 detik sebelum menonaktifkan tombol
+                setTimeout(function() {
+                    // Sembunyikan indikator proses setelah selesai jeda waktu
+                    $('#loading-indicator').hide();
+
+                    // Hilangkan kelas blur dari tabel setelah menonaktifkan tombol
+                    $('table').removeClass('blur');
+                }, 5000);
+            },
+            error: function(xhr, status, error) {
+                if (status === 'timeout') {
+                    console.error('Koneksi timeout setelah 7 detik.');
+                    // Tindakan yang perlu diambil jika koneksi timeout
+                } else {
                     console.error('Terjadi kesalahan saat menyimpan data:', error);
                 }
-            });
-        }
-    });
+
+                // Sembunyikan indikator proses jika terjadi kesalahan atau timeout
+                $('#loading-indicator').hide();
+
+                // Hilangkan kelas blur dari tabel jika terjadi kesalahan atau timeout
+                $('table').removeClass('blur');
+            },
+            complete: function() {
+                // Sembunyikan indikator proses setelah selesai
+                $('#loading-indicator').hide();
+            }
+        });
+    }
 </script>
+
 
 <!-- Format Number Harga -->
 <script>

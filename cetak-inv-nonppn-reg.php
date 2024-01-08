@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/style-inv-nonppn.css">
 </head>
@@ -187,7 +187,9 @@
                                     trx.disc,
                                     trx.total_harga,
                                     trx.status_trx,
+                                    trx.created_date,
                                     tpr.nama_produk,
+                                    tpr.satuan,
                                     mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
                                     tpsm.nama_set_marwa,
                                     tpsm.harga_set_marwa,
@@ -201,7 +203,7 @@
                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
                                 WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode'
                                 GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk_spk, mr_set.nama_merk, mr_produk.nama_merk
-                                ORDER BY no_spk ASC";
+                                ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_nonppn'];
@@ -210,6 +212,7 @@
                         $kat_inv = $data_trx['kategori_inv'];
                         $qty = $data_trx['total_qty'];
                         $harga = $data_trx['harga'];
+                        $satuan = $data_trx['satuan'];
                         $disc = $data_trx['disc'] / 100;
                         $tampil_disc = $data_trx['disc'];
                         $tampil_spdisc = $data_trx['sp_disc'];
@@ -218,11 +221,19 @@
                         $sub_total = floor($total * $qty);
                         $sub_total_fix = floor($sub_total - $sub_total_spdisc);
                         $grand_total += floor($sub_total_fix);
+                        $id_produk = $data_trx['id_produk'];
+                        $satuan_produk = '';
+                        $id_produk_substr = substr($id_produk, 0, 2);
+                        if ($id_produk_substr == 'BR') {
+                            $satuan_produk = $satuan;
+                        } else {
+                            $satuan_produk = 'Set';
+                        }
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
                             <td><?php echo $data_trx['nama_produk_spk'] ?></td>
-                            <td align="right"><?php echo number_format($data_trx['total_qty'], 0, '.', '.') ?></td>
+                            <td align="right"> <?php echo number_format($data_trx['total_qty'], 0, '.', '') . ' ' . $satuan_produk; ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga'], 0, '.', '.') ?></td>
                             <?php
                             if ($data_trx['kategori_inv'] == 'Diskon') {

@@ -85,12 +85,34 @@ include "akses.php";
                 ?>
                     <tr>
                         <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                        <td class="text-nowrap"><?php echo $data['no_inv'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['tgl_inv'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['no_po'] ?></td>
+                        <td class="text-nowrap text-center"><?php echo $data['no_inv'] ?></td>
+                        <td class="text-nowrap text-center"><?php echo $data['tgl_inv'] ?></td>
+                        <td class="text-center text-nowrap">
+                            <?php 
+                                if(!empty($data['no_po'])){
+                                    echo $data['no_po'];
+                                } else {
+                                    echo '-';
+                                }
+                            ?>
+                        </td>
                         <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
+                        <td class="text-nowrap text-center"><?php echo $data['kategori_inv'] ?></td>
+                        <td class="text-nowrap">
+                            <?php
+                                $note = $data['note_inv'];
+
+                                $items = explode("\n", trim($note));
+
+                                if(!empty($note)){
+                                    foreach ($items as $notes) {
+                                        echo trim($notes) . '<br>';
+                                    }
+                                }else{
+                                    echo 'Tidak Ada';
+                                }
+                            ?>
+                        </td>
                         <td class="text-center text-nowrap">
                             <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                         </td>

@@ -28,37 +28,87 @@
                         <?php
                     }
                 } else if (isset($_POST['simpan-tmp'])){
-                    // Mendapatkan data yang dikirimkan melalui form
-                    $id_komplain = base64_encode($_POST['id_komplain']);
-                    $id_tmp = $_POST['id_tmp']; // Mengambil ID transaksi dari form
-                    $nama_produk = $_POST['nama_produk'];
-                    $harga = $_POST['harga']; // Mengambil Nilai Harga
-                    $qty = $_POST['qty_tmp']; // Mengambil nilai qty yang diperbarui
-                    $disc = $_POST['disc'];
-                    for ($i = 0; $i < count($id_tmp); $i++) {
-                        $id = $id_tmp[$i];
-                        $nama_produk_array = $nama_produk[$i];
-                        $hrg = str_replace(',', '', $harga[$i]); // Menghapus tanda ribuan (,)
-                        $hrg = intval($hrg); // Mengubah string harga menjadi integer
-                        $newQtyInt = str_replace(',', '', $qty[$i]); // Menghapus tanda ribuan (,)
-                        $newQtyInt = intval($newQtyInt); // Mengubah string harga menjadi integer
-                        $total_harga = $hrg * $newQtyInt;
-                        $disc_array = $disc[$i];
-                        $array_disc = $disc_array / 100;
-                        $total_harga_disc = $total_harga * (1 - $array_disc);
+                    // Begin transaction
+mysqli_begin_transaction($connect);
 
-                        // Lakukan proses penyimpanan data qty ke dalam database sesuai dengan ID transaksi
-                        // Contoh: Lakukan kueri SQL untuk memperbarui data qty dalam tabel transaksi menggunakan ID transaksi
-                        $sql = "UPDATE tmp_produk_komplain SET nama_produk = '$nama_produk_array', harga = $hrg, qty = '$newQtyInt', disc = '$disc_array', total_harga = '$total_harga_disc', status_tmp = '1' WHERE id_tmp = '$id'";
-                        $query = mysqli_query($connect, $sql);
+try {
+    // Mendapatkan data yang dikirimkan melalui form
+    $id_komplain = base64_encode($_POST['id_komplain']);
+    $id_tmp = $_POST['id_tmp']; // Mengambil ID transaksi dari form
+    $id_produk = $_POST['id_produk_tmp'];
+    $nama_produk = $_POST['nama_produk'];
+    $harga = $_POST['harga']; // Mengambil Nilai Harga
+    $qty = $_POST['qty_tmp']; // Mengambil nilai qty yang diperbarui
+    $disc = $_POST['disc'];
+    $stock = $_POST['stock'];
 
-                        if($query){
-                            $_SESSION['info'] = "Disimpan";
+    // Gunakan variabel flag untuk menandai apakah semua update berhasil
+    $allUpdatesSuccessful = true;
+
+    for ($i = 0; $i < count($id_tmp); $i++) {
+        $id = $id_tmp[$i];
+        $id_produk_array = $id_produk[$i];
+        $nama_produk_array = $nama_produk[$i];
+        $hrg = str_replace(',', '', $harga[$i]); // Menghapus tanda ribuan (,)
+        $hrg = intval($hrg); // Mengubah string harga menjadi integer
+        $newQtyInt = str_replace(',', '', $qty[$i]); // Menghapus tanda ribuan (,)
+        $newQtyInt = intval($newQtyInt); // Mengubah string harga menjadi integer
+        $newStock = str_replace(',', '', $stock[$i]); // Menghapus tanda ribuan (,)
+        $newStock = intval($newStock); // Mengubah string harga menjadi integer
+        $total_harga = $hrg * $newQtyInt;
+        $disc_array = $disc[$i];
+        $array_disc = $disc_array / 100;
+        $total_harga_disc = $total_harga * (1 - $array_disc);
+        $newStockUpdate = $newStock - $newQtyInt;
+
+        // Lakukan proses penyimpanan data qty ke dalam database sesuai dengan ID transaksi
+        // Contoh: Lakukan kueri SQL untuk memperbarui data qty dalam tabel transaksi menggunakan ID transaksi
+        $sql = "UPDATE tmp_produk_komplain SET nama_produk = '$nama_produk_array', harga = $hrg, qty = '$newQtyInt', disc = '$disc_array', total_harga = '$total_harga_disc', status_tmp = '1' WHERE id_tmp = '$id'";
+        $query = mysqli_query($connect, $sql);
+
+        $update_stock = mysqli_query($connect, "UPDATE stock_produk_reguler SET stock = '$newStockUpdate' WHERE id_produk_reg = '$id_produk_array'");
+
+        // Periksa keberhasilan setiap kueri
+        if (!$query || !$update_stock) {
+            $allUpdatesSuccessful = false;
+            break; // Keluar dari loop jika ada kesalahan
+        }
+    }
+
+    // Commit transaksi hanya jika semua kueri berhasil
+    if ($allUpdatesSuccessful) {
+        mysqli_commit($connect);
+        $_SESSION['info'] = "Disimpan";
+        ?>
+        <script>window.location.href = "../detail-komplain-revisi.php?id=<?php echo $id_komplain ?>"</script>
+        <?php
+        exit();
+    } else {
+        // Rollback transaksi jika ada kesalahan
+        mysqli_rollback($connect);
+    }
+                    } catch (Exception $e) {
+                        // Rollback the transaction if an error occurs
+                        mysqli_rollback($connect);
+                        // Handle the error (e.g., display an error message)
+                        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
                             ?>
-                                <script>window.location.href = "../detail-komplain-revisi.php?id=<?php echo $id_komplain ?>"</script>
+                            <!-- Sweet Alert -->
+                            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: "<?php echo $error_message; ?>",
+                                    icon: "error",
+                                }).then(function() {
+                                    window.location.href = "../detail-komplain-revisi.php?id=<?php echo $id_komplain ?>";
+                                });
+                                });
+                            </script>
                             <?php
-                        }
-                    }
+                    } 
                 } else if (isset($_POST['ubah-data'])){
                     $connect->begin_transaction();
                     try{

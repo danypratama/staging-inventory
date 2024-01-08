@@ -47,6 +47,7 @@
                         tpk.qty,
                         tpk.disc,
                         tpk.total_harga,
+                        tpk.created_date,
                         COALESCE(mr_produk.nama_merk, mr_set.nama_merk) AS merk,
                         spr.stock
                     FROM tmp_produk_komplain AS tpk
@@ -55,7 +56,7 @@
                     LEFT JOIN tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                     LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
                     LEFT JOIN stock_produk_reguler spr ON tpk.id_produk = spr.id_produk_reg
-                    WHERE tpk.id_inv = '$id_inv' AND status_tmp = '1' AND status_br_refund = '0'";
+                    WHERE tpk.id_inv = '$id_inv' AND status_tmp = '1' AND status_br_refund = '0' ORDER BY tpk.created_date ASC";
     $query_produk = mysqli_query($connect, $sql_produk);
     $query_produk_total = mysqli_query($connect, $sql_produk);
 

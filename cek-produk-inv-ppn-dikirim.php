@@ -326,6 +326,55 @@ include "function/class-spk.php";
                                         </div>
                                     </div>
                                     <?php
+                                  }else if($jenis_pengiriman == 'Diambil Langsung'){
+                                    ?>
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <p style="float: left;">Jenis Pengiriman</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                <?php echo $jenis_pengiriman ?>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    if(!empty($data_status_kirim['jenis_penerima'])){
+                                        ?>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Jenis Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                    <?php  
+                                                        if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                            ?>
+                                                                (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                    
+                                                </div>
+                                            </div>
+                                            <?php  
+                                                if(!empty($data_penerima['nama_penerima'])){
+                                                    ?>
+                                                         <div class="row">
+                                                            <div class="col-5">
+                                                                <p style="float: left;">Nama Penerima</p>
+                                                                <p style="float: right;"> :</p>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <?php echo $data_penerima['nama_penerima'] ?>
+                                                            </div>
+                                                        </div>
+                                                    <?php
+                                                }
+                                            
+                                            ?>
+                                        <?php
+                                    }
                                 } else {
                                     if($data_status_kirim['jenis_penerima'] == "Customer" || $jenis_pengiriman == 'Driver'){
                                         ?>
@@ -422,24 +471,24 @@ include "function/class-spk.php";
                                         $sql_bukti_kirim = "SELECT id_inv FROM inv_bukti_terima WHERE id_inv = '$id_inv_ppn'";
                                         $query_bukti_kirim = mysqli_query($connect, $sql_bukti_kirim);
                                         $total_row = mysqli_num_rows($query_bukti_kirim);
-                                        if ($total_row > 0 && $data_cek['jenis_pengiriman'] == 'Ekspedisi' && $data_cek['jenis_penerima'] == 'Ekspedisi') {
-                                            echo '
-                                            <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
-                                                <i class="bi bi-file-earmark-image"></i> Bukti Kirim
-                                            </button>
+                                        if ($data_cek['jenis_pengiriman'] == 'Ekspedisi' && $data_cek['jenis_penerima'] == 'Ekspedisi') {
+                                            ?>
+                                                <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
+                                                    <i class="bi bi-file-earmark-image"></i> Bukti Kirim
+                                                </button>
 
-                                            <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
-                                                data-bs-target="#DiterimaEx">
-                                                <i class="bi bi-send"></i>
-                                                Diterima
-                                            </button>
+                                                <button class="btn btn-secondary btn-detail mb-2" data-bs-toggle="modal"
+                                                    data-bs-target="#DiterimaEx">
+                                                    <i class="bi bi-send"></i>
+                                                    Diterima
+                                                </button>
 
-                                            <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal"
-                                                data-bs-target="#editOngkir">
-                                                <i class="bi bi-pencil"></i>
-                                                Edit Ongkir Dan No. Resi
-                                            </button>
-                                            ';
+                                                <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal"
+                                                    data-bs-target="#editOngkir">
+                                                    <i class="bi bi-pencil"></i>
+                                                    Edit Ongkir Dan No. Resi
+                                                </button>
+                                            <?php 
                                         } else if ($total_row > 0 && $data_cek['jenis_pengiriman'] == 'Driver' && $data_cek['jenis_penerima'] == 'Ekspedisi'){
                                             echo '
                                             <button class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#buktiKirim">
@@ -452,18 +501,27 @@ include "function/class-spk.php";
                                                 Diterima
                                             </button>
                                             ';
-                                        } else {
+                                        } else if ($data_cek['jenis_pengiriman'] == 'Driver' && $data_cek['jenis_penerima'] == '') {
                                             ?>
                                                 <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#ubahDriver">
+                                                <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#ubahDriver">
                                                     <i class="bi bi-arrow-repeat"></i> Ubah Driver
+                                                </button>
+                                            <?php
+                                        } else if ($data_cek['jenis_pengiriman'] == 'Diambil Langsung' && $data_cek['jenis_penerima'] == 'Customer'){
+                                            ?>
+                                                 <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#diambil">
+                                                    <i class="bi bi-arrow-repeat"></i> Diambil Oleh
                                                 </button>
                                             <?php
                                         }
                                     ?>
 
+                                    
+
                                     <!-- Ubah Jenis Pengiriman -->
-                                    <a href="proses/proses-ubah-pengiriman.php?id_status_kirim=<?php echo base64_encode($id_status_kirim) ?>&&id_inv=<?php echo base64_encode($id_inv) ?>" class="btn btn-warning mb-2 update-data">
+                                    <a href="proses/proses-ubah-pengiriman.php?id_status_kirim=<?php echo base64_encode($id_status_kirim) ?>&&id_inv=<?php echo base64_encode($id_inv) ?>" class="btn btn-primary mb-2 update-data">
                                         <i class="bi bi-arrow-repeat"></i> Ubah Jenis Pengiriman
                                     </a>
 
@@ -589,6 +647,7 @@ include "function/class-spk.php";
                                                     trx.disc,
                                                     trx.total_harga,
                                                     trx.status_trx,
+                                                    trx.created_date,
                                                     tpr.nama_produk,
                                                     tpr.satuan,
                                                     mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
@@ -602,7 +661,7 @@ include "function/class-spk.php";
                                                 LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                                WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND status_trx = '1' ORDER BY no_spk ASC";
+                                                WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND status_trx = '1' ORDER BY trx.created_date ASC";
                                         $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                         while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                             $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
@@ -710,6 +769,157 @@ include "function/class-spk.php";
         </script>
     </div>
 
+    <!-- Modal Diambil Oleh -->
+    <div class="modal fade" id="diambil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Diambil Oleh</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="proses/proses-diambil-oleh-ppn.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="id_inv" value="<?php echo $id_ppn_decode ?>">
+                        <div class="mb-3">
+                            <label>Diambil Oleh</label>
+                            <input type="text" name="diambil_oleh" class="form-control">
+                        </div>
+
+                         <div class="mb-3">
+                            <label id="labelBukti1">Bukti Terima 1</label>
+                            <br>
+                            <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)" required title="Pilih File">
+                        </div>
+                        <div class="mb-3 preview-image-2" id="imagePreview"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">tutup</button>
+                        <button type="submit" class="btn btn-primary" name="diambil-oleh">Update Data</button>
+                    </div>
+                </form>                                         
+            </div>
+        </div>
+        <?php include "page/upload-img.php";  ?>
+        <?php include "page/cek-upload.php"; ?>
+        <style>
+            .preview-image {
+                max-width: 100%;
+                height: auto;
+            }
+        </style>
+    </div>
+
+    <!-- Modal Edit Ongkir-->
+    <div class="modal fade" id="editOngkir" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <form action="proses/proses-ubah-ongkir-resi.php" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv_ppn']; ?>">
+                            <div class="mb-3">
+                                <label id="labelResi">No. Resi</label>
+                                <input type="text" class="form-control" name="edit_resi" id="resiEdit" value="<?php echo $no_resi ?>" autocomplete="off">
+                            </div>
+                            <div class="mb-3">
+                                <label id="labelJenisOngkir">Jenis Ongkir</label>
+                                <select id="jenis_ongkir_edit" name="jenis_ongkir_edit" class="form-select">
+                                    <option>Pilih</option>
+                                    <option value="0">Non COD</option>
+                                    <option value="1">COD</option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="ongkirDiv" style="display: none;">
+                                <label id="labelOngkir">Ongkir</label>
+                                <input type="text" class="form-control" name="edit_ongkir" id="edit_ongkir" value="<?php echo number_format($ongkir) ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label id="labelBukti1">Bukti Terima 1</label>
+                                <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImageEx(event)" required>
+                            </div>
+                            <div class="mb-3 preview-image-3" id="imagePreviewEx"></div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="ubah-ongkir-ppn"><i class="bi bi-arrow-left-right"></i> Ubah Data</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEdit"><i class="bi bi-x-circle"></i> Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- kode JS Dikirim -->
+        <?php include "page/upload-img.php"; ?>
+        <?php include "page/cek-upload.php"; ?>
+
+        <style>
+            .preview-image {
+                max-width: 100%;
+                height: auto;
+            }
+        </style>
+         <script>
+            var input = document.getElementById('resiEdit');
+
+            input.addEventListener('input', function() {
+                var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
+                input.value = sanitizedValue;
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var jenisOngkirEdit = document.getElementById('jenis_ongkir_edit');
+                var editOngkir = document.getElementById('edit_ongkir');
+                var ongkirDiv = document.getElementById('ongkirDiv');
+                var cancelEdit = document.getElementById('cancelEdit');
+
+                jenisOngkirEdit.addEventListener('change', function() {
+                    if (this.value === '0') {
+                        ongkirDiv.style.display = 'block';
+                        editOngkir.style.backgroundColor = '';
+                        editOngkir.setAttribute('required', 'true');
+                    } else if (this.value === '1'){
+                        ongkirDiv.style.display = 'none';
+                        editOngkir.setAttribute('readonly', 'true');
+                        editOngkir.value = '';
+                    } else if (this.value === ''){
+                        ongkirDiv.style.display = 'none';
+                        editOngkir.value = '';
+                        editOngkir.removeAttribute('required');
+                    }
+                });
+
+                cancelEdit.addEventListener('click', function() {
+                    location.reload();
+                });
+
+                 // Menambahkan event listener untuk input edit_ongkir
+                editOngkir.addEventListener("input", function () {
+                    // Menghapus karakter selain angka dan koma
+                    var formattedValue = editOngkir.value.replace(/[^\d,]/g, '');
+
+                    // Memastikan nilai tidak melebihi 100 juta
+                    var numericValue = Number(formattedValue.replace(/,/g, ''));
+                    if (numericValue > 1000000000) {
+                        numericValue = 1000000000;
+                    }
+
+                    // Memformat nilai ke dalam format angka yang diinginkan
+                    formattedValue = numericValue.toLocaleString();
+
+                    // Menetapkan nilai yang diformat ke input
+                    editOngkir.value = formattedValue;
+                });
+            });
+        </script>
+    </div>
+    <!-- End Modal Edit Ongkir -->
+
     <!-- Footer -->
     <?php include "page/footer.php"?>
     <!-- End Footer -->
@@ -781,39 +991,6 @@ include "function/class-spk.php";
     </div>
 </div>
 <!-- End Modal Dikirim -->
-
-<!-- Modal Edit Ongkir-->
-<div class="modal fade" id="editOngkir" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
-                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
-            </div>
-            <div class="modal-body">
-                <div class="card-body">
-                    <form action="proses/proses-ubah-ongkir-resi.php" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv_ppn']; ?>">
-                        <div class="mb-3">
-                            <label id="labelResi">No. Resi</label>
-                            <input type="text" class="form-control" name="resi" id="resi" value="<?php echo $no_resi ?>" autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelOngkir">Ongkir</label>
-                            <input type="text" class="form-control" name="ongkir" id="ongkos_kirim" value="<?php echo number_format($ongkir) ?>">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="ubah-ongkir-ppn"><i class="bi bi-arrow-left-right"></i> Ubah Data</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel"><i class="bi bi-x-circle"></i> Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Modal Edit Ongkir -->
 
 <!-- Modal Diterima-->
 <div class="modal fade" id="Diterima" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -984,7 +1161,7 @@ include "function/class-spk.php";
           }
     </script>
     <script>
-       const jenisPenerima = <?php echo json_encode($jenis_pengiriman); ?> ;
+        const jenisPenerima = <?php echo json_encode($jenis_pengiriman); ?> ;
         const labeljenisPenerima = document.getElementById('labelJenisPenerima');
         const jenisPenerimaSelect = document.getElementById('jenis-penerima');
         const labelPenerima = document.getElementById('labelPenerima');

@@ -323,6 +323,48 @@ include "function/class-spk.php";
                                         </div>
                                     </div>
                                     <?php
+                                }else if($jenis_pengiriman == 'Diambil Langsung'){
+                                    ?>
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <p style="float: left;">Jenis Pengiriman</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                <?php echo $jenis_pengiriman ?>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    if(!empty($data_status_kirim['jenis_penerima'])){
+                                        ?>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Jenis Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                    <?php  
+                                                        if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                            ?>
+                                                                (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Nama Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_penerima['nama_penerima'] ?>
+                                                </div>
+                                            </div>
+                                        <?php
+                                    }
                                 } else {
                                     ?>
                                         <div class="row mt-2">

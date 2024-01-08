@@ -520,6 +520,7 @@ include "function/class-spk.php";
                                                 trx.disc,
                                                 trx.total_harga,
                                                 trx.status_trx,
+                                                trx.created_date,
                                                 tpr.nama_produk,
                                                 tpr.satuan,
                                                 mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
@@ -533,7 +534,7 @@ include "function/class-spk.php";
                                             LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                             LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                             LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                            WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '1' ORDER BY no_spk ASC";
+                                            WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '1' ORDER BY trx.created_date ASC";
                                 $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                 while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                     $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
@@ -695,6 +696,7 @@ include "function/class-spk.php";
                                         trx.disc,
                                         trx.total_harga,
                                         trx.status_trx,
+                                        trx.created_date,
                                         tpr.nama_produk,
                                         tpr.satuan,
                                         mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
@@ -708,7 +710,7 @@ include "function/class-spk.php";
                                     LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                     LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                     LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '0' ORDER BY no_spk ASC";
+                                    WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '0' ORDER BY trx.created_date ASC";
                     $query_cek_harga = mysqli_query($connect, $sql_cek_harga);
                     $total_cek_harga = mysqli_num_rows($query_cek_harga);
                     while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
@@ -837,6 +839,346 @@ include "function/class-spk.php";
         </section>
     </main><!-- End #main -->
 
+    <!-- Modal Dikirim-->
+    <div class="modal fade" id="Dikirim" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="card-header">
+                        <h1 class="text-center fs-5" id="exampleModalLabel">Proses Dikirim</h1>
+                    </div>
+                    <div class="card-body">
+                        <?php
+                        $uuid = generate_uuid();
+                        $year = date('y');
+                        $day = date('d');
+                        $month = date('m');
+                        ?>
+                        <form action="proses/proses-invoice-nonppn.php" method="POST" enctype="multipart/form-data" id="form-kirim">
+                            <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
+                            <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
+                            <div class="mb-3">
+                                <label>Jenis Pengiriman</label>
+                                <select id="jenis-pengiriman" name="jenis_pengiriman" class="form-select" required>
+                                    <option value="">Pilih...</option>
+                                    <option value="Driver">Driver</option>
+                                    <option value="Ekspedisi">Ekspedisi</option>
+                                    <option value="Diambil Langsung">Diambil Langsung</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label id="labelDriver" style="display: none;">Pilih Driver</label>
+                                <select id="pengirim" name="pengirim" class="form-select" style="display: none;">
+                                    <option value="">Pilih...</option>
+                                    <?php
+                                    include "koneksi.php";
+                                    $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
+                                    while ($data_driver = mysqli_fetch_array($sql_driver)) {
+                                    ?>
+                                        <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="ekspedisi" style="display: none;">
+                                <label>Pilih Ekspedisi</label>
+                                <select name="ekspedisi" id="pilihEkspedisi" class="form-select selectize-js">
+                                    <option value=""></option>
+                                    <?php
+                                    include "koneksi.php";
+                                    $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
+                                    while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
+                                    ?>
+                                        <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>"><?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label style="display: none;" id="labelDikirimOleh">Dikirim Oleh</label>
+                                <input type="text" class="form-control" name="dikirim" id="dikirim_oleh" style="display: none;">
+                            </div>
+                            <div class="mb-3">
+                                <label style="display: none;" id="labelPj">Penanggung Jawab</label>
+                                <input type="text" class="form-control" name="pj" id="penanggung_jawab" style="display: none;">
+                            </div>
+                            <div class="mb-3">
+                                <label id="labelDate">Tanggal Kirim</label>
+                                <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
+                            </div>
+                            <!-- <div class="mb-3">
+                                <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
+                                <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)" style="display: none;">
+                            </div>
+                            <div class="mb-3 preview-image" id="imagePreview" style="display: none;"></div>
+
+                            <div class="mb-3">
+                                <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
+                                <input type="file" name="fileku2" id="fileku2" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage2(event)" style="display: none;">
+                            </div>
+                            <div class="mb-3" id="imagePreview2" style="display: none;"></div>
+                            
+                            <div class="mb-3">
+                                <label id="labelBukti3" for="fileku" style="display: none;">Bukti Terima 3</label>
+                                <input type="file" name="fileku3" id="fileku3" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage3(event)" style="display: none;">
+                            </div>
+                            <div class="mb-3" id="imagePreview3" style="display: none;"></div> -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="ubah-dikirim" id="dikirim" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDikirim"><i class="bi bi-x-circle"> Cancel</i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- kode JS Dikirim -->
+        <?php include "page/upload-img.php";  ?>
+        <!-- kode JS Dikirim -->
+        <script>
+            // var input = document.getElementById('resi');
+
+            // input.addEventListener('input', function() {
+            //     var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
+            //     input.value = sanitizedValue;
+            // });
+        </script>
+
+        <script>
+            function checkFileName() {
+                var file1 = document.getElementById('fileku1').value;
+                var file2 = document.getElementById('fileku2').value;
+                var file3 = document.getElementById('fileku3').value;
+
+                if (file1 === file2 && file2 !== "") {
+                    alert("Nama file ke 2 harus berbeda!");
+                    document.getElementById('fileku2').value = "";
+                    document.getElementById('imagePreview2').innerHTML = "";
+                }
+
+                if (file1 === file3 && file3 !== "") {
+                    alert("Nama file ke 3 harus berbeda!");
+                    document.getElementById('fileku3').value = "";
+                    document.getElementById('imagePreview3').innerHTML = "";
+                }
+
+                if (file2 === file3 && file3 !== "") {
+                    alert("Nama file ke 3 harus berbeda!");
+                    document.getElementById('fileku3').value = "";
+                    document.getElementById('imagePreview3').innerHTML = "";
+                }
+            }
+        </script>
+
+        <script>
+            const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
+            const pengirimSelect = document.getElementById('pengirim');
+            const labelDriver = document.getElementById('labelDriver');
+            const ekspedisiSelect = document.getElementById('ekspedisi');
+            const ekspedisiSelectize = document.getElementById('pilihEkspedisi');
+            const labelDikirimOleh = document.getElementById('labelDikirimOleh');
+            const dikirimOleh = document.getElementById('dikirim_oleh');
+            const pjLabel = document.getElementById('labelPj');
+            const penanggungJawab = document.getElementById('penanggung_jawab');
+            // const labelBukti1 = document.getElementById('labelBukti1');
+            // const labelBukti2 = document.getElementById('labelBukti2');
+            // const labelBukti3 = document.getElementById('labelBukti3');
+            // const file1 = document.getElementById('fileku1');
+            // const file2 = document.getElementById('fileku2');
+            // const file3 = document.getElementById('fileku3');
+            // const imagePreview = document.getElementById('imagePreview');
+            // const imagePreview2 = document.getElementById('imagePreview2');
+            // const imagePreview3 = document.getElementById('imagePreview3');
+            let isModalShown = false;
+
+            jenisPengirimanSelect.addEventListener('change', function() {
+                if (this.value === 'Driver') {
+                    labelDriver.style.display = 'block'; // Menampilkan form input
+                    pengirimSelect.style.display = 'block'; // Menampilkan form input
+                    pengirimSelect.setAttribute('required', 'true');
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                    ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                    ekspedisiSelectize.removeAttribute('required');
+                    ekspedisiSelectize.classList.remove('selectize-js');
+                    // labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                    labelDikirimOleh.style.display = 'none';
+                    dikirimOleh.style.display = 'none';
+                    dikirimOleh.value = '';
+                    dikirimOleh.removeAttribute('required');
+                    pjLabel.style.display = 'none';
+                    penanggungJawab.style.display = 'none';
+                    penanggungJawab.removeAttribute('required');
+                    penanggungJawab.value = '';
+                    // file1.style.display = 'none'; // Menyembunyikan form input
+                    // file2.style.display = 'none'; // Menyembunyikan form input
+                    // file3.style.display = 'none'; // Menyembunyikan form input
+                    // file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                    // file1.removeAttribute('required');
+                    // file2.value = ''; // Mengatur ulang nilai menjadi kosong
+                    // file3.value = ''; // Mengatur ulang nilai menjadi kosong
+                    // imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+                    // imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+                    // imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
+                    dikirim.disabled = false;
+                } else if (this.value === 'Ekspedisi') {
+                    pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                    labelDriver.style.display = 'none'; // Menyembunyikan form input
+                    pengirimSelect.style.display = 'none'; // Menyembunyikan form input
+                    pengirimSelect.removeAttribute('required');
+                    ekspedisiSelect.style.display = 'block'; // Menampilkan form input
+                    ekspedisiSelectize.classList.add('selectize');
+                    ekspedisiSelectize.classList.add('selectize-js');
+                    ekspedisiSelectize.required = true;
+                    labelDikirimOleh.style.display = 'block';
+                    dikirimOleh.style.display = 'block';
+                    dikirimOleh.setAttribute('required', 'true');
+                    labelPj.style.display = 'block';
+                    penanggungJawab.style.display = 'block';
+                    penanggungJawab.setAttribute('required' , 'true');
+                    // labelBukti1.style.display = 'none'; // Menampilkan form input
+                    // labelBukti2.style.display = 'none'; // Menampilkan form input
+                    // labelBukti3.style.display = 'none'; // Menampilkan form input
+                    // file1.style.display = 'none'; // Menampilkan form input
+                    // file1.removeAttribute('required');
+                    // file2.style.display = 'none'; // Menampilkan form input
+                    // file3.style.display = 'none'; // Menampilkan form input
+                    // imagePreview.style.display = 'none'; // Menampilkan konten di dalam elemen "imagePreview"
+                    // imagePreview2.style.display = 'none'; // Menampilkan konten di dalam elemen "imagePreview2"
+                    // imagePreview3.style.display = 'none'; // Menampilkan konten di dalam elemen "imagePreview3"
+                    dikirim.disabled = false;       
+                } else if (this.value === 'Diambil Langsung') {
+                    // labelBukti1.style.display = 'block'; // Menampilkan form input
+                    // labelBukti2.style.display = 'block'; // Menampilkan form input
+                    // labelBukti3.style.display = 'block'; // Menampilkan form input
+                    // file1.style.display = 'block'; // Menampilkan form input
+                    // file1.setAttribute('required', 'true');
+                    // file2.style.display = 'block'; // Menampilkan form input
+                    // file3.style.display = 'block'; // Menampilkan form input
+                    // imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
+                    // imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
+                    // imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
+                    labelDriver.style.display = 'none'; // Menampilkan form input
+                    pengirimSelect.style.display = 'none'; // Menampilkan form input
+                    pengirimSelect.removeAttribute('required');
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                    ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                    ekspedisiSelectize.removeAttribute('required');
+                    ekspedisiSelectize.classList.remove('selectize-js');
+                    // labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                    labelDikirimOleh.style.display = 'none';
+                    dikirimOleh.style.display = 'none';
+                    dikirimOleh.value = '';
+                    dikirimOleh.removeAttribute('required');
+                    pjLabel.style.display = 'none';
+                    penanggungJawab.style.display = 'none';
+                    penanggungJawab.removeAttribute('required');
+                    penanggungJawab.value = '';
+                    dikirim.disabled = false;
+                } else if (this.value === '') {
+                    ekspedisiSelectize.removeAttribute('required');
+                    ekspedisiSelectize.classList.remove('selectize-js');
+                    pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                    ekspedisiSelectize.value = ''; // Mengatur ulang nilai menjadi kosong
+                    dikirimOleh.value = '';
+                    penanggungJawab.value = '';
+                    labelDriver.style.display = 'none'; // Menyembunyikan form input
+                    pengirimSelect.style.display = 'none'; // Menyembunyikan form input
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                    labelDikirimOleh.style.display = 'none' // Menyembunyikan form input
+                    labelPj.style.display = 'none' // Menyembunyikan form input
+                    file1.style.display = 'none'; // Menyembunyikan form input
+                    file2.style.display = 'none'; // Menyembunyikan form input
+                    file3.style.display = 'none'; // Menyembunyikan form input
+                    pengirimSelect.style.display = 'none'; // Menyembunyikan form input
+                    dikirimOleh.style.display = 'none';
+                    penanggungJawab.style.display = 'none';
+                    // labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                    // file1.style.display = 'none'; // Menyembunyikan form input
+                    // file2.style.display = 'none'; // Menyembunyikan form input
+                    // file3.style.display = 'none'; // Menyembunyikan form input
+                    dikirim.disabled = true;
+                    document.getElementById('form-kirim').reset();
+                }
+                dikirim.addEventListener('shown.bs.modal', function() {
+                    // Mengatur properti display menjadi 'none' untuk menyembunyikan elemen file
+                    // file1.style.display = 'none'; // Menyembunyikan form input
+                    // file2.style.display = 'none'; // Menyembunyikan form input
+                    // file3.style.display = 'none'; // Menyembunyikan form input
+                    dikirim.disabled = true;
+                });
+
+                // jenisOngkir.addEventListener('change', function() {
+                //     if (this.value === '0') {
+                //         ongkirSelect.style.display = 'block';
+                //         ongkirSelect.style.backgroundColor = '';
+                //         ongkirSelect.removeAttribute('readonly');
+                //         ongkirSelect.setAttribute('required', 'true');
+                //     } else {
+                //         ongkirSelect.style.display = 'block';
+                //         ongkirSelect.style.backgroundColor = '#f8f9fa';
+                //         ongkirSelect.removeAttribute('required');
+                //         ongkirSelect.setAttribute('readonly', 'true');
+                //         ongkirSelect.value = '0';
+                //     }
+                // });
+
+
+                // Refresh halaman modal
+                if (isModalShown) {
+                    $('#Dikirim').modal('hide'); // Menyembunyikan modal
+                    location.reload(); // Melakukan refresh halaman
+                    $('#Dikirim').modal('show')
+                }
+
+                // Mendapatkan tombol "Cancel" berdasarkan ID
+                const cancelButton = document.getElementById('cancelDikirim');
+
+                // Fungsi untuk mengatur ulang input teks dan tombol
+                // Event listener saat tombol "Cancel" ditekan
+                cancelButton.addEventListener('click', function() {
+                    dikirimOleh.value = '';
+                    penanggungJawab.value = '';
+                    jenisPengirimanSelect.value = '';
+                    pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                    ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
+                    // file1.value = ''; // Mengatur ulang nilai menjadi kosong
+                    // file2.value = ''; // Mengatur ulang nilai menjadi kosong
+                    // file3.value = ''; // Mengatur ulang nilai menjadi kosong
+                    // imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
+                    // imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
+                    // imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
+                    ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
+                    labelDriver.style.display = 'none'; // Menyembunyikan form input
+                    pengirimSelect.style.display = 'none'; // Menyembunyikan form input
+                    labelDikirimOleh.style.display = 'none';
+                    dikirimOleh.style.display = 'none';
+                    pjLabel.style.display = 'none';
+                    penanggungJawab.style.display = 'none';
+                    // labelBukti1.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti2.style.display = 'none'; // Menyembunyikan form input
+                    // labelBukti3.style.display = 'none'; // Menyembunyikan form input
+                    // file1.style.display = 'none'; // Menyembunyikan form input
+                    // file2.style.display = 'none'; // Menyembunyikan form input
+                    // file3.style.display = 'none'; // Menyembunyikan form input
+                    dikirim.disabled = true;
+                });
+            });
+          
+        </script>
+        <!-- End JS Dikirim -->
+        <style>
+            .preview-image {
+                max-width: 100%;
+                height: auto;
+            }
+        </style>
+    </div>
+    <!-- End Modal Dikirim -->
+
     <!-- Footer -->
     <?php include "page/footer.php" ?>
     <?php include "page/script.php" ?>
@@ -845,374 +1187,6 @@ include "function/class-spk.php";
 </body>
 
 </html>
-
-<!-- Modal Dikirim-->
-<div class="modal fade" id="Dikirim" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="card-header">
-                    <h1 class="text-center fs-5" id="exampleModalLabel">Proses Dikirim</h1>
-                </div>
-                <div class="card-body">
-                    <?php
-                    $uuid = generate_uuid();
-                    $year = date('y');
-                    $day = date('d');
-                    $month = date('m');
-                    ?>
-                    <form action="proses/proses-invoice-nonppn.php" method="POST" enctype="multipart/form-data" id="form-kirim">
-                        <input type="hidden" name="id_status" value="STATUS-<?php echo $year ?><?php echo $month ?><?php echo $uuid ?><?php echo $day ?>">
-                        <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>">
-                        <div class="mb-3">
-                            <label>Jenis Pengiriman</label>
-                            <select id="jenis-pengiriman" name="jenis_pengiriman" class="form-select" required>
-                                <option value="">Pilih...</option>
-                                <option value="Driver">Driver</option>
-                                <option value="Ekspedisi">Ekspedisi</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelDriver" style="display: none;">Pilih Driver</label>
-                            <select id="pengirim" name="pengirim" class="form-select" style="display: none;">
-                                <option value="">Pilih...</option>
-                                <?php
-                                include "koneksi.php";
-                                $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
-                                while ($data_driver = mysqli_fetch_array($sql_driver)) {
-                                ?>
-                                    <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelEkspedisi" style="display: none;">Pilih Ekspedisi</label>
-                            <select id="ekspedisi" name="ekspedisi" class="form-select" style="display: none;">
-                                <option value=""></option>
-                                <?php
-                                include "koneksi.php";
-                                $sql_ekspedisi = mysqli_query($connect, "SELECT * FROM ekspedisi");
-                                while ($data_ekspedisi = mysqli_fetch_array($sql_ekspedisi)) {
-                                ?>
-                                    <option value="<?php echo $data_ekspedisi['id_ekspedisi'] ?>"><?php echo $data_ekspedisi['nama_ekspedisi'] ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label style="display: none;" id="labelResi">No. Resi</label>
-                            <input type="text" class="form-control" name="resi" id="resi" style="display: none;">
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelJenisOngkir" style="display: none;">Jenis Ongkir</label>
-                            <select id="jenis_ongkir" name="jenis_ongkir" class="form-select" style="display: none;">
-                                <option>Pilih</option>
-                                <option value="0">Non COD</option>
-                                <option value="1">COD</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label style="display: none;" id="labelOngkir">Ongkir</label>
-                            <input type="text" class="form-control" name="ongkir" id="ongkos_kirim" style="display: none;">
-                        </div>
-                        <div class="mb-3">
-                            <label style="display: none;" id="labelDikirimOleh">Dikirim Oleh</label>
-                            <input type="text" class="form-control" name="dikirim" id="dikirim_oleh" style="display: none;">
-                        </div>
-                        <div class="mb-3">
-                            <label style="display: none;" id="labelPj">Penanggung Jawab</label>
-                            <input type="text" class="form-control" name="pj" id="penanggung_jawab" style="display: none;">
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelDate">Tanggal Kirim</label>
-                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
-                            <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)" style="display: none;">
-                        </div>
-                        <div class="mb-3 preview-image" id="imagePreview" style="display: none;"></div>
-
-                        <div class="mb-3">
-                            <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
-                            <input type="file" name="fileku2" id="fileku2" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage2(event)" style="display: none;">
-                        </div>
-                        <div class="mb-3" id="imagePreview2" style="display: none;"></div>
-                        
-                        <div class="mb-3">
-                            <label id="labelBukti3" for="fileku" style="display: none;">Bukti Terima 3</label>
-                            <input type="file" name="fileku3" id="fileku3" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage3(event)" style="display: none;">
-                        </div>
-                        <div class="mb-3" id="imagePreview3" style="display: none;"></div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="ubah-dikirim" id="dikirim" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDikirim"><i class="bi bi-x-circle"> Cancel</i></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- kode JS Dikirim -->
-    <?php include "page/upload-img.php";  ?>
-    <!-- kode JS Dikirim -->
-    <script>
-        var input = document.getElementById('resi');
-
-        input.addEventListener('input', function() {
-            var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
-            input.value = sanitizedValue;
-        });
-    </script>
-    <script>
-        function checkFileName() {
-            var file1 = document.getElementById('fileku1').value;
-            var file2 = document.getElementById('fileku2').value;
-            var file3 = document.getElementById('fileku3').value;
-
-            if (file1 === file2 && file2 !== "") {
-                alert("Nama file ke 2 harus berbeda!");
-                document.getElementById('fileku2').value = "";
-                document.getElementById('imagePreview2').innerHTML = "";
-            }
-
-            if (file1 === file3 && file3 !== "") {
-                alert("Nama file ke 3 harus berbeda!");
-                document.getElementById('fileku3').value = "";
-                document.getElementById('imagePreview3').innerHTML = "";
-            }
-
-            if (file2 === file3 && file3 !== "") {
-                alert("Nama file ke 3 harus berbeda!");
-                document.getElementById('fileku3').value = "";
-                document.getElementById('imagePreview3').innerHTML = "";
-            }
-        }
-    </script>
-    <script>
-        const jenisPengirimanSelect = document.getElementById('jenis-pengiriman');
-        const pengirimSelect = document.getElementById('pengirim');
-        const labelDriver = document.getElementById('labelDriver');
-        const ekspedisiSelect = document.getElementById('ekspedisi');
-        const labelEkspedisi = document.getElementById('labelEkspedisi');
-        const labelResi = document.getElementById('labelResi')
-        const resiSelect = document.getElementById('resi');
-        const labelJenisOngkir = document.getElementById('labelJenisOngkir')
-        const jenisOngkir = document.getElementById('jenis_ongkir');
-        const labelOngkir = document.getElementById('labelOngkir')
-        const ongkirSelect = document.getElementById('ongkos_kirim');
-        const labelDikirimOleh = document.getElementById('labelDikirimOleh');
-        const dikirimOleh = document.getElementById('dikirim_oleh');
-        const pjLabel = document.getElementById('labelPj');
-        const penanggungJawab = document.getElementById('penanggung_jawab');
-        const labelBukti1 = document.getElementById('labelBukti1');
-        const labelBukti2 = document.getElementById('labelBukti2');
-        const labelBukti3 = document.getElementById('labelBukti3');
-        const file1 = document.getElementById('fileku1');
-        const file2 = document.getElementById('fileku2');
-        const file3 = document.getElementById('fileku3');
-        const imagePreview = document.getElementById('imagePreview');
-        const imagePreview2 = document.getElementById('imagePreview2');
-        const imagePreview3 = document.getElementById('imagePreview3');
-        let isModalShown = false;
-
-        jenisPengirimanSelect.addEventListener('change', function() {
-            if (this.value === 'Driver') {
-                labelDriver.style.display = 'block'; // Menampilkan form input
-                pengirimSelect.style.display = 'block'; // Menampilkan form input
-                pengirimSelect.setAttribute('required', 'true');
-                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
-                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
-                resiSelect.style.display = 'none'; // Menyembunyikan form input
-                ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                ekspedisiSelect.removeAttribute('required');
-                resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                resiSelect.removeAttribute('required');
-                labelJenisOngkir.style.display = 'none';
-                jenisOngkir.style.display = 'none';
-                jenisOngkir.removeAttribute('required');
-                jenisOngkir.value = '';
-                ongkirSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                ongkirSelect.style.display = 'none';
-                ongkirSelect.removeAttribute('required');
-                labelResi.style.display = 'none'; // Menyembunyikan form input
-                labelOngkir.style.display = 'none'; // Menyembunyikan form input
-                labelBukti1.style.display = 'none'; // Menyembunyikan form input
-                labelBukti2.style.display = 'none'; // Menyembunyikan form input
-                labelBukti3.style.display = 'none'; // Menyembunyikan form input
-                labelDikirimOleh.style.display = 'none';
-                dikirimOleh.style.display = 'none';
-                dikirimOleh.value = '';
-                dikirimOleh.removeAttribute('required');
-                pjLabel.style.display = 'none';
-                penanggungJawab.style.display = 'none';
-                penanggungJawab.removeAttribute('required');
-                penanggungJawab.value = '';
-                file1.style.display = 'none'; // Menyembunyikan form input
-                file2.style.display = 'none'; // Menyembunyikan form input
-                file3.style.display = 'none'; // Menyembunyikan form input
-                file1.value = ''; // Mengatur ulang nilai menjadi kosong
-                file1.removeAttribute('required');
-                file2.value = ''; // Mengatur ulang nilai menjadi kosong
-                file3.value = ''; // Mengatur ulang nilai menjadi kosong
-                imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
-                imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
-                imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
-                dikirim.disabled = false;
-            } else if (this.value === 'Ekspedisi') {
-                pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                labelDriver.style.display = 'none'; // Menyembunyikan form input
-                pengirimSelect.style.display = 'none'; // Menyembunyikan form input
-                pengirimSelect.removeAttribute('required');
-                labelEkspedisi.style.display = 'block'; // Menampilkan form input
-                ekspedisiSelect.style.display = 'block'; // Menampilkan form input
-                ekspedisiSelect.setAttribute('required', 'true');
-                labelResi.style.display = 'block';
-                resiSelect.style.display = 'block';
-                resiSelect.setAttribute('required', 'true');
-                labelJenisOngkir.style.display = 'block';
-                jenisOngkir.style.display = 'block';
-                labelOngkir.style.display = 'block';
-                ongkirSelect.style.display = 'block';
-                ongkirSelect.style.backgroundColor = '#f8f9fa';
-                ongkirSelect.setAttribute('readonly', 'true');
-                ongkirSelect.value = '0';
-                labelDikirimOleh.style.display = 'block';
-                dikirimOleh.style.display = 'block';
-                dikirimOleh.setAttribute('required', 'true');
-                labelPj.style.display = 'block';
-                penanggungJawab.style.display = 'block';
-                penanggungJawab.setAttribute('required' , 'true');
-                labelBukti1.style.display = 'block'; // Menampilkan form input
-                labelBukti2.style.display = 'block'; // Menampilkan form input
-                labelBukti3.style.display = 'block'; // Menampilkan form input
-                file1.style.display = 'block'; // Menampilkan form input
-                file1.setAttribute('required', 'true');
-                file2.style.display = 'block'; // Menampilkan form input
-                file3.style.display = 'block'; // Menampilkan form input
-                imagePreview.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview"
-                imagePreview2.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview2"
-                imagePreview3.style.display = 'block'; // Menampilkan konten di dalam elemen "imagePreview3"
-                dikirim.disabled = false;       
-            } else if (this.value === '') {
-                pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                jenisOngkir.ariaPlaceholder = 'Pilih';
-                ongkirSelect.value = '0';
-                dikirimOleh.value = '';
-                penanggungJawab.value = '';
-                labelDriver.style.display = 'none'; // Menyembunyikan form input
-                pengirimSelect.style.display = 'none'; // Menyembunyikan form input
-                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
-                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
-                labelResi.style.display = 'none'; // Menyembunyikan form input
-                labelJenisOngkir.style.display = 'none' // Menyembunyikan form input
-                labelDikirimOleh.style.display = 'none' // Menyembunyikan form input
-                labelPj.style.display = 'none' // Menyembunyikan form input
-                labelOngkir.style.display = 'none'; // Menyembunyikan form input
-                file1.style.display = 'none'; // Menyembunyikan form input
-                file2.style.display = 'none'; // Menyembunyikan form input
-                file3.style.display = 'none'; // Menyembunyikan form input
-                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
-                pengirimSelect.style.display = 'none'; // Menyembunyikan form input
-                resiSelect.style.display = 'none'; // Menyembunyikan form input
-                jenisOngkir.style.display = 'none'; // Menyembunyikan form input
-                ongkirSelect.style.display = 'none'; // Menyembunyikan form input
-                dikirimOleh.style.display = 'none';
-                penanggungJawab.style.display = 'none';
-                labelBukti1.style.display = 'none'; // Menyembunyikan form input
-                labelBukti2.style.display = 'none'; // Menyembunyikan form input
-                labelBukti3.style.display = 'none'; // Menyembunyikan form input
-                file1.style.display = 'none'; // Menyembunyikan form input
-                file2.style.display = 'none'; // Menyembunyikan form input
-                file3.style.display = 'none'; // Menyembunyikan form input
-                dikirim.disabled = true;
-                document.getElementById('form-kirim').reset();
-            }
-            dikirim.addEventListener('shown.bs.modal', function() {
-                // Mengatur properti display menjadi 'none' untuk menyembunyikan elemen file
-                file1.style.display = 'none'; // Menyembunyikan form input
-                file2.style.display = 'none'; // Menyembunyikan form input
-                file3.style.display = 'none'; // Menyembunyikan form input
-                dikirim.disabled = true;
-            });
-
-            jenisOngkir.addEventListener('change', function() {
-                if (this.value === '0') {
-                    ongkirSelect.style.display = 'block';
-                    ongkirSelect.style.backgroundColor = '';
-                    ongkirSelect.removeAttribute('readonly');
-                    ongkirSelect.setAttribute('required', 'true');
-                } else {
-                    ongkirSelect.style.display = 'block';
-                    ongkirSelect.style.backgroundColor = '#f8f9fa';
-                    ongkirSelect.removeAttribute('required');
-                    ongkirSelect.setAttribute('readonly', 'true');
-                    ongkirSelect.value = '0';
-                }
-            });
-
-
-            // Refresh halaman modal
-            if (isModalShown) {
-                $('#Dikirim').modal('hide'); // Menyembunyikan modal
-                location.reload(); // Melakukan refresh halaman
-                $('#Dikirim').modal('show')
-            }
-
-            // Mendapatkan tombol "Cancel" berdasarkan ID
-            const cancelButton = document.getElementById('cancelDikirim');
-
-            // Fungsi untuk mengatur ulang input teks dan tombol
-            // Event listener saat tombol "Cancel" ditekan
-            cancelButton.addEventListener('click', function() {
-                dikirimOleh.value = '';
-                penanggungJawab.value = '';
-                jenisPengirimanSelect.value = '';
-                pengirimSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                ekspedisiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                resiSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                ongkirSelect.value = ''; // Mengatur ulang nilai menjadi kosong
-                file1.value = ''; // Mengatur ulang nilai menjadi kosong
-                file2.value = ''; // Mengatur ulang nilai menjadi kosong
-                file3.value = ''; // Mengatur ulang nilai menjadi kosong
-                imagePreview.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview"
-                imagePreview2.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview2"
-                imagePreview3.innerHTML = ''; // Menghapus konten di dalam elemen "imagePreview3"
-                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
-                ekspedisiSelect.style.display = 'none'; // Menyembunyikan form input
-                labelEkspedisi.style.display = 'none'; // Menyembunyikan form input
-                labelDriver.style.display = 'none'; // Menyembunyikan form input
-                pengirimSelect.style.display = 'none'; // Menyembunyikan form input
-                labelResi.style.display = 'none'; // Menyembunyikan form input
-                labelOngkir.style.display = 'none'; // Menyembunyikan form input
-                labelJenisOngkir.style.display = 'none';
-                jenisOngkir.style.display = 'none';
-                labelDikirimOleh.style.display = 'none';
-                dikirimOleh.style.display = 'none';
-                pjLabel.style.display = 'none';
-                penanggungJawab.style.display = 'none';
-                resiSelect.style.display = 'none'; // Menyembunyikan form input
-                ongkirSelect.style.display = 'none'; // Menyembunyikan form input
-                labelBukti1.style.display = 'none'; // Menyembunyikan form input
-                labelBukti2.style.display = 'none'; // Menyembunyikan form input
-                labelBukti3.style.display = 'none'; // Menyembunyikan form input
-                file1.style.display = 'none'; // Menyembunyikan form input
-                file2.style.display = 'none'; // Menyembunyikan form input
-                file3.style.display = 'none'; // Menyembunyikan form input
-                dikirim.disabled = true;
-            });
-        });
-    </script>
-    <!-- End JS Dikirim -->
-    <style>
-        .preview-image {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
-</div>
-<!-- End Modal Dikirim -->
 
 <!-- Modal Add SPK-->
 <div class="modal fade" id="addSpk" tabindex="-1">
@@ -1369,7 +1343,6 @@ function generate_uuid()
 <script type="text/javascript">
     flatpickr("#date", {
         dateFormat: "d/m/Y",
-        minDate: "today",
     });
 
     flatpickr("#tempo", {

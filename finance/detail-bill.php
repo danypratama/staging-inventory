@@ -528,11 +528,11 @@ include "akses.php";
                     metode.style.display = 'none';
                     nominalDisplay.style.display = 'block';
                     namaPengirim.value = '';
-                    namaPengirim.removeAttribute('required');
+                    // namaPengirim.removeAttribute('required');
                     rekPengirim.value = '';
-                    rekPengirim.removeAttribute('required');
+                    // rekPengirim.removeAttribute('required');
                     bankPengirim.value = '';
-                    bankPengirim.removeAttribute('required');
+                    // bankPengirim.removeAttribute('required');
                     sisaTagihanInput.value = totalTagihanInput.value;
                     fileku.removeAttribute('required');
                     if (parseFloat(sisaTagihanInput.value) < 0) {
@@ -550,8 +550,8 @@ include "akses.php";
                     metode.style.display = 'block';
                     nominalDisplay.style.display = 'block';
                     sisaTagihanInput.value = totalTagihanInput.value; // Set nilai sisa tagihan sama dengan total tagihan
-                    namaPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
-                    rekPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
+                    // namaPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
+                    // rekPengirim.setAttribute('required', 'true'); // Membuat Atribut Required
                     fileku.setAttribute('required', 'true'); // Membuat Atribut Required
                     // Menonaktifkan tombol "Simpan" jika nilai sisa tagihan negatif
                     if (parseFloat(sisaTagihanInput.value) < 0) {
