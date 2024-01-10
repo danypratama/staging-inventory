@@ -1,6 +1,5 @@
 <?php
-$page  = 'transaksi'; 
-$page2  = 'list-cmp';
+$page  = 'list-komplain';
 include "akses.php";
 include 'function/class-komplain.php';
 ?>
@@ -67,7 +66,7 @@ include 'function/class-komplain.php';
         </div><!-- End Page Title -->
         <section>
             <?php 
-                include "query/query-komplain.php" ;
+                include "../query/query-komplain.php" ;
                 $baseUrl = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s://" : "://") . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             ?>
             

@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,7 +7,7 @@
     <link href="assets/img/logo-kma.png" rel="icon">
 </head>
 
-<body> -->
+<body>
 <?php
 // Periksa apakah sesi sudah dimulai
 if (!isset($_SESSION)) {
@@ -36,61 +36,32 @@ if (empty($_SESSION['tiket_user'])) {
 ?>
 
 
-
-
-<!-- </body>
-
-</html> -->
-
-
-<!-- Isi halaman web Anda -->
-
 <script>
-    // Fungsi untuk mengarahkan ke halaman login
-    // function redirectToLogin() {
-    //     // Arahkan ke halaman logout
-    //     window.location.href = 'logout.php';
-    // }
+    var countdown = <?php echo $session_time; ?>;
+    
+    function updateCountdown() {
+        var minutes = Math.floor(countdown / 60);
+        var seconds = countdown % 60;
 
-    // // Fungsi untuk menampilkan Sweet Alert saat sesi habis
-    // function showSessionExpiredAlert() {
-    //     Swal.fire({
-    //         title: 'Sesi Anda telah habis',
-    //         text: 'Silakan login kembali',
-    //         icon: 'warning',
-    //         showCancelButton: false,
-    //         confirmButtonColor: '#3085d6',
-    //         confirmButtonText: 'OK',
-    //         allowOutsideClick: false
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             redirectToLogin();
-    //         }
-    //     });
-    // }
+        // Format menit dan detik dalam bentuk MM:SS
+        var formattedTime = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 
-    // // Fungsi untuk mereset timer saat pengguna berinteraksi dengan halaman web
-    // function resetTimer() {
-    //     clearTimeout(timeout);
-    //     startTimer();
-    // }
+        document.getElementById('countdown').innerHTML = formattedTime;
 
-    // // Fungsi untuk memulai timer
-    // function startTimer() {
-    //     timeout = setTimeout(function() {
-    //         showSessionExpiredAlert();
-    //     }, 900000); // Waktu timeout dalam milidetik (15 menit)
-    // }
+        if (countdown > 0) {
+            countdown--;
+            setTimeout(updateCountdown, 1000);
+        } else {
+            // Redirect ke halaman logout.php setelah hitungan mundur selesai
+            window.location.href = '../logout.php';
+        }
+    }
 
-    // // Event listener saat pengguna melakukan refresh halaman
-    // window.addEventListener('beforeunload', function() {
-    //     redirectToLogin();
-    // });
-
-    // // Event listener untuk mereset timer saat pengguna berinteraksi dengan halaman web
-    // document.addEventListener('mousemove', resetTimer);
-    // document.addEventListener('keypress', resetTimer);
-
-    // // Mulai timer
-    // startTimer();
+    // Memanggil fungsi updateCountdown saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function () {
+        updateCountdown();
+    });
 </script>
+</body>
+
+</html>

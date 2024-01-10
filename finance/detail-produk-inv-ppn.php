@@ -306,7 +306,7 @@ include "../function/class-spk.php";
 
                                     <?php
                                         if ($jenis_pengiriman == 'Ekspedisi') {
-                                            ?> 
+                                            ?>       
                                             <div class="row">
                                                 <div class="col-5">
                                                     <p style="float: left;">Jenis Pengiriman</p>
@@ -355,7 +355,7 @@ include "../function/class-spk.php";
                                                                 <p style="float: right;"> :</p>
                                                             </div>
                                                             <div class="col-7">
-                                                                <?php echo date('d F Y', strtotime($tgl_terima)) ?>
+                                                                <?php echo $tgl_terima ?>
                                                             </div>
                                                         </div>
                                                     <?php

@@ -1,6 +1,5 @@
 <?php
-    $page  = 'transaksi';
-    $page2  = 'list-cmp';
+    $page  = 'list-komplain';
     include "akses.php";
     include 'function/class-komplain.php';
     ?>
@@ -703,11 +702,11 @@
                         $query_bukti = mysqli_query($connect, $sql_bukti);
                         $data_bukti = mysqli_fetch_array($query_bukti);
                         $gambar1 = $data_bukti['bukti_satu'];
-                        $gambar_bukti1 = "gambar-revisi/bukti1/$gambar1";
+                        $gambar_bukti1 = "../gambar-revisi/bukti1/$gambar1";
                         $gambar2 = $data_bukti['bukti_dua'];
-                        $gambar_bukti2 = "gambar-revisi/bukti2/$gambar2";
+                        $gambar_bukti2 = "../gambar-revisi/bukti2/$gambar2";
                         $gambar3 = $data_bukti['bukti_tiga'];
-                        $gambar_bukti3 = "gambar-revisi/bukti3/$gambar3";
+                        $gambar_bukti3 = "../gambar-revisi/bukti3/$gambar3";
                         $jenis_penerima = $data_bukti['jenis_penerima'];
                         $no_resi = $data_bukti['no_resi'];
                         $tgl_terima = $data_bukti['tgl_terima'];

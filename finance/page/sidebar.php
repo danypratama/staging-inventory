@@ -1,7 +1,7 @@
 <aside id="sidebar" class="sidebar">
   <ul class="sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'dashboard') { echo 'collapsed'; } ?>" href="dashboard.php">
+      <a class="nav-link <?php if ($page == 'dashboard') { echo 'active-link'; } ?>" href="dashboard.php">
         <i class="bi bi-grid"></i><span>Dasboard</span>
       </a>
     </li>
@@ -47,7 +47,7 @@
     
     <!-- Data Finance -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'finance') { echo 'collapsed'; } ?>" href="finance-inv.php?date_range=monthly">
+      <a class="nav-link <?php if ($page == 'finance') { echo 'active-link'; } ?>" href="finance-inv.php?date_range=monthly">
         <i class="bi bi-cash-stack"></i><span>Invoice Penjualan</span>
       </a>
     </li>
@@ -73,14 +73,14 @@
 
     <!-- Data Customer -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'list-cs') { echo 'collapsed'; } ?>" href="finance-customer.php?date_range=weekly">
+      <a class="nav-link <?php if ($page == 'list-cs') { echo 'active-link'; } ?>" href="finance-customer.php?date_range=weekly">
         <i class="bi bi-cash-stack"></i><span>Transaksi Customer</span>
       </a>
     </li>
     <!-- End Finance -->
     <!-- Data Customer -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'list-cmp') { echo 'collapsed'; } ?>" href="invoice-komplain.php?date_range=monthly">
+      <a class="nav-link <?php if ($page == 'list-komplain') { echo 'active-link'; } ?>" href="invoice-komplain.php?date_range=monthly">
         <i class="bi bi-clipboard-x"></i><span>Invoice Komplain</span>
       </a>
     </li>

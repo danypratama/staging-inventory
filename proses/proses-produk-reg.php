@@ -42,8 +42,28 @@
 				// Tingkat koreksi kesalahan: L (Low), M (Medium), Q (Quartile), H (High)
 				$correctionLevel = 'M';
 
+				// Logo dan ukuran logo (pixels)
+				$logoPath = '../assets/img/KMA.png';  // Ganti dengan path logo Anda
+				$logoSize = 120;  // Ganti dengan ukuran logo yang diinginkan
+
 				// Membuat QR code
-				QRcode::png($url_qr, $outputFile, $correctionLevel, $size);
+				QRcode::png($url_qr, $outputFile, $correctionLevel, $size, 2);
+
+				// Menambahkan logo ke QR code
+				$QR = imagecreatefrompng($outputFile);
+				$logo = imagecreatefrompng($logoPath);
+				$QR_width = imagesx($QR);
+				$QR_height = imagesy($QR);
+				$logo_width = imagesx($logo);
+				$logo_height = imagesy($logo);
+				$centerX = ($QR_width - $logo_width) / 2;
+				$centerY = ($QR_height - $logo_height) / 2;
+				imagecopy($QR, $logo, $centerX, $centerY, 0, 0, $logo_width, $logo_height);
+				imagepng($QR, $outputFile);
+
+				// Membebaskan memori
+				imagedestroy($QR);
+				imagedestroy($logo);
 				// End Proses QR Code
 
 				

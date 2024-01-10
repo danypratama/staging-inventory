@@ -303,6 +303,7 @@ function generate_uuid()
     }
 </script>
 
+<!-- Kode untuk modal cancel SPK -->
 <script>
     $(document).ready(function() {
         $('.btn-detail').click(function() {

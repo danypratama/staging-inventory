@@ -147,7 +147,7 @@
                     $query_history_produk = mysqli_query($connect, "INSERT IGNORE INTO 
                                                             history_produk_terjual (id_trx_history, id_inv, id_produk, qty)
                                                         SELECT
-                                                            tpr.id_transaksi,
+                                                            tpr.id_tmp,
                                                             tpr.id_inv,
                                                             tpr.id_produk,
                                                             tpr.qty

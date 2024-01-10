@@ -67,6 +67,13 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
       text-align: center;
       color: #333; /* Ubah warna sesuai keinginan */
     }
+
+    .disabled-select{
+      pointer-events: none;
+      background-color: #0d6efd;
+      color: white;
+      
+    }
   </style>
 </head>
 
@@ -102,191 +109,299 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
         <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) { echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
         <!-- END SWEET ALERT -->
         <div class="card p-3">
+          <?php
+            // Mendapatkan bagian dari URL yang berisi parameter GET
+            $queryString = $_SERVER['QUERY_STRING'];
+
+            // Daftar parameter yang ingin dihapus
+            $parametersToRemove = ['status_bayar', 'jenis_inv', 'status_tagihan'];
+
+            // Simpan nilai-nilai filter dalam variabel terpisah
+            $dateRangeFilter = '';
+            $statusBayarFilter = '';
+            $jenisInvFilter = '';
+            $statusTagihanFilter = '';
+
+            // Loop melalui daftar parameter dan hapus dari URL
+            foreach ($parametersToRemove as $parameter) {
+                $queryString = preg_replace('/' . $parameter . '=[^&]+&?/', '', $queryString);
+            }
+
+            // Fungsi untuk menambahkan atau mengganti nilai parameter dalam URL
+            function addOrReplaceParameter($queryString, $paramName, $paramValue = '') {
+                // Membersihkan duplikasi tanda & sebelum menambahkan parameter baru
+                $queryString = rtrim($queryString, '&');
+
+                // Hapus parameter yang memiliki nama sama sebelum menambahkan yang baru
+                $queryString = preg_replace('/' . $paramName . '=[^&]+&?/', '', $queryString);
+
+                if (!empty($paramValue)) {
+                    // Jika nilai parameter tidak kosong, tambahkan parameter ke URL
+                    $queryString .= (empty($queryString) ? '' : '&') . $paramName . '=' . $paramValue;
+                }
+
+                return $queryString;
+            }
+
+            // Memeriksa apakah parameter date_range sudah ada dalam URL
+            if (strpos($queryString, 'date_range') === false) {
+                // Jika tidak ada, tambahkan parameter date_range ke URL
+                $queryString = (empty($queryString) ? '' : $queryString . '&') . 'date_range=weekly';
+            }
+
+            // Menyimpan nilai-nilai filter yang telah diaplikasikan
+            $dateRangeFilter = isset($_GET['date_range']) ? $_GET['date_range'] : '';
+            $statusBayarFilter = isset($_GET['status_bayar']) ? $_GET['status_bayar'] : '';
+            $jenisInvFilter = isset($_GET['jenis_inv']) ? $_GET['jenis_inv'] : '';
+            $statusTagihanFilter = isset($_GET['status_tagihan']) ? $_GET['status_tagihan'] : '';
+
+            // Menambah atau mengganti nilai parameter status_bayar dalam URL
+            $queryString = addOrReplaceParameter($queryString, 'status_bayar', $statusBayarFilter);
+
+            // Menambah atau mengganti nilai parameter jenis_inv dalam URL
+            $queryString = addOrReplaceParameter($queryString, 'jenis_inv', $jenisInvFilter);
+
+            // Menambah atau mengganti nilai parameter status_tagihan dalam URL
+            $queryString = addOrReplaceParameter($queryString, 'status_tagihan', $statusTagihanFilter);
+
+            // echo $queryString;
+          ?>
+
+              <!-- Mengganti date_range dan mempertahankan nilai-nilai filter yang telah diaplikasikan -->
+          <?php
+            if (!empty($dateRangeFilter)) {
+                $queryString = addOrReplaceParameter($queryString, 'date_range', $dateRangeFilter);
+            }
+          ?>
           <div class="p-2">
             <div class="row">
-              <div class="col-sm-5">
-                <div class="row row-cols-1 row-cols-lg-3 g-2 g-lg-3">
+              <div class="col-sm-2">
+                <div class="row row-cols-1 row-cols-lg-1 g-2 g-lg-3">
                   <div class="col">
                     <div class="card">
                       <button class="btn btn-secondary btn-md" id="export-button">Export Excel <i class="bi bi-file-earmark-excel"></i></button>
                     </div>
                   </div>
-                  <div class="col">
+                  <!-- <div class="col">
                     <div class="card" id="cs">
                       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCs">
                         Filter by Customer
                       </button>
                     </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
-                          <?php
-                            // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
-                            $selectedOption = isset($_GET['date_range']) ? $_GET['date_range'] : 'today';
-                            if ($selectedOption === "today") {
-                              echo "Hari ini";
-                            } elseif ($selectedOption === "weekly") {
-                              echo "Minggu ini";
-                            } elseif ($selectedOption === "monthly") {
-                              echo "Bulan ini";
-                            } elseif ($selectedOption === "lastMonth") {
-                              echo "Bulan Kemarin";
-                            } elseif ($selectedOption === "year") {
-                              echo "Tahun ini";
-                            } elseif ($selectedOption === "lastyear") {
-                              echo "Tahun Lalu";
-                            } else {
-                              echo "Pilih Tanggal";
-                            }
-                          ?>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
-                            <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'today' ? 'active' : ''; ?>" href="?date_range=today">Hari ini</a>
-                            <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'weekly' ? 'active' : ''; ?>" href="?date_range=weekly">Minggu ini</a>
-                            <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'monthly' ? 'active' : ''; ?>" href="?date_range=monthly">Bulan ini</a>
-                            <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'lastMonth' ? 'active' : ''; ?>" href="?date_range=lastMonth">Bulan Kemarin</a>
-                            <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'year' ? 'active' : ''; ?>" href="?date_range=year">Tahun ini</a>
-                            <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'lastyear' ? 'active' : ''; ?>" href="?date_range=lastyear">Tahun Lalu</a>
-                            <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'pilihTanggal' ? 'active' : ''; ?>">Pilih Tanggal</a>
-                          </form>
-                          <li><hr class="dropdown-divider"></li>
-                          <form action="" method="GET" class="form-group newsletter-group" id="dateForm">
-                            <div class="row p-2">
-                              <div class="col-md-6 mb-3">
-                                  <label for="start_date">From</label>
-                                  <input type="date" id="startDate" class="form-control form-control-md date-picker" placeholder="dd/mm/yyyy" name="start_date">
+                  </div> -->
+                </div>
+              </div>
+              <div class="col-sm-10">
+                <div class="row row-cols-1 row-cols-lg-4 g-2 g-lg-3">
+                    <div class="col">
+                      <div class="card">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php
+                              // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                              $selectedOption = isset($_GET['date_range']) ? $_GET['date_range'] : 'today';
+                              if ($selectedOption === "today") {
+                                echo "Hari ini";
+                              } elseif ($selectedOption === "weekly") {
+                                echo "Minggu ini";
+                              } elseif ($selectedOption === "monthly") {
+                                echo "Bulan ini";
+                              } elseif ($selectedOption === "lastMonth") {
+                                echo "Bulan Kemarin";
+                              } elseif ($selectedOption === "year") {
+                                echo "Tahun ini";
+                              } elseif ($selectedOption === "lastyear") {
+                                echo "Tahun Lalu";
+                              } else {
+                                echo "Pilih Tanggal";
+                              }
+                            ?>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'today' ? 'active' : ''; ?>" href="?<?php echo $queryString ?>&date_range=today">Hari ini</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'weekly' ? 'active' : ''; ?>" href="?<?php echo $queryString ?>&date_range=weekly">Minggu ini</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'monthly' ? 'active' : ''; ?>" href="?<?php echo $queryString ?>&date_range=monthly">Bulan ini</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'lastMonth' ? 'active' : ''; ?>" href="?<?php echo $queryString ?>&date_range=lastMonth">Bulan Kemarin</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'year' ? 'active' : ''; ?>" href="?<?php echo $queryString ?>&date_range=year">Tahun ini</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'lastyear' ? 'active' : ''; ?>" href="?<?php echo $queryString ?>&date_range=lastyear">Tahun Lalu</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['date_range']) && $_GET['date_range'] === 'pilihTanggal' ? 'active' : ''; ?>">Pilih Tanggal</a>
+                            </form>
+                            <li><hr class="dropdown-divider"></li>
+                            <form action="" method="GET" class="form-group newsletter-group" id="dateForm">
+                              <div class="row p-2">
+                                <div class="col-md-6 mb-3">
+                                    <label for="start_date">From</label>
+                                    <input type="date" id="startDate" class="form-control form-control-md date-picker" placeholder="dd/mm/yyyy" name="start_date">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="end_date">To</label>
+                                    <input type="date" id="endDate" class="form-control form-control-md date-picker" placeholder="dd/mm/yyyy" name="end_date">
+                                </div>
+                                <input type="hidden" name="date_range" value="pilihTanggal">
                               </div>
-                              <div class="col-md-6 mb-3">
-                                  <label for="end_date">To</label>
-                                  <input type="date" id="endDate" class="form-control form-control-md date-picker" placeholder="dd/mm/yyyy" name="end_date">
-                              </div>
-                              <input type="hidden" name="date_range" value="pilihTanggal">
-                            </div>
-                            
-                            <!-- Add the submit button with name="tampilkan" -->
-                            <a href="finance-inv.php?date_range=weekly" name="tampilkan" class="custom-dropdown-item dropdown-item rounded bg-danger text-white" id="resetLink">Reset</a>
-                          </form>
-                          <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                const endDateInput = document.getElementById('endDate');
-                                const startDateInput = document.getElementById('startDate');
-                                const dateForm = document.getElementById('dateForm');
-                                const resetLink = document.getElementById('resetLink');
+                              
+                              <!-- Add the submit button with name="tampilkan" -->
+                              <a href="finance-inv.php?date_range=monthly" name="tampilkan" class="custom-dropdown-item dropdown-item rounded bg-danger text-white" id="resetLink">Reset</a>
+                            </form>
+                            <script>
+                              document.addEventListener('DOMContentLoaded', function() {
+                                  const endDateInput = document.getElementById('endDate');
+                                  const startDateInput = document.getElementById('startDate');
+                                  const dateForm = document.getElementById('dateForm');
+                                  const resetLink = document.getElementById('resetLink');
 
-                                // Cek apakah data tanggal tersimpan di localStorage
-                                const savedStartDate = localStorage.getItem('startDate');
-                                const savedEndDate = localStorage.getItem('endDate');
+                                  // Cek apakah data tanggal tersimpan di localStorage
+                                  const savedStartDate = localStorage.getItem('startDate');
+                                  const savedEndDate = localStorage.getItem('endDate');
 
-                                if (savedStartDate) {
-                                    startDateInput.value = savedStartDate;
-                                }
+                                  if (savedStartDate) {
+                                      startDateInput.value = savedStartDate;
+                                  }
 
-                                if (savedEndDate) {
-                                    endDateInput.value = savedEndDate;
-                                }
+                                  if (savedEndDate) {
+                                      endDateInput.value = savedEndDate;
+                                  }
 
-                                startDateInput.addEventListener('change', () => {
-                                    const startDateValue = new Date(startDateInput.value);
-                                    const maxEndDateValue = new Date(startDateValue);
-                                    maxEndDateValue.setDate(maxEndDateValue.getDate() + 30);
+                                  startDateInput.addEventListener('change', () => {
+                                      const startDateValue = new Date(startDateInput.value);
+                                      const maxEndDateValue = new Date(startDateValue);
+                                      maxEndDateValue.setDate(maxEndDateValue.getDate() + 30);
 
-                                    endDateInput.value = ''; // Reset nilai endDate
+                                      endDateInput.value = ''; // Reset nilai endDate
 
-                                    endDateInput.min = startDateValue.toISOString().split('T')[0];
-                                    endDateInput.max = maxEndDateValue.toISOString().split('T')[0];
+                                      endDateInput.min = startDateValue.toISOString().split('T')[0];
+                                      endDateInput.max = maxEndDateValue.toISOString().split('T')[0];
 
-                                    endDateInput.disabled = false; // Aktifkan kembali input endDate
-                                });
+                                      endDateInput.disabled = false; // Aktifkan kembali input endDate
+                                  });
 
-                                endDateInput.addEventListener('change', () => {
-                                    const startDateValue = new Date(startDateInput.value);
-                                    const endDateValue = new Date(endDateInput.value);
+                                  endDateInput.addEventListener('change', () => {
+                                      const startDateValue = new Date(startDateInput.value);
+                                      const endDateValue = new Date(endDateInput.value);
 
-                                    const daysDifference = Math.floor((endDateValue - startDateValue) / (1000 * 60 * 60 * 24));
+                                      const daysDifference = Math.floor((endDateValue - startDateValue) / (1000 * 60 * 60 * 24));
 
-                                    if (daysDifference > 30) {
-                                        endDateInput.value = '';
-                                    }
+                                      if (daysDifference > 30) {
+                                          endDateInput.value = '';
+                                      }
 
-                                    startDateInput.value = startDateValue.toISOString().split('T')[0]; // Menampilkan pada field startDate
-                                    endDateInput.value = endDateValue.toISOString().split('T')[0]; // Menampilkan pada field endDate
+                                      startDateInput.value = startDateValue.toISOString().split('T')[0]; // Menampilkan pada field startDate
+                                      endDateInput.value = endDateValue.toISOString().split('T')[0]; // Menampilkan pada field endDate
 
-                                    const queryParams = new URLSearchParams({
-                                        start_date: startDateValue.toISOString().split('T')[0],
-                                        end_date: endDateValue.toISOString().split('T')[0],
-                                        date_range: 'pilihTanggal'
-                                    });
+                                      const queryParams = new URLSearchParams({
+                                          start_date: startDateValue.toISOString().split('T')[0],
+                                          end_date: endDateValue.toISOString().split('T')[0],
+                                          date_range: 'pilihTanggal'
+                                      });
 
-                                    const newUrl = `finance-inv.php?${queryParams.toString()}`;
+                                      const newUrl = `finance-inv.php?${queryParams.toString()}`;
 
-                                    dateForm.action = newUrl;
-                                    dateForm.submit();
+                                      dateForm.action = newUrl;
+                                      dateForm.submit();
 
-                                    // Simpan tanggal ke localStorage
-                                    localStorage.setItem('startDate', startDateInput.value);
-                                    localStorage.setItem('endDate', endDateInput.value);
-                                });
+                                      // Simpan tanggal ke localStorage
+                                      localStorage.setItem('startDate', startDateInput.value);
+                                      localStorage.setItem('endDate', endDateInput.value);
+                                  });
 
-                                resetLink.addEventListener('click', () => {
-                                    // Hapus data dari localStorage
-                                    localStorage.removeItem('startDate');
-                                    localStorage.removeItem('endDate');
+                                  resetLink.addEventListener('click', () => {
+                                      // Hapus data dari localStorage
+                                      localStorage.removeItem('startDate');
+                                      localStorage.removeItem('endDate');
 
-                                    // Hapus nilai dari field input
-                                    startDateInput.value = '';
-                                    endDateInput.value = '';
-                                });
-                            });
-                          </script>
+                                      // Hapus nilai dari field input
+                                      startDateInput.value = '';
+                                      endDateInput.value = '';
+                                  });
+                              });
+                            </script>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-7">
-                <div class="row row-cols-1 row-cols-lg-3 g-2 g-lg-3">
-                  <div class="col">
-                    <div class="card">
-                      <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">Status</span>
-                        <select class="form-select" id="filterSelect" onchange="filterStatus()">
-                          <option value="all">Semua</option>
-                          <option value="Belum Bayar">Belum Bayar</option>
-                          <option value="Sudah Bayar">Sudah Bayar</option>
-                        </select>
+                    <div class="col">
+                      <div class="card">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php
+                              // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                              $statusBayar = isset($_GET['status_bayar']) ? $_GET['status_bayar'] : 'Semua';
+                              if ($statusBayar === "Semua" || $statusBayar === "") {
+                                echo "Semua Status Bayar";
+                              } elseif ($statusBayar === "Belum Bayar") {
+                                echo "Status Belum Bayar";
+                              } elseif ($statusBayar === "Sudah Bayar") {
+                                echo "Status Sudah Bayar";
+                              }
+                            ?>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_bayar']) && $_GET['status_bayar'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_bayar=">Semua Status</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_bayar']) && $_GET['status_bayar'] === 'Belum Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_bayar=Belum Bayar">Status Belum Bayar</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_bayar']) && $_GET['status_bayar'] === 'Sudah Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_bayar=Sudah Bayar">Status Sudah Bayar</a>
+                            </form>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">Jenis Invoice</span>
-                        <select class="form-select" id="filterSelectInv" onchange="filterInv()">
-                          <option value="all">Semua</option>
-                          <option value="NONPPN">Non PPN</option>
-                          <option value="PPN">PPN</option>
-                          <option value="BUM">BUM</option>
-                        </select>
+                    <div class="col">
+                      <div class="card">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php
+                              // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                              $jenisInv = isset($_GET['jenis_inv']) ? $_GET['jenis_inv'] : 'Semua';
+                              if ($jenisInv === "Semua" || $jenisInv === "") {
+                                echo "Semua Jenis Invoice";
+                              } elseif ($jenisInv === "nonppn") {
+                                echo "Non PPN";
+                              } elseif ($jenisInv === "ppn") {
+                                echo "PPN";
+                              }elseif ($jenisInv === "bum") {
+                                echo "BUM";
+                              }
+                            ?>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['jenis_inv']) && $_GET['jenis_inv'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&jenis_inv=">Semua</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['jenis_inv']) && $_GET['jenis_inv'] === 'nonppn' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&jenis_inv=nonppn">Non PPN</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['jenis_inv']) && $_GET['jenis_inv'] === 'ppn' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&jenis_inv=ppn">PPN</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['jenis_inv']) && $_GET['jenis_inv'] === 'bum' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&jenis_inv=bum">BUM</a>
+                            </form>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">Tagihan</span>
-                        <select class="form-select" id="filterSelectTagihan">
-                          <option value="all">Semua</option>
-                          <option value="Sudah">Sudah</option>
-                          <option value="Belum">Belum</option>
-                        </select>
+                    </div>  
+                    <div class="col">
+                      <div class="card">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php
+                              // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                              $statusTagihan = isset($_GET['status_tagihan']) ? $_GET['status_tagihan'] : 'Semua';
+                              if ($statusTagihan === "Semua" || $statusTagihan === "") {
+                                echo "Semua Status Tagihan";
+                              } elseif ($statusTagihan === "Belum Dibuat") {
+                                echo "Belum Dibuat";
+                              } elseif ($statusTagihan === "Sudah Dibuat") {
+                                echo "Sudah Dibuat";
+                              }
+                            ?>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_tagihan']) && $_GET['status_tagihan'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_tagihan=">Semua</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_tagihan']) && $_GET['status_tagihan'] === 'Belum Dibuat' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_tagihan=Belum Dibuat">Belum Dibuat</a>
+                              <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_tagihan']) && $_GET['status_tagihan'] === 'Sudah Dibuat' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_tagihan=Sudah Dibuat">Sudah Dibuat</a>
+                            </form>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </div> 
+                    </div>   
+                  </div> 
               </div>
             </div>
           </div>   
@@ -305,7 +420,11 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
             </div>
           </div>
           <?php        
-            $baseUrl = $_GET['date_range'];
+            // Memeriksa apakah parameter 'date_range' telah diterima melalui URL
+            if (isset($_GET['date_range'])) {
+              $baseUrl = $_GET['date_range'];
+            } else {
+            }
           ?>
           <div class="table-responsive">
             <form id="invoiceForm" name="proses" method="GET">
@@ -398,17 +517,56 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                         elseif($_GET['date_range'] == "lastyear")
                         {
                             $sort_option = "YEAR(STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), '%d/%m/%Y')) = YEAR(CURDATE()) - 1";
-                        }
-                    }
-                    if (isset($_GET["start_date"]) && isset($_GET["end_date"])) {
-                      $dt1 = $_GET["start_date"];
-                      $dt2 = $_GET["end_date"];
-                      $format_dt1 = date('d/m/Y', strtotime($dt1));
-                      $format_dt2 = date('d/m/Y', strtotime($dt2));
-                      $sort_option = "STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), '%d/%m/%Y') BETWEEN STR_TO_DATE('$format_dt1', '%d/%m/%Y') AND STR_TO_DATE('$format_dt2', '%d/%m/%Y')";
-                      // Lakukan sesuatu dengan $sort_option, misalnya memproses data dari database
+                        } 
+
+                        elseif($_GET['date_range'] == "pilihTanggal")
+                        {
+                          if (isset($_GET["start_date"]) && isset($_GET["end_date"])) {
+                            $dt1 = $_GET["start_date"];
+                            $dt2 = $_GET["end_date"];
+                            $format_dt1 = date('d/m/Y', strtotime($dt1));
+                            $format_dt2 = date('d/m/Y', strtotime($dt2));
+                            $sort_option .= "STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), '%d/%m/%Y') BETWEEN STR_TO_DATE('$format_dt1', '%d/%m/%Y') AND STR_TO_DATE('$format_dt2', '%d/%m/%Y')";
+                          }
+                        } 
+
                     }
 
+                    if(isset($_GET['status_bayar'])){
+                      if($_GET['status_bayar'] == "Belum Bayar"){
+                        $sort_option .= "AND status_pembayaran = '0'";
+                      }else if ($_GET['status_bayar'] == "Sudah Bayar"){
+                        $sort_option .= "AND status_pembayaran = '1'";
+                      }
+                    }
+
+                    if(isset($_GET['jenis_inv'])){
+                      if($_GET['jenis_inv'] == "nonppn"){
+                        $sort_option .= "AND jenis_inv = 'nonppn'";
+                      }else if ($_GET['jenis_inv'] == "ppn"){
+                        $sort_option .= "AND jenis_inv = 'ppn'";
+                      }else if ($_GET['jenis_inv'] == "bum"){
+                        $sort_option .= "AND jenis_inv = 'bum'";
+                      }
+                    }
+
+
+                    if(isset($_GET['status_tagihan'])){
+                      if($_GET['status_tagihan'] == "Belum Dibuat"){
+                        $sort_option .= "AND status_tagihan = '0'";
+                      }else if ($_GET['status_tagihan'] == "Sudah Dibuat"){
+                        $sort_option .= "AND status_tagihan = '1'";
+                      }
+                    }
+
+                    // if (isset($_GET["start_date"]) && isset($_GET["end_date"])) {
+                    //   $dt1 = $_GET["start_date"];
+                    //   $dt2 = $_GET["end_date"];
+                    //   $format_dt1 = date('d/m/Y', strtotime($dt1));
+                    //   $format_dt2 = date('d/m/Y', strtotime($dt2));
+                    //   $sort_option .= "STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), '%d/%m/%Y') BETWEEN STR_TO_DATE('$format_dt1', '%d/%m/%Y') AND STR_TO_DATE('$format_dt2', '%d/%m/%Y')";
+                    // }
+                    
                     $sql = "SELECT 
                               -- finance
                               fnc.jenis_inv,
@@ -870,118 +1028,79 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
 </script>
 
 <script>
-  function filterStatus() {
-    const filterSelect = document.getElementById("filterSelect");
-    const filterValue = filterSelect.value.toLowerCase().trim();
-
-    const rows = document.querySelectorAll("#table2 tbody tr");
-    let dataFound = false; // Gunakan variabel untuk mengecek apakah data sesuai dengan filter ditemukan
-
-    for (const row of rows) {
-      const statusPembayaranCell = row.getElementsByTagName("td")[8];
-      if (statusPembayaranCell) {
-        const statusPembayaran = statusPembayaranCell.innerText.toLowerCase().trim();
-
-        if (filterValue === "all" || statusPembayaran === filterValue) {
-          row.style.display = "table-row";
-          dataFound = true; // Set dataFound menjadi true jika ada data yang sesuai dengan filter
-        } else {
-          row.style.display = "none";
-        }
-      }
-    }
-
-    // Tampilkan pesan "Data Tidak Ditemukan" jika tidak ada data yang sesuai dengan filter
-    const messageRow = document.getElementById("messageRow");
-    if (!dataFound) {
-      messageRow.style.display = "table-row";
-    } else {
-      messageRow.style.display = "none";
-    }
-  }
-
-  // Panggil fungsi filterStatus() saat halaman dimuat dan atur opsi select ke "all" secara default.
-  filterStatus();
-  document.getElementById("filterSelect").value = "all";
-
-  // Tambahkan event listener untuk elemen select
-  document.getElementById("filterSelect").addEventListener("change", filterStatus);
-</script>
-
-<script>
-  function filterInv() {
-    const filterSelect = document.getElementById("filterSelectInv");
-    const filterValue = filterSelect.value.toLowerCase().trim();
+  // function filterInv() {
+  //   const filterSelect = document.getElementById("filterSelectInv");
+  //   const filterValue = filterSelect.value.toLowerCase().trim();
   
-    const rows = document.querySelectorAll("#table2 tbody tr");
-    let dataFound = false; // Gunakan variabel untuk mengecek apakah data sesuai dengan filter ditemukan
+  //   const rows = document.querySelectorAll("#table2 tbody tr");
+  //   let dataFound = false; // Gunakan variabel untuk mengecek apakah data sesuai dengan filter ditemukan
 
-    for (const row of rows) {
-      const statusInvCell = row.getElementsByTagName("td")[3];
-      if (statusInvCell) {
-        const statusInv = statusInvCell.innerText.toLowerCase().trim();
+  //   for (const row of rows) {
+  //     const statusInvCell = row.getElementsByTagName("td")[3];
+  //     if (statusInvCell) {
+  //       const statusInv = statusInvCell.innerText.toLowerCase().trim();
 
-        if (filterValue === "all" || statusInv === filterValue) {
-          row.style.display = "table-row";
-          dataFound = true; // Set dataFound menjadi true jika ada data yang sesuai dengan filter
-        } else {
-          row.style.display = "none";
-        }
-      }
-    }
+  //       if (filterValue === "all" || statusInv === filterValue) {
+  //         row.style.display = "table-row";
+  //         dataFound = true; // Set dataFound menjadi true jika ada data yang sesuai dengan filter
+  //       } else {
+  //         row.style.display = "none";
+  //       }
+  //     }
+  //   }
 
-    // Tampilkan pesan "Data Tidak Ditemukan" jika tidak ada data yang sesuai dengan filter
-    const messageRow = document.getElementById("messageRow");
-    if (!dataFound) {
-      messageRow.style.display = "table-row";
-    } else {
-      messageRow.style.display = "none";
-    }
-  }
+  //   // Tampilkan pesan "Data Tidak Ditemukan" jika tidak ada data yang sesuai dengan filter
+  //   const messageRow = document.getElementById("messageRow");
+  //   if (!dataFound) {
+  //     messageRow.style.display = "table-row";
+  //   } else {
+  //     messageRow.style.display = "none";
+  //   }
+  // }
 
-  // Panggil fungsi filterStatus() saat halaman dimuat dan atur opsi select ke "all" secara default.
-  filterInv();
-  document.getElementById("filterSelectInv").value = "all";
+  // // Panggil fungsi filterStatus() saat halaman dimuat dan atur opsi select ke "all" secara default.
+  // filterInv();
+  // document.getElementById("filterSelectInv").value = "all";
 
-  // Tambahkan event listener untuk elemen select
-  document.getElementById("filterSelectInv").addEventListener("change", filterInv);
+  // // Tambahkan event listener untuk elemen select
+  // document.getElementById("filterSelectInv").addEventListener("change", filterInv);
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const filterSelectTagihan = document.getElementById('filterSelectTagihan');
-    const dataTable = document.getElementById('table2');
+  // document.addEventListener('DOMContentLoaded', function () {
+  //   const filterSelectTagihan = document.getElementById('filterSelectTagihan');
+  //   const dataTable = document.getElementById('table2');
 
-    filterSelectTagihan.addEventListener('change', applyFilters);
+  //   filterSelectTagihan.addEventListener('change', applyFilters);
 
-    function applyFilters() {
-        const selectedValue = filterSelectTagihan.value;
-        const rows = dataTable.getElementsByTagName('tr');
+  //   function applyFilters() {
+  //       const selectedValue = filterSelectTagihan.value;
+  //       const rows = dataTable.getElementsByTagName('tr');
 
-        for (let i = 1; i < rows.length; i++) {
-            const row = rows[i];
-            const cell = row.cells[10]; // Pastikan indeks 10 sesuai dengan kolom nomor tagihan
+  //       for (let i = 1; i < rows.length; i++) {
+  //           const row = rows[i];
+  //           const cell = row.cells[10]; // Pastikan indeks 10 sesuai dengan kolom nomor tagihan
 
-            // Memeriksa apakah ada cell pada baris tersebut
-            if (cell) {
-                const cellValue = cell.textContent.trim();
-                let showRow = false;
+  //           // Memeriksa apakah ada cell pada baris tersebut
+  //           if (cell) {
+  //               const cellValue = cell.textContent.trim();
+  //               let showRow = false;
 
-                if (selectedValue === 'all') {
-                    showRow = true;
-                } else if (selectedValue === 'Belum' && cellValue === 'Belum Dibuat') {
-                    showRow = true;
-                } else if (selectedValue === 'Sudah' && cellValue !== 'Belum Dibuat') {
-                    showRow = true;
-                }
+  //               if (selectedValue === 'all') {
+  //                   showRow = true;
+  //               } else if (selectedValue === 'Belum' && cellValue === 'Belum Dibuat') {
+  //                   showRow = true;
+  //               } else if (selectedValue === 'Sudah' && cellValue !== 'Belum Dibuat') {
+  //                   showRow = true;
+  //               }
 
-                row.style.display = showRow ? '' : 'none';
-            }
-        }
-    }
+  //               row.style.display = showRow ? '' : 'none';
+  //           }
+  //       }
+  //   }
 
-    // Inisialisasi filter pada awal halaman
-    applyFilters();});
+  //   // Inisialisasi filter pada awal halaman
+  //   applyFilters();});
 
 
 </script>
@@ -996,7 +1115,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
       const selectedCustomers = new Set(checkedCheckboxes.map(checkbox => checkbox.getAttribute("data-customer")));
       const selectedJenis = new Set(checkedCheckboxes.map(checkbox => checkbox.getAttribute("data-jenis")));
 
-      if (checkedCheckboxes.length <= 5 && selectedCustomers.size === 1) {
+      if (checkedCheckboxes.length <= 10 && selectedCustomers.size === 1) {
           // Check if "nonppn" and "bum" are selected together, and "ppn" is not selected
           const isNonPPNSelected = selectedJenis.has("nonppn");
           const isBUMSelected = selectedJenis.has("bum");
@@ -1028,7 +1147,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
         checkbox.addEventListener("change", function () {
             // Limit selection to a maximum of 5 checkboxes
             const checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
-            if (checkedCount > 5) {
+            if (checkedCount > 10) {
                 this.checked = false;
                 Swal.fire({
                     title: '<strong>Batas Maksimum Pemilihan</strong>',

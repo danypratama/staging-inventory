@@ -82,7 +82,7 @@ include "akses.php";
       include "koneksi.php";        
       $id_bill = base64_decode($_GET['id']);
       $no = 1;
-      $sql_data = "SELECT 
+      $sql_data = "SELECT DISTINCT
                     spk.id_customer,  -- Menampilkan kolom id_customer dari tabel spk_reg
                     cs.nama_cs AS nama_cs,  -- Menampilkan kolom nama_cs dari tabel tb_customer
                     cs.alamat AS alamat_cs,  -- Menampilkan kolom alamat_cs dari tabel tb_customer
@@ -181,7 +181,7 @@ include "akses.php";
       <div class="row">
         <div class="col-7 ms-4 m-2 text-start">
           <b>PT. Karsa Mandiri Alkesindo</b>
-          <br><br><br> <br><br><br>
+          <br><br><br><br>
           <b style="text-decoration: underline;">
           <?php echo $_SESSION['tiket_nama'] ?>
           </b><br>

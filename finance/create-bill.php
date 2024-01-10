@@ -34,7 +34,8 @@ include 'akses.php';
                             // Misalnya, tampilkan daftar ID SPK yang dipilih
                             foreach ($selectedInvIds as $invId) {
                                 echo '<input type="hidden" name="id_inv[]" value="' . $invId . '">';
-                                $sql = mysqli_query($connect, "SELECT sr.id_customer, sr.id_inv, cs.nama_cs, 
+                                $sql = mysqli_query($connect, "SELECT DISTINCT
+                                                                    sr.id_customer, sr.id_inv, cs.nama_cs, 
                                                                     nonppn.id_inv_nonppn, 
                                                                     nonppn.no_inv AS no_inv_nonppn, 
                                                                     nonppn.cs_inv AS cs_nonppn, 

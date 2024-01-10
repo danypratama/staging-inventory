@@ -90,7 +90,7 @@
                         if($compressSuccess){
                             $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu, bukti_dua, bukti_tiga) VALUES ('$id_inv_bukti', '$id_inv', '$new_file1_name', '$new_file2_name', '$new_file3_name')");
 
-                            $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat')");
+                            $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima (id_inv_penerima, id_inv, nama_penerima, alamat, tgl_terima) VALUES ('$id_inv_penerima', '$id_inv', '$nama_penerima', '$alamat', '$tgl')");
                 
                             $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
