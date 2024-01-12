@@ -415,7 +415,7 @@
                                         if($total_data_bukti != '0'){
                                             ?>
                                                 <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#bukti">
-                                                    <i class="bi bi-image"></i> Bukti Terima
+                                                    <i class="bi bi-image"></i> Bukti Terima Revisi
                                                 </button>
                                             <?php
                                         }
