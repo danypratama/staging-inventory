@@ -149,15 +149,15 @@
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
-                        <th style="width: 200px;">Nama Produk</th>
-                        <th style="width: 40px;">Qty</th>
-                        <th style="width: 80px;">Harga</th>
+                        <th style="width: 350px;">Nama Produk</th>
+                        <th style="width: 60px;">Qty</th>
+                        <th style="width: 75px;">Harga</th>
                         <?php
                         if ($data['kategori_inv'] == 'Diskon') {
                             echo '<th style="width: 40px;">Disc</th>';
                         }
                         ?>
-                        <th style="width: 80px;">Total</th>
+                        <th style="width: 85px;">Total</th>
                     </tr>
                 </thead>
                 <tbody>

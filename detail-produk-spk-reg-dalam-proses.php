@@ -255,35 +255,38 @@ include "function/class-spk.php";
                                     $id_spk_decode = base64_decode($_GET['id']);
                                     $no = 1;
                                     $total_spk = 0;
-                                    $sql_trx = "SELECT 
+                                    $sql_trx = "SELECT
                                                     sr.id_spk_reg,
                                                     sr.id_inv,
                                                     trx.id_transaksi,
                                                     trx.id_produk,
                                                     trx.qty,
+                                                    trx.created_date,
                                                     spr.stock, 
-                                                    tpr.nama_produk, 
-                                                    tpr.satuan,
-                                                    tpr.harga_produk,
-                                                    mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                                    tpsm.nama_set_marwa,
-                                                    tpsm.harga_set_marwa,
-                                                    mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                                    COALESCE(tpr.nama_produk, tpe.nama_produk, tpsm.nama_set_marwa, tpse.nama_set_ecat) AS nama_produk,
+                                                    COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                                                    COALESCE(tpr.harga_produk,  tpe.harga_produk, tpsm.harga_set_marwa, tpse.harga_set_ecat) AS harga_produk,
+                                                    COALESCE(mr_produk.nama_merk, mr_produk_ecat.nama_merk, mr_set.nama_merk, mr_set_ecat.nama_merk) AS merk_produk -- Nama merk untuk produk reguler
                                                 FROM  transaksi_produk_reg AS trx
                                                 LEFT JOIN spk_reg sr ON sr.id_spk_reg = trx.id_spk
                                                 LEFT JOIN stock_produk_reguler spr ON trx.id_produk = spr.id_produk_reg
+                                                LEFT JOIN stock_produk_ecat spe ON trx.id_produk = spe.id_produk_ecat
                                                 LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
+                                                LEFT JOIN tb_produk_ecat tpe ON trx.id_produk = tpe.id_produk_ecat
                                                 LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
+                                                LEFT JOIN tb_produk_set_ecat tpse ON trx.id_produk = tpse.id_set_ecat
                                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
+                                                LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk reguler
                                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                                WHERE sr.id_spk_reg = '$id_spk_decode'";
+                                                LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
+                                                WHERE sr.id_spk_reg = '$id_spk_decode' ORDER BY trx.created_date ASC";
                                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
-                                        $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
+                                        $namaProduk = $data_trx['nama_produk'];
                                         $id_produk = $data_trx['id_produk'];
                                         $satuan = $data_trx['satuan'];
-                                        $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
-                                        $harga = detailSpk::getHarga($data_trx['harga_produk'], $data_trx['harga_set_marwa']);
+                                        $nama_merk = $data_trx['merk_produk'];
+                                        $harga = $data_trx['harga_produk'];
                                         $sub_total =  $harga * $data_trx['qty'];
                                         $total_spk += $sub_total;
                                         $satuan_produk = '';

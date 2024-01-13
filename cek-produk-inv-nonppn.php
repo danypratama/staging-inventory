@@ -340,75 +340,90 @@ include "function/class-spk.php";
                 <!-- Tampil data -->
                 <div class="card shadow">
                     <div class="card-body p-3">
-                        <div class="table-responsive">
-                            <div class="text-start">
-                                <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail mb-2">
-                                    <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                                </a>
-                                <?php
-                                    $id_inv_nonppn = base64_decode($_GET['id']);
-                                    $sql_cek = "SELECT 
-                                                nonppn.id_inv_nonppn, kategori_inv,
-                                                sr.id_inv, sr.no_spk,
-                                                trx.status_trx 
-                                                FROM inv_nonppn AS nonppn
-                                                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn' AND status_trx = '1' ORDER BY no_spk ASC";
-                                    $query_cek = mysqli_query($connect, $sql_cek);
-                                    $data_cek = mysqli_fetch_array($query_cek);
-                                    $total_data = mysqli_num_rows($query_cek);
-                                ?>
-                                <?php 
-                                    include "koneksi.php";
-                                    $id_role = $_SESSION['tiket_role'];
-                                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
-                                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
-                                    $data_role = mysqli_fetch_array($query_role);
-                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
-                                        ?>
-                                            <button class="btn btn-info btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#ubahKat">
-                                                <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
-                                            </button>
-                                            <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
-                                                <i class="bi bi-plus-circle"></i> Tambah SPK
-                                            </a>
-                                            <?php
-                                            if ($kat_inv == 'Spesial Diskon') {
-                                                echo '
-                                                    <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
-                                            }
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="text-start">
+                                    <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail mb-2">
+                                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                    </a>
+                                    <?php
+                                        $id_inv_nonppn = base64_decode($_GET['id']);
+                                        $sql_cek = "SELECT 
+                                                    nonppn.id_inv_nonppn, kategori_inv,
+                                                    sr.id_inv, sr.no_spk,
+                                                    trx.status_trx 
+                                                    FROM inv_nonppn AS nonppn
+                                                    JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                    WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn' AND status_trx = '1' ORDER BY no_spk ASC";
+                                        $query_cek = mysqli_query($connect, $sql_cek);
+                                        $data_cek = mysqli_fetch_array($query_cek);
+                                        $total_data = mysqli_num_rows($query_cek);
+                                    ?>
+                                    <?php 
+                                        include "koneksi.php";
+                                        $id_role = $_SESSION['tiket_role'];
+                                        $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                                        $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                        $data_role = mysqli_fetch_array($query_role);
+                                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
                                             ?>
-                                            <?php
-                                            // Eksekusi query SQL
-                                            $result = mysqli_query($connect, "SELECT 
-                                                                    nonppn.id_inv_nonppn,
-                                                                    trx.status_trx
-                                                                    FROM inv_nonppn AS nonppn
-                                                                    JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                                    WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn'  ORDER BY no_spk ASC");
-                                            $tombolDitampilkan = false;
-                                            // Inisialisasi variabel untuk status kosong
-                                            while ($row = mysqli_fetch_array($result)) {
-                                                $status_trx = $row['status_trx'];
-                                            ?>
+                                                <button class="btn btn-info btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#ubahKat">
+                                                    <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
+                                                </button>
+                                                <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
+                                                    <i class="bi bi-plus-circle"></i> Tambah SPK
+                                                </a>
                                                 <?php
-                                                if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
-                                                    echo ' 
-                                                            <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Dikirim">
-                                                                <i class="bi bi-send"></i> Proses Dikirim
-                                                            </button> 
-                                                            ';
-
-                                                    // Set variabel $tombolDitampilkan menjadi true
-                                                    $tombolDitampilkan = true;
+                                                if ($kat_inv == 'Spesial Diskon') {
+                                                    echo '
+                                                        <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
                                                 }
                                                 ?>
-                                            <?php } ?>
-                                        <?php
-                                    }
-                                ?>
+                                                <?php
+                                                // Eksekusi query SQL
+                                                $result = mysqli_query($connect, "SELECT 
+                                                                        nonppn.id_inv_nonppn,
+                                                                        trx.status_trx
+                                                                        FROM inv_nonppn AS nonppn
+                                                                        JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                                                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                                        WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn'  ORDER BY no_spk ASC");
+                                                $tombolDitampilkan = false;
+                                                // Inisialisasi variabel untuk status kosong
+                                                while ($row = mysqli_fetch_array($result)) {
+                                                    $status_trx = $row['status_trx'];
+                                                ?>
+                                                    <?php
+                                                    if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
+                                                        echo ' 
+                                                                <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Dikirim">
+                                                                    <i class="bi bi-send"></i> Proses Dikirim
+                                                                </button> 
+                                                                ';
+
+                                                        // Set variabel $tombolDitampilkan menjadi true
+                                                        $tombolDitampilkan = true;
+                                                    }
+                                                    ?>
+                                                <?php } ?>
+                                            <?php
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-end">
+                                    <?php  
+                                        $sql_total_inv = mysqli_query($connect, "SELECT total_inv FROM inv_nonppn WHERE id_inv_nonppn = '$id_inv'");
+                                        $data_total_inv = mysqli_fetch_array($sql_total_inv);
+                                        $tampil_total_inv = $data_total_inv['total_inv'];
+                                    ?>
+                                    <button type="button" class="btn btn-outline-dark">
+                                        Total Invoice<br>
+                                        Rp. <?php echo number_format($tampil_total_inv, 0,'.','.') ?>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -455,10 +470,10 @@ include "function/class-spk.php";
                                                 <th class="text-center p-3 text-nowrap" style="width:20px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:80px">No. SPK</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:200px">Nama Produk</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:100px">Satuan</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:100px">Merk</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:80px">Qty Order</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:100px">Satuan</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:80px">Total</th>
                                                 <?php  
                                                     if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
@@ -477,11 +492,11 @@ include "function/class-spk.php";
                                                 <th class="text-center p-3 text-nowrap" style="width:20px">No</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:100px">No. SPK</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:200px">Nama Produk</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:100px">Satuan</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:100px">Merk</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:100px">Diskon</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:80px">Qty Order</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:100px">Satuan</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:100px">Diskon</th>       
                                                 <th class="text-center p-3 text-nowrap" style="width:80px">Total</th>
                                                 <?php  
                                                     if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
@@ -521,12 +536,9 @@ include "function/class-spk.php";
                                                 trx.total_harga,
                                                 trx.status_trx,
                                                 trx.created_date,
-                                                tpr.nama_produk,
-                                                tpr.satuan,
-                                                mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                                tpsm.nama_set_marwa,
-                                                tpsm.harga_set_marwa,
-                                                mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                                COALESCE(tpr.nama_produk, tpe.nama_produk, tpsm.nama_set_marwa, tpse.nama_set_ecat) AS nama_produk,
+                                                COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                                                COALESCE(mr_produk.nama_merk, mr_produk_ecat.nama_merk, mr_set.nama_merk, mr_set_ecat.nama_merk)AS merk_produk -- Nama merk untuk produk reguler
                                             FROM inv_nonppn AS nonppn
                                             LEFT JOIN spk_reg spk ON (nonppn.id_inv_nonppn = spk.id_inv)
                                             LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
@@ -534,13 +546,17 @@ include "function/class-spk.php";
                                             LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                             LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                             LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+                                            LEFT JOIN tb_produk_ecat tpe ON trx.id_produk = tpe.id_produk_ecat
+                                            LEFT JOIN tb_produk_set_ecat tpse ON trx.id_produk = tpse.id_set_ecat
+                                            LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk reguler
+                                            LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
                                             WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '1' ORDER BY trx.created_date ASC";
                                 $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                 while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
-                                    $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
+                                    $namaProduk = $data_trx['nama_produk'];
                                     $id_produk = $data_trx['id_produk'];
                                     $satuan = $data_trx['satuan'];
-                                    $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
+                                    $nama_merk = $data_trx['merk_produk'];
                                     $disc = $data_trx['disc'];
                                     $total_harga = $data_trx['total_harga'];
                                     $sub_total += $total_harga;
@@ -556,8 +572,9 @@ include "function/class-spk.php";
                                         <td class="text-center text-nowrap"><?php echo $no; ?></td>
                                         <td class="text-center text-nowrap"><?php echo $data_trx['no_spk']; ?></td>
                                         <td class="text-nowrap"><?php echo $data_trx['nama_produk_spk'] ?></td>
+                                        <td class="text-center"><?php echo $nama_merk ?></td>
+                                        <td class="text-end text-nowrap"><?php echo number_format($data_trx['qty']) ?></td>
                                         <td class="text-center text-nowrap"><?php echo $satuan_produk ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $nama_merk ?></td>
                                         <td class="text-end text-nowrap"><?php echo number_format($data_trx['harga']) ?></td>
                                         <?php
                                         if ($total_data != 0) {
@@ -566,7 +583,7 @@ include "function/class-spk.php";
                                             }
                                         }
                                         ?>
-                                        <td class="text-end text-nowrap"><?php echo number_format($data_trx['qty']) ?></td>
+                                       
                                         <td class="text-end text-nowrap"><?php echo number_format($data_trx['total_harga']) ?></td>
                                         <?php  
                                             if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
@@ -676,7 +693,9 @@ include "function/class-spk.php";
                 <div class="container">
                     <?php
                     if ($total_data == 0) {
-                        echo '<h5 class="text-center">Cek Harga Produk</h5>';
+                        ?>
+                            <h5 class="text-center">Cek Harga Produk</h5>
+                        <?php
                     }
                     ?>
                 </div>
@@ -697,27 +716,28 @@ include "function/class-spk.php";
                                         trx.total_harga,
                                         trx.status_trx,
                                         trx.created_date,
-                                        tpr.nama_produk,
-                                        tpr.satuan,
-                                        mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                        tpsm.nama_set_marwa,
-                                        tpsm.harga_set_marwa,
-                                        mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                        COALESCE(tpr.nama_produk, tpe.nama_produk, tpsm.nama_set_marwa, tpse.nama_set_ecat) AS nama_produk,
+                                        COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                                        COALESCE(mr_produk.nama_merk, mr_produk_ecat.nama_merk, mr_set.nama_merk, mr_set_ecat.nama_merk)AS merk_produk -- Nama merk untuk produk reguler
                                     FROM inv_nonppn AS nonppn
                                     LEFT JOIN spk_reg spk ON (nonppn.id_inv_nonppn = spk.id_inv)
                                     LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
                                     LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
+                                    LEFT JOIN tb_produk_ecat tpe ON trx.id_produk = tpe.id_produk_ecat
                                     LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
+                                    LEFT JOIN tb_produk_set_ecat tpse ON trx.id_produk = tpse.id_set_ecat
                                     LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
+                                    LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk reguler
                                     LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+                                    LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
                                     WHERE nonppn.id_inv_nonppn = '$id_nonppn_decode' AND status_trx = '0' ORDER BY trx.created_date ASC";
                     $query_cek_harga = mysqli_query($connect, $sql_cek_harga);
                     $total_cek_harga = mysqli_num_rows($query_cek_harga);
                     while ($data_cek_harga = mysqli_fetch_array($query_cek_harga)) {
-                        $namaProduk = detailSpk::getDetail($data_cek_harga['nama_produk'], $data_cek_harga['nama_set_marwa']);
+                        $namaProduk = $data_cek_harga['nama_produk'];
                         $id_produk = $data_cek_harga['id_produk'];
                         $satuan = $data_cek_harga['satuan'];
-                        $nama_merk = detailSpk::getMerk($data_cek_harga['merk_produk'], $data_cek_harga['merk_set']);
+                        $nama_merk =$data_cek_harga['merk_produk'];
                         $satuan_produk = '';
                         $id_produk_substr = substr($id_produk, 0, 2);
                         if ($id_produk_substr == 'BR') {
@@ -726,30 +746,28 @@ include "function/class-spk.php";
                             $satuan_produk = 'Set';
                         }
                     ?>
-                        <div class="card-body border p-3 mb-3">
+                        <div class="card-body">
                             <div class="row">
-                                <div class="col-1 mb-2">
-                                    <input type="text" class="form-control text-center mobile bg-light" value="<?php echo $no; ?>" readonly>
-                                    <?php $no++ ?>
-                                </div>
-                                <div class="col-sm-3 mb-2">
+                                <div class="col-sm-6 mb-1">
                                     <input type="hidden" name="id_inv" value="<?php echo $data_cek_harga['id_inv_nonppn'] ?>" readonly>
                                     <input type="hidden" name="id_trx[]" id="id_<?php echo $data_cek_harga['id_transaksi'] ?>" value="<?php echo $data_cek_harga['id_transaksi'] ?>" readonly>
-                                    <input type="text" class="form-control mobile-text" name="nama_produk[]" value="<?php echo $namaProduk ?>" required>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1"><?php echo $no; ?></span>
+                                        <?php $no++ ?>
+                                        <input type="text" class="form-control mobile-text" name="nama_produk[]" value="<?php echo $namaProduk ?>" required>                      
+                                    </div>
+                                   
                                 </div>
-                                <div class="col-sm-1 mb-2">
-                                    <input type="text" class="form-control bg-light text-center mobile-text" value="<?php echo $satuan_produk ?>" readonly>
-                                </div>
-                                <div class="col-sm-1 mb-2">
+                                <div class="col-sm-1 mb-1">
                                     <input type="text" class="form-control bg-light text-center mobile-text" value="<?php echo $nama_merk ?>" readonly>
                                 </div>
-                                <div class="col-sm-2 mb-2">
+                                <div class="col-sm-2 mb-1">
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1">Rp</span>
                                         <input type="text" class="form-control text-end harga_produk  mobile-text" name="harga_produk[]" value="<?php echo number_format($data_cek_harga['harga']) ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 mb-2">
+                                <div class="col-sm-1 mb-1">
                                     <?php
                                     if ($total_cek_harga != 0) {
                                         if ($data_cek_harga['kategori_inv'] == 'Diskon') {
@@ -767,10 +785,10 @@ include "function/class-spk.php";
                                     ?>
 
                                 </div>
-                                <div class="col-sm-2 mb-2">
+                                <div class="col-sm-2 mb-1">
                                     <div class="input-group">
-                                        <span class="input-group-text" id="basic-addon1">Qty</span>
                                         <input type="text" class="form-control bg-light text-end  mobile-text" name="qty[]" value="<?php echo number_format($data_cek_harga['qty']) ?>" readonly>
+                                        <span class="input-group-text" id="basic-addon1"><?php echo $satuan_produk ?></span>
                                     </div>
                                 </div>
                             </div>

@@ -131,7 +131,7 @@ if(isset($_POST['simpan-pembayaran'])){
                         } while (true);
         
                         if($sisa_tagihan == 0 ){
-                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$id_bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
 
                             $sql_cs_bank = '';
 
@@ -144,7 +144,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
@@ -174,7 +174,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             exit();
         
                         } else {
-                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$id_bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
 
                             $sql_cs_bank = '';
 
@@ -187,10 +187,10 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
-                                                            ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
+                                                            ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
                             if($id_bank_pengirim != ''){
                                 $bank_pengirim = $id_bank_pengirim;
                             } else {
@@ -291,7 +291,7 @@ if(isset($_POST['simpan-pembayaran'])){
                         } while (true);
         
                         if($sisa_tagihan == 0 ){
-                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
+                            $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$id_bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
 
                             $sql_cs_bank = '';
 
@@ -304,10 +304,10 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
-                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterengan_bayar, total_bayar, tgl_bayar, created_by) 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
+                                                            (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
-                                                            ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
+                                                            ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
 
                             if($id_bank_pengirim != ''){
                                 $bank_pengirim = $id_bank_pengirim;
@@ -369,7 +369,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
@@ -548,10 +548,10 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
-                                                            ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
+                                                            ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
 
                             if($id_bank_pengirim != ''){
                                 $bank_pengirim = $id_bank_pengirim;
@@ -605,10 +605,10 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
-                                                            ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
+                                                            ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
 
                                                     
                             if($id_bank_pengirim != ''){
@@ -724,10 +724,10 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
-                                                            ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
+                                                            ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
 
                             if($id_bank_pengirim != ''){
                                 $bank_pengirim = $id_bank_pengirim;
@@ -775,7 +775,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                                 (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                                 VALUES 
                                                                 ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
@@ -956,10 +956,10 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
-                                                            ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
+                                                            ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
 
                             if($id_bank_pengirim != ''){
                                 $bank_pengirim = $id_bank_pengirim;
@@ -1013,7 +1013,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                                 (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                                 VALUES 
                                                                 ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
@@ -1131,10 +1131,10 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
-                                                            ('$id_bayar', '$id_bank', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
+                                                            ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
 
                             if($id_bank_pengirim != ''){
                                 $bank_pengirim = $id_bank_pengirim;
@@ -1197,7 +1197,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = '';
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
@@ -1273,7 +1273,7 @@ if(isset($_POST['simpan-pembayaran'])){
     
         try{
             if($sisa_tagihan == 0 ){
-                $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                 (id_bayar, id_tagihan, id_finance, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                  VALUES 
                                                  ('$id_bayar', '$id_bill', '$id_finance', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
@@ -1306,7 +1306,7 @@ if(isset($_POST['simpan-pembayaran'])){
                 exit();
 
             } else {
-                $sql_bayar = mysqli_query($connect, "INSERT INTO finance_bayar 
+                $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                 (id_bayar, id_tagihan, id_finance, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                  VALUES 
                                                  ('$id_bayar', '$id_bill', '$id_finance', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");

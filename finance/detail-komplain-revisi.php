@@ -414,7 +414,7 @@
                                         if($total_data_bukti != '0'){
                                             ?>
                                                 <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#bukti">
-                                                    <i class="bi bi-image"></i> Bukti Terima
+                                                    <i class="bi bi-image"></i> Bukti Terima Revisi
                                                 </button>
                                             <?php
                                         }
@@ -539,7 +539,7 @@
                                 </div>
                                 <?php
                                     $no = 1;
-                                    $sql = "SELECT
+                                    $sql = "SELECT DISTINCT
                                                 COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                                                 STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                                                 ik.id_komplain,

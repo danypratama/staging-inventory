@@ -67,24 +67,24 @@ include "function/class-spk.php";
                     include "koneksi.php";
                     $id_inv = base64_decode($_GET['id']);
                     $sql = "SELECT
-                            nonppn.id_inv_nonppn,
-                            nonppn.no_inv,
-                            nonppn.tgl_inv,
-                            nonppn.kategori_inv,
-                            nonppn.cs_inv,
-                            nonppn.sp_disc,
-                            nonppn.tgl_tempo,
-                            nonppn.ongkir,
-                            nonppn.note_inv,
-                            nonppn.total_inv,
+                            nonnonppn.id_inv_nonnonppn,
+                            nonnonppn.no_inv,
+                            nonnonppn.tgl_inv,
+                            nonnonppn.kategori_inv,
+                            nonnonppn.cs_inv,
+                            nonnonppn.sp_disc,
+                            nonnonppn.tgl_tempo,
+                            nonnonppn.ongkir,
+                            nonnonppn.note_inv,
+                            nonnonppn.total_inv,
                             sr.id_user, sr.id_customer, sr.no_spk, sr.no_po, sr.tgl_pesanan, sr.petugas,
                             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales
-                            FROM inv_nonppn AS nonppn
-                            JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
+                            FROM inv_nonnonppn AS nonnonppn
+                            JOIN spk_reg sr ON (nonnonppn.id_inv_nonnonppn = sr.id_inv)
                             JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
                             JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                             JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                            WHERE nonppn.id_inv_nonppn = '$id_inv'";
+                            WHERE nonnonppn.id_inv_nonnonppn = '$id_inv'";
                     $query = mysqli_query($connect, $sql);
                     $query2 = mysqli_query($connect, $sql);
                     $data = mysqli_fetch_array($query);
@@ -114,7 +114,7 @@ include "function/class-spk.php";
                                     <?php 
                                         $no = 1;
                                         while($data2 = mysqli_fetch_array($query2)){
-                                                $id_inv = $data2['id_inv_nonppn'];
+                                                $id_inv = $data2['id_inv_nonnonppn'];
                                                 $kat_inv = $data2['kategori_inv'];
                                                 $id_cs = $data2['id_customer'];
                                                 $tgl_pesanan = $data2['tgl_pesanan'];
@@ -392,35 +392,13 @@ include "function/class-spk.php";
                             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#bukti">
                                 <i class="bi bi-file-earmark-image"></i> Bukti Terima
                             </button>
-                            <!-- End Button Modal Bukti Terima -->
-
-                            <?php
-                            $id_inv_nonppn = base64_decode($_GET['id']);
-                            $sql_cek = "SELECT 
-                                        nonppn.id_inv_nonppn, kategori_inv,
-                                        sr.id_inv, sr.no_spk,
-                                        spr.stock, 
-                                        tpr.nama_produk, 
-                                        tpr.harga_produk
-                                        FROM inv_nonppn AS nonppn
-                                        JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                        WHERE nonppn.id_inv_nonppn = '$id_inv_nonppn' AND status_trx = '1' ORDER BY no_spk ASC";
-                            $query_cek = mysqli_query($connect, $sql_cek);
-                            $data_cek = mysqli_fetch_array($query_cek);
-                            $total_data = mysqli_num_rows($query_cek);
-                            ?>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped table-bordered" id="table2">
                             <?php
-                            if ($total_data != 0) {
-                                if ($data_cek['kategori_inv'] != 'Diskon') {
+                                if ($data['kategori_inv'] != 'Diskon') {
                                     echo '
                                         <thead>
                                             <tr class="text-white" style="background-color: #051683;">
@@ -450,7 +428,6 @@ include "function/class-spk.php";
                                             </tr>
                                         </thead>';
                                 }
-                            }
                             ?>
                             <tbody>
                                 <?php
@@ -495,6 +472,7 @@ include "function/class-spk.php";
                                     $satuan = $data_trx['satuan'];
                                     $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
                                     $disc = $data_trx['disc'];
+                                    $satuan_produk = '';
                                     $id_produk_substr = substr($id_produk, 0, 2);
                                     if ($id_produk_substr == 'BR') {
                                         $satuan_produk = $satuan;
@@ -504,17 +482,15 @@ include "function/class-spk.php";
                                 ?>
                                     <tr>
                                         <td class="text-center"><?php echo $no; ?></td>
-                                        <td class="text-center"><?php echo $data_trx['no_spk']; ?></td>
+                                        <td class="text-center text-nowrap"><?php echo $data_trx['no_spk']; ?></td>
                                         <td class="text-nowrap"><?php echo $data_trx['nama_produk_spk'] ?></td>
                                         <td class="text-center"><?php echo $satuan_produk ?></td>
-                                        <td class="text-center"><?php echo $nama_merk ?></td>
+                                        <td class="text-center text-nowrap"><?php echo $nama_merk ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['harga']) ?></td>
                                         <?php
-                                        if ($total_data != 0) {
-                                            if ($data_cek['kategori_inv'] == 'Diskon') {
+                                            if ($data_trx['kategori_inv'] == 'Diskon') {
                                                 echo "<td class='text-end'>" . $disc . "</td>";
                                             }
-                                        }
                                         ?>
                                         <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['total_harga']) ?></td>
@@ -545,11 +521,11 @@ include "function/class-spk.php";
                                 $query_bukti = mysqli_query($connect, $sql_bukti);
                                 $data_bukti = mysqli_fetch_array($query_bukti);
                                 $gambar1 = $data_bukti['bukti_satu'];
-                                $gambar_bukti1 = "gambar/bukti1/$gambar1";
+                                $gambar_bukti1 = "../gambar/bukti1/$gambar1";
                                 $gambar2 = $data_bukti['bukti_dua'];
-                                $gambar_bukti2 = "gambar/bukti2/$gambar2";
+                                $gambar_bukti2 = "../gambar/bukti2/$gambar2";
                                 $gambar3 = $data_bukti['bukti_tiga'];
-                                $gambar_bukti3 = "gambar/bukti3/$gambar3";
+                                $gambar_bukti3 = "../gambar/bukti3/$gambar3";
                                 $jenis_penerima = $data_bukti['jenis_penerima'];
                                 $no_resi = $data_bukti['no_resi'];
                                 ?>
@@ -607,6 +583,7 @@ include "function/class-spk.php";
                     </div>
                 </div>
                 <!-- End Modal Bukti Terima -->
+            </div>
         </section>
     </main><!-- End #main -->
 

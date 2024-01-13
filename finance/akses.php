@@ -53,7 +53,7 @@ if (empty($_SESSION['tiket_user'])) {
             setTimeout(updateCountdown, 1000);
         } else {
             // Redirect ke halaman logout.php setelah hitungan mundur selesai
-            window.location.href = '../logout.php';
+            window.location.href = 'logout.php';
         }
     }
 

@@ -262,11 +262,11 @@ include "function/class-spk.php";
                                         <thead>
                                             <tr class="text-white" style="background-color: #051683;">
                                                 <th class="text-center p-3 text-nowrap" style="width:20px">No</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:300px">Nama Produk</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:350px">Nama Produk</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:150px">Merk</th>
+                                                <th class="text-center p-3 text-nowrap" style="width:50px">Qty Order</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:100px">Satuan</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:100px">Merk</th>
                                                 <th class="text-center p-3 text-nowrap" style="width:100px">Harga</th>
-                                                <th class="text-center p-3 text-nowrap" style="width:80px">Qty Order</th>
                                                 <?php  
                                                     if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
                                                         ?>
@@ -287,39 +287,41 @@ include "function/class-spk.php";
                                     $month = date('m');
                                     $id_spk_decode = base64_decode($_GET['id']);
                                     $no = 1;
-                                    $sql_trx = "SELECT 
+                                    $sql_trx = "SELECT DISTINCT
                                                     sr.id_spk_reg,
                                                     sr.id_inv,
                                                     tps.id_tmp,
                                                     tps.id_produk,
-                                                    tps.qty,
                                                     tps.status_tmp,
-                                                    tps.created_date, 
-                                                    spr.stock, 
-                                                    tpr.nama_produk, 
-                                                    tpr.satuan,
-                                                    tpr.harga_produk,
-                                                    mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                                    tpsm.nama_set_marwa,
-                                                    tpsm.harga_set_marwa,
-                                                    mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                                    tps.qty,
+                                                    tps.created_date,
+                                                    COALESCE(spr.stock, spe.stock) AS stock,
+                                                    COALESCE(tpr.nama_produk, tpe.nama_produk, tpsm.nama_set_marwa, tpse.nama_set_ecat) AS nama_produk,
+                                                    COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                                                    COALESCE(tpr.harga_produk, tpe.harga_produk, tpsm.harga_set_marwa, tpse.harga_set_ecat) AS harga_produk,
+                                                    COALESCE(mr_produk.nama_merk, mr_produk_ecat.nama_merk, mr_set.nama_merk, mr_set_ecat.nama_merk) AS merk_produk -- Nama merk untuk produk
                                                 FROM tmp_produk_spk AS tps
                                                 LEFT JOIN spk_reg sr ON sr.id_spk_reg = tps.id_spk
                                                 LEFT JOIN stock_produk_reguler spr ON tps.id_produk = spr.id_produk_reg
+                                                LEFT JOIN stock_produk_ecat spe ON tps.id_produk = spe.id_produk_ecat
                                                 LEFT JOIN tb_produk_reguler tpr ON tps.id_produk = tpr.id_produk_reg
+                                                LEFT JOIN tb_produk_ecat tpe ON tps.id_produk = tpe.id_produk_ecat
                                                 LEFT JOIN tb_produk_set_marwa tpsm ON tps.id_produk = tpsm.id_set_marwa
+                                                LEFT JOIN tb_produk_set_ecat tpse ON tps.id_produk = tpse.id_set_ecat
                                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
+                                                LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk ecat
                                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+                                                LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
                                                 WHERE sr.id_spk_reg = '$id_spk_decode' AND tps.status_tmp = '1' ORDER BY tps.created_date ASC";
                                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                                         $uuid = generate_uuid();
                                         $id_produk = $data_trx['id_produk'];
                                         $satuan = $data_trx['satuan'];
-                                        $stock_edit = $data_trx['qty'] + $data_trx['stock'];
-                                        $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
-                                        $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
-                                        $harga = detailSpk::getHarga($data_trx['harga_produk'], $data_trx['harga_set_marwa']);
+                                        $stock_edit = $data_trx['stock'] + $data_trx['qty'];
+                                        $namaProduk = $data_trx['nama_produk'];
+                                        $nama_merk = $data_trx['merk_produk'];
+                                        $harga = $data_trx['harga_produk'];
                                         $satuan_produk = '';
                                         $id_produk_substr = substr($id_produk, 0, 2);
                                         if ($id_produk_substr == 'BR') {
@@ -337,10 +339,10 @@ include "function/class-spk.php";
                                             <input type="hidden" class="form-control" name="id_produk[]" value="<?php echo $data_trx['id_produk'] ?>" readonly>
                                             <td class="text-nowrap"><input type="text" class="text-center" value="<?php echo $no; ?>" readonly></td>
                                             <td class="text-nowrap"><?php echo $namaProduk ?></td>
-                                            <td class="text-center text-nowrap"><?php echo $satuan_produk ?></td>
                                             <td class="text-nowrap"><input type="text" class="text-center" value="<?php echo $nama_merk ?>" readonly></td>
-                                            <td class="text-nowrap"><input type="text" class="text-end" name="harga[]" value="<?php echo number_format($harga) ?>" readonly></td>
                                             <td class="text-nowrap"><input type="text" class="text-end" name="qty[]" value="<?php echo number_format($data_trx['qty']) ?>" readonly></td>
+                                            <td class="text-center text-nowrap"><?php echo $satuan_produk ?></td>
+                                            <td class="text-nowrap"><input type="text" class="text-end" name="harga[]" value="<?php echo number_format($harga) ?>" readonly></td>
                                             <?php  
                                                 if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Gudang") {
                                                     ?>
@@ -400,85 +402,116 @@ include "function/class-spk.php";
                             </table>
                             <div class="card">
                                 <?php
-                                $id_spk_reg = $data['id_spk_reg'];
-                                $no = 1;
-                                $sql = "SELECT 
-                                            sr.id_spk_reg,
-                                            tps.id_tmp,
-                                            tps.id_produk,
-                                            tps.status_tmp,
-                                            tps.created_date,
-                                            spr.stock, 
-                                            tpr.nama_produk, 
-                                            tpr.satuan,
-                                            tpr.harga_produk,
-                                            mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                            tpsm.nama_set_marwa,
-                                            tpsm.harga_set_marwa,
-                                            mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
-                                        FROM tmp_produk_spk AS tps
-                                        LEFT JOIN spk_reg sr ON sr.id_spk_reg = tps.id_spk
-                                        LEFT JOIN stock_produk_reguler spr ON tps.id_produk = spr.id_produk_reg
-                                        LEFT JOIN tb_produk_reguler tpr ON tps.id_produk = tpr.id_produk_reg
-                                        LEFT JOIN tb_produk_set_marwa tpsm ON tps.id_produk = tpsm.id_set_marwa
-                                        LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
-                                        LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                        WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0' ORDER BY tps.created_date ASC";
-                                $query = mysqli_query($connect, $sql);
-                                $totalRows = mysqli_num_rows($query);
-                                if ($totalRows != 0) {
-                                    ?>
-                                    <h5 class="text-center">Tambah Produk Pesanan</h5>
-                                    <?php
-                                } else {
-
-                                }
-
-                                while ($data = mysqli_fetch_array($query)) {
-                                    $id_spk = $data['id_spk_reg'];
-                                    $id_produk = $data['id_produk'];
-                                    $namaProduk = detailSpk::getDetail($data['nama_produk'], $data['nama_set_marwa']);
-                                    $satuan = $data['satuan'];
-                                    $nama_merk = detailSpk::getMerk($data['merk_produk'], $data['merk_set']);
-                                    $harga = detailSpk::getHarga($data['harga_produk'], $data['harga_set_marwa']);
-                                    $uuid = generate_uuid();
-                                    $isEmpty = false; // Setel variabel pengecekan menjadi false jika ada data
-                                    $satuan_produk = '';
-                                    $id_produk_substr = substr($id_produk, 0, 2);
-                                    if ($id_produk_substr == 'BR') {
-                                        $satuan_produk = $satuan;
+                                    $id_spk_reg = $data['id_spk_reg'];
+                                    $no = 1;
+                                    $sql = "SELECT DISTINCT
+                                                sr.id_spk_reg,
+                                                tps.id_tmp,
+                                                tps.id_produk,
+                                                tps.status_tmp,
+                                                tps.created_date,
+                                                COALESCE(spr.stock, spe.stock) AS stock,
+                                                COALESCE(tpr.nama_produk, tpe.nama_produk, tpsm.nama_set_marwa, tpse.nama_set_ecat) AS nama_produk,
+                                                COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                                                COALESCE(tpr.harga_produk, tpe.harga_produk, tpsm.harga_set_marwa, tpse.harga_set_ecat) AS harga_produk,
+                                                COALESCE(mr_produk.nama_merk, mr_produk_ecat.nama_merk, mr_set.nama_merk, mr_set_ecat.nama_merk) AS merk_produk -- Nama merk untuk produk
+                                            FROM tmp_produk_spk AS tps
+                                            LEFT JOIN spk_reg sr ON sr.id_spk_reg = tps.id_spk
+                                            LEFT JOIN stock_produk_reguler spr ON tps.id_produk = spr.id_produk_reg
+                                            LEFT JOIN stock_produk_ecat spe ON tps.id_produk = spe.id_produk_ecat
+                                            LEFT JOIN tb_produk_reguler tpr ON tps.id_produk = tpr.id_produk_reg
+                                            LEFT JOIN tb_produk_ecat tpe ON tps.id_produk = tpe.id_produk_ecat
+                                            LEFT JOIN tb_produk_set_marwa tpsm ON tps.id_produk = tpsm.id_set_marwa
+                                            LEFT JOIN tb_produk_set_ecat tpse ON tps.id_produk = tpse.id_set_ecat
+                                            LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
+                                            LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk ecat
+                                            LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+                                            LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
+                                            WHERE sr.id_spk_reg = '$id_spk_reg' AND tps.status_tmp = '0' ORDER BY tps.created_date ASC";
+                                    $query = mysqli_query($connect, $sql);
+                                    $totalRows = mysqli_num_rows($query);
+                                    if ($totalRows != 0) {
+                                        ?>
+                                        <h5 class="text-center">Tambah Produk Pesanan</h5>
+                                        <div class="card-body">
+                                            <div class="row p-1">
+                                                <div class="col-sm-1">
+                                                    <P class="text-center">No</P>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <P class="text-center">Nama Produk</P>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <P class="text-center">Satuan</P>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <P class="text-center">Merk</P>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <P class="text-center">Harga</P>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <P class="text-center">Stock</P>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <P class="text-center">Qty Order</P>
+                                                </div>
+                                                <div class="col-sm-1 text-center">
+                                                    <P class="text-center">Aksi</P>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php
                                     } else {
-                                        $satuan_produk = 'Set';
+
                                     }
+
+                                    while ($data = mysqli_fetch_array($query)) {
+                                        $id_spk = $data['id_spk_reg'];
+                                        $id_produk = $data['id_produk'];
+                                        $namaProduk = $data['nama_produk'];
+                                        $satuan = $data['satuan'];
+                                        $nama_merk = $data['merk_produk'];
+                                        $harga = $data['harga_produk'];
+                                        $uuid = generate_uuid();
+                                        $isEmpty = false; // Setel variabel pengecekan menjadi false jika ada data
+                                        $satuan_produk = '';
+                                        $id_produk_substr = substr($id_produk, 0, 2);
+                                        if ($id_produk_substr == 'BR') {
+                                            $satuan_produk = $satuan;
+                                        } else {
+                                            $satuan_produk = 'Set';
+                                        } 
+                                  
                                 ?>
-                                    <div class="card-body p-2">
+                                    <div class="card-body p-1">
                                         <div class="row p-1">
-                                            <div class="col-sm-1 mb-2">
+                                            <div class="col-sm-1 mb-1">
                                                 <input type="text" class="form-control text-center bg-light mobile" value="<?php echo $no; ?>" readonly>
                                                 <?php $no++ ?>
                                             </div>
-                                            <div class="col-sm-5 mb-2">
+                                            <div class="col-sm-5 mb-1">
                                                 <input type="hidden" name="id_tmp[]" id="id_<?php echo $data['id_tmp'] ?>" value="<?php echo $data['id_tmp'] ?>" readonly>
                                                 <input type="hidden" class="form-control" name="id_spk_reg_tmp[]" value="<?php echo $id_spk_reg ?>" readonly>
                                                 <input type="hidden" class="form-control" name="id_produk_tmp[]" value="<?php echo $data['id_produk'] ?>" readonly>
                                                 <input type="text" class="form-control bg-light text-wrap" value="<?php echo $namaProduk; ?>" readonly>
                                             </div>
-                                            <div class="col-sm-1 mb-2">
+                                            <div class="col-sm-1 mb-1">
                                                 <input type="text" class="form-control bg-light text-center mobile-text" value="<?php echo $satuan_produk; ?>" readonly>
                                             </div>
-                                            <div class="col-sm-1 mb-2">
-                                                <input type="text" class="form-control bg-light text-center text-wrap mobile-text" value="<?php echo $nama_merk ?>" readonly>
+                                            <div class="col-sm-1 mb-1">
+                                                <input type="text" class="form-control bg-light text-center text-wrap mobile-text text-break" value="<?php echo $nama_merk ?>" readonly>
                                             </div>
-                                            <div class="col-sm-1 mb-2">
+                                            <div class="col-sm-1 mb-1">
                                                 <input type="text" class="form-control bg-light text-end mobile-text" value="<?php echo number_format($harga) ?>" readonly>
                                             </div>
-                                            <div class="col-sm-1 mb-2">
+                                            <div class="col-sm-1 mb-1">
                                                 <input type="text" class="form-control bg-light text-end mobile-text" name="stock" id="stock_<?php echo $data['id_tmp'] ?>" value="<?php echo number_format($data['stock']) ?>" readonly>
                                             </div>
-                                            <div class="col-sm-1 mb-2">
+                                            <div class="col-sm-1 mb-1">
                                                 <input type="text" class="form-control text-end mobile-text" name="qty_tmp[]" id="qtyInput_<?php echo $data['id_tmp'] ?>" oninput="checkStock('<?php echo $data['id_tmp'] ?>')" required>
                                             </div>
-                                            <div class="col-sm-1 mb-2 text-center">
+                                            <div class="col-sm-1 mb-1 text-center">
                                                 <a href="proses/proses-produk-spk-reg.php?hapus_tmp=<?php echo base64_encode($data['id_tmp']) ?>&&id_spk=<?php echo base64_encode($id_spk) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                             </div>
                                         </div>
@@ -508,92 +541,194 @@ include "function/class-spk.php";
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Data Barang</h1>
                     </div>
                     <div class="modal-body">
-                        <div class="table-responsive position-relative"> <!-- Tambahkan class position-relative untuk posisi relatif -->
-                            <div id="loading-indicator" class="position-absolute top-50 start-50 translate-middle" style="display: none;">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="prod-reg-tab" data-bs-toggle="pill" data-bs-target="#prod-reg" type="button" role="tab" aria-controls="prod-reg" aria-selected="true">Produk Reguler</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="prod-ecat-tab" data-bs-toggle="pill" data-bs-target="#prod-ecat" type="button" role="tab" aria-controls="prod-ecat" aria-selected="false">Produk E-Cat</button>
+                            </li>
+                        </ul>
+                                
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="prod-reg" role="tabpanel" aria-labelledby="prod-reg-tab" tabindex="0">
+                                <div class="table-responsive position-relative"> <!-- Tambahkan class position-relative untuk posisi relatif -->
+                                    <div id="loading-indicator" class="position-absolute top-50 start-50 translate-middle" style="display: none;">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <table class="table table-striped table-bordered" id="table3">
+                                        <thead>
+                                            <tr class="text-white" style="background-color: #051683;">
+                                                <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 350px">Kode Produk</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 350px">Nama Produk</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Satuan</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Merk</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Stock</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Aksi</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            include "koneksi.php";
+                                            $id = $_GET['id'];
+                                            $selected_produk = [];
+                                            $id_spk = $id_spk_reg;
+                                            $no = 1;
+
+                                            // Mengambil data produk yang ada dalam tmp_produk_spk untuk id_spk yang sedang aktif
+                                            $query_selected_produk = mysqli_query($connect, "SELECT id_produk FROM tmp_produk_spk WHERE id_spk = '$id_spk'");
+                                            while ($selected_data = mysqli_fetch_array($query_selected_produk)) {
+                                                $selected_produk[] = $selected_data['id_produk'];
+                                            }
+
+                                            $sql = "SELECT 
+                                                        COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
+                                                        COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
+                                                        COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
+                                                        COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
+                                                        tpr.satuan,
+                                                        spr.id_stock_prod_reg,
+                                                        spr.stock,
+                                                        tkp.min_stock, 
+                                                        tkp.max_stock
+                                                    FROM stock_produk_reguler AS spr
+                                                    LEFT JOIN tb_produk_reguler AS tpr ON (tpr.id_produk_reg = spr.id_produk_reg)
+                                                    LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spr.id_kat_penjualan)
+                                                    LEFT JOIN tb_produk_set_marwa AS tpsm ON (tpsm.id_set_marwa = spr.id_produk_reg)
+                                                    LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
+                                                    LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
+                                                    ORDER BY nama_produk ASC";
+
+                                            $query = mysqli_query($connect, $sql);
+
+                                            while ($data = mysqli_fetch_array($query)) {
+                                                $id_produk = $data['id_produk'];
+                                                $id_produk_substr = substr($id_produk, 0, 2);
+                                                $isChecked = in_array($id_produk, $selected_produk);
+                                                $isDisabled = false;
+
+                                                if ($data['stock'] == 0) {
+                                                    $isDisabled = true; // Jika stock = 0, maka tombol pilih akan menjadi disabled
+                                                }
+                                            ?>
+                                                <tr>
+                                                    <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                                                    <td class="text-nowrap text-center"><?php echo $data['kode_produk']; ?></td>
+                                                    <td class="text-nowrap"><?php echo $data['nama_produk']; ?></td>
+                                                    <td class="text-center text-nowrap">
+                                                        <?php 
+                                                        if($id_produk_substr == 'BR'){
+                                                            echo $data['satuan'];
+                                                        } else {
+                                                            echo "Set";
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
+                                                    <td class="text-center text-nowrap"><?php echo number_format($data['stock']); ?></td>
+                                                    <td class="text-center text-nowrap">
+                                                        <button class="btn-pilih btn btn-primary btn-sm" data-id="<?php echo $id_produk; ?>"  data-spk="<?php echo $id_spk; ?>" <?php echo ($isChecked || $isDisabled) ? 'disabled' : ''; ?>>Pilih</button>
+                                                    </td>
+                                                </tr>
+                                                <?php $no++; ?>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <table class="table table-striped table-bordered" id="table3">
-                                <thead>
-                                    <tr class="text-white" style="background-color: #051683;">
-                                        <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>
-                                        <td class="text-center p-3 text-nowrap" style="width: 350px">Kode Produk</td>
-                                        <td class="text-center p-3 text-nowrap" style="width: 350px">Nama Produk</td>
-                                        <td class="text-center p-3 text-nowrap" style="width: 100px">Satuan</td>
-                                        <td class="text-center p-3 text-nowrap" style="width: 100px">Merk</td>
-                                        <td class="text-center p-3 text-nowrap" style="width: 100px">Stock</td>
-                                        <td class="text-center p-3 text-nowrap" style="width: 100px">Aksi</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    include "koneksi.php";
-                                    $id = $_GET['id'];
-                                    $selected_produk = [];
-                                    $id_spk = $id_spk_reg;
-                                    $no = 1;
+                            <div class="tab-pane fade" id="prod-ecat" role="tabpanel" aria-labelledby="prod-ecat-tab" tabindex="0">
+                                <div class="table-responsive position-relative"> <!-- Tambahkan class position-relative untuk posisi relatif -->
+                                    <div id="loading-indicator" class="position-absolute top-50 start-50 translate-middle" style="display: none;">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <table class="table table-striped table-bordered" id="table4">
+                                        <thead>
+                                            <tr class="text-white" style="background-color: #051683;">
+                                                <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 350px">Kode Produk</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 350px">Nama Produk</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Satuan</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Merk</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Stock</td>
+                                                <td class="text-center p-3 text-nowrap" style="width: 100px">Aksi</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            include "koneksi.php";
+                                            $id = $_GET['id'];
+                                            $selected_produk = [];
+                                            $id_spk = $id_spk_reg;
+                                            $no = 1;
 
-                                    // Mengambil data produk yang ada dalam tmp_produk_spk untuk id_spk yang sedang aktif
-                                    $query_selected_produk = mysqli_query($connect, "SELECT id_produk FROM tmp_produk_spk WHERE id_spk = '$id_spk'");
-                                    while ($selected_data = mysqli_fetch_array($query_selected_produk)) {
-                                        $selected_produk[] = $selected_data['id_produk'];
-                                    }
+                                            // Mengambil data produk yang ada dalam tmp_produk_spk untuk id_spk yang sedang aktif
+                                            $query_selected_produk = mysqli_query($connect, "SELECT id_produk FROM tmp_produk_spk WHERE id_spk = '$id_spk'");
+                                            while ($selected_data = mysqli_fetch_array($query_selected_produk)) {
+                                                $selected_produk[] = $selected_data['id_produk'];
+                                            }
 
-                                    $sql = "SELECT 
-                                                COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
-                                                COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
-                                                COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
-                                                COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
-                                                tpr.satuan,
-                                                spr.id_stock_prod_reg,
-                                                spr.stock,
-                                                tkp.min_stock, 
-                                                tkp.max_stock
-                                            FROM stock_produk_reguler AS spr
-                                            LEFT JOIN tb_produk_reguler AS tpr ON (tpr.id_produk_reg = spr.id_produk_reg)
-                                            LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spr.id_kat_penjualan)
-                                            LEFT JOIN tb_produk_set_marwa AS tpsm ON (tpsm.id_set_marwa = spr.id_produk_reg)
-                                            LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
-                                            LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
-                                            ORDER BY nama_produk ASC";
+                                            $sql = "SELECT 
+                                                        COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat) AS id_produk,
+                                                        COALESCE(tpr.kode_produk, tpsm.kode_set_ecat) AS kode_produk,
+                                                        COALESCE(tpr.nama_produk, tpsm.nama_set_ecat) AS nama_produk,
+                                                        COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
+                                                        tpr.satuan,
+                                                        spr.id_stock_prod_ecat,
+                                                        spr.stock,
+                                                        tkp.min_stock, 
+                                                        tkp.max_stock
+                                                    FROM stock_produk_ecat AS spr
+                                                    LEFT JOIN tb_produk_ecat AS tpr ON (tpr.id_produk_ecat = spr.id_produk_ecat)
+                                                    LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spr.id_kat_penjualan)
+                                                    LEFT JOIN tb_produk_set_ecat AS tpsm ON (tpsm.id_set_ecat = spr.id_produk_ecat)
+                                                    LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
+                                                    LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
+                                                    ORDER BY nama_produk ASC";
 
-                                    $query = mysqli_query($connect, $sql);
+                                            $query = mysqli_query($connect, $sql);
 
-                                    while ($data = mysqli_fetch_array($query)) {
-                                        $id_produk = $data['id_produk'];
-                                        $id_produk_substr = substr($id_produk, 0, 2);
-                                        $isChecked = in_array($id_produk, $selected_produk);
-                                        $isDisabled = false;
+                                            while ($data = mysqli_fetch_array($query)) {
+                                                $id_produk = $data['id_produk'];
+                                                $id_produk_substr = substr($id_produk, 0, 2);
+                                                $isChecked = in_array($id_produk, $selected_produk);
+                                                $isDisabled = false;
 
-                                        if ($data['stock'] == 0) {
-                                            $isDisabled = true; // Jika stock = 0, maka tombol pilih akan menjadi disabled
-                                        }
-                                    ?>
-                                        <tr>
-                                            <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                                            <td class="text-nowrap text-center"><?php echo $data['kode_produk']; ?></td>
-                                            <td class="text-nowrap"><?php echo $data['nama_produk']; ?></td>
-                                            <td class="text-center text-nowrap">
-                                                <?php 
-                                                if($id_produk_substr == 'BR'){
-                                                    echo $data['satuan'];
-                                                } else {
-                                                    echo "Set";
+                                                if ($data['stock'] == 0) {
+                                                    $isDisabled = true; // Jika stock = 0, maka tombol pilih akan menjadi disabled
                                                 }
-                                                ?>
-                                            </td>
-                                            <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
-                                            <td class="text-center text-nowrap"><?php echo number_format($data['stock']); ?></td>
-                                            <td class="text-center text-nowrap">
-                                                <button class="btn-pilih btn btn-primary btn-sm" data-id="<?php echo $id_produk; ?>"  data-spk="<?php echo $id_spk; ?>" <?php echo ($isChecked || $isDisabled) ? 'disabled' : ''; ?>>Pilih</button>
-                                            </td>
-                                        </tr>
-                                        <?php $no++; ?>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+                                            ?>
+                                                <tr>
+                                                    <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                                                    <td class="text-nowrap text-center"><?php echo $data['kode_produk']; ?></td>
+                                                    <td class="text-nowrap"><?php echo $data['nama_produk']; ?></td>
+                                                    <td class="text-center text-nowrap">
+                                                        <?php 
+                                                        if($id_produk_substr == 'BR'){
+                                                            echo $data['satuan'];
+                                                        } else {
+                                                            echo "Set";
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
+                                                    <td class="text-center text-nowrap"><?php echo number_format($data['stock']); ?></td>
+                                                    <td class="text-center text-nowrap">
+                                                        <button class="btn-pilih btn btn-primary btn-sm" data-id="<?php echo $id_produk; ?>"  data-spk="<?php echo $id_spk; ?>" <?php echo ($isChecked || $isDisabled) ? 'disabled' : ''; ?>>Pilih</button>
+                                                    </td>
+                                                </tr>
+                                                <?php $no++; ?>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
+                                
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshPage()">Close</button>

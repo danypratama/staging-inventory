@@ -1,7 +1,7 @@
 <?php  
     include "../koneksi.php";
     // Query Untuk Table
-    $sql_tmp = "SELECT
+    $sql_tmp = "SELECT DISTINCT
                     COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                     STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                     ik.id_komplain,

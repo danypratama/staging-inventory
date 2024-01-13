@@ -7,8 +7,8 @@ body {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding-top: 0.5cm;
-  padding-left: 1.5cm;
+  padding-top: 0cm;
+  padding-left: 1cm;
   padding-right: 1.5cm;
   padding-bottom: 0.5cm;
   background-color: #ffffff;
@@ -91,7 +91,7 @@ body {
 .invoice-table td {
   padding: 0.1cm;
   border: 1px solid Black;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .invoice-payment {
@@ -118,7 +118,7 @@ body {
 
 .grand-total {
   text-align: right;
-  width: 200px;
+  margin-left: 50px;
 }
 
 .amount {
@@ -168,7 +168,8 @@ body {
 @media print {
   @page {
     size: letter;
-    margin: 0;
+    margin: 10px;
+    padding: 0;
   }
 
   .invoice {

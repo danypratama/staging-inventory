@@ -180,6 +180,7 @@ include "akses.php";
       <p>
       <div class="row">
         <div class="col-7 ms-4 m-2 text-start">
+          <br>
           <b>PT. Karsa Mandiri Alkesindo</b>
           <br><br><br><br>
           <b style="text-decoration: underline;">
@@ -196,7 +197,7 @@ include "akses.php";
               <th><br></th>
             </tr>
           </table>
-          <br><br><br><br>
+          <br><br><br>
           <p>(Paraf & Nama Penerima)</p>
         </div>
       </div>

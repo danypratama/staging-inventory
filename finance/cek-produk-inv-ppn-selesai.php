@@ -60,7 +60,7 @@ include "../function/class-spk.php";
             <div class="card shadow p-2">
                 <div class="card-header text-center">
                     <h5>
-                        <strong>DETAIL INVOICE PPN</strong>
+                        <strong>DETAIL INVOICE PPN</strong> 
                     </h5>
                 </div>
                 <?php
@@ -274,18 +274,21 @@ include "../function/class-spk.php";
                             ?>
 
                             <?php  
-                                $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
+                                $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, no_resi, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
                                 $data_status_kirim = mysqli_fetch_array($status_kirim);
                                 $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
                                 $ekspedisi = $data_status_kirim['dikirim_ekspedisi'];
                                 $driver = $data_status_kirim['dikirim_driver'];
+                                $no_resi = $data_status_kirim['no_resi'];
 
 
-                                $ekspedisi_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_ekspedisi, sk.jenis_penerima, ex.nama_ekspedisi
+                                $ekspedisi_kirim =  mysqli_query($connect, "SELECT 
+                                                                                sk.jenis_pengiriman, sk.dikirim_ekspedisi, sk.jenis_penerima, ex.nama_ekspedisi
                                                                             FROM status_kirim AS sk
                                                                             JOIN ekspedisi ex ON (sk.dikirim_ekspedisi = ex.id_ekspedisi)
                                                                             WHERE sk.dikirim_ekspedisi = '$ekspedisi'");
                                 $data_ekspedisi_kirim = mysqli_fetch_array($ekspedisi_kirim);
+
                                 
                                 $driver_kirim =  mysqli_query($connect, "SELECT sk.jenis_pengiriman, sk.dikirim_driver, us.nama_user 
                                                                             FROM status_kirim AS sk
@@ -311,18 +314,68 @@ include "../function/class-spk.php";
                                             <?php echo $data_ekspedisi_kirim['jenis_penerima'] ?> (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
                                         </div>
                                     </div>
-                                    <div class="row mt-2">
+                                    <div class="row">
                                         <div class="col-5">
-                                            <p style="float: left;">Diterima Oleh</p>
-                                            <p style="float: right;">:</p>
+                                            <p style="float: left;">No. Resi</p>
+                                            <p style="float: right;"> :</p>
                                         </div>
                                         <div class="col-7">
-                                            <?php echo $data_penerima['nama_penerima'] ?>
+                                            <?php echo $no_resi ?>
                                         </div>
                                     </div>
                                     <?php
-                                } else {
+                                  }else if($jenis_pengiriman == 'Diambil Langsung'){
                                     ?>
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <p style="float: left;">Jenis Pengiriman</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                <?php echo $jenis_pengiriman ?>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    if(!empty($data_status_kirim['jenis_penerima'])){
+                                        ?>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Jenis Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                    <?php  
+                                                        if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                            ?>
+                                                                (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                    
+                                                </div>
+                                            </div>
+                                            <?php  
+                                                if(!empty($data_penerima['nama_penerima'])){
+                                                    ?>
+                                                         <div class="row">
+                                                            <div class="col-5">
+                                                                <p style="float: left;">Nama Penerima</p>
+                                                                <p style="float: right;"> :</p>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <?php echo $data_penerima['nama_penerima'] ?>
+                                                            </div>
+                                                        </div>
+                                                    <?php
+                                                }
+                                            
+                                            ?>
+                                        <?php
+                                    }
+                                } else {
+                                    if($data_status_kirim['jenis_penerima'] == "Customer" || $jenis_pengiriman == 'Driver'){
+                                        ?>
                                         <div class="row mt-2">
                                             <div class="col-5">
                                                 <p style="float: left;">Jenis Pengiriman</p>
@@ -332,9 +385,9 @@ include "../function/class-spk.php";
                                                 <?php echo $jenis_pengiriman ?> (<?php echo $data_driver_kirim['nama_user'] ?>)
                                             </div>
                                         </div>
-                                    <?php
+                                        <?php
                                         if(!empty($data_status_kirim['jenis_penerima'])){
-                                            ?>
+                                            ?>  
                                                 <div class="row">
                                                     <div class="col-5">
                                                         <p style="float: left;">Jenis Penerima</p>
@@ -346,6 +399,7 @@ include "../function/class-spk.php";
                                                 </div>
                                             <?php
                                         }
+                                    }
                                 }
                             ?>
                             <?php
@@ -390,36 +444,28 @@ include "../function/class-spk.php";
                             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#bukti">
                                 <i class="bi bi-file-earmark-image"></i> Bukti Terima
                             </button>
-                            <!-- End Button Modal Bukti Terima -->
 
-                            <?php
-                            $id_inv_ppn = base64_decode($_GET['id']);
-                            $sql_cek = "SELECT 
-                                        ppn.id_inv_ppn, kategori_inv,
-                                        sr.id_inv, sr.no_spk,
-                                        trx.*, 
-                                        spr.stock, 
-                                        tpr.nama_produk, 
-                                        tpr.harga_produk, mr.* 
-                                        FROM inv_ppn AS ppn
-                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                        WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
-                            $query_cek = mysqli_query($connect, $sql_cek);
-                            $data_cek = mysqli_fetch_array($query_cek);
-                            $total_data = mysqli_num_rows($query_cek);
+                            <?php  
+                                $finance =  mysqli_query($connect, "SELECT id_inv, status_tagihan FROM finance WHERE id_inv = '$id_inv'");
+                                $cek_finance = mysqli_fetch_array($finance);
+                                $status_tagihan = $cek_finance['status_tagihan'];
+                                if($status_tagihan == '1'){
+                                    ?>
+                                        <button class="btn btn-secondary mb-2"><i class="bi bi-check"></i> Tagihan Sudah Dibuat</button>
+                                    <?php
+                                } else {
+                                    ?>
+                                        <button class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#modalKomplain"><i class="bi bi-info-circle"></i> Komplain</button>
+                                    <?php
+                                }
                             ?>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <button type="button" class="btn btn-secondary p-2">Nama Petugas : <?php echo $petugas ?></button>
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped table-bordered" id="table2">
                             <?php
-                            if ($total_data != 0) {
-                                if ($data_cek['kategori_inv'] != 'Diskon') {
+                                if ($data['kategori_inv'] != 'Diskon') {
                                     echo '
                                         <thead>
                                             <tr class="text-white" style="background-color: #051683;">
@@ -449,7 +495,6 @@ include "../function/class-spk.php";
                                             </tr>
                                         </thead>';
                                 }
-                            }
                             ?>
                             <tbody>
                                 <?php
@@ -510,11 +555,9 @@ include "../function/class-spk.php";
                                         <td class="text-center text-nowrap"><?php echo $nama_merk ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['harga']) ?></td>
                                         <?php
-                                        if ($total_data != 0) {
-                                            if ($data_cek['kategori_inv'] == 'Diskon') {
+                                            if ($data_trx['kategori_inv'] == 'Diskon') {
                                                 echo "<td class='text-end'>" . $disc . "</td>";
                                             }
-                                        }
                                         ?>
                                         <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['total_harga']) ?></td>
@@ -610,6 +653,112 @@ include "../function/class-spk.php";
             </div>
         </section>
     </main><!-- End #main -->
+    <!-- Modal Komplain -->
+    <div class="modal fade" id="modalKomplain" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Komplain Invoice</h1>
+                </div>
+                <div class="modal-body">
+                    <form action="proses/komplain.php" method="POST">
+                        <input type="hidden" name="id_inv" value="<?php echo $id_inv; ?>">
+                        <div id="tidak_sesuai_form">
+                            <div class="mb-3">
+                                <label><b>Tanggal Komplain</b></label>
+                                <input type="text" class="form-control" name="tgl" id="tgl_komplain" required>
+                            </div>
+                            <div class="mb-3">
+                                <label><b>Pilih Kategori Komplain</b></label>
+                                <select name="kat_komplain" id="kat_komplain" class="form-select" required>
+                                    <option value="">Pilih Kategori...</option>
+                                    <option value="0">Invoice</option>
+                                    <option value="1">Barang</option>
+                                </select>
+                            </div>
+                            <label><b>Pilih Kondisi Pesanan</b></label>
+                            <div class="mb-3 border p-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan0" value="0" required>
+                                    <label class="form-check-label" for="kondisi_pesanan0">
+                                        Faktur sesuai, tetapi barang yang diterima adalah jenis yang salah.
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan1" value="1" required>
+                                    <label class="form-check-label" for="kondisi_pesanan1">
+                                        Faktur sesuai, namun jumlah barang yang diterima kurang dari yang diharapkan.
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan2" value="2" required>
+                                    <label class="form-check-label" for="kondisi_pesanan2">
+                                        Faktur sesuai, tetapi pelanggan meminta revisi harga.
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan3" value="3" required>
+                                    <label class="form-check-label" for="kondisi_pesanan3">
+                                        Faktur dan barang sesuai, tetapi barang yang diterima rusak, cacat,atau memiliki masalah kualitas sehingga tidak berfungsi sesuai yang diharapkan.
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan4" value="4" required>
+                                    <label class="form-check-label" for="kondisi_pesanan4">
+                                        Faktur tidak sesuai, tetapi barang dan jumlahnya cocok dengan pesanan.
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kondisi_pesanan" id="kondisi_pesanan5" value="5" required>
+                                    <label class="form-check-label" for="kondisi_pesanan5">
+                                        Pelanggan meminta pengembalian barang / uang karena ketidakcocokan pesanan.
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label><b>Retur Barang</b></label><br>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="retur" id="retur_ya" value="1" required>
+                                            <label class="form-check-label" for="inlineRadio1">Ya</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="retur" id="retur_tidak" value="0" required>
+                                            <label class="form-check-label" for="inlineRadio2">Tidak</label>
+                                        </div>
+                                    </div>                                     
+                                    <div class="col-md-6" id="refundDana" style="display: none;">
+                                        <label><b>Refund Dana</b></label><br>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="refund" id="refund_ya" value="1" required>
+                                            <label class="form-check-label" for="inlineRadio1">Ya</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="refund" id="refund_tidak" value="0" required>
+                                            <label class="form-check-label" for="inlineRadio2">Tidak</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label><b>Catatan Khusus (*)</b></label>
+                                <textarea class="form-control" name="catatan" id="catatan" cols="30" rows="5"></textarea>
+                                <p>Jumlah Karakter: <span id="hitungKarakter">0</span></p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="cancelKomplain" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary" name="komplain-ppn">Proses Komplain</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- kode JS Dikirim -->
+        <?php include "../page/kondisi-diterima.php"; ?>
+    </div>
+    <!-- End Modal Komplain -->            
 
     <!-- Footer -->
     <?php include "page/footer.php" ?>
@@ -620,3 +769,9 @@ include "../function/class-spk.php";
 
 </body>
 </html>
+<!-- Flat picker js -->
+<script>
+     flatpickr("#tgl_komplain", {
+        dateFormat: "d/m/Y"
+    });
+</script>
