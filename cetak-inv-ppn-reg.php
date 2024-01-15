@@ -166,7 +166,7 @@
                         <th style="width: 75px;">Harga</th>
                         <?php
                         if ($data['kategori_inv'] == 'Diskon') {
-                            echo '<th style="width: 40px;">Disc</th>';
+                            echo '<th style="width: 60px;">Disc</th>';
                         }
                         ?>
                         <th style="width: 90px;">Total</th>
