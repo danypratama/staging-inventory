@@ -93,7 +93,7 @@
                         LEFT JOIN 
                             inv_penerima_revisi penerima ON sk.id_komplain = penerima.id_komplain
                         WHERE 
-                            sk.id_komplain = 'KMPLN23114ee18b029fd730'
+                            sk.id_komplain = '$id'
                         GROUP BY
                             sk.id_komplain,
                             sk.jenis_pengiriman,

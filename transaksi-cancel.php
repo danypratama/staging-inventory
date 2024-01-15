@@ -305,9 +305,9 @@ include "akses.php";
                                         $filter = '';
                                         if (isset($_GET['sort'])) {
                                             if ($_GET['sort'] == "baru") {
-                                                $filter = "ORDER BY tgl_spk DESC";
+                                                $filter = "ORDER BY no_spk DESC";
                                             } elseif ($_GET['sort'] == "lama") {
-                                                $filter = "ORDER BY tgl_spk ASC";
+                                                $filter = "ORDER BY no_spk ASC";
                                             }
                                         }
                                         $sql = "SELECT 
@@ -343,7 +343,6 @@ include "akses.php";
                             </div>
                         </div>
                     </div>
-                    <!-- End Dalam Proses -->
                     <!-- ================================================ -->
                 </div>
             </div>

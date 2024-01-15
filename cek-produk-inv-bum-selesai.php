@@ -60,7 +60,7 @@ include "function/class-spk.php";
             <div class="card shadow p-2">
                 <div class="card-header text-center">
                     <h5>
-                        <strong>DETAIL INVOICE NONPPN</strong>
+                        <strong>DETAIL INVOICE BUM</strong>
                     </h5>
                 </div>
                 <?php
@@ -275,7 +275,7 @@ include "function/class-spk.php";
                                 }
                             ?>
 
-                            <?php  
+<?php  
                                 $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
                                 $data_status_kirim = mysqli_fetch_array($status_kirim);
                                 $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
@@ -313,32 +313,6 @@ include "function/class-spk.php";
                                             <?php echo $data_ekspedisi_kirim['jenis_penerima'] ?> (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
                                         </div>
                                     </div>
-                                    <?php
-                                        if (!empty($data_status_kirim['dikirim_oleh'])) {
-                                            echo '<div class="row">
-                                                    <div class="col-5">
-                                                        <p style="float: left;">Dikirim Oleh</p>
-                                                        <p style="float: right;"> :</p>
-                                                    </div>
-                                                    <div class="col-7">
-                                                        ' . $data_status_kirim['dikirim_oleh'] . '
-                                                    </div>
-                                                </div>';
-                                            }
-                                    ?>
-                                    <?php
-                                        if (!empty($data_status_kirim['penanggung_jawab'])) {
-                                            echo '  <div class="row">
-                                                        <div class="col-5">
-                                                            <p style="float: left;">PJ. Paket Kirim</p>
-                                                            <p style="float: right;"> :</p>
-                                                        </div>
-                                                        <div class="col-7">
-                                                            ' . $data_status_kirim['penanggung_jawab'] . '
-                                                        </div>
-                                                    </div>';
-                                        }
-                                    ?>
                                     <div class="row mt-2">
                                         <div class="col-5">
                                             <p style="float: left;">Diterima Oleh</p>
@@ -349,6 +323,48 @@ include "function/class-spk.php";
                                         </div>
                                     </div>
                                     <?php
+                                }else if($jenis_pengiriman == 'Diambil Langsung'){
+                                    ?>
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <p style="float: left;">Jenis Pengiriman</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                <?php echo $jenis_pengiriman ?>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    if(!empty($data_status_kirim['jenis_penerima'])){
+                                        ?>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Jenis Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                    <?php  
+                                                        if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                            ?>
+                                                                (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Nama Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_penerima['nama_penerima'] ?>
+                                                </div>
+                                            </div>
+                                        <?php
+                                    }
                                 } else {
                                     ?>
                                         <div class="row mt-2">
@@ -369,11 +385,54 @@ include "function/class-spk.php";
                                                         <p style="float: right;"> :</p>
                                                     </div>
                                                     <div class="col-7">
-                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> (<?php echo $data_penerima['nama_penerima'] ?>)
+                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                        <?php  
+                                                            if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                                ?>
+                                                                    (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                                <?php
+                                                            }
+                                                        ?>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <p style="float: left;">Nama Penerima</p>
+                                                        <p style="float: right;"> :</p>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <?php echo $data_penerima['nama_penerima'] ?>
                                                     </div>
                                                 </div>
                                             <?php
                                         }
+                                }
+                            ?>
+                            <?php
+                                if (!empty($data_status_kirim['dikirim_oleh'])) {
+                                    echo '<div class="row">
+                                            <div class="col-5">
+                                                <p style="float: left;">Dikirim Oleh</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                ' . $data_status_kirim['dikirim_oleh'] . '
+                                            </div>
+                                        </div>';
+                                    }
+                            ?>
+                            <?php
+                                if (!empty($data_status_kirim['penanggung_jawab'])) {
+                                    echo '  <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">PJ. Paket Kirim</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    ' . $data_status_kirim['penanggung_jawab'] . '
+                                                </div>
+                                            </div>';
                                 }
                             ?>
                         </div>
@@ -405,10 +464,10 @@ include "function/class-spk.php";
                                                 <th class="text-center text-nowrap p-3" style="width:20px">No</th>
                                                 <th class="text-center text-nowrap p-3" style="width:80px">No. SPK</th>
                                                 <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
                                                 <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
                                                 <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
+                                                <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
+                                                <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
                                                 <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
                                             </tr>
                                         </thead>';
@@ -419,11 +478,12 @@ include "function/class-spk.php";
                                                 <th class="text-center text-nowrap p-3" style="width:20px">No</th>
                                                 <th class="text-center text-nowrap p-3" style="width:100px">No. SPK</th>
                                                 <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
                                                 <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
+                                                <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
+                                                <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
                                                 <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
                                                 <th class="text-center text-nowrap p-3" style="width:100px">Diskon</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
+                                                
                                                 <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
                                             </tr>
                                         </thead>';
@@ -440,7 +500,7 @@ include "function/class-spk.php";
                                 $sql_trx = "SELECT 
                                                 bum.id_inv_bum, 
                                                 bum.kategori_inv,
-                                                
+                                                bum.sp_disc,   
                                                 spk.id_inv, 
                                                 spk.no_spk,
                                                 trx.id_transaksi,
@@ -451,12 +511,10 @@ include "function/class-spk.php";
                                                 trx.disc,
                                                 trx.total_harga,
                                                 trx.status_trx,
-                                                tpr.nama_produk,
-                                                tpr.satuan,
-                                                mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                                tpsm.nama_set_marwa,
-                                                tpsm.harga_set_marwa,
-                                                mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                                trx.created_date,
+                                                COALESCE(tpr.nama_produk, tpsm.nama_set_marwa, tpe.nama_produk, tpse.nama_set_ecat) AS nama_produk, 
+                                                COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                                                COALESCE(mr_produk.nama_merk, mr_set.nama_merk, mr_produk_ecat.nama_merk, mr_set_ecat.nama_merk) AS merk_produk
                                             FROM inv_bum AS bum
                                             LEFT JOIN spk_reg spk ON (bum.id_inv_bum = spk.id_inv)
                                             LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
@@ -464,35 +522,38 @@ include "function/class-spk.php";
                                             LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                             LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                             LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                            WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '1' ORDER BY no_spk ASC";
-                                $trx_produk_reg = mysqli_query($connect, $sql_trx);
-                                while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
-                                    $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
-                                    $id_produk = $data_trx['id_produk'];
-                                    $satuan = $data_trx['satuan'];
-                                    $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
-                                    $disc = $data_trx['disc'];
-                                    $satuan_produk = '';
-                                    $id_produk_substr = substr($id_produk, 0, 2);
-                                    if ($id_produk_substr == 'BR') {
-                                        $satuan_produk = $satuan;
-                                    } else {
-                                        $satuan_produk = 'Set';
-                                    }
+                                            LEFT JOIN tb_produk_ecat tpe ON trx.id_produk = tpe.id_produk_ecat
+                                            LEFT JOIN tb_produk_set_ecat tpse ON trx.id_produk = tpse.id_set_ecat
+                                            LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk reguler
+                                            LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
+                                            WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '1' ORDER BY trx.created_date ASC";
+                                    $trx_produk_reg = mysqli_query($connect, $sql_trx);
+                                    while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                        $namaProduk = $data_trx['nama_produk'];
+                                        $id_produk = $data_trx['id_produk'];
+                                        $satuan = $data_trx['satuan'];
+                                        $nama_merk = $data_trx['merk_produk'];
+                                        $disc = $data_trx['disc'];
+                                        $id_produk_substr = substr($id_produk, 0, 2);
+                                        if ($id_produk_substr == 'BR') {
+                                            $satuan_produk = $satuan;
+                                        } else {
+                                            $satuan_produk = 'Set';
+                                        }
                                 ?>
                                     <tr>
                                         <td class="text-center"><?php echo $no; ?></td>
                                         <td class="text-center text-nowrap"><?php echo $data_trx['no_spk']; ?></td>
                                         <td class="text-nowrap"><?php echo $data_trx['nama_produk_spk'] ?></td>
-                                        <td class="text-center"><?php echo $satuan_produk ?></td>
                                         <td class="text-center text-nowrap"><?php echo $nama_merk ?></td>
+                                        <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
+                                        <td class="text-center"><?php echo $satuan_produk ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['harga']) ?></td>
                                         <?php
                                             if ($data_trx['kategori_inv'] == 'Diskon') {
                                                 echo "<td class='text-end'>" . $disc . "</td>";
                                             }
                                         ?>
-                                        <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['total_harga']) ?></td>
                                     </tr>
                                     <?php $no++; ?>
@@ -521,11 +582,11 @@ include "function/class-spk.php";
                                 $query_bukti = mysqli_query($connect, $sql_bukti);
                                 $data_bukti = mysqli_fetch_array($query_bukti);
                                 $gambar1 = $data_bukti['bukti_satu'];
-                                $gambar_bukti1 = "../gambar/bukti1/$gambar1";
+                                $gambar_bukti1 = "gambar/bukti1/$gambar1";
                                 $gambar2 = $data_bukti['bukti_dua'];
-                                $gambar_bukti2 = "../gambar/bukti2/$gambar2";
+                                $gambar_bukti2 = "gambar/bukti2/$gambar2";
                                 $gambar3 = $data_bukti['bukti_tiga'];
-                                $gambar_bukti3 = "../gambar/bukti3/$gambar3";
+                                $gambar_bukti3 = "gambar/bukti3/$gambar3";
                                 $jenis_penerima = $data_bukti['jenis_penerima'];
                                 $no_resi = $data_bukti['no_resi'];
                                 ?>

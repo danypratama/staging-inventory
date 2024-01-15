@@ -96,25 +96,43 @@ include "akses.php";
             <?php
               $no = 1;
               $grand_total = 0;
-              $sql_trx = "SELECT tps.*, tps.status_trx, mr.nama_merk, spr.stock
+              $sql_trx = "SELECT DISTINCT
+                              sr.id_sph,
+                              tps.id_transaksi,
+                              tps.id_produk,
+                              tps.qty,
+                              tps.status_trx,
+                              tps.created_date,
+                              COALESCE(spr.stock, spe.stock) AS stock,
+                              COALESCE(tpr.nama_produk, tpe.nama_produk, tpsm.nama_set_marwa, tpse.nama_set_ecat) AS nama_produk,
+                              COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                              COALESCE(tpr.harga_produk, tpe.harga_produk, tpsm.harga_set_marwa, tpse.harga_set_ecat) AS harga_produk,
+                              COALESCE(mr_produk.nama_merk, mr_produk_ecat.nama_merk, mr_set.nama_merk, mr_set_ecat.nama_merk) AS merk_produk -- Nama merk untuk produk
                           FROM transaksi_produk_sph AS tps
-                          LEFT JOIN stock_produk_reguler spr ON (spr.id_produk_reg = tps.id_produk)
-                          LEFT JOIN tb_produk_reguler tpr ON (tpr.id_produk_reg = spr.id_produk_reg)
-                          LEFT JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                          LEFT JOIN tb_produk_set_marwa tpsm ON (spr.id_produk_reg = tpsm.id_set_marwa)
-                          WHERE status_trx = 1 AND id_sph = '$id_sph_decode'";
+                          LEFT JOIN sph sr ON sr.id_sph = tps.id_sph
+                          LEFT JOIN stock_produk_reguler spr ON tps.id_produk = spr.id_produk_reg
+                          LEFT JOIN stock_produk_ecat spe ON tps.id_produk = spe.id_produk_ecat
+                          LEFT JOIN tb_produk_reguler tpr ON tps.id_produk = tpr.id_produk_reg
+                          LEFT JOIN tb_produk_ecat tpe ON tps.id_produk = tpe.id_produk_ecat
+                          LEFT JOIN tb_produk_set_marwa tpsm ON tps.id_produk = tpsm.id_set_marwa
+                          LEFT JOIN tb_produk_set_ecat tpse ON tps.id_produk = tpse.id_set_ecat
+                          LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
+                          LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk ecat
+                          LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+                          LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
+                          WHERE sr.id_sph = '$id_sph_decode' AND tps.status_trx = '1' ORDER BY tps.created_date ASC";
               $query_trx = mysqli_query($connect, $sql_trx);
               while($data_trx = mysqli_fetch_array($query_trx)){
                 $id_produk = $data_trx['id_produk'];
                 $id_produk_substr = substr($id_produk, 0, 2);
-                $total_harga = $data_trx['harga'] * $data_trx['qty'];
+                $total_harga = $data_trx['harga_produk'] * $data_trx['qty'];
                 $grand_total += $total_harga;
 
             ?>
             <tr>
               <td><?php echo $no; ?></td>
-              <td class="text-left" style="max-width: 300px;"><?php echo $data_trx['nama_produk_sph'] ?></td>
-              <td class="text-nowrap"><?php echo $data_trx['nama_merk'] ?> - Pakistan</td>
+              <td class="text-left" style="max-width: 300px;"><?php echo $data_trx['nama_produk'] ?></td>
+              <td class="text-nowrap"><?php echo $data_trx['merk_produk'] ?> - Pakistan</td>
               <td class="text-right"><?php echo $data_trx['qty'] ?></td>
               <td class="text-nowrap">
                 <?php 
@@ -125,7 +143,7 @@ include "akses.php";
                   }
                 ?>
               </td>
-              <td class="text-nowrap text-right"><?php echo number_format($data_trx['harga']) ?></td>
+              <td class="text-nowrap text-right"><?php echo number_format($data_trx['harga_produk']) ?></td>
               <td class="text-right text-nowrap"><?php echo number_format($total_harga) ?></td>
             </tr>
             <?php $no++ ?>

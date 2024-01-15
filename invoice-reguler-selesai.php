@@ -306,7 +306,7 @@ include "akses.php";
                                 $query_cancel = mysqli_query($connect, $sql_cancel);
                                 $total_query_cancel = mysqli_num_rows($query_cancel);
                             ?>
-                            <a class="nav-link" href="transaksi-cancel.php">
+                            <a class="nav-link" href="transaksi-cancel.php?sort=baru">
                                 Transaksi Cancel &nbsp;
                                 <?php if ($total_query_cancel != 0) {
                                     echo '<span class="badge text-bg-secondary">' . $total_query_cancel . '</span>';

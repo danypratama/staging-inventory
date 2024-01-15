@@ -648,12 +648,9 @@ include "function/class-spk.php";
                                                     trx.total_harga,
                                                     trx.status_trx,
                                                     trx.created_date,
-                                                    tpr.nama_produk,
-                                                    tpr.satuan,
-                                                    mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
-                                                    tpsm.nama_set_marwa,
-                                                    tpsm.harga_set_marwa,
-                                                    mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
+                                                    COALESCE(tpr.nama_produk, tpsm.nama_set_marwa, tpe.nama_produk, tpse.nama_set_ecat) AS nama_produk, 
+                                                    COALESCE(tpr.satuan, tpe.satuan) AS satuan,
+                                                    COALESCE(mr_produk.nama_merk, mr_set.nama_merk, mr_produk_ecat.nama_merk, mr_set_ecat.nama_merk) AS merk_produk
                                                 FROM inv_ppn AS ppn
                                                 LEFT JOIN spk_reg spk ON (ppn.id_inv_ppn = spk.id_inv)
                                                 LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
@@ -661,13 +658,17 @@ include "function/class-spk.php";
                                                 LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
                                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
+                                                LEFT JOIN tb_produk_ecat tpe ON trx.id_produk = tpe.id_produk_ecat
+                                                LEFT JOIN tb_produk_set_ecat tpse ON trx.id_produk = tpse.id_set_ecat
+                                                LEFT JOIN tb_merk mr_produk_ecat ON tpe.id_merk = mr_produk_ecat.id_merk -- JOIN untuk produk reguler
+                                                LEFT JOIN tb_merk mr_set_ecat ON tpse.id_merk = mr_set_ecat.id_merk -- JOIN untuk produk set
                                                 WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND status_trx = '1' ORDER BY trx.created_date ASC";
                                         $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                         while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
-                                            $namaProduk = detailSpk::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
+                                            $namaProduk = $data_trx['nama_produk'];
                                             $id_produk = $data_trx['id_produk'];
                                             $satuan = $data_trx['satuan'];
-                                            $nama_merk = detailSpk::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
+                                            $nama_merk = $data_trx['merk_produk'];
                                             $disc = $data_trx['disc'];
                                             $total_harga = $data_trx['total_harga'];
                                             $sub_total += $total_harga;
