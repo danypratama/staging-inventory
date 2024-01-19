@@ -43,7 +43,7 @@ include "akses.php";
               ?>
               <div class="mb-3">
                   <label class="form-label"><strong>Kode Produk Set</strong></label>
-                  <input type="hidden" class="form-control" name="id_set_ecat" value="SETMRW<?php echo $UUID; ?>">
+                  <input type="hidden" class="form-control" name="id_set_ecat" value="SETECAT<?php echo $UUID; ?>">
                   <input type="text" class="form-control" name="kode_barang" required>
               </div>
               <div class="mb-3">

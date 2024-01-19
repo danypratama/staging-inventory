@@ -25,6 +25,11 @@ include "akses.php";
   <!-- end sidebar -->
 
   <main id="main" class="main">
+    <div class="loader loader">
+        <div class="loading">
+            <img src="img/loading.gif" width="200px" height="auto">
+        </div>
+    </div>
     <section>
       <!-- SWEET ALERT -->
       <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
@@ -37,6 +42,7 @@ include "akses.php";
           <div class="card-body p-3">
             <?php
             $id = base64_decode($_GET['detail-id']);
+            echo $id;
             $sql = "SELECT * FROM tb_produk_set_ecat AS tbsm 
                       LEFT JOIN tb_lokasi_produk AS lk ON (tbsm.id_lokasi = lk.id_lokasi)
                       WHERE id_set_ecat = '$id'";
@@ -79,6 +85,7 @@ include "akses.php";
                 <thead>
                   <tr class="text-white" style="background-color: #051683;">
                     <th class="text-center p-3 text-nowrap" style="width: 50px">No</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 100px">Kode Produk</th>
                     <th class="text-center p-3 text-nowrap" style="width: 450px">Nama Produk</th>
                     <th class="text-center p-3 text-nowrap" style="width: 100px">Harga Satuan</th>
                     <th class="text-center p-3 text-nowrap" style="width: 50px">Qty</th>
@@ -88,21 +95,31 @@ include "akses.php";
                 <tbody>   
                   <?php  
                       $no = 1;
-                      $sql_isi = " SELECT 
-                                      ipsm.id_isi_set_ecat, ipsm.id_set_ecat, ipsm.id_produk, ipsm.qty, tpr.nama_produk, tpr.harga_produk 
+                      $sql_isi =  " SELECT 
+                                      ipsm.id_isi_set_ecat, 
+                                      ipsm.id_set_ecat, 
+                                      ipsm.id_produk, 
+                                      ipsm.qty, 
+                                      COALESCE(tpr.kode_produk, tpe.kode_produk) AS kode_produk, 
+                                      COALESCE(tpr.nama_produk, tpe.nama_produk) AS nama_produk, 
+                                      COALESCE(tpr.harga_produk, tpe.harga_produk) AS harga_produk
                                     FROM isi_produk_set_ecat ipsm
-                                    LEFT JOIN tb_produk_ecat tpr ON (ipsm.id_produk = tpr.id_produk_reg)
-                                    LEFT JOIN tb_produk_set_ecat tpsm ON (ipsm.id_set_ecat = tpsm.id_set_ecat)
-                                    WHERE tpsm.id_set_ecat = '$id'";
-                      $query_isi = mysqli_query($connect, $sql_data) or die(mysqli_error($connect, $sql_data));
+                                    LEFT JOIN tb_produk_ecat tpe ON (ipsm.id_produk = tpe.id_produk_ecat)
+                                    LEFT JOIN tb_produk_set_ecat tpse ON (ipsm.id_set_ecat = tpse.id_set_ecat)
+                                    LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
+                                    LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_ecat = tpsm.id_set_marwa)
+                                    WHERE ipsm.id_set_ecat = '$id'";
+                      $query_isi = mysqli_query($connect, $sql_isi) or die(mysqli_error($connect, $sql_isi));
                       while($data = mysqli_fetch_array($query_isi)){
                         $harga = $data['harga_produk'];
                         $qty = $data['qty'];
+                        $kode_produk = $data['kode_produk'];    
                         $nama_produk = $data['nama_produk'];    
                         $id_isi_set_ecat = $data['id_isi_set_ecat'];        
                   ?>
                   <tr>
                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
+                    <td class="text-nowrap"><?php echo $kode_produk; ?></td>
                     <td class="text-nowrap"><?php echo $nama_produk; ?></td>
                     <td class="text-end text-nowrap"><?php echo number_format($harga) ?></td>
                     <td class="text-end text-nowrap"><?php echo $qty; ?></td>

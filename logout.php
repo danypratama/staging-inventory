@@ -18,5 +18,9 @@ unset($_SESSION['login']);
 $decode = base64_decode($id_history);
 $history = mysqli_query($connect, "UPDATE user_history SET logout_time = '$today', status_perangkat = '$offline' WHERE id_history = '$decode'");
 
+// Set header untuk mengontrol caching
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+
 session_destroy();
 header("Location:login.php");
+?>

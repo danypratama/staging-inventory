@@ -49,6 +49,13 @@ include "akses.php";
             <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) { echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
             <!-- END SWEET ALERT -->
             <div class="container-fluid">
+                <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <div class="card">
                     <div class="card-body p-3">
                         <a href="input-set-in-ecat.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data</a>
@@ -61,7 +68,13 @@ include "akses.php";
                                         <td class="text-center p-3" style="width: 250px">Nama Set Produk </td>
                                         <td class="text-center p-3" style="width: 100px">Merk</td>
                                         <td class="text-center p-3" style="width: 80px">Qty</td>
-                                        <td class="text-center p-3" style="width: 100px">Aksi</td>
+                                        <?php  
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                ?>
+                                                    <td class="text-center p-3" style="width: 100px">Aksi</td>
+                                                <?php
+                                            }
+                                        ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,10 +95,16 @@ include "akses.php";
                                             <td><?php echo $data['nama_set_ecat'] ?></td>
                                             <td class="text-center"><?php echo $data['nama_merk'] ?></td>
                                             <td class="text-end"><?php echo $data['qty'] ?></td>
-                                            <td class="text-center">
-                                                <!-- Hapus Data -->
-                                                <a href="proses/proses-update-stock-set-ecat.php?hapus=<?php echo base64_encode($data['id_tr_set_ecat']); ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                                            </td>
+                                            <?php  
+                                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                    ?>
+                                                        <td class="text-center">
+                                                            <!-- Hapus Data -->
+                                                            <a href="proses/proses-update-stock-set-ecat.php?hapus=<?php echo base64_encode($data['id_tr_set_ecat']); ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                        </td>
+                                                    <?php
+                                                }
+                                            ?>
                                         </tr>
                                         <?php $no++; ?>
                                     <?php } ?>

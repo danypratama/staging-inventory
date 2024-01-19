@@ -60,6 +60,18 @@ if (
     title: "Terjadi Kesalahan Pada Server",
     text: "" + notifikasi,
   });
+} else if (notifikasi == "Dilogout") {
+  Swal.fire({
+    icon: "success",
+    title: "Sukses",
+    text: "User Berhasil " + notifikasi,
+  });
+} else if (notifikasi == "Gagal Dilogout") {
+  Swal.fire({
+    icon: "success",
+    title: "Sukses",
+    text: "User " + notifikasi,
+  });
 }
 
 $(".delete-data").on("click", function (e) {

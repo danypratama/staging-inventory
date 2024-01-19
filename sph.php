@@ -107,9 +107,9 @@
                                         <a href="tampil-data-sph.php?id=<?php echo base64_encode($data['id_sph']) ?>" class="btn btn-primary btn-sm">
                                             <i class="bi bi-eye"></i> Lihat Data
                                         </a>
-                                        <a href="proses/proses-sph.php?cancel=<?php echo base64_encode($data['id_sph']) ?>" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-eye"></i> Cancel
-                                        </a>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#cancelSph" data-id= "<?php echo base64_encode($data['id_sph']) ?>" data-no= "<?php echo $data['no_sph'] ?>" data-cs= "<?php echo $data['nama_cs'] ?>" onclick="setSphId(this)">
+                                            <i class="bi bi-x-circle"> Cancel</i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <?php $no++ ?>
@@ -169,6 +169,29 @@
         </section>
     </main><!-- End #main -->
 
+    <!-- Modal Cancel -->
+    <div class="modal fade" id="cancelSph" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Konfirmasi Cancel</h1>
+                </div>
+                <div class="modal-body">
+                    Apakah anda yakin ingin cancel No. SPH : <b><span id="noSph"></span></b><br><b><span id="namaCs"></span></b> ?
+                    <form action="proses/proses-sph.php" method="POST">
+                        <input type="hidden" name="id_sph" id="idSph">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="cancel" class="btn btn-danger">
+                                <i class="bi bi-eye"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
   <!-- Footer -->
   <?php include "page/footer.php" ?>
   <!-- End Footer -->
@@ -177,3 +200,14 @@
   <?php include "page/script.php" ?>
 </body>
 </html>
+<script>
+    function setSphId(button) {
+        var idSphValue = button.getAttribute('data-id');
+        var namaCsValue = button.getAttribute('data-cs');
+        var noSphValue = button.getAttribute('data-no');
+
+        document.getElementById('idSph').value = idSphValue;
+        document.getElementById('namaCs').innerText = namaCsValue;
+        document.getElementById('noSph').innerText = noSphValue;
+    }
+</script>

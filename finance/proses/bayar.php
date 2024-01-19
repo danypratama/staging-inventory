@@ -136,7 +136,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -155,7 +155,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $bank_pengirim = $id_bank_select;
                             }                            
 
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -179,7 +179,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -197,7 +197,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $bank_pengirim = $id_bank_select;
                             }       
 
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -296,7 +296,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -314,7 +314,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -361,7 +361,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 } else {
                                     $bank_pengirim = $id_bank_select;
                                 }       
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -379,7 +379,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -540,7 +540,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -558,7 +558,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -597,7 +597,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -616,7 +616,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -716,7 +716,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -734,7 +734,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -767,7 +767,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 } else {
                                     $bank_pengirim = $id_bank_select;
                                 }       
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -785,7 +785,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -948,7 +948,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -966,7 +966,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -1005,7 +1005,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -1023,7 +1023,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -1123,7 +1123,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             $sql_cs_bank = '';
 
                             if($cek_data->num_rows == 0){
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -1141,7 +1141,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");
@@ -1189,7 +1189,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 } else {
                                     $bank_pengirim = $id_bank_select;
                                 }       
-                                $sql_cs_bank = mysqli_query($connect, "INSERT INTO bank_cs 
+                                $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
@@ -1207,7 +1207,7 @@ if(isset($_POST['simpan-pembayaran'])){
                             } else {
                                 $bank_pengirim = $id_bank_select;
                             }       
-                            $sql_bukti_tf = mysqli_query($connect, "INSERT INTO finance_bukti_tf
+                            $sql_bukti_tf = mysqli_query($connect, "INSERT IGNORE INTO finance_bukti_tf
                                                                 (id_bukti_tf, tf_bank, rek_pengirim, tf_an, bukti_tf, created_by) 
                                                                 VALUES 
                                                                 ('$id_bukti', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$new_file1_name', '$user')");

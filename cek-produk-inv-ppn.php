@@ -55,6 +55,13 @@ include "function/class-spk.php";
         <!-- SWEET ALERT -->
         <section>
             <div class="container-fluid">
+                 <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <div class="card shadow p-2">
                     <div class="card-header text-center">
                         <h5><strong>DETAIL INVOICE NONPPN</strong></h5>
@@ -340,75 +347,85 @@ include "function/class-spk.php";
                 <!-- Tampil data -->
                 <div class="card shadow">
                     <div class="card-body p-3">
-                        <div class="table-responsive">
-                            <div class="text-start">
-                                <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail mb-2">
-                                    <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                                </a>
-                                <?php
-                                    $id_inv_ppn = base64_decode($_GET['id']);
-                                    $sql_cek = "SELECT 
-                                                ppn.id_inv_ppn, kategori_inv,
-                                                sr.id_inv, sr.no_spk,
-                                                trx.status_trx 
-                                                FROM inv_ppn AS ppn
-                                                JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
-                                    $query_cek = mysqli_query($connect, $sql_cek);
-                                    $data_cek = mysqli_fetch_array($query_cek);
-                                    $total_data = mysqli_num_rows($query_cek);
-                                ?>
-                                <?php 
-                                    include "koneksi.php";
-                                    $id_role = $_SESSION['tiket_role'];
-                                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
-                                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
-                                    $data_role = mysqli_fetch_array($query_role);
-                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
-                                        ?>
-                                            <button class="btn btn-info btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#ubahKat">
-                                                <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
-                                            </button>
-                                            <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
-                                                <i class="bi bi-plus-circle"></i> Tambah SPK
-                                            </a>
-                                            <?php
-                                            if ($kat_inv == 'Spesial Diskon') {
-                                                echo '
-                                                    <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
-                                            }
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="text-start">
+                                    <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail mb-2">
+                                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                    </a>
+                                    <?php
+                                        $id_inv_ppn = base64_decode($_GET['id']);
+                                        $sql_cek = "SELECT 
+                                                    ppn.id_inv_ppn, kategori_inv,
+                                                    sr.id_inv, sr.no_spk,
+                                                    trx.status_trx 
+                                                    FROM inv_ppn AS ppn
+                                                    JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                    WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
+                                        $query_cek = mysqli_query($connect, $sql_cek);
+                                        $data_cek = mysqli_fetch_array($query_cek);
+                                        $total_data = mysqli_num_rows($query_cek);
+                                    ?>
+                                    <?php 
+                                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
                                             ?>
-                                            <?php
-                                            // Eksekusi query SQL
-                                            $result = mysqli_query($connect, "SELECT 
-                                                                    ppn.id_inv_ppn,
-                                                                    trx.status_trx
-                                                                    FROM inv_ppn AS ppn
-                                                                    JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                                    WHERE ppn.id_inv_ppn = '$id_inv_ppn'  ORDER BY no_spk ASC");
-                                            $tombolDitampilkan = false;
-                                            // Inisialisasi variabel untuk status kosong
-                                            while ($row = mysqli_fetch_array($result)) {
-                                                $status_trx = $row['status_trx'];
-                                            ?>
+                                                <button class="btn btn-info btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#ubahKat">
+                                                    <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
+                                                </button>
+                                                <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
+                                                    <i class="bi bi-plus-circle"></i> Tambah SPK
+                                                </a>
                                                 <?php
-                                                if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
-                                                    echo ' 
-                                                            <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Dikirim">
-                                                                <i class="bi bi-send"></i> Proses Dikirim
-                                                            </button> 
-                                                            ';
-
-                                                    // Set variabel $tombolDitampilkan menjadi true
-                                                    $tombolDitampilkan = true;
+                                                if ($kat_inv == 'Spesial Diskon') {
+                                                    echo '
+                                                        <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
                                                 }
                                                 ?>
-                                            <?php } ?>
-                                        <?php
-                                    }
-                                ?>
+                                                <?php
+                                                // Eksekusi query SQL
+                                                $result = mysqli_query($connect, "SELECT 
+                                                                        ppn.id_inv_ppn,
+                                                                        trx.status_trx
+                                                                        FROM inv_ppn AS ppn
+                                                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                                        WHERE ppn.id_inv_ppn = '$id_inv_ppn'  ORDER BY no_spk ASC");
+                                                $tombolDitampilkan = false;
+                                                // Inisialisasi variabel untuk status kosong
+                                                while ($row = mysqli_fetch_array($result)) {
+                                                    $status_trx = $row['status_trx'];
+                                                ?>
+                                                    <?php
+                                                    if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
+                                                        echo ' 
+                                                                <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Dikirim">
+                                                                    <i class="bi bi-send"></i> Proses Dikirim
+                                                                </button> 
+                                                                ';
+
+                                                        // Set variabel $tombolDitampilkan menjadi true
+                                                        $tombolDitampilkan = true;
+                                                    }
+                                                    ?>
+                                                <?php } ?>
+                                            <?php
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-end">
+                                    <?php  
+                                        $sql_total_inv = mysqli_query($connect, "SELECT total_inv FROM inv_ppn WHERE id_inv_ppn = '$id_inv'");
+                                        $data_total_inv = mysqli_fetch_array($sql_total_inv);
+                                        $tampil_total_inv = $data_total_inv['total_inv'];
+                                    ?>
+                                    <button type="button" class="btn btn-outline-dark">
+                                        Total Invoice<br>
+                                        Rp. <?php echo number_format($tampil_total_inv, 0,'.','.') ?>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

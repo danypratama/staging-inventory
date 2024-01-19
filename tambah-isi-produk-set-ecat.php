@@ -47,7 +47,7 @@ include "akses.php";
               $id_set = base64_decode($_GET['id-set']);
               $UUID = generate_uuid();
               ?>
-              <input type="hidden" class="form-control" name="id_isi_set_ecat" value="BR-SET-MRW-<?php echo $UUID ?>">
+              <input type="hidden" class="form-control" name="id_isi_set_ecat" value="BR-SET-ECAT-<?php echo $UUID ?>">
               <input type="hidden" class="form-control" name="id_set_ecat" value="<?php echo $id_set ?>">
               <div class="mb-3">
                 <div class="row">
@@ -85,7 +85,6 @@ include "akses.php";
 
   <?php include "page/script.php" ?>
 </body>
-
 </html>
 
 <!-- Modal Barang -->
@@ -93,80 +92,171 @@ include "akses.php";
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Data Barang</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Data Barang</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered" id="table2">
-            <thead>
-              <tr class="text-white" style="background-color: #051683;">
-                <td class="text-center p-3" style="width: 50px">No</td>
-                <td class="text-center p-3" style="width: 350px">Nama Produk</td>
-                <td class="text-center p-3" style="width: 100px">Merk</td>
-                <td class="text-center p-3" style="width: 80px">Stock</td>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              date_default_timezone_set('Asia/Jakarta');
-
-              include "koneksi.php";
-              $no = 1;
-              $sql = "SELECT 
-                          COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat) AS id_produk,
-                          COALESCE(tpr.nama_produk, tpsm.nama_set_ecat) AS nama_produk,
-                          COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
-                          spr.id_stock_prod_ecat,
-                          spr.stock,
-                          tkp.min_stock, 
-                          tkp.max_stock,
-                          SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) AS substr_id_produk
-                      FROM tb_produk_ecat AS tpr
-                      LEFT JOIN stock_produk_ecat AS spr ON (tpr.id_produk_ecat = spr.id_produk_ecat)
-                      LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spr.id_kat_penjualan)
-                      LEFT JOIN tb_produk_set_ecat AS tpsm ON (tpsm.id_set_ecat = spr.id_produk_ecat)
-                      LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
-                      LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
-                      WHERE SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) = 'BR'
-                      ORDER BY nama_produk ASC";
-              $query = mysqli_query($connect, $sql);
-              while ($data = mysqli_fetch_array($query)) {
-                $id_stock = base64_encode($data['id_stock_prod_ecat']);
-                $id_produk = base64_encode($data['id_produk']);
-                $stock = $data['stock'];
-                $min_stock = $data['min_stock'];
-                $max_stock = $data['max_stock'];
-                $low = $min_stock * 0.25;
-                $low_lev = $min_stock - $low;
-                $med_lev = $min_stock + $low;
-                $high = $max_stock * 0.25;
-                $high_lev = $max_stock - $high;
-                $stock_status = '';
-                $tampil_stock = number_format($data['stock'], 0, '.', '.');
-              ?>
-                <tr data-idprod="<?php echo $data['id_produk']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
-                  <td class="text-center"><?php echo $no; ?></td>
-                  <td><?php echo $data['nama_produk']; ?></td>
-                  <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="produk-ecat-tab" data-bs-toggle="pill" data-bs-target="#produk-ecat" type="button" role="tab" aria-controls="produk-ecat" aria-selected="false">Produk E-Cat</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="produk-reg-tab" data-bs-toggle="pill" data-bs-target="#produk-reg" type="button" role="tab" aria-controls="produk-reg" aria-selected="true">Produk Reguler</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="produk-ecat" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered" id="table2">
+              <thead>
+                  <tr class="text-white" style="background-color: #051683;">
+                    <td class="text-center p-3" style="width: 50px">No</td>
+                    <td class="text-center p-3" style="width: 180px">Kode Produk</td>
+                    <td class="text-center p-3" style="width: 400px">Nama Produk</td>
+                    <td class="text-center p-3" style="width: 100px">Merk</td>
+                    <td class="text-center p-3" style="width: 50px">Stock</td>
+                  </tr>
+                </thead>
+                <tbody>
                   <?php
-                  if ($stock <= $low_lev) {
-                    echo "<td class='text-end text-white' style='background-color: #cc0000'>" . ($tampil_stock) . "</td>";
-                  } else if ($stock >= $low_lev && $stock <= $min_stock) {
-                    echo "<td class='text-end' style='background-color: #ff4500'>" . ($tampil_stock) . "</td>";
-                  } else if ($stock >= $min_stock && $stock <= $high_lev) {
-                    echo "<td class='text-end' style='background-color: #ffff00'>" . ($tampil_stock) . "</td>";
-                  } else if ($stock >= $high_lev && $stock <= $max_stock) {
-                    echo "<td class='text-end text-white' style='background-color: #469536'>" . ($tampil_stock) . "</td>";
-                  } else if ($stock > $max_stock) {
-                    echo "<td class='text-end text-white' style='background-color: #006600'>" . ($tampil_stock) . "</td>";
-                  }
+                  date_default_timezone_set('Asia/Jakarta');
+
+                  include "koneksi.php";
+                  $no = 1;
+                  $sql = "SELECT 
+                              COALESCE(tpe.id_produk_ecat, tpse.id_set_ecat) AS id_produk,
+                              COALESCE(tpe.kode_produk, tpse.kode_set_ecat) AS kode_produk,
+                              COALESCE(tpe.nama_produk, tpse.nama_set_ecat) AS nama_produk,
+                              COALESCE(mr_tpe.nama_merk, mr_tpse.nama_merk) AS nama_merk,
+                              spe.id_stock_prod_ecat,
+                              spe.stock,
+                              tkp.min_stock, 
+                              tkp.max_stock,
+                              SUBSTRING(COALESCE(tpe.id_produk_ecat, tpse.id_set_ecat), 1, 2) AS substr_id_produk
+                          FROM tb_produk_ecat AS tpe
+                          LEFT JOIN stock_produk_ecat AS spe ON (tpe.id_produk_ecat = spe.id_produk_ecat)
+                          LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spe.id_kat_penjualan)
+                          LEFT JOIN tb_produk_set_ecat AS tpse ON (tpse.id_set_ecat = spe.id_produk_ecat)
+                          LEFT JOIN tb_merk AS mr_tpe ON (tpe.id_merk = mr_tpe.id_merk)
+                          LEFT JOIN tb_merk AS mr_tpse ON (tpse.id_merk = mr_tpse.id_merk)
+                          WHERE SUBSTRING(COALESCE(tpe.id_produk_ecat, tpse.id_set_ecat), 1, 2) = 'BR'
+                          ORDER BY nama_produk ASC";
+                  $query = mysqli_query($connect, $sql);
+                  while ($data = mysqli_fetch_array($query)) {
+                    $id_stock = base64_encode($data['id_stock_prod_ecat']);
+                    $id_produk = base64_encode($data['id_produk']);
+                    $stock = $data['stock'];
+                    $min_stock = $data['min_stock'];
+                    $max_stock = $data['max_stock'];
+                    $low = $min_stock * 0.25;
+                    $low_lev = $min_stock - $low;
+                    $med_lev = $min_stock + $low;
+                    $high = $max_stock * 0.25;
+                    $high_lev = $max_stock - $high;
+                    $stock_status = '';
+                    $tampil_stock = number_format($data['stock'], 0, '.', '.');
                   ?>
-                </tr>
-                <?php $no++; ?>
-              <?php } ?>
-            </tbody>
-          </table>
+                    <tr data-idprod="<?php echo $data['id_produk']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                      <td class="text-center"><?php echo $no; ?></td>
+                      <td class="text-center"><?php echo $data['kode_produk']; ?></td>
+                      <td><?php echo $data['nama_produk']; ?></td>
+                      <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                      <?php
+                      if ($stock <= $low_lev) {
+                        echo "<td class='text-end text-white' style='background-color: #cc0000'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock >= $low_lev && $stock <= $min_stock) {
+                        echo "<td class='text-end' style='background-color: #ff4500'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock >= $min_stock && $stock <= $high_lev) {
+                        echo "<td class='text-end' style='background-color: #ffff00'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock >= $high_lev && $stock <= $max_stock) {
+                        echo "<td class='text-end text-white' style='background-color: #469536'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock > $max_stock) {
+                        echo "<td class='text-end text-white' style='background-color: #006600'>" . ($tampil_stock) . "</td>";
+                      }
+                      ?>
+                    </tr>
+                    <?php $no++; ?>
+                  <?php } ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="produk-reg" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered" id="table3">
+                <thead>
+                  <tr class="text-white" style="background-color: #051683;">
+                    <td class="text-center p-3" style="width: 50px">No</td>
+                    <td class="text-center p-3" style="width: 180px">Kode Produk</td>
+                    <td class="text-center p-3" style="width: 400px">Nama Produk</td>
+                    <td class="text-center p-3" style="width: 100px">Merk</td>
+                    <td class="text-center p-3" style="width: 50px">Stock</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  date_default_timezone_set('Asia/Jakarta');
+
+                  include "koneksi.php";
+                  $no = 1;
+                  $sql = "SELECT 
+                              COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
+                              COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
+                              COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
+                              COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
+                              spe.id_stock_prod_reg,
+                              spe.stock,
+                              tkp.min_stock, 
+                              tkp.max_stock,
+                              SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) AS substr_id_produk
+                          FROM tb_produk_reguler AS tpr
+                          LEFT JOIN stock_produk_reguler AS spe ON (tpr.id_produk_reg = spe.id_produk_reg)
+                          LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spe.id_kat_penjualan)
+                          LEFT JOIN tb_produk_set_marwa AS tpsm ON (tpsm.id_set_marwa = spe.id_produk_reg)
+                          LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
+                          LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
+                          WHERE SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) = 'BR'
+                          ORDER BY nama_produk ASC";
+                  $query = mysqli_query($connect, $sql);
+                  while ($data = mysqli_fetch_array($query)) {
+                    $id_stock = base64_encode($data['id_stock_prod_reg']);
+                    $id_produk = base64_encode($data['id_produk']);
+                    $stock = $data['stock'];
+                    $min_stock = $data['min_stock'];
+                    $max_stock = $data['max_stock'];
+                    $low = $min_stock * 0.25;
+                    $low_lev = $min_stock - $low;
+                    $med_lev = $min_stock + $low;
+                    $high = $max_stock * 0.25;
+                    $high_lev = $max_stock - $high;
+                    $stock_status = '';
+                    $tampil_stock = number_format($data['stock'], 0, '.', '.');
+                  ?>
+                    <tr data-idprod="<?php echo $data['id_produk']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                      <td class="text-center"><?php echo $no; ?></td>
+                      <td class="text-center"><?php echo $data['kode_produk']; ?></td>
+                      <td><?php echo $data['nama_produk']; ?></td>
+                      <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                      <?php
+                      if ($stock <= $low_lev) {
+                        echo "<td class='text-end text-white' style='background-color: #cc0000'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock >= $low_lev && $stock <= $min_stock) {
+                        echo "<td class='text-end' style='background-color: #ff4500'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock >= $min_stock && $stock <= $high_lev) {
+                        echo "<td class='text-end' style='background-color: #ffff00'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock >= $high_lev && $stock <= $max_stock) {
+                        echo "<td class='text-end text-white' style='background-color: #469536'>" . ($tampil_stock) . "</td>";
+                      } else if ($stock > $max_stock) {
+                        echo "<td class='text-end text-white' style='background-color: #006600'>" . ($tampil_stock) . "</td>";
+                      }
+                      ?>
+                    </tr>
+                    <?php $no++; ?>
+                  <?php } ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -199,6 +289,18 @@ function generate_uuid()
 <script>
   // select Produk Reguler
   $(document).on('click', '#table2 tbody tr', function(e) {
+    $('#idProduk').val($(this).data('idprod'));
+    $('#namaProduk').val($(this).data('namaprod'));
+    $('#merkProduk').val($(this).data('merkprod'));
+    $('#modalBarang').modal('hide');
+
+    // Mengaktifkan tombol
+    $('#simpan').prop('disabled', false);
+  });
+</script>
+<script>
+  // select Produk Reguler
+  $(document).on('click', '#table3 tbody tr', function(e) {
     $('#idProduk').val($(this).data('idprod'));
     $('#namaProduk').val($(this).data('namaprod'));
     $('#merkProduk').val($(this).data('merkprod'));

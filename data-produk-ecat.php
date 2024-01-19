@@ -60,6 +60,13 @@ include "akses.php";
                                             unset($_SESSION['info']); ?>"></div>
       <!-- END SWEET ALERT -->
       <div class="container-fluid">
+        <?php  
+          include "koneksi.php";
+          $id_role = $_SESSION['tiket_role'];
+          $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+          $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+          $data_role = mysqli_fetch_array($query_role);
+        ?>
         <div class="card">
           <div class="card-body p-3">
             <a href="tambah-data-produk.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk</a>
@@ -92,23 +99,45 @@ include "akses.php";
     </section>
   </main><!-- End #main -->
 
-  <!-- Modal Hapus -->
-  <div class="modal fade" id="hapusData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <form action="proses/proses-produk-reg.php" method="POST" enctype="multipart/form-data">
-          <div class="modal-body">
-            Apakah anda yakin hapus data <b id="nama_produk"></b>-<b id="merk"></b>?
-              <input type="hidden" name="id_produk" id="id_produk">
+  <?php  
+    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+      ?>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="hapusData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form action="proses/proses-produk-reg.php" method="POST" enctype="multipart/form-data">
+                  <div class="modal-body">
+                    Apakah anda yakin hapus data <b id="nama_produk"></b>-<b id="merk"></b>?
+                      <input type="hidden" name="id_produk" id="id_produk">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger" name="hapus-produk-ecat">Ya, Hapus data</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-danger" name="hapus-produk-ecat">Ya, Hapus data</button>
+      <?php 
+    } else {
+      ?>
+        <!-- Modal Hapus -->
+        <div class="modal fade" id="hapusData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-body">
+                     Maaf Anda Tidak Memiliki Akses Fitur Ini
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
+            </div>
           </div>
-        </form>
-      </div>
-    </div>
-  </div>
+      <?php
+    }
+  ?>
 
   <!-- Modal Detail -->
   <div class="modal fade" id="detailProduk" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">

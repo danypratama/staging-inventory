@@ -113,7 +113,7 @@ include "akses.php";
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="profile-tab">
                   <!-- Table User Aktive -->
                   <div class="table-responsive mt-3">
-                    <table class="table table-hover table-striped table-bordered" id="table2">
+                    <table class="table table-hover table-striped table-bordered" id="table3">
                       <thead>
                         <tr class="text-white" style="background-color: #051683;">
                           <td class="text-center p-3" style="width: 200px;">Nama User</td>
@@ -129,6 +129,7 @@ include "akses.php";
                         <?php
                         date_default_timezone_set('Asia/Jakarta');
                         include "koneksi.php";
+                        $id_history = $_SESSION['id_history'];
                         $no = 1;
                         $sql = "SELECT his.*, u.*
                               FROM user_history AS his 
@@ -145,8 +146,15 @@ include "akses.php";
                             <td><?php echo $data['jenis_perangkat']; ?></td>
                             <td><?php echo $data['lokasi']; ?></td>
                             <td class="text-center">
-                              <a href="logout.php?id_off=<?php echo $data['id_history'] ?>&ip=<?php echo $data['ip_login'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin logout dengan IP <?php echo $data['ip_login'] ?> ?')">OFF</a>
-
+                              <?php  
+                                if ($id_history === $data['id_history']) {
+                                  
+                                }else{
+                                  ?>
+                                    <a href="logout-paksa.php?id_off=<?php echo $data['id_history'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin logout dengan IP <?php echo $data['ip_login'] ?> ?')">OFF</a>
+                                  <?php
+                                }
+                              ?>
                             </td>
                           </tr>
                           <?php $no++; ?>

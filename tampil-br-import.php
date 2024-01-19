@@ -67,6 +67,13 @@ include "akses.php";
                                                     unset($_SESSION['info']); ?>"></div>
             <!-- END SWEET ALERT -->
             <div class="container-fluid">
+                <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <div class="card">
                     <div class="card-body mt-3">
                         <?php
@@ -74,8 +81,14 @@ include "akses.php";
                         $add = base64_encode($id);
                         ?>
                         <div class="text-start">
-                            <a href="input-isi-inv-br-import.php?id=<?php echo $add ?>" class="btn btn-md btn-primary text-end"><i class="bi bi-plus-circle"></i> Tambah data order</a>
                             <a href="barang-masuk-reg-import.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
+                            <?php  
+                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                    ?>
+                                        <a href="input-isi-inv-br-import.php?id=<?php echo $add ?>" class="btn btn-md btn-primary text-end"><i class="bi bi-plus-circle"></i> Tambah data order</a>
+                                    <?php
+                                }
+                            ?>
                         </div>
                         <div class="mt-3">
                             <div class="p-3">
@@ -218,18 +231,31 @@ include "akses.php";
                                                     }
                                                     ?>
                                                     <td class="text-center text-nowrap">
-                                                        <a class="btn btn-secondary btn-sm" href="update-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?>" title="Input Actual">
-                                                            <i class="bi bi-box-seam"></i>
-                                                        </a>
+                                                        <?php  
+                                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                                ?>
+                                                                    <a class="btn btn-secondary btn-sm" href="update-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?>" title="Input Actual">
+                                                                        <i class="bi bi-box-seam"></i>
+                                                                    </a>
+                                                                <?php
+                                                            }
+                                                        ?>
+                                                       
                                                         <a class="btn btn-info btn-sm" href="list-act-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?>" title="Detail Actual">
                                                             <i class="bi bi-info-circle"></i>
                                                         </a>
-                                                        <a class="btn btn-warning btn-sm" href="edit-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?>" title="Edit Data Order">
-                                                            <i class="bi bi-pencil"></i>
-                                                        </a>
-                                                        <a class="btn btn-danger btn-sm delete-data" href="proses/proses-br-in-import.php?hapus=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?> ">
-                                                            <i class="bi bi-trash"></i>
-                                                        </a>
+                                                        <?php  
+                                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                                ?>
+                                                                    <a class="btn btn-warning btn-sm" href="edit-br-import.php?id=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?>" title="Edit Data Order">
+                                                                        <i class="bi bi-pencil"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-danger btn-sm delete-data" href="proses/proses-br-in-import.php?hapus=<?php echo base64_encode($data['id_isi_inv']); ?> && id_inv=<?php echo base64_encode($data['id_inv_br_import']); ?> ">
+                                                                        <i class="bi bi-trash"></i>
+                                                                    </a>
+                                                                <?php
+                                                            }
+                                                        ?>   
                                                     </td>
                                                 </tr>
                                                 <?php $no++ ?>

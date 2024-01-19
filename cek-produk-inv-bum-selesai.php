@@ -451,6 +451,7 @@ include "function/class-spk.php";
                             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#bukti">
                                 <i class="bi bi-file-earmark-image"></i> Bukti Terima
                             </button>
+                            <a href="cetak-inv-bum-reg.php?id=<?php echo base64_encode($id_inv) ?>" class="btn btn-secondary mb-2"><i class="bi bi-printer-fill"></i> Cetak Invoice</a>
                         </div>
                     </div>
                     <div class="table-responsive">

@@ -28,11 +28,11 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <section>
             <div class="container-fluid">
@@ -97,13 +97,25 @@ include "akses.php";
                                         $month = date('m');
                                         $year = date('dy');
 
-                                        $sql = mysqli_query($connect, " SELECT ipsm.*, tpsm.*, tpr.*, mr.*, spr.stock AS stock_produk
-                                                                        FROM isi_produk_set_ecat ipsm 
-                                                                        LEFT JOIN tb_produk_ecat tpr ON (ipsm.id_produk = tpr.id_produk_ecat)
-                                                                        LEFT JOIN tb_produk_set_ecat tpsm ON (ipsm.id_set_ecat = tpsm.id_set_ecat)
-                                                                        LEFT JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
-                                                                        LEFT JOIN stock_produk_ecat spr ON (spr.id_produk_ecat = ipsm.id_produk)
-                                                                        WHERE ipsm.id_set_ecat = '$id'");
+                                        $sql = mysqli_query($connect, " SELECT 
+                                                                            ipse.id_isi_set_ecat, 
+                                                                            ipse.id_set_ecat, 
+                                                                            ipse.id_produk, 
+                                                                            ipse.qty,  
+                                                                            COALESCE(tpr.kode_produk, tpe.kode_produk) AS kode_produk, 
+                                                                            COALESCE(tpr.nama_produk, tpe.nama_produk) AS nama_produk, 
+                                                                            COALESCE(tpr.harga_produk, tpe.harga_produk) AS harga_produk,
+                                                                            COALESCE(mr.nama_merk, mr_reg.nama_merk) AS nama_merk,
+                                                                            spr.stock AS stock_produk
+                                                                        FROM isi_produk_set_ecat ipse 
+                                                                        LEFT JOIN tb_produk_ecat tpe ON (ipse.id_produk = tpe.id_produk_ecat)
+                                                                        LEFT JOIN tb_produk_set_ecat tpse ON (ipse.id_set_ecat = tpse.id_set_ecat)
+                                                                        LEFT JOIN tb_merk mr ON (tpe.id_merk = mr.id_merk)
+                                                                        LEFT JOIN stock_produk_ecat spe ON (spe.id_produk_ecat = ipse.id_produk)
+                                                                        LEFT JOIN tb_produk_reguler tpr ON (ipse.id_produk = tpr.id_produk_reg)
+                                                                        LEFT JOIN tb_merk mr_reg ON (tpr.id_merk = mr_reg.id_merk)
+                                                                        LEFT JOIN stock_produk_reguler spr ON (spr.id_produk_reg = ipse.id_produk)
+                                                                        WHERE ipse.id_set_ecat = '$id'");
                                         // Hitung total data yang ditampilkan
                                         while ($data = mysqli_fetch_array($sql)) {
                                             $total = $data['qty'] * $qty;
@@ -114,7 +126,7 @@ include "akses.php";
                                             <tr>
                                                 <input type="hidden" name="id_set_isi[]" class="form-control bg-light text-center" value="<?php echo $id ?>" readonly>
                                                 <input type="hidden" name="id_produk[]" class="form-control bg-light text-center" value="<?php echo $data['id_produk'] ?>" readonly>
-                                                <input type="hidden" name="id_tr_set_isi[]" class="form-control bg-light text-center" value="TR-ISI-SET-MRW-<?php echo $year ?><?php echo $uuid ?><?php echo $month ?>" readonly>
+                                                <input type="hidden" name="id_tr_set_isi[]" class="form-control bg-light text-center" value="TR-ISI-SET-ECAT-<?php echo $year ?><?php echo $uuid ?><?php echo $month ?>" readonly>
                                                 <td><input type="text" class="form-control bg-light text-center" value="<?php echo $no ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light" value="<?php echo $data['kode_produk']; ?>" readonly></td>
                                                 <td><input type="text" class="form-control bg-light" value="<?php echo $data['nama_produk']; ?>" readonly></td>

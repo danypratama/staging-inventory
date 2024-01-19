@@ -259,8 +259,8 @@
             <?php
         }
 
-    }else if(isset($_GET['cancel'])){
-        $id_sph = $_GET['cancel'];
+    }else if(isset($_POST['cancel'])){
+        $id_sph = $_POST['id_sph'];
         $id_sph_decode = base64_decode($id_sph); 
         $cancel_sph = mysqli_query($connect, "UPDATE sph SET status_cancel = 1 WHERE id_sph = '$id_sph_decode'");
 
@@ -276,7 +276,7 @@
                         'Data Berhasil Dicancel',
                         'success'
                         ).then(function() {
-                    window.location.href = "../sph.php ?>";
+                    window.location.href = "../sph.php";
                     });
                 });
             </script>

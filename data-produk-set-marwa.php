@@ -51,6 +51,13 @@ include "akses.php";
                                             unset($_SESSION['info']); ?>"></div>
       <!-- END SWEET ALERT -->
       <div class="container-fluid">
+        <?php  
+          include "koneksi.php";
+          $id_role = $_SESSION['tiket_role'];
+          $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+          $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+          $data_role = mysqli_fetch_array($query_role);
+        ?>
         <div class="card">
           <div class="card-body p-3">
             <a href="tambah-data-produk-set-marwa.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data produk set</a>
@@ -120,10 +127,16 @@ include "akses.php";
                       <td class="text-center">
                         <!-- Lihat Data -->
                         <a href="detail-set-marwa.php?detail-id=<?php echo $id_set ?>" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i></a>
-                        <!-- Edit Data -->
-                        <a href="edit-data-set-marwa.php?edit-set-marwa=<?php echo $id_set ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
-                        <!-- Hapus Data -->
-                        <a href="proses/proses-produk-set-marwa.php?hapus-set-marwa=<?php echo $id_set ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                        <?php 
+                          if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
+                            ?>
+                              <!-- Edit Data -->
+                              <a href="edit-data-set-marwa.php?edit-set-marwa=<?php echo $id_set ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                              <!-- Hapus Data -->
+                              <a href="proses/proses-produk-set-marwa.php?hapus-set-marwa=<?php echo $id_set ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                            <?php
+                          }
+                        ?>
                       </td>
                     </tr>
                     <?php $no++; ?>

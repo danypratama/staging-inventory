@@ -1,4 +1,4 @@
 <?php
   include "akses.php";
-  include "login.php";
+  include "dashboard.php";
 ?>

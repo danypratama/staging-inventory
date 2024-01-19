@@ -19,21 +19,52 @@ if (empty($_SESSION['tiket_user'])) {
     // Redirect ke halaman logout.php
     header("location: logout.php");
 } else {
-    // Periksa apakah sesi telah berakhir (10 detik tidak ada aktivitas)
-    $session_time = 1800; // 30 menit
-    $current_time = time();
+    include "koneksi.php";
+    // Ambil status pengguna dari database
+    $id_user = $_SESSION['tiket_id'];
+    $ip = $_SESSION['ip'];
+    $id_history = $_SESSION['id_history'];
+    $query = "SELECT status_perangkat FROM user_history WHERE id_history = '$id_history'";
+    $result = $connect->query($query);
 
-    if (isset($_SESSION['last_activity']) && ($current_time - $_SESSION['last_activity']) > $session_time) {
-        // Jika sesi telah berakhir, hancurkan sesi dan redirect ke logout.php
+    // Periksa apakah query berhasil dijalankan
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $status = $row['status_perangkat'];
+
+        // Periksa status pengguna
+        if ($status == "Online") {
+            // Periksa apakah sesi telah berakhir (10 detik tidak ada aktivitas)
+            $session_time = 1800; // 30 menit
+            $current_time = time();
+
+            if (isset($_SESSION['last_activity']) && ($current_time - $_SESSION['last_activity']) > $session_time) {
+                // Jika sesi telah berakhir, hancurkan sesi dan redirect ke logout.php
+                session_unset();
+                session_destroy();
+                header("location: logout.php");
+            } else {
+                // Perbarui waktu aktivitas terakhir setiap kali ada aktivitas
+                $_SESSION['last_activity'] = $current_time;
+            }
+        } else {
+            // Status pengguna tidak aktif, hancurkan sesi dan redirect ke logout.php
+            session_unset();
+            session_destroy();
+            header("location: logout.php");
+        }
+    } else {
+        // Status pengguna tidak aktif, hancurkan sesi dan redirect ke logout.php
         session_unset();
         session_destroy();
         header("location: logout.php");
-    } else {
-        // Perbarui waktu aktivitas terakhir setiap kali ada aktivitas
-        $_SESSION['last_activity'] = $current_time;
     }
+
+    // Tutup koneksi database
+    $connect->close();
 }
 ?>
+
 
 
 <script>

@@ -377,7 +377,9 @@ include "akses.php";
                                                             ?>
                                                                <td class="text-center text-nowrap">
                                                                     <a href="detail-produk-spk-reg-dalam-proses.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" class="btn btn-primary btn-sm"  title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
-                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order"><i class="bi bi-x-circle"></i></a>
+                                                                    <button href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_spk_reg']; ?>" data-nama="<?php echo $data['no_spk']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                                                        <i class="bi bi-x-circle"></i>
+                                                                    </button>
                                                                 </td>
                                                             <?php
                                                         } else {
@@ -389,8 +391,8 @@ include "akses.php";
                                                         }
                                                     ?>
                                                     
-                                                    <!-- Modal -->
-                                                    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                     <!-- Modal Cancel -->
+                                                     <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog modal-dialog-centered">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -399,13 +401,14 @@ include "akses.php";
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <form action="proses/proses-produk-spk-reg.php" method="POST">
+                                                                        <p>Apakah Anda Yakin Ingin Cancel <br>No.SPK : <b id="no_spk"></b> (<b id="cs"></b>) ?</p>
                                                                         <div class="mb-3">
-                                                                            <input type="hidden" name="id_spk" value="<?php echo $data['id_spk_reg'] ?>">
+                                                                            <input type="hidden" name="id_spk" id="id_spk">
                                                                             <Label>Alasan Cancel</Label>
                                                                             <input type="text" class="form-control" name="alasan" required>
                                                                         </div>
                                                                         <div class="modal-footer">
-                                                                            <button type="submit" class="btn btn-primary" name="cancel-dalam-proses">Ya, Cancel Transaksi</button>
+                                                                            <button type="submit" class="btn btn-primary" name="cancel-dalam-proses" id="cancel">Ya, Cancel Transaksi</button>
                                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                                         </div>
                                                                     </form>
@@ -438,7 +441,25 @@ include "akses.php";
 </body>
 
 </html>
+<script>
+    $('#cancelModal').on('show.bs.modal', function(event) {
+        // Mendapatkan data dari tombol yang ditekan
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var nama = button.data('nama');
+        var cs = button.data('cs');
+        
+        var modal = $(this);
+        var simpanBtn = modal.find('.modal-footer #cancel');
+        var namaInput = modal.find('.modal-body #no_spk');
+        var csInput = modal.find('.modal-body #cs');
 
+        // Menampilkan data
+        modal.find('.modal-body #id_spk').val(id);
+        namaInput.text(nama);
+        csInput.text(cs);
+    });
+</script>
 <script>
     $(document).ready(function() {
         $("#select").change(function() {

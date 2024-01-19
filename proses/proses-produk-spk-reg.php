@@ -185,7 +185,7 @@ if (isset($_POST['simpan-tmp'])) {
     date_default_timezone_set('Asia/Jakarta');
     $id_spk = $_POST['id_spk'];
     $alasan = $_POST['alasan'];
-    $menu_cancel = 'Siap Proses';
+    $menu_cancel = 'Siap Kirim';
     $user = $_SESSION['tiket_user'];
     $time = date('d/m/Y, H:i:s');
 

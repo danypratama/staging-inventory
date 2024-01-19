@@ -42,6 +42,13 @@ include "akses.php";
                                                     unset($_SESSION['info']); ?>"></div>
             <!-- END SWEET ALERT -->
             <div class="container-fluid">
+                <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <div class="card">
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Keluar Reguler</h5>
@@ -60,7 +67,13 @@ include "akses.php";
                                         <td class="text-center p-3" style="width: 150px">Keterangan</td>
                                         <td class="text-center p-3" style="width: 100px">Dibuat Oleh</td>
                                         <td class="text-center p-3" style="width: 100px">Dibuat Tanggal</td>
-                                        <td class="text-center p-3" style="width: 50px">Aksi</td>
+                                        <?php  
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                ?>
+                                                     <td class="text-center p-3" style="width: 50px">Aksi</td>
+                                                <?php
+                                            }
+                                        ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,14 +97,20 @@ include "akses.php";
                                         <td><?php echo $data['ket_out'] ?></td>
                                         <td><?php echo $data['nama_user'] ?></td>
                                         <td class="text-center"><?php echo $data['created'] ?></td>
-                                        <td class="text-center">
-                                            <a href="edit-br-out-reg.php?id=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>"
-                                                class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil"
-                                                    style="font-size: 14px;"></i></a>
-                                            <a href="proses/proses-br-out-reg.php?hapus=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>"
-                                                class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash"
-                                                    style="font-size: 14px;"></i></a>
-                                        </td>
+                                        <?php  
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                ?>
+                                                    <td class="text-center">
+                                                        <a href="edit-br-out-reg.php?id=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>"
+                                                            class="btn btn-warning btn-sm rounded"><i class="bi bi-pencil"
+                                                                style="font-size: 14px;"></i></a>
+                                                        <a href="proses/proses-br-out-reg.php?hapus=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>"
+                                                            class="btn btn-danger btn-sm rounded delete-data"><i class="bi bi-trash"
+                                                                style="font-size: 14px;"></i></a>
+                                                    </td>
+                                                <?php
+                                            }
+                                        ?>
                                     </tr>
                                     <?php $no++ ?>
                                     <?php } ?>

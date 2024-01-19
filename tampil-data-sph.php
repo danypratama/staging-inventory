@@ -148,13 +148,20 @@
     <!-- end sidebar -->
     <main id="main" class="main">
         <!-- Loading -->
-        <!-- <div class="loader loader">
+        <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div> -->
+        </div>
         <!-- ENd Loading -->
         <section class="pagetitle">
+            <?php  
+                include "koneksi.php";
+                $id_role = $_SESSION['tiket_role'];
+                $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                $data_role = mysqli_fetch_array($query_role);
+            ?>
             <div class="card p-3">
                 <div class="card-header text-center">
                     <h5>Form Surat Penawaran Harga</h5>
@@ -279,9 +286,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-center mt-3 mb-3">
-                        <button class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#editPelanggan"><i class="bi bi-pencil"></i> Edit Pelanggan SPH</button>
-                    </div>
+                    <?php  
+                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                            ?>
+                                <div class="text-center mt-3 mb-3">
+                                    <button class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#editPelanggan"><i class="bi bi-pencil"></i> Edit Pelanggan SPH</button>
+                                </div>
+                            <?php
+                        }
+                    ?>
                     <!-- Modal -->
                     <div class="modal fade" id="editPelanggan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -329,7 +342,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" name="ubah-cs-sph" class="btn btn-primary">Ubah Data</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reloadPage()">Close</button>
                                     </div>
                                 </form>
                             </div>
@@ -338,15 +351,18 @@
                 </div>
             </div>
             <div class="card-body p-2">
-                <a href="sph.php" class="btn btn-warning btn-detail mb-3">
-                    <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                </a>
-                <button class="btn btn-primary btn-detail mb-3" data-sph="<?php echo  $id_sph_decode ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
-                    <i class="bi bi-plus-circle"></i> Tambah Produk
-                </button>
-                <a class="btn btn-secondary btn-detail mb-3" href="cetak-sph.php?id=<?php echo base64_encode($id_sph) ?>">
-                    <i class="bi bi-plus-circle"></i> Cetak SPH 
-                </a>          
+                <div class="d-flex justify-content-start flex-wrap">
+                    <a href="sph.php" class="btn btn-warning btn-detail mb-3 me-2">
+                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                    </a>
+                    <button class="btn btn-primary btn-detail mb-3 me-2" data-sph="<?php echo  $id_sph_decode ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                        <i class="bi bi-plus-circle"></i> Tambah Produk
+                    </button>
+                
+                    <a class="btn btn-secondary btn-detail mb-3 me-2" href="cetak-sph.php?id=<?php echo base64_encode($id_sph) ?>">
+                        <i class="bi bi-plus-circle"></i> Cetak SPH 
+                    </a>       
+                </div>
             </div>
             <div class="card-body p-2">
                 <div class="table-responsive">
@@ -1061,5 +1077,11 @@ function formatCurrency(input) {
         if (parseInt(qty) > stock) {
             qtyInput.value = formatNumber(stock);
         }
+    }
+</script>
+
+<script>
+    function reloadPage() {
+        location.reload();
     }
 </script>

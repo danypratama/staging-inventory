@@ -42,11 +42,24 @@ include "akses.php";
                                                     unset($_SESSION['info']); ?>"></div>
             <!-- END SWEET ALERT -->
             <div class="container-fluid">
+                <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <div class="card">
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Masuk Import</h5>
                         <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
-                        <a href="input-inv-br-in-import.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah Data</a>
+                        <?php  
+                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                ?>
+                                    <a href="input-inv-br-in-import.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah Data</a>
+                                <?php
+                            }
+                        ?>
                         <div class="table-responsive pt-3">
                             <table class="table table-striped table-bordered" id="table1">
                                 <thead>
@@ -82,27 +95,44 @@ include "akses.php";
                                             <td class="text-center"><?php echo ($data['shipping_by']); ?></td>
                                             <td class="text-center"><?php echo $data['tgl_est']; ?></td>
                                             <td class="text-center">
-                                                <?php echo $data['status_pengiriman']; ?><br> 
-                                                (<?php echo $data['tgl_terima']; ?>)
+                                                <?php  
+                                                    if($data['status_pengiriman'] != ''){
+                                                        echo $data['status_pengiriman'];
+                                                        echo '<br>';
+                                                        echo ($data['tgl_terima']);
+                                                    }
+                                                ?>
                                             </td>
                                             <td><?php echo $data['keterangan']; ?></td>
                                             <td class ="text-center text-nowrap">
-                                                <button type="button" class="btn btn-warning btn-sm status" data-bs-toggle="modal" data-bs-target="#modalStatus" data-id="<?php echo $data['id_inv_br_import']; ?>" data-estimasi="<?php echo $data['tgl_est']; ?>" data-status="<?php echo $data['status_pengiriman']; ?>" title="Ubah Status">
-                                                    <i class="bi bi-repeat"></i>
-                                                </button>
+                                                <?php  
+                                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                        ?>
+                                                            <button type="button" class="btn btn-warning btn-sm status" data-bs-toggle="modal" data-bs-target="#modalStatus" data-id="<?php echo $data['id_inv_br_import']; ?>" data-estimasi="<?php echo $data['tgl_est']; ?>" data-status="<?php echo $data['status_pengiriman']; ?>" title="Ubah Status">
+                                                                <i class="bi bi-repeat"></i>
+                                                            </button>
+                                                        <?php
+                                                    }
+                                                ?>
                                                 <button type="button" class="btn btn-info btn-detail btn-sm" data-no-inv="<?php echo $data['no_inv'] ?>" data-tgl-inv="<?php echo $data['tgl_inv']; ?>" data-no-order="<?php echo $data['no_order']; ?>" data-tgl-order="<?php echo $data['tgl_order'] ?>" data-ship="<?php echo $data['shipping_by'] ?>" data-awb="<?php echo $data['no_awb'] ?>" data-tgl-kirim="<?php echo $data['tgl_kirim'] ?>" data-tgl-est="<?php echo $data['tgl_est'] ?>" data-status="<?php echo $data['status_pengiriman']; ?>" data-tgl-terima="<?php echo $data['tgl_terima']; ?>" data-tgl-create="<?php echo $data['created'] ?>" data-user-create="<?php echo $data['user_created'] ?>" data-keterangan="<?php echo $data['keterangan']; ?>" title="Detail">
                                                     <i class="bi bi-info"></i>
                                                 </button>
                                                 <a class="btn btn-secondary btn-sm" href="tampil-br-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>" title="Lihat Isi">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
-                                                <p></p>
-                                                <a class="btn btn-primary btn-sm" href="edit-inv-br-in-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>" title="Edit Data">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <a class="btn btn-danger btn-sm delete-data" href="proses/proses-br-in-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>" title="Hapus Data">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
+                                                <?php  
+                                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                        ?>
+                                                           <p></p>
+                                                            <a class="btn btn-primary btn-sm" href="edit-inv-br-in-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>" title="Edit Data">
+                                                                <i class="bi bi-pencil"></i>
+                                                            </a>
+                                                            <a class="btn btn-danger btn-sm delete-data" href="proses/proses-br-in-import.php?id=<?php echo base64_encode($data['id_inv_br_import']) ?>" title="Hapus Data">
+                                                                <i class="bi bi-trash"></i>
+                                                            </a>
+                                                        <?php
+                                                    }
+                                                ?>
                                         </tr>
                                         <?php $no++ ?>
                                     <?php } ?>

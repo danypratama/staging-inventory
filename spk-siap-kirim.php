@@ -439,9 +439,9 @@ include "akses.php";
                                                                             class="btn btn-primary btn-sm mb-2" title="Lihat Produk">
                                                                             <i class="bi bi-eye-fill"></i>
                                                                         </a>
-                                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm mb-2" title="Cancel Order" data-id="<?php echo $data['id_spk_reg']; ?>" data-nama="<?php echo $data['no_spk']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                                                        <button href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm mb-2" title="Cancel Order" data-id="<?php echo $data['id_spk_reg']; ?>" data-nama="<?php echo $data['no_spk']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
                                                                             <i class="bi bi-x-circle"></i>
-                                                                        </a>
+                                                                         </button>
                                                                     </td>
                                                                 <?php
                                                             } else {
@@ -459,24 +459,24 @@ include "akses.php";
                                                         <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered">
                                                                 <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h4><strong>Silahkan Isi Alasan</strong></h4>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <form action="proses/proses-produk-spk-reg.php" method="POST">
-                                                                        <p>Apakah Anda Yakin Ingin Cancel <br>No.SPK : <b id="no_spk"></b> (<b id="cs"></b>) ?</p>
-                                                                        <div class="mb-3">
-                                                                            <input type="hidden" name="id_spk" id="id_spk">
-                                                                            <Label>Alasan Cancel</Label>
-                                                                            <input type="text" class="form-control" name="alasan" required>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="submit" class="btn btn-primary" name="cancel-siap-kirim" id="cancel">Ya, Cancel Transaksi</button>
-                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
+                                                                    <div class="modal-header">
+                                                                        <h4><strong>Silahkan Isi Alasan</strong></h4>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="proses/proses-produk-spk-reg.php" method="POST">
+                                                                            <p>Apakah Anda Yakin Ingin Cancel <br>No.SPK : <b id="no_spk"></b> (<b id="cs"></b>) ?</p>
+                                                                            <div class="mb-3">
+                                                                                <input type="hidden" name="id_spk" id="id_spk">
+                                                                                <Label>Alasan Cancel</Label>
+                                                                                <input type="text" class="form-control" name="alasan" required>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="submit" class="btn btn-primary" name="cancel-siap-kirim" id="cancel">Ya, Cancel Transaksi</button>
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -47,6 +47,13 @@
       <div class="info-data" data-infodata="<?php if(isset($_SESSION['info'])){ echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
       <!-- END SWEET ALERT -->
       <div class="container-fluid">
+        <?php  
+            include "koneksi.php";
+            $id_role = $_SESSION['tiket_role'];
+            $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+            $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+            $data_role = mysqli_fetch_array($query_role);
+        ?>
         <div class="card">
             <div class="card-body">
                 <!-- Bordered Tabs -->
@@ -72,7 +79,13 @@
                                             <th class="text-center p-3" style="width: 80px">Qty</th>
                                             <th class="text-center p-3" style="width: 150px">Dibuat Oleh</th>
                                             <th class="text-center p-3" style="width: 150px">Dibuat Tanggal</th>
-                                            <th class="text-center p-3" style="width: 100px">Aksi</th>
+                                            <?php  
+                                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                    ?>
+                                                        <th class="text-center p-3" style="width: 100px">Aksi</th>
+                                                    <?php
+                                                }
+                                            ?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -100,9 +113,15 @@
                                             <td class="text-end"><?php echo $data['qty']; ?></td>
                                             <td class="text-center"><?php echo $data['nama_user']; ?></td>
                                             <td class="text-center"><?php echo $data['created']; ?></td>
-                                            <td class="text-center">
-                                                <a href="proses/proses-ganti-merk.php?hapus_id=<?php echo $data['id_ganti_merk_out']; ?>" class="btn btn-sm btn-danger delete-data"><i class="bi bi-trash"></i></a>
-                                            </td>
+                                            <?php  
+                                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                    ?>
+                                                        <td class="text-center">
+                                                            <a href="proses/proses-ganti-merk.php?hapus_id=<?php echo $data['id_ganti_merk_out']; ?>" class="btn btn-sm btn-danger delete-data"><i class="bi bi-trash"></i></a>
+                                                        </td>
+                                                    <?php
+                                                }
+                                            ?>
                                         </tr>
                                         <?php $no++; ?>
                                         <?php } ?>

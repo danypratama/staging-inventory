@@ -55,6 +55,13 @@ include "function/class-spk.php";
         <!-- SWEET ALERT -->
         <section>
             <div class="container-fluid">
+                <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <div class="card shadow p-2">
                     <div class="card-header text-center">
                         <h5><strong>DETAIL INVOICE BUM</strong></h5>
@@ -305,9 +312,15 @@ include "function/class-spk.php";
                                 ?>
                             </div>
                         </div>
-                        <div class="text-center mt-3 mb-3">
-                            <button class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#editPelanggan"><i class="bi bi-pencil"></i> Edit Data Detail</button>
-                        </div>
+                        <?php  
+                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
+                                ?>
+                                    <div class="text-center mt-3 mb-3">
+                                        <button class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#editPelanggan"><i class="bi bi-pencil"></i> Edit Data Detail</button>
+                                    </div>
+                                <?php
+                            }
+                        ?>
                         <!-- Modal -->
                         <div class="modal fade" id="editPelanggan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
@@ -361,11 +374,6 @@ include "function/class-spk.php";
                                         $total_data = mysqli_num_rows($query_cek);
                                     ?>
                                     <?php 
-                                        include "koneksi.php";
-                                        $id_role = $_SESSION['tiket_role'];
-                                        $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
-                                        $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
-                                        $data_role = mysqli_fetch_array($query_role);
                                         if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
                                             ?>
                                                 <button class="btn btn-info btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#ubahKat">

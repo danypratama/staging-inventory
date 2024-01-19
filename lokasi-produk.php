@@ -57,6 +57,13 @@ include "akses.php";
                                                     unset($_SESSION['info']); ?>"></div>
             <!-- END SWEET ALERT -->
             <div class="container-fluid">
+                <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <div class="card">
                     <div class="card-body mt-3">
                         <button class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modal1">
@@ -79,45 +86,67 @@ include "akses.php";
                                 </thead>
                                 <tbody>
                                         <tr>    
-                                            <!-- Modal Edit  -->
-                                            <div class="modal fade" id="modal2" tabindex="-1">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5">Edit Data Kategori Penjualan</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <?php  
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                                            ?>
+                                                    <!-- Modal Edit  -->
+                                                <div class="modal fade" id="modal2" tabindex="-1">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5">Edit Data Kategori Penjualan</h1>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form action="proses/proses-lokasi-produk.php" method="POST">
+                                                                <div class="modal-body">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label">Lokasi</label>
+                                                                        <input type="hidden" class="form-control" name="id_lokasi_produk" id="id_lokasi">
+                                                                        <input type="text" class="form-control" name="lokasi" id="nama_lokasi" required>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label">No. Lantai</label>
+                                                                        <input type="text" class="form-control" name="no_lantai" id="lantai" required>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label">Area</label>
+                                                                        <input type="text" class="form-control" name="area" id="area" required>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label">No. Rak</label>
+                                                                        <input type="text" class="form-control" name="no_rak" id="rak" required>
+                                                                    </div>
+                                                                    <input type="hidden" class="form-control" name="updated" id="datetime-edit">
+                                                                    <input type="hidden" class="form-control" name="user_updated" value="<?php echo $_SESSION['tiket_id'] ?>">
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" name="edit-lokasi-produk" id="simpan" class="btn btn-primary btn-md" disabled><i class="bx bx-save"></i> Simpan Perubahan</button>
+                                                                    <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
+                                                                </div>
+                                                            </form>
                                                         </div>
-                                                        <form action="proses/proses-lokasi-produk.php" method="POST">
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">Lokasi</label>
-                                                                    <input type="hidden" class="form-control" name="id_lokasi_produk" id="id_lokasi">
-                                                                    <input type="text" class="form-control" name="lokasi" id="nama_lokasi" required>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">No. Lantai</label>
-                                                                    <input type="text" class="form-control" name="no_lantai" id="lantai" required>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">Area</label>
-                                                                    <input type="text" class="form-control" name="area" id="area" required>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">No. Rak</label>
-                                                                    <input type="text" class="form-control" name="no_rak" id="rak" required>
-                                                                </div>
-                                                                <input type="hidden" class="form-control" name="updated" id="datetime-edit">
-                                                                <input type="hidden" class="form-control" name="user_updated" value="<?php echo $_SESSION['tiket_id'] ?>">
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" name="edit-lokasi-produk" id="simpan" class="btn btn-primary btn-md" disabled><i class="bx bx-save"></i> Simpan Perubahan</button>
-                                                                <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal"><i class="bi bi-x"></i> Tutup</button>
-                                                            </div>
-                                                        </form>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <!-- End Modal Edit -->
+                                                <!-- End Modal Edit -->
+                                            <?php 
+                                            } else {
+                                                ?>
+                                                    <!-- Modal Hapus -->
+                                                    <div class="modal fade" id="modal2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                Maaf Anda Tidak Memiliki Akses Fitur Ini
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                            }
+                                        ?>
                                         </tr>
                                 </tbody>
                             </table>
@@ -190,28 +219,51 @@ include "akses.php";
 </div>
 <!-- End Info -->
 
-<!-- Modal -->
-<div class="modal fade" id="hapusData" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-md">
-    <div class="modal-content">
-        <form action="proses/proses-lokasi-produk.php" method="POST">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+
+<?php  
+    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+      ?>
+        <!-- Modal Hapus-->
+        <div class="modal fade" id="hapusData" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <form action="proses/proses-lokasi-produk.php" method="POST">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" class="form-control" name="id_lokasi_produk" id="id_lokasi">
+                        <p>Apakah anda ingin hapus data lokasi <br><b id="nama_lokasi"></b> - <b id="lantai"></b> - <b id="area"></b> - <b id="rak"></b> ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-danger" name="hapus-lokasi-produk">
+                            Ya, Hapus data
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-body">
-                <input type="hidden" class="form-control" name="id_lokasi_produk" id="id_lokasi">
-                <p>Apakah anda ingin hapus data lokasi <br><b id="nama_lokasi"></b> - <b id="lantai"></b> - <b id="area"></b> - <b id="rak"></b> ?</p>
+        </div>
+        </div>
+      <?php 
+    } else {
+      ?>
+        <!-- Modal Hapus -->
+        <div class="modal fade" id="hapusData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-body">
+                     Maaf Anda Tidak Memiliki Akses Fitur Ini
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-danger" name="hapus-lokasi-produk">
-                    Ya, Hapus data
-                </button>
-            </div>
-        </form>
-    </div>
-  </div>
-</div>
+          </div>
+      <?php
+    }
+  ?>
 
 <!-- Modal Input-->
 <div class="modal fade" id="modal1" tabindex="-1" aria-hidden="true">
