@@ -42,7 +42,6 @@ include "akses.php";
           <div class="card-body p-3">
             <?php
             $id = base64_decode($_GET['detail-id']);
-            echo $id;
             $sql = "SELECT * FROM tb_produk_set_ecat AS tbsm 
                       LEFT JOIN tb_lokasi_produk AS lk ON (tbsm.id_lokasi = lk.id_lokasi)
                       WHERE id_set_ecat = '$id'";

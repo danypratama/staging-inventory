@@ -401,3 +401,26 @@ function format_rupiah($angka)
         table.buttons().container().appendTo('#buttons');
     });
 </script>
+<script>
+    // Mengambil semua elemen gambar pada halaman
+    var images = document.querySelectorAll('img');
+
+    // Mengaitkan event listener untuk mencegah klik kanan pada gambar
+    images.forEach(function(image) {
+        image.addEventListener('contextmenu', function(event) {
+            // Mencegah menu konteks muncul saat klik kanan
+            event.preventDefault();
+            
+            // Menampilkan pesan khusus (opsional)
+            alert('Right-clicking is not allowed!');
+        });
+    });
+    // Menyembunyikan elemen <script> dari alat pengembang
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
+            event.preventDefault();
+            alert('Developer tools are disabled.');
+        }
+   });
+</script>
+ 

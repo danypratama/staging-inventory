@@ -106,7 +106,7 @@ include "akses.php";
                                                                             COALESCE(tpr.nama_produk, tpe.nama_produk) AS nama_produk, 
                                                                             COALESCE(tpr.harga_produk, tpe.harga_produk) AS harga_produk,
                                                                             COALESCE(mr.nama_merk, mr_reg.nama_merk) AS nama_merk,
-                                                                            spr.stock AS stock_produk
+                                                                            COALESCE(spr.stock, spe.stock) AS stock_produk
                                                                         FROM isi_produk_set_ecat ipse 
                                                                         LEFT JOIN tb_produk_ecat tpe ON (ipse.id_produk = tpe.id_produk_ecat)
                                                                         LEFT JOIN tb_produk_set_ecat tpse ON (ipse.id_set_ecat = tpse.id_set_ecat)
