@@ -129,7 +129,7 @@
                     // Inisialisasi variabel $selectedOption
                     // $selectedOption = isset($_POST['selectedOption']) ? $_POST['selectedOption'] : '';
                 ?>
-                <form method="post" action="" id="printButton">
+                <!-- <form method="post" action="" id="printButton">
                     <select class="form-select" name="selectedOption" onchange="this.form.submit()" style="text-align: center;">
                         <option value="" <?php echo empty($selectedOption) ? 'selected' : ''; ?>>Pilih Nomor Invoice</option>
                         <?php 
@@ -158,7 +158,7 @@
                         <option value="<?php echo $no_inv ?>" <?php echo ($selectedOption == $no_inv) ? 'selected' : ''; ?>><?php echo $no_inv ?></option>
                         <?php } ?>
                     </select>
-                </form>
+                </form> -->
             
 
                 <!-- PHP Code -->
