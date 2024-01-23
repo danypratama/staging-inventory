@@ -293,6 +293,7 @@
                     $day = date('d');
                     $month = date('m');
                     $id_ppn_decode = base64_decode($_GET['id']);
+                    $uniqueToken = time();
                     $no = 1;
                     $sub_total_tampil = 0;
                     $grand_total = 0;
@@ -367,6 +368,7 @@
                             <td align="right"><?php echo number_format($sub_total_fix, 0, '.', '.') ?></td>
                         </tr>
                         <?php $no++ ?>
+                        <?php $_SESSION['unique_token'] = $uniqueToken; ?>
                     <?php } ?>
                 </tbody>
             </table>
