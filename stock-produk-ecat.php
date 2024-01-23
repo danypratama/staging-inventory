@@ -42,7 +42,7 @@ include "akses.php";
     </div>
     <!-- ENd Loading -->
     <div class="pagetitle">
-      <h1>Stock Produk Reguler</h1>
+      <h1>Stock Produk E-Cat</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>

@@ -424,14 +424,6 @@
           </li>
           <!-- End Barang Keluar Nav -->
 
-          <!-- Perubahan Merk -->
-          <li class="nav-item">
-            <a class="nav-link collapsed <?php if ($page == 'perubahan-merk') { echo 'active-link'; } ?>" href="ganti-merk-reg.php">
-              <i class="bi bi-arrow-left-right"></i><span>Perubahan Merk</span>
-            </a>
-          </li>
-          <!-- End Perubahan Merk -->
-
           <li class="nav-item">
             <a class="nav-link collapsed <?php if ($page == 'transaksi') { echo 'active-link'; } ?>" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
               <i class="bi bi-bar-chart"></i><span>Transaksi</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -486,70 +478,71 @@
               <?php
             }
           ?>
-
-          <?php  
-            if ($data['role'] == "Super Admin" || $data['role'] == "Manager Gudang" || $data['role'] == "Admin Penjualan") { 
-              ?>
-                <!-- Sales -->
-                <li class="nav-item">
-                  <a class="nav-link collapsed <?php if ($page == 'sales') { echo 'active-link'; } ?>" href="data-sales.php">
-                    <i class="bi bi-people"></i><span>Sales</span>
-                  </a>
-                </li>
-                <!-- Emd Sales -->
-              <?php
-            }
-          ?>
-
-          <?php  
-            if ($data['role'] == "Super Admin" || $data['role'] == "Manager Gudang" || $data['role'] == "Admin Penjualan") { 
-              ?>
-                <!-- Ekspedisi -->
-                <li class="nav-item">
-                  <a class="nav-link collapsed <?php if ($page == 'ekspedisi') { echo 'active-link'; } ?>" href="data-ekspedisi.php">
-                    <i class="ri-truck-line"></i><span>Ekspedisi</span>
-                  </a>
-                </li>
-                <!-- End Ekspedisi -->
-              <?php
-            }
-          ?>
-
-
-          <!-- Keterangan -->
+          <!-- Data Bank -->
           <li class="nav-item">
-            <a class="nav-link collapsed <?php if ($page == 'keterangan') { echo 'active-link'; } ?>" data-bs-target="#keterangan" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-bookmarks"></i><span>Keterangan</span><i class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link <?php if ($page == 'bank') { echo 'active-link'; } ?>" data-bs-target="#bank" data-bs-toggle="collapse" href="#">
+              <i class="bi bi-bank"></i><span>Data Bank</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="keterangan" class="nav-content collapse " data-bs-parent="#keterangan">
+            <ul id="bank" class="nav-content collapse " data-bs-parent="#bank">
               <li>
-                <a class="<?php if ($page2 == 'ket-in') {
-                            echo 'active';
-                          } ?>" href="keterangan-in.php">
-                  <i class="bi bi-circle"></i><span>Barang Masuk</span>
+                <a class="<?php if ($page2 == 'bank-pt') { echo 'active'; } ?>" href="data-bank-pt.php">
+                  <i class="bi bi-circle"></i><span>Perusahaan</span>
                 </a>
               </li>
               <li>
-                <a class="<?php if ($page2 == 'ket-out') {
-                            echo 'active';
-                          } ?>" href="keterangan-out.php">
-                  <i class="bi bi-circle"></i><span>Barang Keluar</span>
+                <a class="<?php if ($page2 == 'bank-cs') { echo 'active'; } ?>" href="data-bank-cs.php">
+                  <i class="bi bi-circle"></i><span>Customer</span>
+                </a>
+              </li>
+              <li>
+                <a class="<?php if ($page2 == 'bank-sp') { echo 'active'; } ?>" href="data-bank-sp.php">
+                  <i class="bi bi-circle"></i><span>Supplier</span>
                 </a>
               </li>
             </ul>
           </li>
-          <!-- End Keterangan -->
+          <!-- End Data Bank -->
 
-
-
-          <!-- End Pajak di Gunggung -->
-          <!-- Order By -->
+          <!-- Data Invoice penjualan -->
           <li class="nav-item">
-            <a class="nav-link collapsed <?php if ($page == 'orderby') { echo 'active-link'; } ?>" href="data-orderby.php">
-              <i class="bi bi-dropbox"></i><span>Order By</span>
+            <a class="nav-link <?php if ($page == 'finance') { echo 'active-link'; } ?>" href="finance-inv.php?date_range=monthly">
+              <i class="bi bi-cash-stack"></i><span>Invoice Penjualan</span>
             </a>
           </li>
-          <!-- End Order By -->
+
+          <li class="nav-item">
+            <a class="nav-link <?php if ($page == 'list-tagihan') { echo 'active-link'; } ?>" data-bs-target="#tagihan" data-bs-toggle="collapse" href="#">
+              <i class="bi bi-file-earmark-text"></i><span>List Tagihan</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="tagihan" class="nav-content collapse " data-bs-parent="#tagihan">
+              <li>
+                <a class="<?php if ($page2 == 'tagihan-penjualan') { echo 'active'; } ?>" href="list-tagihan-penjualan.php">
+                  <i class="bi bi-circle"></i><span>Penjualan</span>
+                </a>
+              </li>
+              <li>
+                <a class="<?php if ($page2 == 'tagihan-pembelian') { echo 'active'; } ?>" href="list-tagihan-pembelian.php">
+                  <i class="bi bi-circle"></i><span>Pembelian</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- End Invoice Penjualan -->
+
+          <!-- Transaksi Per Customer -->
+          <li class="nav-item">
+            <a class="nav-link <?php if ($page == 'list-cs') { echo 'active-link'; } ?>" href="finance-customer.php?date_range=monthly">
+              <i class="bi bi-cash-stack"></i><span>Transaksi Customer</span>
+            </a>
+          </li>
+          <!-- End Finance -->
+          <!-- Data Customer -->
+          <li class="nav-item">
+            <a class="nav-link <?php if ($page == 'list-komplain') { echo 'active-link'; } ?>" href="invoice-komplain.php?date_range=monthly">
+              <i class="bi bi-clipboard-x"></i><span>Invoice Komplain</span>
+            </a>
+          </li>
+          <!-- End Finance -->
 
           <?php
             if ($data['role'] == "Super Admin") { ?>

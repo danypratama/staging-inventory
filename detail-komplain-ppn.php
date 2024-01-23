@@ -52,11 +52,11 @@
 
         <main id="main" class="main">
             <!-- Loading -->
-            <!-- <div class="loader loader">
+            <div class="loader loader">
                 <div class="loading">
                     <img src="img/loading.gif" width="200px" height="auto">
                 </div>
-            </div> -->
+            </div>
             <!-- ENd Loading -->
             <section>
                 <?php  
@@ -300,7 +300,7 @@
                             <div class="col-md-10">
                                 <div class="d-flex justify-content-start flex-wrap mt-3">
                                     <div class="p-1">
-                                        <a href="invoice-komplain.php?date_range=weekly" class="btn btn-warning">
+                                        <a href="invoice-komplain.php?date_range=year" class="btn btn-warning">
                                             <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                         </a>
                                     </div>

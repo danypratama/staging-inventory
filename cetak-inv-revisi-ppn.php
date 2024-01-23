@@ -8,10 +8,19 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/style-inv-ppn.css">
     <style>
+          .center-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .centered-div {
+            width: 30%;
+            margin: 0 auto; /* Ini membuat elemen berada di tengah dengan margin otomatis */
+        }
         .print-button-new {
             display: inline-block;
             padding: 8px 16px; /* Sesuaikan dengan kebutuhan Anda */
@@ -33,7 +42,7 @@
         /* Style untuk elemen select */
         .form-select {
         display: block;
-        width: 30%;
+        width: 100%;
         padding: 0.375rem 0.75rem;
         font-size: 1rem;
         font-weight: 400;
@@ -103,18 +112,83 @@
     $tgl_tempo_format = $day . ' ' . $bulan[$month] . ' ' . $year;
 
     ?>
-    <div style="text-align: center;">
-        <button id="printButton" class="print-button">
-            <i class="fas fa-print"></i> Print
-        </button>
-    </div>
-    <br>
+      <div style="text-align: center;">
+            <button id="printButton" class="print-button-new">
+                <i class="fas fa-print"></i> Print
+            </button>
+            <?php 
+                $id = $_GET['id_komplain'];
+            
+            ?>
+
+            <a href="detail-komplain-revisi-ppn.php?id=<?php echo($id) ?>" style="text-decoration: none;" class="print-button-new" id="printButton"><i class="fas fa-arrow-left"></i> Halaman Sebelumnya</a>
+        </div>
+        <div class="center-container">
+            <div class="centered-div">
+                <?php
+                    // Inisialisasi variabel $selectedOption
+                    $selectedOption = isset($_POST['selectedOption']) ? $_POST['selectedOption'] : '';
+                ?>
+                <form method="post" action="" id="printButton">
+                    <select class="form-select" name="selectedOption" onchange="this.form.submit()" style="text-align: center;">
+                        <option value="" <?php echo empty($selectedOption) ? 'selected' : ''; ?>>Pilih Nomor Invoice</option>
+                        <?php 
+                            $sql_revisi = mysqli_query($connect, "  SELECT 
+                                                                        id_inv,
+                                                                        no_inv
+                                                                    FROM (
+                                                                        SELECT 
+                                                                            ir.id_inv, 
+                                                                            COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv, '') AS no_inv
+                                                                        FROM inv_revisi AS ir
+                                                                        LEFT JOIN inv_nonppn nonppn ON ir.id_inv = nonppn.id_inv_nonppn
+                                                                        LEFT JOIN inv_ppn ppn ON ir.id_inv = ppn.id_inv_ppn
+                                                                        LEFT JOIN inv_bum bum ON ir.id_inv = bum.id_inv_bum
+                                                                        WHERE ir.id_inv = '$id_inv'
+                                                                        
+                                                                        UNION
+                                                                        
+                                                                        SELECT 
+                                                                            id_inv, 
+                                                                            no_inv_revisi
+                                                                        FROM inv_revisi
+                                                                        WHERE id_inv = '$id_inv'
+                                                                    ) AS merged_result");
+                                                                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
+                                                                            $no_inv = $data_inv_revisi['no_inv'];
+                        ?>
+                        <option value="<?php echo $no_inv ?>" <?php echo ($selectedOption == $no_inv) ? 'selected' : ''; ?>><?php echo $no_inv ?></option>
+                        <?php } ?>
+                    </select>
+                </form>
+            
+
+                <!-- PHP Code -->
+                <?php 
+                    $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
+                    $data_rev = mysqli_fetch_array($sql_rev);
+                    $total_data = mysqli_num_rows($sql_rev);
+                    // Inisialisasi $no_inv
+                    $no_inv = "";
+                    if($total_data == 0){
+                        $no_inv = $no_inv;
+                    } else {
+                        $no_inv = $data_rev['no_inv_revisi'];
+                    }
+
+                    // Periksa apakah ada data yang dikirimkan dari formulir
+                    if (isset($_POST['selectedOption'])) {
+                    $no_inv = $_POST['selectedOption'];
+                    }
+                ?>
+            </div>
+        </div>
     <div class="invoice">
         <h2 align='right'><strong>INVOICE</strong></h2>
         <div class="invoice-header">
             <div class="col-header-1">
                 <!-- Kolom pertama -->
-                <img src="assets/img/header-kma.jpg" style="width: 480px; height: 70px;">
+                <img src="assets/img/header-kma.jpg" style="width: 460px; height: 70px;">
             </div>
             <div class="col-header-2">
                 <!-- Kolom kedua -->
@@ -130,7 +204,7 @@
 
                 <div class="col-ket-in-2">
                     &nbsp;: <?php echo $tgl_inv_format ?> <br>
-                    &nbsp;: <?php echo $data['no_inv'] ?> <br>
+                    &nbsp;: <?php echo $no_inv ?> <br>
                     <?php
                     if (!empty($dateStringTempo)) {
                         $datePartsTempo = explode('/', $dateStringTempo);
@@ -202,12 +276,12 @@
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
-                        <th style="width: 200px;">Nama Produk</th>
+                        <th style="width: 300px;">Nama Produk</th>
                         <th style="width: 40px;">Qty</th>
-                        <th style="width: 80px;">Harga</th>
+                        <th style="width: 60px;">Harga</th>
                         <?php
                         if ($data['kategori_inv'] == 'Diskon') {
-                            echo '<th style="width: 40px;">Disc</th>';
+                            echo '<th style="width: 60px;">Disc</th>';
                         }
                         ?>
                         <th style="width: 80px;">Total</th>

@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/style-inv-nonppn.css">
     <style>
@@ -247,12 +247,12 @@
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
-                        <th style="width: 200px;">Nama Produk</th>
+                        <th style="width: 300px;">Nama Produk</th>
                         <th style="width: 40px;">Qty</th>
-                        <th style="width: 80px;">Harga</th>
+                        <th style="width: 60px;">Harga</th>
                         <?php
                         if ($data['kategori_inv'] == 'Diskon') {
-                            echo '<th style="width: 40px;">Disc</th>';
+                            echo '<th style="width: 60px;">Disc</th>';
                         }
                         ?>
                         <th style="width: 80px;">Total</th>

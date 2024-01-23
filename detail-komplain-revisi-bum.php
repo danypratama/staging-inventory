@@ -118,7 +118,7 @@
                 <!-- END SWEET ALERT -->
                 <?php  
                     $id = base64_decode($_GET['id']);
-                    include "query/detail-komplain-ppn.php";
+                    include "query/detail-komplain-bum.php";
                     $id_inv = $data_kondisi['id_inv'];
                     $no_inv = $data_detail['no_inv'];
                     $alamat = $data_detail['alamat'];
@@ -128,7 +128,7 @@
                     $inv_id = substr($id_inv_substr, 0, 3);
                     $jenis_inv = "";
                     if ($inv_id == "NON"){
-                        $jenis_inv = "nonppn";
+                        $jenis_inv = "bum";
                     } else if ($inv_id == "PPN"){
                         $jenis_inv = "ppn";
                     } else if ($inv_id == "BUM"){
@@ -139,12 +139,12 @@
 
                     // query untuk cek no invoice
                     $cek_no_inv = mysqli_query($connect,"   SELECT 
-                                                                ppn.id_inv_ppn AS id_inv,
+                                                                bum.id_inv_bum AS id_inv,
                                                                 max(rev.no_inv_revisi) AS no_inv_revisi
                                                             FROM inv_revisi AS rev
                                                             LEFT JOIN inv_komplain ik ON rev.id_inv = ik.id_inv
-                                                            LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
-                                                            WHERE '$id_inv' IN (ppn.id_inv_ppn) GROUP BY id_inv
+                                                            LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
+                                                            WHERE '$id_inv' IN (bum.id_inv_bum) GROUP BY id_inv
                                               ");
                     $total_row_rev = mysqli_num_rows($cek_no_inv);
                     $data_inv_rev = mysqli_fetch_array($cek_no_inv);
@@ -519,7 +519,7 @@
                             <!-- Default Tabs -->
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a href="detail-komplain-ppn.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Original</a>
+                                    <a href="detail-komplain-bum.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Original</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a href="#" class="nav-link active">Revisi</a>
@@ -573,14 +573,14 @@
                                         if($total_data != '0'){
                                             ?>
                                                 <div class="p-2 text-start">
-                                                    <a href="cetak-inv-revisi-ppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                    <a href="cetak-inv-revisi-bum.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
                                                         <i></i> Cetak Invoice Revisi PPN
                                                     </a> 
-                                                </div>       
+                                                </div>   
                                             <?php
                                         }
                                     
-                                    ?>                                                      
+                                    ?>                             
                                 </div>
                                 <div class="table-responsive p-3">
                                     <table class="table table-bordered table-striped" id="table2">
@@ -628,7 +628,7 @@
                                                             $data_status_refund = mysqli_fetch_array($sql_komplain);
                                                             if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 0){
                                                                 ?>
-                                                                    <a href="proses/produk-tmp-revisi-ppn.php?hapus_tmp=<?php echo base64_encode($id_tmp) ?>&&id_komplain=<?php echo base64_encode($id_komplain) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                                    <a href="proses/produk-tmp-revisi-bum.php?hapus_tmp=<?php echo base64_encode($id_tmp) ?>&&id_komplain=<?php echo base64_encode($id_komplain) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                                                 <?php
                                                             } else if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
                                                                 ?>
@@ -649,7 +649,7 @@
                                 <?php
                                     $no = 1;
                                     $sql = "SELECT DISTINCT
-                                                ppn.id_inv_ppn AS id_inv,
+                                                bum.id_inv_bum AS id_inv,
                                                 STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                                                 ik.id_komplain,
                                                 tpk.id_tmp,
@@ -663,14 +663,14 @@
                                                 spr.stock,
                                                 COALESCE(mr_produk.nama_merk, mr_set.nama_merk) AS merk
                                             FROM inv_komplain AS ik 
-                                            LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
-                                            LEFT JOIN tmp_produk_komplain tpk ON ppn.id_inv_ppn = tpk.id_inv
+                                            LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
+                                            LEFT JOIN tmp_produk_komplain tpk ON bum.id_inv_bum = tpk.id_inv
                                             LEFT JOIN stock_produk_reguler spr ON tpk.id_produk = spr.id_produk_reg
                                             LEFT JOIN tb_produk_reguler pr ON tpk.id_produk = pr.id_produk_reg
                                             LEFT JOIN tb_produk_set_marwa tpsm ON tpk.id_produk = tpsm.id_set_marwa
                                             LEFT JOIN tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                             LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                            WHERE (ppn.id_inv_ppn = '$id_inv') AND tpk.status_tmp = '0'";
+                                            WHERE (bum.id_inv_bum = '$id_inv') AND tpk.status_tmp = '0'";
                                     $query = mysqli_query($connect, $sql);
                                     $totalRows = mysqli_num_rows($query);
                                     if ($totalRows != 0) {
@@ -719,7 +719,7 @@
                                         // $uuid = generate_uuid();
                                         $isEmpty = false; // Setel variabel pengecekan menjadi false jika ada data
                                     ?>
-                                    <form action="proses/produk-tmp-revisi-ppn.php" method="POST" enctype="multipart/form-data">
+                                    <form action="proses/produk-tmp-revisi-bum.php" method="POST" enctype="multipart/form-data">
                                         <div class="card-body p-2">
                                             <div class="row p-1">
                                                 <div class="col-sm-1 mb-2">
@@ -758,7 +758,7 @@
                                                     <input type="text" class="form-control text-end mobile-text" name="disc[]" oninput="validasiDiskon(this)" required>
                                                 </div>
                                                 <div class="col-sm-1 mb-2 text-center">
-                                                    <a href="proses/produk-tmp-revisi-ppn.php?hapus_tmp=<?php echo base64_encode($data['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                    <a href="proses/produk-tmp-revisi-bum.php?hapus_tmp=<?php echo base64_encode($data['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -1266,7 +1266,7 @@
                                             <td class="text-end text-nowrap"><?php echo $data_refund['disc'] ?></td>
                                             <td class="text-end text-nowrap"><?php echo number_format($harga_final) ?></td>
                                             <td class="text-center text-nowrap">
-                                                <a href="proses/produk-tmp-revisi-ppn.php?batal_refund=<?php echo base64_encode($data_refund['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm">Batal Refund</a>
+                                                <a href="proses/produk-tmp-revisi-bum.php?batal_refund=<?php echo base64_encode($data_refund['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm">Batal Refund</a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>
@@ -1394,7 +1394,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <form action="proses/produk-tmp-revisi-ppn.php" method="POST" enctype="multipart/form-data">
+        <form action="proses/produk-tmp-revisi-bum.php" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <p>
                     Pilih jenis hapus untuk barang ini: <br>
@@ -1424,7 +1424,7 @@
                 <h5>Edit Produk Revisi</h5>
             </div>
             <div class="modal-body">
-                <form action="proses/produk-tmp-revisi-ppn.php" method="POST" enctype="multipart/form-data">
+                <form action="proses/produk-tmp-revisi-bum.php" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_tmp" id="id_tmp">
                     <input type="hidden" name="id_produk" id="id_produk">
                     <input type="hidden" name="id_komplain" value="<?php echo $id ?>">

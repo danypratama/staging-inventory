@@ -37,7 +37,7 @@ body {
 }
 
 .col-header-2 {
-  grid-column: 4;
+  grid-column: 4 / span 4; /* Memperpanjang ukuran menjadi span 4 */
   border: 1px solid Black;
   padding: 0.3cm;
   display: flex;

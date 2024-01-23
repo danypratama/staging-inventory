@@ -61,7 +61,7 @@
             <section>
                 <?php  
                     $id = base64_decode($_GET['id']);
-                    include "query/detail-komplain-nonppn.php";
+                    include "query/detail-komplain-bum.php";
                     $id_inv = $data_kondisi['id_inv'];
                 ?>
                 <div class="card p-2">     
@@ -300,7 +300,7 @@
                             <div class="col-md-10">
                                 <div class="d-flex justify-content-start flex-wrap mt-3">
                                     <div class="p-1">
-                                        <a href="invoice-komplain.php?date_range=weekly" class="btn btn-warning">
+                                        <a href="invoice-komplain.php?date_range=year" class="btn btn-warning">
                                             <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                         </a>
                                     </div>
@@ -327,7 +327,7 @@
                                 <a href="#" class="nav-link active">Original</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a href="detail-komplain-revisi-nonppn.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Revisi</a>
+                                <a href="detail-komplain-revisi-bum.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Revisi</a>
                             </li>
                         </ul>
                         <div class="tab-content pt-2" id="myTabContent">

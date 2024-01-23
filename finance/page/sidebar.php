@@ -73,7 +73,7 @@
 
     <!-- Data Customer -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'list-cs') { echo 'active-link'; } ?>" href="finance-customer.php?date_range=weekly">
+      <a class="nav-link <?php if ($page == 'list-cs') { echo 'active-link'; } ?>" href="finance-customer.php?date_range=monthly">
         <i class="bi bi-cash-stack"></i><span>Transaksi Customer</span>
       </a>
     </li>

@@ -89,18 +89,18 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
   <div id="content">
     <main id="main" class="main">
       <!-- Loading -->
-      <!-- <div class="loader loader">
+      <div class="loader loader">
         <div class="loading">
           <img src="img/loading.gif" width="200px" height="auto">
         </div>
-      </div> -->
+      </div>
       <!-- End Loading -->
       <div class="pagetitle">
         <h1>Data Invoice</h1>
         <nav>
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-            <li class="breadcrumb-item active">Invoice Non PPN</li>
+            <li class="breadcrumb-item active">Invoice</li>
           </ol>
         </nav>
       </div><!-- End Page Title -->
