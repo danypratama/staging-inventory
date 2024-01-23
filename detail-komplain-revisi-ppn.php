@@ -588,9 +588,9 @@
                                             <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center text-nowrap p-3">No</th>
                                                 <th class="text-center text-nowrap p-3">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3">Satuan</th>
                                                 <th class="text-center text-nowrap p-3">Merk</th>
                                                 <th class="text-center text-nowrap p-3">Qty Order</th>
+                                                <th class="text-center text-nowrap p-3">Satuan</th>
                                                 <th class="text-center text-nowrap p-3">Harga</th>
                                                 <th class="text-center text-nowrap p-3">Diskon</th>
                                                 <th class="text-center text-nowrap p-3">Total</th>
@@ -611,9 +611,9 @@
                                             <tr>
                                                 <td class="text-center text-nowrap"><?php echo $no ?></td>
                                                 <td class="text-nowrap"><?php echo $data_tmp['nama_produk'] ?></td>
-                                                <td class="text-center text-nowrap"><?php echo $satuan ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $data_tmp['merk'] ?></td>
                                                 <td class="text-center text-nowrap"><?php echo number_format($data_tmp['qty']) ?></td>
+                                                <td class="text-center text-nowrap"><?php echo $satuan ?></td>
                                                 <td class="text-end text-nowrap"><?php echo number_format($data_tmp['harga']) ?></td>
                                                 <td class="text-end text-nowrap"><?php echo $data_tmp['disc'] ?></td>
                                                 <td class="text-end text-nowrap"><?php echo number_format($harga_final) ?></td>

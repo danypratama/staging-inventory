@@ -339,11 +339,18 @@
                                                 <th class="text-center text-nowrap p-3">No</th>
                                                 <th class="text-center text-nowrap p-3">No.SPK</th>
                                                 <th class="text-center text-nowrap p-3">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3">Satuan</th>
                                                 <th class="text-center text-nowrap p-3">Merk</th>
                                                 <th class="text-center text-nowrap p-3">Qty Order</th>
+                                                <th class="text-center text-nowrap p-3">Satuan</th>
                                                 <th class="text-center text-nowrap p-3">Harga</th>
-                                                <th class="text-center text-nowrap p-3">Diskon</th>
+                                                <?php  
+                                                    if($data_detail['kategori_inv'] == 'diskon'){
+                                                        ?>
+                                                            <th class="text-center text-nowrap p-3">Diskon</th>
+                                                        <?php
+                                                    }
+                                                
+                                                ?>
                                                 <th class="text-center text-nowrap p-3">Total</th>
                                             </tr>
                                         </thead>
@@ -361,11 +368,18 @@
                                                 <td class="text-center text-nowrap"><?php echo $no ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $data['no_spk'] ?></td>
                                                 <td class="text-nowrap"><?php echo $data['nama_produk_spk'] ?></td>
-                                                <td class="text-center text-nowrap"><?php echo $satuan ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $data['merk'] ?></td>
                                                 <td class="text-center text-nowrap"><?php echo $data['qty'] ?></td>
+                                                <td class="text-center text-nowrap"><?php echo $satuan ?></td>
                                                 <td class="text-end text-nowrap"><?php echo number_format($data['harga']) ?></td>
-                                                <td class="text-end text-nowrap"><?php echo $data['disc'] ?></td>
+                                                <?php  
+                                                    if($data_detail['kategori_inv'] == 'diskon'){
+                                                        ?>
+                                                            <td class="text-end text-nowrap"><?php echo $data['disc'] ?></td>
+                                                        <?php
+                                                    }
+                                                
+                                                ?>
                                                 <td class="text-end text-nowrap"><?php echo number_format($harga_final) ?></td>
                                             </tr>
                                             <?php $no++ ?>
