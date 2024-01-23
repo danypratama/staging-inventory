@@ -74,44 +74,6 @@
     $sort_option = "STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') BETWEEN STR_TO_DATE('$format_dt1', '%d/%m/%Y') AND STR_TO_DATE('$format_dt2', '%d/%m/%Y')";
     // Lakukan sesuatu dengan $sort_option, misalnya memproses data dari database
     }
-
-    // $status = isset($_GET['status']) ? $_GET['status'] : ''; // Periksa apakah status ada dalam query string
-
-// $sql = "SELECT
-//             id_inv,
-//             cs_inv,
-//             no_inv,
-//             tanggal,
-//             no_komplain,
-//             kat_komplain,
-//             kondisi_pesanan,
-//             status_retur,
-//             status_refund,
-//             total_komplain_aktif,
-//             total_komplain_selesai,
-//             total_komplain,
-//             status_komplain
-//         FROM (
-//             SELECT
-//                 COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
-//                 COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
-//                 COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
-//                 STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
-//                 ik.no_komplain,
-//                 ik.kat_komplain,
-//                 ik.kondisi_pesanan,
-//                 ik.status_retur,
-//                 ik.status_refund,
-//                 COUNT(CASE WHEN ik.status_komplain = '0' THEN 1 ELSE NULL END) AS total_komplain_aktif,
-//                 COUNT(CASE WHEN ik.status_komplain = '1' THEN 1 ELSE NULL END) AS total_komplain_selesai,
-//                 COUNT(ik.status_komplain) AS total_komplain,
-//                 ik.status_komplain
-//             FROM inv_komplain AS ik
-//             LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
-//             LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
-//             LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
-//             WHERE $sort_option AND ik.tgl_komplain IS NOT NULL";
-
 $sql = "SELECT
             COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
             COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
