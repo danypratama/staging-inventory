@@ -329,6 +329,7 @@
                                 GROUP BY trx.id_produk
                                 ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
+		    var_dump($sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
                         $total_inv = $data_trx['total_inv'];
