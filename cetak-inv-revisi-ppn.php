@@ -329,7 +329,7 @@
                                 LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
                                 WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
-                                GROUP BY trx.id_produk
+                              
                                 ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     var_dump($trx_produk_reg);
