@@ -139,11 +139,9 @@
                                                                     FROM (
                                                                         SELECT 
                                                                             ir.id_inv, 
-                                                                            COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv, '') AS no_inv
+                                                                           ppn.no_inv AS no_inv
                                                                         FROM inv_revisi AS ir
-                                                                        LEFT JOIN inv_nonppn nonppn ON ir.id_inv = nonppn.id_inv_nonppn
                                                                         LEFT JOIN inv_ppn ppn ON ir.id_inv = ppn.id_inv_ppn
-                                                                        LEFT JOIN inv_bum bum ON ir.id_inv = bum.id_inv_bum
                                                                         WHERE ir.id_inv = '$id_inv'
                                                                         
                                                                         UNION
@@ -165,7 +163,7 @@
 
                 <!-- PHP Code -->
                 <?php 
-                    $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
+                    $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv'");
                     $data_rev = mysqli_fetch_array($sql_rev);
                     $total_data = mysqli_num_rows($sql_rev);
                     // Inisialisasi $no_inv
