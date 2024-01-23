@@ -350,70 +350,59 @@ include "function/class-spk.php";
                         <div class="row">
                             <div class="col-md-10">
                                 <div class="text-start">
-                                    <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail mb-2">
-                                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                                    </a>
-                                    <?php
-                                        $id_inv_ppn = base64_decode($_GET['id']);
-                                        $sql_cek = "SELECT 
-                                                    ppn.id_inv_ppn, kategori_inv,
-                                                    sr.id_inv, sr.no_spk,
-                                                    trx.status_trx 
-                                                    FROM inv_ppn AS ppn
-                                                    JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                                    JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                    WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
-                                        $query_cek = mysqli_query($connect, $sql_cek);
-                                        $data_cek = mysqli_fetch_array($query_cek);
-                                        $total_data = mysqli_num_rows($query_cek);
-                                    ?>
-                                    <?php 
-                                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
-                                            ?>
-                                                <button class="btn btn-info btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#ubahKat">
-                                                    <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
-                                                </button>
-                                                <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
-                                                    <i class="bi bi-plus-circle"></i> Tambah SPK
-                                                </a>
-                                                <?php
-                                                if ($kat_inv == 'Spesial Diskon') {
-                                                    echo '
-                                                        <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
-                                                }
+                                        <a href="invoice-reguler.php?sort=baru" class="btn btn-warning btn-detail mb-2">
+                                            <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                                        </a>
+                                        <?php
+                                            $id_inv_ppn = base64_decode($_GET['id']);
+                                            $sql_cek = "SELECT 
+                                                            ppn.id_inv_ppn, kategori_inv,
+                                                            sr.id_inv, sr.no_spk,
+                                                            trx.status_trx 
+                                                        FROM inv_ppn AS ppn
+                                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                        WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
+                                            $query_cek = mysqli_query($connect, $sql_cek);
+                                            $data_cek = mysqli_fetch_array($query_cek);
+                                            $total_data = mysqli_num_rows($query_cek);
+                                        ?>
+                                        <?php 
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Admin Penjualan") {
                                                 ?>
-                                                <?php
-                                                // Eksekusi query SQL
-                                                $result = mysqli_query($connect, "SELECT 
-                                                                        ppn.id_inv_ppn,
-                                                                        trx.status_trx
-                                                                        FROM inv_ppn AS ppn
-                                                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                                        WHERE ppn.id_inv_ppn = '$id_inv_ppn'  ORDER BY no_spk ASC");
-                                                $tombolDitampilkan = false;
-                                                // Inisialisasi variabel untuk status kosong
-                                                while ($row = mysqli_fetch_array($result)) {
-                                                    $status_trx = $row['status_trx'];
-                                                ?>
+                                                    <button class="btn btn-info btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#ubahKat">
+                                                        <i class="bi bi-arrow-left-right"></i> Ubah Kategori Invoice
+                                                    </button>
+                                                    <a href="#" class="btn btn-primary btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#addSpk">
+                                                        <i class="bi bi-plus-circle"></i> Tambah SPK
+                                                    </a>
                                                     <?php
-                                                    if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
+                                                    if ($kat_inv == 'Spesial Diskon') {
+                                                        echo '
+                                                            <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
+                                                    }
+                                                    $sql_cek2 = "SELECT 
+                                                                    ppn.id_inv_ppn, kategori_inv,
+                                                                    sr.id_inv, sr.no_spk,
+                                                                    trx.status_trx 
+                                                                FROM inv_ppn AS ppn
+                                                                JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                                                JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                                WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '0' ORDER BY no_spk ASC";
+                                                    $query_cek2 = mysqli_query($connect, $sql_cek2);
+                                                    $data_cek2 = mysqli_fetch_array($query_cek2);
+                                                    $total_data2 = mysqli_num_rows($query_cek2);
+                                                    if ($total_data2 == 0) {
                                                         echo ' 
                                                                 <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Dikirim">
                                                                     <i class="bi bi-send"></i> Proses Dikirim
                                                                 </button> 
                                                                 ';
-
-                                                        // Set variabel $tombolDitampilkan menjadi true
-                                                        $tombolDitampilkan = true;
                                                     }
-                                                    ?>
-                                                <?php } ?>
-                                            <?php
-                                        }
-                                    ?>
+                                            }
+                                        ?>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="col-md-2">
                                 <div class="text-end">
                                     <?php  

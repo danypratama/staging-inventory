@@ -276,7 +276,9 @@ include 'function/class-komplain.php';
                                 $no = 1;
                                 
                                 while($data = mysqli_fetch_array($query)){
-                                    $id_komplain = $data['id_komplain']
+                                    $id_komplain = $data['id_komplain'];
+                                    $id_inv = $data['id_inv'];
+                                    $id_inv_substr = substr($id_inv, 0, 3);
                             ?>
                             <tr>
                                 <td class="text-center text-nowrap"><?php echo $no; ?></td>
@@ -304,7 +306,24 @@ include 'function/class-komplain.php';
                                     ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="detail-komplain.php?id=<?php echo base64_encode($id_komplain) ?>" class="btn btn-primary btn-sm" title="Detail"><i class="bi bi-eye"></i></a>
+                                    <?php  
+                                        if ($id_inv_substr == 'NON') {
+                                            ?>
+                                                <a href="detail-komplain-nonppn.php?id=<?php echo base64_encode($id_komplain) ?>" class="btn btn-primary btn-sm" title="Detail"><i class="bi bi-eye"></i></a>
+                                            <?php
+                                        } else  if ($id_inv_substr == 'PPN') {
+                                            ?>
+                                                <a href="detail-komplain-ppn.php?id=<?php echo base64_encode($id_komplain) ?>" class="btn btn-primary btn-sm" title="Detail"><i class="bi bi-eye"></i></a>
+                                            <?php
+                                        }  if ($id_inv_substr == 'BUM'){
+                                            ?>
+                                                <a href="detail-komplain-bum.php?id=<?php echo base64_encode($id_komplain) ?>" class="btn btn-primary btn-sm" title="Detail"><i class="bi bi-eye"></i></a>
+                                            <?php
+                                        }
+
+
+                                    
+                                    ?>
                                 </td>
                             </tr>
                             <?php $no++ ?>

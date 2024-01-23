@@ -62,7 +62,7 @@ include "akses.php";
                 <div class="card">
                     <div class="card-body p-3">
                         <?php  
-                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Gudang") { 
                                 ?>
                                     <a href="input-set-in-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data</a>
                                 <?php
@@ -78,7 +78,7 @@ include "akses.php";
                                         <td class="text-center p-3" style="width: 100px">Merk</td>
                                         <td class="text-center p-3" style="width: 80px">Qty</td>
                                         <?php  
-                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Gudang") { 
                                                 ?>
                                                     <td class="text-center p-3" style="width: 100px">Aksi</td>
                                                 <?php

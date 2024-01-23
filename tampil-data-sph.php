@@ -355,13 +355,19 @@
                     <a href="sph.php" class="btn btn-warning btn-detail mb-3 me-2">
                         <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                     </a>
-                    <button class="btn btn-primary btn-detail mb-3 me-2" data-sph="<?php echo  $id_sph_decode ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
-                        <i class="bi bi-plus-circle"></i> Tambah Produk
-                    </button>
-                
-                    <a class="btn btn-secondary btn-detail mb-3 me-2" href="cetak-sph.php?id=<?php echo base64_encode($id_sph) ?>">
-                        <i class="bi bi-plus-circle"></i> Cetak SPH 
-                    </a>       
+                    <?php  
+                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan" ) { 
+                            ?>
+                                <button class="btn btn-primary btn-detail mb-3 me-2" data-sph="<?php echo  $id_sph_decode ?>" data-bs-toggle="modal" data-bs-target="#modalBarang">
+                                    <i class="bi bi-plus-circle"></i> Tambah Produk
+                                </button>
+                            
+                                <a class="btn btn-secondary btn-detail mb-3 me-2" href="cetak-sph.php?id=<?php echo base64_encode($id_sph) ?>">
+                                    <i class="bi bi-plus-circle"></i> Cetak SPH 
+                                </a>       
+                            <?php
+                        }
+                    ?>
                 </div>
             </div>
             <div class="card-body p-2">
@@ -398,7 +404,7 @@
                             $totalRows = mysqli_num_rows($query_sph);
 
                             if ($totalRows != 0) {
-                                echo '
+                                ?>
                                     <thead>
                                         <tr class="text-white" style="background-color: navy">
                                             <td class="text-center text-nowrap p-3">No</td>
@@ -407,31 +413,46 @@
                                             <td class="text-center text-nowrap p-3">Satuan</td>
                                             <td class="text-center text-nowrap p-3">Harga</td>
                                             <td class="text-center text-nowrap p-3">Qty</td>
-                                            <td class="text-center text-nowrap p-3">Aksi</td>
+                                            <?php  
+                                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan" ) { 
+                                                    ?>
+                                                        <td class="text-center text-nowrap p-3">Aksi</td>
+                                                    <?php
+                                                }
+                                            ?>  
                                         </tr>
                                     </thead>
-                                    <tbody>';
-                                
-                                while ($data_sph = mysqli_fetch_array($query_sph)) {
-                                    $id_produk = $data_sph['id_produk'];
-                                    $id_produk_substr = substr($id_produk, 0, 2);
-                                    echo '
-                                        <tr>
-                                            <td class="text-center text-nowrap">' . $no . '</td>
-                                            <td class="text-nowrap">' . $data_sph['nama_produk'] . '</td>
-                                            <td class="text-center text-nowrap">' . $data_sph['merk_produk'] . '</td>
-                                            <td class="text-center text-nowrap">' . ($id_produk_substr == 'BR' ? "Pcs" : "Set") . '</td>
-                                            <td class="text-end text-nowrap">' . number_format($data_sph['harga_produk'],0,'.','.') . '</td>
-                                            <td class="text-end text-nowrap">' . $data_sph['qty'] . '</td>
-                                            <td class="text-center text-nowrap">
-                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editProduk" data-id="'.$data_sph['id_transaksi'].'" data-nama="'.$data_sph['nama_produk'].'" data-merk="'.$data_sph['merk_produk'].'" data-harga="'.$data_sph['harga_produk'].'" data-stock="'.number_format($data_sph['stock']).'" data-qty="'.$data_sph['qty'].'" title="edit-data"><i class="bi bi-pencil"></i></button>
-                                                <a href="proses/proses-sph.php?hapus='. base64_encode($data_sph['id_transaksi']) .' && id_sph= '. base64_encode($data_sph['id_sph']) .'" class="btn btn-danger btn-sm delete-data" title="Hapus Data"><i class="bi bi-trash"></i> 
-                                             </td>
-                                        </tr>';
-                                    $no++;
-                                }
-                                echo '</tbody>';
-                            } 
+                                    <tbody>
+                                    <?php
+                                        while ($data_sph = mysqli_fetch_array($query_sph)) {
+                                            $id_produk = $data_sph['id_produk'];
+                                            $id_produk_substr = substr($id_produk, 0, 2);
+                                        ?>
+                                                <tr>
+                                                    <td class="text-center text-nowrap"><?php echo $no ?></td>
+                                                    <td class="text-nowrap"><?php echo $data_sph['nama_produk'] ?></td>
+                                                    <td class="text-center text-nowrap"><?php echo $data_sph['merk_produk']?></td>
+                                                    <td class="text-center text-nowrap"><?php ($id_produk_substr == 'BR' ? "Pcs" : "Set")?></td>
+                                                    <td class="text-end text-nowrap"><?php echo number_format($data_sph['harga_produk'],0,'.','.')?></td>
+                                                    <td class="text-end text-nowrap"><?php echo $data_sph['qty']?></td>
+                                                    <?php  
+                                                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan" ) { 
+                                                            ?>
+                                                                <td class="text-center text-nowrap">
+                                                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editProduk" data-id="'.$data_sph['id_transaksi'].'" data-nama="'.$data_sph['nama_produk'].'" data-merk="'.$data_sph['merk_produk'].'" data-harga="'.$data_sph['harga_produk'].'" data-stock="'.number_format($data_sph['stock']).'" data-qty="'.$data_sph['qty'].'" title="edit-data"><i class="bi bi-pencil"></i></button>
+                                                                    <a href="proses/proses-sph.php?hapus='. base64_encode($data_sph['id_transaksi']) .' && id_sph= '. base64_encode($data_sph['id_sph']) .'" class="btn btn-danger btn-sm delete-data" title="Hapus Data"><i class="bi bi-trash"></i> 
+                                                                </td>
+                                                            <?php
+                                                        }
+                                                    ?>  
+                                                </tr>
+                                        
+                                            <?php $no++; ?>
+                                       <?php } ?>
+                                     
+                                    </tbody>
+                                <?php
+                            }
                         ?>
                     </table>
                 </div>

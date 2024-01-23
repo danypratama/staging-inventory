@@ -52,8 +52,14 @@ include "akses.php";
                 <div class="card">
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Keluar Reguler</h5>
-                        <a href="input-br-out-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i>
-                            Tambah Data</a>
+                        <?php  
+                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                ?>
+                                    <a href="input-br-out-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i>
+                                    Tambah Data</a>
+                                <?php
+                            }
+                        ?>
                         <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i
                                 class="bi bi-arrow-left"></i> Kembali</a>
                         <div class="table-responsive pt-3">

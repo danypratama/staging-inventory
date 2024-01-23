@@ -362,9 +362,9 @@ include "function/class-spk.php";
                                     <?php
                                         $id_inv_bum = base64_decode($_GET['id']);
                                         $sql_cek = "SELECT 
-                                                    bum.id_inv_bum, kategori_inv,
-                                                    sr.id_inv, sr.no_spk,
-                                                    trx.status_trx 
+                                                        bum.id_inv_bum, kategori_inv,
+                                                        sr.id_inv, sr.no_spk,
+                                                        trx.status_trx 
                                                     FROM inv_bum AS bum
                                                     JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
                                                     JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
@@ -387,35 +387,24 @@ include "function/class-spk.php";
                                                     echo '
                                                         <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#inputSpdisc"><i class="bi bi-percent"></i> Spesial Diskon</button>';
                                                 }
-                                                ?>
-                                                <?php
-                                                // Eksekusi query SQL
-                                                $result = mysqli_query($connect, "SELECT 
-                                                                        bum.id_inv_bum,
-                                                                        trx.status_trx
-                                                                        FROM inv_bum AS bum
-                                                                        JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
-                                                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                                                        WHERE bum.id_inv_bum = '$id_inv_bum'  ORDER BY no_spk ASC");
-                                                $tombolDitampilkan = false;
-                                                // Inisialisasi variabel untuk status kosong
-                                                while ($row = mysqli_fetch_array($result)) {
-                                                    $status_trx = $row['status_trx'];
-                                                ?>
-                                                    <?php
-                                                    if ($total_data != 0 && $status_trx != 0 && !$tombolDitampilkan) {
-                                                        echo ' 
-                                                                <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Dikirim">
-                                                                    <i class="bi bi-send"></i> Proses Dikirim
-                                                                </button> 
-                                                                ';
-
-                                                        // Set variabel $tombolDitampilkan menjadi true
-                                                        $tombolDitampilkan = true;
-                                                    }
-                                                    ?>
-                                                <?php } ?>
-                                            <?php
+                                                $sql_cek2 = "SELECT 
+                                                                bum.id_inv_bum, kategori_inv,
+                                                                sr.id_inv, sr.no_spk,
+                                                                trx.status_trx 
+                                                            FROM inv_bum AS bum
+                                                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
+                                                            JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                                            WHERE bum.id_inv_bum = '$id_inv_bum' AND status_trx = '0' ORDER BY no_spk ASC";
+                                                $query_cek2 = mysqli_query($connect, $sql_cek2);
+                                                $data_cek2 = mysqli_fetch_array($query_cek2);
+                                                $total_data2 = mysqli_num_rows($query_cek2);
+                                                if ($total_data2 == 0) {
+                                                    echo ' 
+                                                            <button class="btn btn-warning btn-detail mb-2" data-bs-toggle="modal" data-bs-target="#Dikirim">
+                                                                <i class="bi bi-send"></i> Proses Dikirim
+                                                            </button> 
+                                                            ';
+                                                }
                                         }
                                     ?>
                                 </div>
@@ -930,23 +919,6 @@ include "function/class-spk.php";
                                 <label id="labelDate">Tanggal Kirim</label>
                                 <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
                             </div>
-                            <!-- <div class="mb-3">
-                                <label id="labelBukti1" style="display: none;">Bukti Terima 1</label>
-                                <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)" style="display: none;">
-                            </div>
-                            <div class="mb-3 preview-image" id="imagePreview" style="display: none;"></div>
-
-                            <div class="mb-3">
-                                <label id="labelBukti2" style="display: none;">Bukti Terima 2</label>
-                                <input type="file" name="fileku2" id="fileku2" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage2(event)" style="display: none;">
-                            </div>
-                            <div class="mb-3" id="imagePreview2" style="display: none;"></div>
-                            
-                            <div class="mb-3">
-                                <label id="labelBukti3" for="fileku" style="display: none;">Bukti Terima 3</label>
-                                <input type="file" name="fileku3" id="fileku3" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage3(event)" style="display: none;">
-                            </div>
-                            <div class="mb-3" id="imagePreview3" style="display: none;"></div> -->
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary" name="ubah-dikirim" id="dikirim" disabled><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDikirim"><i class="bi bi-x-circle"> Cancel</i></button>
@@ -959,14 +931,6 @@ include "function/class-spk.php";
         <!-- kode JS Dikirim -->
         <?php include "page/upload-img.php";  ?>
         <!-- kode JS Dikirim -->
-        <script>
-            // var input = document.getElementById('resi');
-
-            // input.addEventListener('input', function() {
-            //     var sanitizedValue = input.value.replace(/[^A-Za-z0-9]/g, '');
-            //     input.value = sanitizedValue;
-            // });
-        </script>
 
         <script>
             function checkFileName() {

@@ -103,11 +103,11 @@
 
         <main id="main" class="main">
             <!-- Loading -->
-            <div class="loader loader">
+            <!-- <div class="loader loader">
                 <div class="loading">
                     <img src="img/loading.gif" width="200px" height="auto">
                 </div>
-            </div>
+            </div> -->
             <!-- ENd Loading -->
             <section>
                 <!-- SWEET ALERT -->
@@ -129,7 +129,7 @@
                     $inv_id = substr($id_inv_substr, 0, 3);
                     $jenis_inv = "";
                     if ($inv_id == "NON"){
-                        $jenis_inv = "nonppn";
+                        $jenis_inv = "ppn";
                     } else if ($inv_id == "PPN"){
                         $jenis_inv = "ppn";
                     } else if ($inv_id == "BUM"){
@@ -140,12 +140,12 @@
 
                     // query untuk cek no invoice
                     $cek_no_inv = mysqli_query($connect,"   SELECT 
-                                                                nonppn.id_inv_nonppn AS id_inv,
+                                                                ppn.id_inv_ppn AS id_inv,
                                                                 max(rev.no_inv_revisi) AS no_inv_revisi
                                                             FROM inv_revisi AS rev
                                                             LEFT JOIN inv_komplain ik ON rev.id_inv = ik.id_inv
-                                                            LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
-                                                            WHERE '$id_inv' IN (nonppn.id_inv_nonppn) GROUP BY id_inv
+                                                            LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
+                                                            WHERE '$id_inv' IN (ppn.id_inv_ppn) GROUP BY id_inv
                                               ");
                     $total_row_rev = mysqli_num_rows($cek_no_inv);
                     $data_inv_rev = mysqli_fetch_array($cek_no_inv);
@@ -572,13 +572,13 @@
                                     ?>
                                     <div class="p-2 text-start">
                                         <?php  
-                                            if($jenis_inv == "nonppn") {
+                                            if($jenis_inv == "ppn") {
                                                 ?>
                                                     <?php  
                                                         if($total_data == 0){
                                                         } else {
                                                             ?>
-                                                                <a href="cetak-inv-revisi-nonppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                                <a href="cetak-inv-revisi-ppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
                                                                     <i></i> Cetak Invoice Nonppn
                                                                 </a> 
                                                             <?php
@@ -682,7 +682,7 @@
                                 <?php
                                     $no = 1;
                                     $sql = "SELECT DISTINCT
-                                                COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
+                                                COALESCE(ppn.id_inv_ppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                                                 STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                                                 ik.id_komplain,
                                                 tpk.id_tmp,
@@ -696,16 +696,16 @@
                                                 spr.stock,
                                                 COALESCE(mr_produk.nama_merk, mr_set.nama_merk) AS merk
                                             FROM inv_komplain AS ik 
-                                            LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
+                                            LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
                                             LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
                                             LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
-                                            LEFT JOIN tmp_produk_komplain tpk ON nonppn.id_inv_nonppn = tpk.id_inv OR ppn.id_inv_ppn = tpk.id_inv OR bum.id_inv_bum = tpk.id_inv
+                                            LEFT JOIN tmp_produk_komplain tpk ON ppn.id_inv_ppn = tpk.id_inv OR ppn.id_inv_ppn = tpk.id_inv OR bum.id_inv_bum = tpk.id_inv
                                             LEFT JOIN stock_produk_reguler spr ON tpk.id_produk = spr.id_produk_reg
                                             LEFT JOIN tb_produk_reguler pr ON tpk.id_produk = pr.id_produk_reg
                                             LEFT JOIN tb_produk_set_marwa tpsm ON tpk.id_produk = tpsm.id_set_marwa
                                             LEFT JOIN tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                             LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                            WHERE (nonppn.id_inv_nonppn = '$id_inv' OR ppn.id_inv_ppn = '$id_inv' OR bum.id_inv_bum = '$id_inv') AND tpk.status_tmp = '0'";
+                                            WHERE (ppn.id_inv_ppn = '$id_inv' OR ppn.id_inv_ppn = '$id_inv' OR bum.id_inv_bum = '$id_inv') AND tpk.status_tmp = '0'";
                                     $query = mysqli_query($connect, $sql);
                                     $totalRows = mysqli_num_rows($query);
                                     if ($totalRows != 0) {

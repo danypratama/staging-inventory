@@ -68,7 +68,13 @@
                 <div class="tab-content pt-2" id="borderedTabContent">
                     <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="card-body p-3">
-                            <a href="input-ganti-merk-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data</a>
+                            <?php  
+                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                    ?>
+                                        <a href="input-ganti-merk-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data</a>
+                                    <?php
+                                }
+                            ?>
                             <div class="table-responsive mt-3">
                                 <table class="table table-bordered table-striped" id="tableAwal">
                                     <thead>
