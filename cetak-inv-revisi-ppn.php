@@ -152,8 +152,9 @@
                                                                         FROM inv_revisi
                                                                         WHERE id_inv = '$id_inv'
                                                                     ) AS merged_result");
-                                                                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
-                                                                            $no_inv = $data_inv_revisi['no_inv'];
+                        var_dump($sql_revisi);
+                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
+                            $no_inv = $data_inv_revisi['no_inv'];
                         ?>
                         <option value="<?php echo $no_inv ?>" <?php echo ($selectedOption == $no_inv) ? 'selected' : ''; ?>><?php echo $no_inv ?></option>
                         <?php } ?>
@@ -166,6 +167,7 @@
                     $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv'");
                     $data_rev = mysqli_fetch_array($sql_rev);
                     $total_data = mysqli_num_rows($sql_rev);
+                    var_dump($sql_rev);
                     // Inisialisasi $no_inv
                     $no_inv = "";
                     if($total_data == 0){
