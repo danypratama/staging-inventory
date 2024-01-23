@@ -310,7 +310,7 @@
                                     trx.id_produk,
                                     trx.nama_produk AS nama_produk_rev,
                                     trx.harga,
-                                    SUM(trx.qty) AS total_qty,
+                                    trx.qty AS total_qty,
                                     trx.disc,
                                     trx.total_harga,
                                     trx.status_br_refund,
