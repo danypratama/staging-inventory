@@ -232,6 +232,7 @@
                 JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
                 WHERE ppn.id_inv_ppn = '$id_inv'";
                 $query2 = mysqli_query($connect, $sql2);
+                var_dump($sql2);
                 $rowIndex = 0;
                 $totalRows = mysqli_num_rows($query2);
                 $dataCount = 0;
@@ -329,7 +330,7 @@
                                 GROUP BY trx.id_produk
                                 ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
-		    var_dump($sql_trx);
+                    var_dump($sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
                         $total_inv = $data_trx['total_inv'];
