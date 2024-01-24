@@ -272,7 +272,7 @@
         <div class="invoice-body">
            
         </div>
-        <table class="invoice-table">
+         <table class="invoice-table">
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
@@ -300,42 +300,41 @@
                     $grand_total = 0;
                     $sub_total_spdisc = 0;
                     $sql_trx = "SELECT
-                    ppn.id_inv_ppn,
-                    ppn.kategori_inv,
-                    ppn.sp_disc,
-                    ppn.note_inv,
-                    ppn.total_inv,
-                    trx.id_produk,
-                    trx.nama_produk AS nama_produk_rev,
-                    trx.harga,
-                    trx.qty AS total_qty,
-                    trx.disc,
-                    trx.total_harga,
-                    trx.status_br_refund,
-                    trx.created_date,
-                    tpr.nama_produk,
-                    tpr.satuan,
-                    mr_produk.nama_merk AS merk_produk,
-                    tpsm.nama_set_marwa,
-                    tpsm.harga_set_marwa,
-                    mr_set.nama_merk AS merk_set
-                FROM
-                    inv_ppn AS ppn
-                LEFT JOIN
-                    tmp_produk_komplain trx ON ppn.id_inv_ppn = trx.id_inv
-                LEFT JOIN
-                    tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
-                LEFT JOIN
-                    tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
-                LEFT JOIN
-                    tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
-                LEFT JOIN
-                    tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
-                WHERE
-                    ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
-                ORDER BY
-                    trx.created_date ASC;
-                ";
+                                    ppn.id_inv_ppn,
+                                    ppn.kategori_inv,
+                                    ppn.sp_disc,
+                                    ppn.note_inv,
+                                    ppn.total_inv,
+                                    trx.id_produk,
+                                    trx.nama_produk AS nama_produk_rev,
+                                    trx.harga,
+                                    trx.qty AS total_qty,
+                                    trx.disc,
+                                    trx.total_harga,
+                                    trx.status_br_refund,
+                                    trx.created_date,
+                                    tpr.nama_produk,
+                                    tpr.satuan,
+                                    mr_produk.nama_merk AS merk_produk,
+                                    tpsm.nama_set_marwa,
+                                    tpsm.harga_set_marwa,
+                                    mr_set.nama_merk AS merk_set
+                                FROM
+                                    inv_ppn AS ppn
+                                LEFT JOIN
+                                    tmp_produk_komplain trx ON ppn.id_inv_ppn = trx.id_inv
+                                LEFT JOIN
+                                    tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
+                                LEFT JOIN
+                                    tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
+                                LEFT JOIN
+                                    tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
+                                LEFT JOIN
+                                    tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
+                                WHERE
+                                    ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
+                                ORDER BY
+                                    trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
