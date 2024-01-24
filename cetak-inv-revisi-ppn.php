@@ -116,71 +116,7 @@
             <button id="printButton" class="print-button-new">
                 <i class="fas fa-print"></i> Print
             </button>
-            <?php 
-                $id = $_GET['id_komplain'];
             
-            ?>
-
-            <a href="detail-komplain-revisi-ppn.php?id=<?php echo($id) ?>" style="text-decoration: none;" class="print-button-new" id="printButton"><i class="fas fa-arrow-left"></i> Halaman Sebelumnya</a>
-        </div>
-        <div class="center-container">
-            <div class="centered-div">
-                <?php
-                    // Inisialisasi variabel $selectedOption
-                    // $selectedOption = isset($_POST['selectedOption']) ? $_POST['selectedOption'] : '';
-                ?>
-                <!-- <form method="post" action="" id="printButton">
-                    <select class="form-select" name="selectedOption" onchange="this.form.submit()" style="text-align: center;">
-                        <option value="" <?php echo empty($selectedOption) ? 'selected' : ''; ?>>Pilih Nomor Invoice</option>
-                        <?php 
-                            $sql_revisi = mysqli_query($connect, "  SELECT 
-                                                                        id_inv,
-                                                                        no_inv
-                                                                    FROM (
-                                                                        SELECT 
-                                                                            ir.id_inv, 
-                                                                           ppn.no_inv AS no_inv
-                                                                        FROM inv_revisi AS ir
-                                                                        LEFT JOIN inv_ppn ppn ON ir.id_inv = ppn.id_inv_ppn
-                                                                        WHERE ir.id_inv = '$id_inv'
-                                                                        
-                                                                        UNION
-                                                                        
-                                                                        SELECT 
-                                                                            id_inv, 
-                                                                            no_inv_revisi
-                                                                        FROM inv_revisi
-                                                                        WHERE id_inv = '$id_inv'
-                                                                    ) AS merged_result");
-                                                                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
-                                                                            $no_inv = $data_inv_revisi['no_inv'];
-                        ?>
-                        <option value="<?php echo $no_inv ?>" <?php echo ($selectedOption == $no_inv) ? 'selected' : ''; ?>><?php echo $no_inv ?></option>
-                        <?php } ?>
-                    </select>
-                </form> -->
-            
-
-                <!-- PHP Code -->
-                <?php 
-                    $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv'");
-                    $data_rev = mysqli_fetch_array($sql_rev);
-                    $total_data = mysqli_num_rows($sql_rev);
-                    // Inisialisasi $no_inv
-                    $no_inv = "";
-                    if($total_data == 0){
-                        $no_inv = $no_inv;
-                    } else {
-                        $no_inv = $data_rev['no_inv_revisi'];
-                    }
-
-                    // Periksa apakah ada data yang dikirimkan dari formulir
-                    if (isset($_POST['selectedOption'])) {
-                    $no_inv = $_POST['selectedOption'];
-                    }
-                ?>
-            </div>
-        </div>
     <div class="invoice">
         <h2 align='right'><strong>INVOICE</strong></h2>
         <div class="invoice-header">
