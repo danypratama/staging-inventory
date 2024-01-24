@@ -365,7 +365,7 @@
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
-                            <td><?php echo $data_trx['nama_produk_rev'] ?></td>
+                            <td align="left"><?php echo $data_trx['nama_produk_rev'] ?></td>
                             <td align="right"> <?php echo number_format($data_trx['total_qty'], 0, '.', '') . ' ' . $satuan_produk; ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga'], 0, '.', '.') ?></td>
                             <?php
