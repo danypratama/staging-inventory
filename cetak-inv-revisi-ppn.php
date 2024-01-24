@@ -270,7 +270,9 @@
             </div>
         </div>
         <div class="invoice-body">
-            <table class="invoice-table">
+           
+        </div>
+        <table class="invoice-table">
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
@@ -306,7 +308,7 @@
                     trx.id_produk,
                     trx.nama_produk AS nama_produk_rev,
                     trx.harga,
-                   trx.qty AS total_qty,
+                    trx.qty AS total_qty,
                     trx.disc,
                     trx.total_harga,
                     trx.status_br_refund,
@@ -377,7 +379,6 @@
                     <?php } ?>
                 </tbody>
             </table>
-        </div>
         <div class="invoice-payment">
             <?php
             $sql_inv = mysqli_query($connect, "SELECT id_inv_ppn, sp_disc, ongkir FROM inv_ppn WHERE id_inv_ppn = '$id_ppn_decode'");
