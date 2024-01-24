@@ -53,7 +53,7 @@
             $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
             $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
             $data_role = mysqli_fetch_array($query_role);
-        ?>
+        ?> 
         <div class="card">
             <div class="card-body">
                 <!-- Bordered Tabs -->

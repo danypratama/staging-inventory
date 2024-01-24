@@ -110,6 +110,13 @@
             </div>
             <!-- ENd Loading -->
             <section>
+                <?php  
+                    include "koneksi.php";
+                    $id_role = $_SESSION['tiket_role'];
+                    $sql_role = "SELECT * FROM user_role WHERE id_user_role='$id_role'";
+                    $query_role = mysqli_query($connect, $sql) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                ?>
                 <!-- SWEET ALERT -->
                 <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
                                                             echo $_SESSION['info'];
@@ -526,62 +533,68 @@
                                 </li>
                             </ul>
                             <div class="card p-3">
-                                <div class="d-flex justify-content-start mb-3 flex-wrap">
-                                    <?php  
-                                        if($status_kmpl == '0') {
-                                            ?> 
-                                                <div class="p-2" id="edit" style="display: block;">
-                                                    <button type="button" class="btn btn-warning" id="edit-button">
-                                                        <i class="bi bi-pencil"></i> Edit Data Produk
-                                                    </button>            
-                                                </div>   
-                                            <?php 
-                                        }
-                                    ?>
-                                    <div class="p-2" id="selesai-edit" style="display: none;">
-                                        <button type="button" class="btn btn-warning" id="selesai-edit-button">
-                                            <i class="bi bi-pencil"></i> Selesai Edit
-                                        </button>            
-                                    </div>    
-                                    <div class="p-2">
-                                        <button type="button" class="btn btn-primary tambahData" data-inv="<?php echo $id_inv ?>" data-bs-toggle="modal" data-bs-target="#tambahData" style="display: none;">
-                                            <i class="bi bi-plus-circle"></i> Tambah data produk
-                                        </button>   
-                                    </div>
-                                    <div class="p-2 text-start">
-                                        <?php  
-                                            $id_komplain = $id;
-                                            $sql_komplain = mysqli_query($connect, "SELECT status_refund, status_retur FROM komplain_kondisi WHERE id_komplain = '$id_komplain'");
-                                            $data_status_refund = mysqli_fetch_array($sql_komplain);
-                                            if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
-                                                ?>
-                                                    <a href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#bayarRefund">
-                                                        <i></i> Pembayaran Refund
-                                                    </a>   
-                                                <?php
-                                            }
+                                <?php  
+                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
                                         ?>
-                                    </div>
-                                    <!-- kode untuk kondisi button cetak -->
-                                    <?php  
-                                        $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
-                                        $cek_rev = mysqli_fetch_array($sql_rev);
-                                        $total_data = mysqli_num_rows($sql_rev);
-                                    
-                                    ?>
-                                    <?php  
-                                        if($total_data != '0'){
-                                            ?>
+                                            <div class="d-flex justify-content-start mb-3 flex-wrap">
+                                                <?php  
+                                                    if($status_kmpl == '0') {
+                                                        ?> 
+                                                            <div class="p-2" id="edit" style="display: block;">
+                                                                <button type="button" class="btn btn-warning" id="edit-button">
+                                                                    <i class="bi bi-pencil"></i> Edit Data Produk
+                                                                </button>            
+                                                            </div>   
+                                                        <?php 
+                                                    }
+                                                ?>
+                                                <div class="p-2" id="selesai-edit" style="display: none;">
+                                                    <button type="button" class="btn btn-warning" id="selesai-edit-button">
+                                                        <i class="bi bi-pencil"></i> Selesai Edit
+                                                    </button>            
+                                                </div>    
+                                                <div class="p-2">
+                                                    <button type="button" class="btn btn-primary tambahData" data-inv="<?php echo $id_inv ?>" data-bs-toggle="modal" data-bs-target="#tambahData" style="display: none;">
+                                                        <i class="bi bi-plus-circle"></i> Tambah data produk
+                                                    </button>   
+                                                </div>
                                                 <div class="p-2 text-start">
-                                                    <a href="cetak-inv-revisi-nonppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                        <i></i> Cetak Invoice Revisi Non PPN
-                                                    </a> 
-                                                </div>   
-                                            <?php
-                                        }
-                                    
-                                    ?>                             
-                                </div>
+                                                    <?php  
+                                                        $id_komplain = $id;
+                                                        $sql_komplain = mysqli_query($connect, "SELECT status_refund, status_retur FROM komplain_kondisi WHERE id_komplain = '$id_komplain'");
+                                                        $data_status_refund = mysqli_fetch_array($sql_komplain);
+                                                        if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
+                                                            ?>
+                                                                <a href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#bayarRefund">
+                                                                    <i></i> Pembayaran Refund
+                                                                </a>   
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                </div>
+                                                <!-- kode untuk kondisi button cetak -->
+                                                <?php  
+                                                    $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
+                                                    $cek_rev = mysqli_fetch_array($sql_rev);
+                                                    $total_data = mysqli_num_rows($sql_rev);
+                                                
+                                                ?>
+                                                <?php  
+                                                    if($total_data != '0'){
+                                                        ?>
+                                                            <div class="p-2 text-start">
+                                                                <a href="cetak-inv-revisi-nonppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                                    <i></i> Cetak Invoice Revisi Non PPN
+                                                                </a> 
+                                                            </div>   
+                                                        <?php
+                                                    }
+                                                
+                                                ?>                             
+                                            </div>
+                                        <?php
+                                    }
+                                ?>
                                 <div class="table-responsive p-3">
                                     <table class="table table-bordered table-striped" id="table2">
                                         <thead>
@@ -594,7 +607,13 @@
                                                 <th class="text-center text-nowrap p-3">Harga</th>
                                                 <th class="text-center text-nowrap p-3">Diskon</th>
                                                 <th class="text-center text-nowrap p-3">Total</th>
-                                                <th class="text-center text-nowrap p-3">Aksi</th>
+                                                <?php  
+                                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                                                        ?>
+                                                            <th class="text-center text-nowrap p-3">Aksi</th>
+                                                        <?php
+                                                    }
+                                                ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -617,29 +636,35 @@
                                                 <td class="text-end text-nowrap"><?php echo number_format($data_tmp['harga']) ?></td>
                                                 <td class="text-end text-nowrap"><?php echo $data_tmp['disc'] ?></td>
                                                 <td class="text-end text-nowrap"><?php echo number_format($harga_final) ?></td>
-                                                <td class="text-center">
-                                                    <div class="text-center aksi" style="display: none;">
-                                                        <button class="btn btn-warning btn-sm" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editData" data-id="<?php echo $data_tmp['id_tmp'] ?>" data-id-produk="<?php echo $data_tmp['id_produk'] ?>" data-nama="<?php echo $data_tmp['nama_produk'] ?>" data-merk="<?php echo $data_tmp['merk'] ?>" data-harga="<?php echo $data_tmp['harga']  ?>" data-disc="<?php echo $data_tmp['disc'] ?>" data-stock="<?php if($data_tmp['stock'] == 0){echo '0';}else{echo $data_tmp['stock'] + $data_tmp['qty'];} ?>" data-qty="<?php echo $data_tmp['qty'] ?>" data-qty-edit="<?php echo $data_tmp['qty'] ?>">
-                                                            <i class="bi bi-pencil"></i>  
-                                                        </button>
-                                                        <?php  
-                                                            $id_komplain = $id;
-                                                            $sql_komplain = mysqli_query($connect, "SELECT status_refund, status_retur FROM komplain_kondisi WHERE id_komplain = '$id_komplain'");
-                                                            $data_status_refund = mysqli_fetch_array($sql_komplain);
-                                                            if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 0){
-                                                                ?>
-                                                                    <a href="proses/produk-tmp-revisi-nonppn.php?hapus_tmp=<?php echo base64_encode($id_tmp) ?>&&id_komplain=<?php echo base64_encode($id_komplain) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
-                                                                <?php
-                                                            } else if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
-                                                                ?>
-                                                                    <button type="button" class="btn btn-danger btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#hapus" data-id="<?php echo $data_tmp['id_tmp'] ?>" data-total="<?php echo $harga_final ?>">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button> 
-                                                                <?php
-                                                            }
+                                                <?php  
+                                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
                                                         ?>
-                                                    </div>       
-                                                </td>
+                                                            <td class="text-center">
+                                                                <div class="text-center aksi" style="display: none;">
+                                                                    <button class="btn btn-warning btn-sm" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editData" data-id="<?php echo $data_tmp['id_tmp'] ?>" data-id-produk="<?php echo $data_tmp['id_produk'] ?>" data-nama="<?php echo $data_tmp['nama_produk'] ?>" data-merk="<?php echo $data_tmp['merk'] ?>" data-harga="<?php echo $data_tmp['harga']  ?>" data-disc="<?php echo $data_tmp['disc'] ?>" data-stock="<?php if($data_tmp['stock'] == 0){echo '0';}else{echo $data_tmp['stock'] + $data_tmp['qty'];} ?>" data-qty="<?php echo $data_tmp['qty'] ?>" data-qty-edit="<?php echo $data_tmp['qty'] ?>">
+                                                                        <i class="bi bi-pencil"></i>  
+                                                                    </button>
+                                                                    <?php  
+                                                                        $id_komplain = $id;
+                                                                        $sql_komplain = mysqli_query($connect, "SELECT status_refund, status_retur FROM komplain_kondisi WHERE id_komplain = '$id_komplain'");
+                                                                        $data_status_refund = mysqli_fetch_array($sql_komplain);
+                                                                        if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 0){
+                                                                            ?>
+                                                                                <a href="proses/produk-tmp-revisi-nonppn.php?hapus_tmp=<?php echo base64_encode($id_tmp) ?>&&id_komplain=<?php echo base64_encode($id_komplain) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                                            <?php
+                                                                        } else if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
+                                                                            ?>
+                                                                                <button type="button" class="btn btn-danger btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#hapus" data-id="<?php echo $data_tmp['id_tmp'] ?>" data-total="<?php echo $harga_final ?>">
+                                                                                    <i class="bi bi-trash"></i>
+                                                                                </button> 
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </div>       
+                                                            </td>
+                                                        <?php
+                                                    }
+                                                ?>
                                             </tr>
                                             <?php $no++ ?>
                                             <?php } ?>
