@@ -116,7 +116,71 @@
             <button id="printButton" class="print-button-new">
                 <i class="fas fa-print"></i> Print
             </button>
+            <?php 
+                $id = $_GET['id_komplain'];
             
+            ?>
+
+            <a href="detail-komplain-revisi-ppn.php?id=<?php echo($id) ?>" style="text-decoration: none;" class="print-button-new" id="printButton"><i class="fas fa-arrow-left"></i> Halaman Sebelumnya</a>
+        </div>
+        <div class="center-container">
+            <div class="centered-div">
+                <?php
+                    // Inisialisasi variabel $selectedOption
+                    $selectedOption = isset($_POST['selectedOption']) ? $_POST['selectedOption'] : '';
+                ?>
+                <form method="post" action="" id="printButton">
+                    <select class="form-select" name="selectedOption" onchange="this.form.submit()" style="text-align: center;">
+                        <option value="" <?php echo empty($selectedOption) ? 'selected' : ''; ?>>Pilih Nomor Invoice</option>
+                        <?php 
+                            $sql_revisi = mysqli_query($connect, "  SELECT 
+                                                                        id_inv,
+                                                                        no_inv
+                                                                    FROM (
+                                                                        SELECT 
+                                                                            ir.id_inv, 
+                                                                           ppn.no_inv AS no_inv
+                                                                        FROM inv_revisi AS ir
+                                                                        LEFT JOIN inv_ppn ppn ON ir.id_inv = ppn.id_inv_ppn
+                                                                        WHERE ir.id_inv = '$id_inv'
+                                                                        
+                                                                        UNION
+                                                                        
+                                                                        SELECT 
+                                                                            id_inv, 
+                                                                            no_inv_revisi
+                                                                        FROM inv_revisi
+                                                                        WHERE id_inv = '$id_inv'
+                                                                    ) AS merged_result");
+                                                                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
+                                                                            $no_inv = $data_inv_revisi['no_inv'];
+                        ?>
+                        <option value="<?php echo $no_inv ?>" <?php echo ($selectedOption == $no_inv) ? 'selected' : ''; ?>><?php echo $no_inv ?></option>
+                        <?php } ?>
+                    </select>
+                </form>
+            
+
+                <!-- PHP Code -->
+                <?php 
+                    $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv'");
+                    $data_rev = mysqli_fetch_array($sql_rev);
+                    $total_data = mysqli_num_rows($sql_rev);
+                    // Inisialisasi $no_inv
+                    $no_inv = "";
+                    if($total_data == 0){
+                        $no_inv = $no_inv;
+                    } else {
+                        $no_inv = $data_rev['no_inv_revisi'];
+                    }
+
+                    // Periksa apakah ada data yang dikirimkan dari formulir
+                    if (isset($_POST['selectedOption'])) {
+                    $no_inv = $_POST['selectedOption'];
+                    }
+                ?>
+            </div>
+        </div>
     <div class="invoice">
         <h2 align='right'><strong>INVOICE</strong></h2>
         <div class="invoice-header">
@@ -234,35 +298,44 @@
                     $grand_total = 0;
                     $sub_total_spdisc = 0;
                     $sql_trx = "SELECT
-                                    ppn.id_inv_ppn,
-                                    ppn.kategori_inv,
-                                    ppn.sp_disc,
-                                    ppn.note_inv,
-                                    ppn.total_inv,
-                                    trx.id_produk,
-                                    trx.nama_produk AS nama_produk_rev,
-                                    trx.harga,
-                                    SUM(trx.qty) AS total_qty,
-                                    trx.disc,
-                                    trx.total_harga,
-                                    trx.status_br_refund,
-                                    trx.created_date,
-                                    tpr.nama_produk,
-                                    tpr.satuan,
-                                    mr_produk.nama_merk AS merk_produk,
-                                    tpsm.nama_set_marwa,
-                                    tpsm.harga_set_marwa,
-                                    mr_set.nama_merk AS merk_set
-                                FROM inv_ppn AS ppn
-                                LEFT JOIN inv_komplain ik ON ppn.id_inv_ppn = ik.id_inv
-                                LEFT JOIN tmp_produk_komplain trx ON trx.id_inv = ppn.id_inv_ppn
-                                LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
-                                LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
-                                LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
-                                LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
-                                WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
-                                GROUP BY trx.id_produk
-                                ORDER BY trx.created_date ASC";
+                    ppn.id_inv_ppn,
+                    ppn.kategori_inv,
+                    ppn.sp_disc,
+                    ppn.note_inv,
+                    ppn.total_inv,
+                    trx.id_produk,
+                    trx.nama_produk AS nama_produk_rev,
+                    trx.harga,
+                    SUM(trx.qty) AS total_qty,
+                    trx.disc,
+                    trx.total_harga,
+                    trx.status_br_refund,
+                    trx.created_date,
+                    tpr.nama_produk,
+                    tpr.satuan,
+                    mr_produk.nama_merk AS merk_produk,
+                    tpsm.nama_set_marwa,
+                    tpsm.harga_set_marwa,
+                    mr_set.nama_merk AS merk_set
+                FROM
+                    inv_ppn AS ppn
+                LEFT JOIN
+                    tmp_produk_komplain trx ON ppn.id_inv_ppn = trx.id_inv
+                LEFT JOIN
+                    tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
+                LEFT JOIN
+                    tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
+                LEFT JOIN
+                    tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
+                LEFT JOIN
+                    tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
+                WHERE
+                    ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
+                GROUP BY
+                    ppn.id_inv_ppn, trx.id_produk
+                ORDER BY
+                    trx.created_date ASC;
+                ";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
