@@ -306,7 +306,7 @@
                     trx.id_produk,
                     trx.nama_produk AS nama_produk_rev,
                     trx.harga,
-                    SUM(trx.qty) AS total_qty,
+                   trx.qty AS total_qty,
                     trx.disc,
                     trx.total_harga,
                     trx.status_br_refund,
@@ -331,8 +331,6 @@
                     tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
                 WHERE
                     ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
-                GROUP BY
-                    ppn.id_inv_ppn, trx.id_produk
                 ORDER BY
                     trx.created_date ASC;
                 ";
