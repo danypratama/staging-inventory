@@ -1,3 +1,4 @@
+<?php include "akses.php" ?>
 <!DOCTYPE html>
 <html>
 
@@ -152,8 +153,8 @@
                                                                         FROM inv_revisi
                                                                         WHERE id_inv = '$id_inv'
                                                                     ) AS merged_result");
-                                                                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
-                                                                            $no_inv = $data_inv_revisi['no_inv'];
+                        while($data_inv_revisi = mysqli_fetch_array($sql_revisi)) {
+                            $no_inv = $data_inv_revisi['no_inv'];
                         ?>
                         <option value="<?php echo $no_inv ?>" <?php echo ($selectedOption == $no_inv) ? 'selected' : ''; ?>><?php echo $no_inv ?></option>
                         <?php } ?>
@@ -222,7 +223,7 @@
                 <!-- Kolom pertama -->
                 <?php
                 $sql2 = "SELECT 
-                ppn.*, 
+                ppn.id_inv_ppn, ppn.no_inv, ppn.tgl_inv, ppn.tgl_tempo, ppn.cs_inv,
                 sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                 cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
                 FROM inv_ppn AS ppn
@@ -270,9 +271,7 @@
             </div>
         </div>
         <div class="invoice-body">
-           
-        </div>
-         <table class="invoice-table">
+            <table class="invoice-table">
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
@@ -308,33 +307,21 @@
                                     trx.id_produk,
                                     trx.nama_produk AS nama_produk_rev,
                                     trx.harga,
-                                    trx.qty AS total_qty,
+                                    SUM(trx.qty) AS total_qty,
                                     trx.disc,
                                     trx.total_harga,
                                     trx.status_br_refund,
                                     trx.created_date,
                                     tpr.nama_produk,
-                                    tpr.satuan,
-                                    mr_produk.nama_merk AS merk_produk,
-                                    tpsm.nama_set_marwa,
-                                    tpsm.harga_set_marwa,
-                                    mr_set.nama_merk AS merk_set
-                                FROM
-                                    inv_ppn AS ppn
-                                LEFT JOIN
-                                    tmp_produk_komplain trx ON ppn.id_inv_ppn = trx.id_inv
-                                LEFT JOIN
-                                    tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
-                                LEFT JOIN
-                                    tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
-                                LEFT JOIN
-                                    tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
-                                LEFT JOIN
-                                    tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
-                                WHERE
-                                    ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
-                                ORDER BY
-                                    trx.created_date ASC";
+                                    tpr.satuan
+                                FROM inv_ppn AS ppn
+                                LEFT JOIN inv_komplain ik ON ppn.id_inv_ppn = ik.id_inv
+                                LEFT JOIN tmp_produk_komplain trx ON trx.id_inv = ppn.id_inv_ppn
+                                LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
+                                LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
+                                WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND trx.status_br_refund = '0'
+                                GROUP BY trx.id_produk
+                                ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
@@ -364,7 +351,7 @@
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
-                            <td align="left"><?php echo $data_trx['nama_produk_rev'] ?></td>
+                            <td><?php echo $data_trx['nama_produk_rev'] ?></td>
                             <td align="right"> <?php echo number_format($data_trx['total_qty'], 0, '.', '') . ' ' . $satuan_produk; ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga'], 0, '.', '.') ?></td>
                             <?php
@@ -378,6 +365,7 @@
                     <?php } ?>
                 </tbody>
             </table>
+        </div>
         <div class="invoice-payment">
             <?php
             $sql_inv = mysqli_query($connect, "SELECT id_inv_ppn, sp_disc, ongkir FROM inv_ppn WHERE id_inv_ppn = '$id_ppn_decode'");

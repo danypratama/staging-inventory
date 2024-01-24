@@ -129,7 +129,7 @@
                     $jenis_inv = "";
                     if ($inv_id == "NON"){
                         $jenis_inv = "bum";
-                    } else if ($inv_id == "PPN"){
+                    } else if ($inv_id == "BUM"){
                         $jenis_inv = "ppn";
                     } else if ($inv_id == "BUM"){
                         $jenis_inv = "bum";
@@ -574,7 +574,7 @@
                                             ?>
                                                 <div class="p-2 text-start">
                                                     <a href="cetak-inv-revisi-bum.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                        <i></i> Cetak Invoice Revisi PPN
+                                                        <i></i> Cetak Invoice Revisi BUM
                                                     </a> 
                                                 </div>   
                                             <?php
@@ -912,7 +912,7 @@
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status Transaksi Komplain</h1>
             </div>
-            <form action="proses/proses-ubah-status.php" method="POST" enctype="multipart/form-data">
+            <form action="proses/proses-ubah-status-trx-rev-bum.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="id_komplain" value="<?php echo $id ?>"> 
                 <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>"> 
                 <input type="hidden" name="no_inv" value="<?php echo $no_inv_fix ?>">

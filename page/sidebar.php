@@ -199,7 +199,7 @@
                   ?>
                     <li>
                       <a class="<?php if ($page2 == 'list-cmp') { echo 'active'; } ?>" href="invoice-komplain.php?date_range=year">
-                        <i class="bi bi-circle"></i><span>Faktur Komplain</span>
+                        <i class="bi bi-circle"></i><span>Invoice Komplain</span>
                       </a>
                     </li>
                   <?php
@@ -212,7 +212,7 @@
             if ($data['role'] == "Super Admin" || $data['role'] == "Manager Gudang" || $data['role'] == "Admin Penjualan") { 
               ?>
                 <!-- Pajak di Gunggung -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-layout-text-window-reverse"></i><span>Data Pajak Digunggung</span><i class="bi bi-chevron-down ms-auto"></i>
                   </a>
@@ -228,7 +228,7 @@
                       </a>
                     </li>
                   </ul>
-                </li>
+                </li> -->
                 <!-- End Pajak di Gunggung -->
               <?php
             }
@@ -440,11 +440,11 @@
                 </a>
               </li>
               <?php  
-                if ($data['role'] == "Super Admin" || $data['role'] == "Manager Gudang" || $data['role'] == "Admin Penjualan") { 
+                if ($data['role'] == "Super Admin" || $data['role'] == "Manager Gudang" || $data['role'] == "Admin Penjualan" || $data['role'] == "Pimpinan") { 
                   ?>
                     <li>
                       <a class="<?php if ($page2 == 'list-cmp') { echo 'active'; } ?>" href="invoice-komplain.php?date_range=year">
-                        <i class="bi bi-circle"></i><span>Faktur Komplain</span>
+                        <i class="bi bi-circle"></i><span>Invoice Komplain</span>
                       </a>
                     </li>
                   <?php
@@ -457,7 +457,7 @@
             if ($data['role'] == "Super Admin" || $data['role'] == "Manager Gudang" || $data['role'] == "Admin Penjualan") { 
               ?>
                 <!-- Pajak di Gunggung -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-layout-text-window-reverse"></i><span>Data Pajak Digunggung</span><i class="bi bi-chevron-down ms-auto"></i>
                   </a>
@@ -473,7 +473,7 @@
                       </a>
                     </li>
                   </ul>
-                </li>
+                </li> -->
                 <!-- End Pajak di Gunggung -->
               <?php
             }
@@ -535,14 +535,7 @@
               <i class="bi bi-cash-stack"></i><span>Transaksi Customer</span>
             </a>
           </li>
-          <!-- End Finance -->
-          <!-- Data Customer -->
-          <li class="nav-item">
-            <a class="nav-link <?php if ($page == 'list-komplain') { echo 'active-link'; } ?>" href="invoice-komplain.php?date_range=monthly">
-              <i class="bi bi-clipboard-x"></i><span>Invoice Komplain</span>
-            </a>
-          </li>
-          <!-- End Finance -->
+          <!-- End  -->
 
           <?php
             if ($data['role'] == "Super Admin") { ?>

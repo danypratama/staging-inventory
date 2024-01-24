@@ -1,3 +1,4 @@
+<?php include "akses.php" ?>
 <!DOCTYPE html>
 <html>
 

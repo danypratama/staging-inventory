@@ -55,7 +55,8 @@ body {
 .col-header-3 {
   grid-column: 1 / span 4;
   border: 1px solid Black;
-  min-width: 480px;
+  min-width: 450px;
+  max-width: 450px;
   padding: 0.1cm;
   text-align: left;
   align-self: flex-start;

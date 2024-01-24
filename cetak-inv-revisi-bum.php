@@ -53,14 +53,13 @@
         }
     </style>
 </head>
-
 <body>
     <?php
     include "koneksi.php";
     $id_komplain = base64_decode($_GET['id_komplain']);
     $id_inv = base64_decode($_GET['id']);
     $sql = "SELECT 
-            bum.*, 
+            bum.id_inv_bum, bum.no_inv, bum.kategori_inv, bum.tgl_inv, cs_inv, tgl_tempo,
             sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
             cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
             FROM inv_bum AS bum
@@ -103,7 +102,7 @@
                 <i class="fas fa-print"></i> Print
             </button>
 
-            <a href="detail-komplain-revisi.php?id=<?php echo base64_encode($id_komplain) ?>" style="text-decoration: none;" class="print-button-new" id="printButton"><i class="fas fa-arrow-left"></i> Halaman Sebelumnya</a>
+            <a href="detail-komplain-revisi-bum.php?id=<?php echo base64_encode($id_komplain) ?>" style="text-decoration: none;" class="print-button-new" id="printButton"><i class="fas fa-arrow-left"></i> Halaman Sebelumnya</a>
             <!-- Elemen Select -->
             <!-- Elemen Select -->
             <?php
@@ -121,10 +120,8 @@
                                                                 FROM (
                                                                     SELECT 
                                                                         ir.id_inv, 
-                                                                        COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv, '') AS no_inv
+                                                                        bum.no_inv AS no_inv
                                                                     FROM inv_revisi AS ir
-                                                                    LEFT JOIN inv_nonppn nonppn ON ir.id_inv = nonppn.id_inv_nonppn
-                                                                    LEFT JOIN inv_ppn ppn ON ir.id_inv = ppn.id_inv_ppn
                                                                     LEFT JOIN inv_bum bum ON ir.id_inv = bum.id_inv_bum
                                                                     WHERE ir.id_inv = '$id_inv'
                                                                     
@@ -202,17 +199,7 @@
         </div>
         <!-- Kolom kedua -->
         <?php
-        $sql2 = "SELECT 
-                nonppn.*, 
-                sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
-                cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
-                FROM inv_nonppn AS nonppn
-                JOIN spk_reg sr ON (nonppn.id_inv_nonppn = sr.id_inv)
-                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
-                JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
-                WHERE nonppn.id_inv_nonppn = '$id_inv'";
-        $query2 = mysqli_query($connect, $sql2);
+        $query2 = mysqli_query($connect, $sql);
         $rowIndex = 0;
         $totalRows = mysqli_num_rows($query2);
         $dataCount = 0;
@@ -284,20 +271,14 @@
                                     trx.status_br_refund,
                                     trx.created_date,
                                     tpr.nama_produk,
-                                    tpr.satuan,
-                                    mr_produk.nama_merk AS merk_produk,
-                                    tpsm.nama_set_marwa,
-                                    tpsm.harga_set_marwa,
-                                    mr_set.nama_merk AS merk_set
+                                    tpr.satuan
                                 FROM inv_bum AS bum
                                 LEFT JOIN inv_komplain ik ON bum.id_inv_bum = ik.id_inv
                                 LEFT JOIN tmp_produk_komplain trx ON trx.id_inv = bum.id_inv_bum
                                 LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
                                 LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
-                                LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk
-                                LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk
                                 WHERE bum.id_inv_bum = '$id_bum_decode' AND trx.status_br_refund = '0'
-                                GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk, mr_set.nama_merk, mr_produk.nama_merk, trx.id_produk, trx.harga, trx.disc, trx.total_harga, tpr.nama_produk, tpsm.harga_set_marwa, mr_set.nama_merk
+                                GROUP BY trx.id_produk
                                 ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
