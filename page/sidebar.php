@@ -67,12 +67,12 @@
               </li>
               <li>
                 <a class="<?php if ($page2 == 'data-produk-set-marwa') { echo 'active'; } ?>" href="data-produk-set-marwa.php">
-                  <i class="bi bi-circle"></i><span>Set Produk Reguler</span>
+                  <i class="bi bi-circle"></i><span>Produk Set Reguler</span>
                 </a>
               </li>
               <li>
                 <a class="<?php if ($page2 == 'data-produk-set-ecat') { echo 'active'; } ?>" href="data-produk-set-ecat.php">
-                  <i class="bi bi-circle"></i><span>Set Produk Ecat</span>
+                  <i class="bi bi-circle"></i><span>Produk Set Ecat</span>
                 </a>
               </li>
               <li>
@@ -142,32 +142,21 @@
                   <i class="bi bi-circle"></i><span>Lokal</span>
                 </a>
                 <a class="<?php if ($page2 == 'br-masuk-set-reg') { echo 'active'; } ?>" href="barang-masuk-set-reg.php">
-                  <i class="bi bi-circle"></i><span>Set Produk Reguler</span>
+                  <i class="bi bi-circle"></i><span>Produk Set Reguler</span>
                 </a>
                 <a class="<?php if ($page2 == 'br-masuk-set-ecat') { echo 'active'; } ?>" href="barang-masuk-set-ecat.php">
-                  <i class="bi bi-circle"></i><span>Set Produk E-Cat</span>
+                  <i class="bi bi-circle"></i><span>Produk Set E-Cat</span>
                 </a>
               </li>
             </ul>
           </li>
           <!-- End Barang Masuk Nav -->
 
+          <!-- Barang Keluar -->
           <li class="nav-item">
-            <a class="nav-link collapsed <?php if ($page == 'br-keluar') { echo 'active-link'; } ?>" data-bs-target="#barang-keluar" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-file-ruled"></i><span>Barang Keluar</span><i class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link <?php if ($page == 'br-keluar') { echo 'active-link'; } ?>"  href="barang-keluar-reg.php">
+              <i class="bi bi-file-ruled"></i><span>Barang Keluar</span>
             </a>
-            <ul id="barang-keluar" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-              <li>
-                <a href="barang-keluar-reg.php">
-                  <i class="bi bi-circle"></i><span>Barang Keluar Reguler</span>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="bi bi-circle"></i><span>Barang Keluar E-Cat</span>
-                </a>
-              </li>
-            </ul>
           </li>
           <!-- End Barang Keluar Nav -->
 
@@ -395,7 +384,7 @@
                   <i class="bi bi-circle"></i><span>Import</span> 
                 </a>
                 <a class="<?php if ($page2 == 'br-masuk-set-reg') { echo 'active'; } ?>" href="barang-masuk-set-reg.php">
-                  <i class="bi bi-circle"></i><span>Set Produk Reguler</span>
+                  <i class="bi bi-circle"></i><span>Produk Set Reguler</span>
                 </a>
                 <!-- <a class="<?php if ($page2 == 'br-masuk-set-ecat') { echo 'active'; } ?>" href="barang-masuk-set-ecat.php">
                   <i class="bi bi-circle"></i><span>Set Produk E-Cat</span>

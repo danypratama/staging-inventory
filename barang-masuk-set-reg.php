@@ -105,7 +105,7 @@ include "akses.php";
                                             <td class="text-center"><?php echo $data['nama_merk'] ?></td>
                                             <td class="text-end"><?php echo $data['qty'] ?></td>
                                             <?php  
-                                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                                if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Gudang") { 
                                                     ?>
                                                         <td class="text-center">
                                                             <!-- Hapus Data -->

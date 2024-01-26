@@ -164,48 +164,61 @@ function generate_uuid()
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered" id="table2">
                             <thead>
-                                <tr class="text-white" style="background-color: #051683;">
-                                    <td class="text-center text-nowrap p-3">No</td>
-                                    <td class="text-center text-nowrap p-3">Kode Produk</td>
-                                    <td class="text-center text-nowrap p-3">Nama Produk</td>
-                                    <td class="text-center text-nowrap p-3">Merk</td>
-                                    <td class="text-center text-nowrap p-3">Stock</td>
-                                </tr>
+                            <tr class="text-white" style="background-color: #051683;">
+                                <td class="text-center text-nowrap p-3">No</td>
+                                <td class="text-center text-nowrap p-3">Kode Produk</td>
+                                <td class="text-center text-nowrap p-3">Nama Produk</td>
+                                <td class="text-center text-nowrap p-3">Merk</td>
+                                <td class="text-center text-nowrap p-3">Grade</td>
+                                <td class="text-center text-nowrap p-3">Stock</td>
+                            </tr>
                             </thead>
                             <tbody>
+                            <?php
+                            date_default_timezone_set('Asia/Jakarta');
+                            include "koneksi.php";
+                            $no = 1;
+                            $sql = "SELECT
+                                        tpr.id_grade, 
+                                        COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
+                                        COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
+                                        COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
+                                        COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
+                                        spr.id_stock_prod_reg,
+                                        spr.stock,
+                                        tkp.min_stock, 
+                                        tkp.max_stock,
+                                        gr.nama_grade
+                                    FROM stock_produk_reguler AS spr
+                                    LEFT JOIN tb_produk_reguler AS tpr ON (tpr.id_produk_reg = spr.id_produk_reg)
+                                    LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spr.id_kat_penjualan)
+                                    LEFT JOIN tb_produk_set_marwa AS tpsm ON (tpsm.id_set_marwa = spr.id_produk_reg)
+                                    LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
+                                    LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
+                                    LEFT JOIN tb_produk_grade gr ON (tpr.id_grade = gr.id_grade)
+                                    WHERE SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) = 'BR' AND spr.stock > 0
+                                    ORDER BY nama_produk ASC ";
+                            $query = mysqli_query($connect, $sql);
+                            while ($data = mysqli_fetch_array($query)) {
+                                $stock = $data['stock'];
+                                $min_stock = $data['min_stock'];
+                            ?>
+                                <tr data-idprod="<?php echo $data['id_produk']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                                <td class="text-center"><?php echo $no; ?></td>
+                                <td class="text-center"><?php echo $data['kode_produk']; ?></td>
+                                <td class="text-start"><?php echo $data['nama_produk']; ?></td>
+                                <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                                <td class="text-center"><?php echo $data['nama_grade']; ?></td>
                                 <?php
-                                date_default_timezone_set('Asia/Jakarta');
-
-                                include "koneksi.php";
-                                $no = 1;
-                                $sql = "SELECT 
-                                            COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa) AS id_produk,
-                                            COALESCE(tpr.kode_produk, tpsm.kode_set_marwa) AS kode_produk,
-                                            COALESCE(tpr.nama_produk, tpsm.nama_set_marwa) AS nama_produk,
-                                            COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
-                                            COALESCE(tpr.harga_produk, tpsm.harga_set_marwa) AS harga,
-                                            spr.id_stock_prod_reg,
-                                            spr.stock,
-                                            SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) AS substr_id_produk
-                                        FROM stock_produk_reguler AS spr
-                                        LEFT JOIN tb_produk_reguler AS tpr ON (tpr.id_produk_reg = spr.id_produk_reg)
-                                        LEFT JOIN tb_produk_set_marwa AS tpsm ON (tpsm.id_set_marwa = spr.id_produk_reg)
-                                        LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
-                                        LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
-                                        WHERE SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) = 'BR'
-                                        ORDER BY nama_produk ASC";
-                                $query = mysqli_query($connect, $sql);
-                                while ($data = mysqli_fetch_array($query)) {
+                                if ($stock < $min_stock) {
+                                    echo "<td class='text-end text-white bg-danger'>" . $data['stock'] . "</td>";
+                                } else {
+                                    echo "<td class='text-end' style='background-color: #7CFC00'>" . number_format($data['stock'], 0, '.', '.') . "</td>";
+                                }
                                 ?>
-                                    <tr data-idprod="<?php echo $data['id_produk']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
-                                        <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $data['kode_produk']; ?></td>
-                                        <td class="text-start text-nowrap"><?php echo $data['nama_produk']; ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $data['stock']; ?></td>
-                                    </tr>
-                                    <?php $no++; ?>
-                                <?php } ?>
+                                </tr>
+                                <?php $no++; ?>
+                            <?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -215,11 +228,12 @@ function generate_uuid()
                         <table class="table table-striped table-bordered" id="table3">
                             <thead>
                                 <tr class="text-white" style="background-color: #051683;">
-                                    <td class="text-center text-nowrap p-3">No</td>
-                                    <td class="text-center text-nowrap p-3">Kode Produk</td>
-                                    <td class="text-center text-nowrap p-3">Nama Produk</td>
-                                    <td class="text-center text-nowrap p-3">Merk</td>
-                                    <td class="text-center text-nowrap p-3">Stock</td>
+                                <td class="text-center text-nowrap p-3">No</td>
+                                <td class="text-center text-nowrap p-3">Kode Produk</td>
+                                <td class="text-center text-nowrap p-3">Nama Produk</td>
+                                <td class="text-center text-nowrap p-3">Merk</td>
+                                <td class="text-center text-nowrap p-3">Grade</td>
+                                <td class="text-center text-nowrap p-3">Stock</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -228,33 +242,47 @@ function generate_uuid()
 
                                 include "koneksi.php";
                                 $no = 1;
-                                $sql = "SELECT 
+                                $sql = "SELECT
+                                            tpr.id_grade, 
                                             COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat) AS id_produk,
                                             COALESCE(tpr.kode_produk, tpsm.kode_set_ecat) AS kode_produk,
                                             COALESCE(tpr.nama_produk, tpsm.nama_set_ecat) AS nama_produk,
                                             COALESCE(mr_tpr.nama_merk, mr_tpsm.nama_merk) AS nama_merk,
-                                            COALESCE(tpr.harga_produk, tpsm.harga_set_ecat) AS harga,
                                             spr.id_stock_prod_ecat,
                                             spr.stock,
-                                            SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) AS substr_id_produk
+                                            tkp.min_stock, 
+                                            tkp.max_stock,
+                                            SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) AS substr_id_produk,
+                                            gr.nama_grade
                                         FROM stock_produk_ecat AS spr
                                         LEFT JOIN tb_produk_ecat AS tpr ON (tpr.id_produk_ecat = spr.id_produk_ecat)
+                                        LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spr.id_kat_penjualan)
                                         LEFT JOIN tb_produk_set_ecat AS tpsm ON (tpsm.id_set_ecat = spr.id_produk_ecat)
                                         LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
                                         LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
-                                        WHERE SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) = 'BR'
-                                        ORDER BY nama_produk ASC";
+                                        LEFT JOIN tb_produk_grade gr ON (tpr.id_grade = gr.id_grade)
+                                        WHERE SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) = 'BR' AND spr.stock > 0
+                                        ORDER BY nama_produk ASC ";
                                 $query = mysqli_query($connect, $sql);
                                 while ($data = mysqli_fetch_array($query)) {
+                                $stock = $data['stock'];
+                                $min_stock = $data['min_stock'];
                                 ?>
-                                    <tr data-idprod="<?php echo $data['id_produk']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
-                                        <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $data['kode_produk']; ?></td>
-                                        <td class="text-start text-nowrap"><?php echo $data['nama_produk']; ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $data['nama_merk']; ?></td>
-                                        <td class="text-center text-nowrap"><?php echo $data['stock']; ?></td>
-                                    </tr>
-                                    <?php $no++; ?>
+                                <tr data-idprod="<?php echo $data['id_produk']; ?>" data-namaprod="<?php echo $data['nama_produk']; ?>" data-merkprod="<?php echo $data['nama_merk']; ?>" data-bs-dismiss="modal">
+                                    <td class="text-center"><?php echo $no; ?></td>
+                                    <td class="text-center"><?php echo $data['kode_produk']; ?></td>
+                                    <td class="text-start"><?php echo $data['nama_produk']; ?></td>
+                                    <td class="text-center"><?php echo $data['nama_merk']; ?></td>
+                                    <td class="text-center"><?php echo $data['nama_grade']; ?></td>
+                                    <?php
+                                    if ($stock < $min_stock) {
+                                    echo "<td class='text-end text-white bg-danger'>" . $data['stock'] . "</td>";
+                                    } else {
+                                    echo "<td class='text-end' style='background-color: #7CFC00'>" . number_format($data['stock'], 0, '.', '.') . "</td>";
+                                    }
+                                    ?>
+                                </tr>
+                                <?php $no++; ?>
                                 <?php } ?>
                             </tbody>
                         </table>

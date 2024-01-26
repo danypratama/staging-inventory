@@ -66,16 +66,26 @@ include "akses.php";
             <div class="container-fluid">
                 <div class="card shadow p-3">
                     <?php
-                    $id = base64_decode($_GET['id']);
-                    $sql = "SELECT ibor.*, pr.*, mr.*, us.nama_user, ket_out.*
-                            FROM isi_br_out_reg AS ibor
-                            LEFT JOIN tb_produk_reguler pr ON(ibor.id_produk_reg = pr.id_produk_reg)
-                            LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
-                            LEFT JOIN user us ON(ibor.id_user = us.id_user)
-                            LEFT JOIN keterangan_out ket_out ON(ibor.id_ket_out = ket_out.id_ket_out)
-                            WHERE id_isi_br_out_reg = '$id'";
-                    $query = mysqli_query($connect, $sql);
-                    $data = mysqli_fetch_array($query);
+                        $id = base64_decode($_GET['id']);
+                        $sql = "SELECT  
+                                    ibor.id_isi_br_out_reg,
+                                    ibor.id_produk_reg,
+                                    ibor.qty,
+                                    ibor.id_ket_out,
+                                    ibor.created_date AS created, 
+                                    COALESCE(pr.nama_produk, ecat.nama_produk) AS nama_produk,
+                                    mr.nama_merk, 
+                                    us.nama_user, 
+                                    ket.ket_out
+                                FROM isi_br_out_reg AS ibor
+                                LEFT JOIN tb_produk_reguler pr ON(ibor.id_produk_reg = pr.id_produk_reg)
+                                LEFT JOIN tb_produk_ecat ecat ON(ibor.id_produk_reg = ecat.id_produk_ecat)
+                                LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk OR mr.id_merk = ecat.id_merk)
+                                LEFT JOIN user us ON(ibor.id_user = us.id_user)
+                                LEFT JOIN keterangan_out ket ON(ibor.id_ket_out = ket.id_ket_out)
+                                WHERE id_isi_br_out_reg = '$id'";
+                        $query = mysqli_query($connect, $sql);
+                        $data = mysqli_fetch_array($query);
                     ?>
                     <form method="post" action="proses/proses-br-out-reg.php" class="form">
                         <div class="row">

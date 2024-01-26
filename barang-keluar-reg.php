@@ -53,15 +53,13 @@ include "akses.php";
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Keluar Reguler</h5>
                         <?php  
-                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang"  || $data_role['role'] == "Admin Gudang") { 
                                 ?>
                                     <a href="input-br-out-reg.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i>
                                     Tambah Data</a>
                                 <?php
                             }
                         ?>
-                        <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i
-                                class="bi bi-arrow-left"></i> Kembali</a>
                         <div class="table-responsive pt-3">
                             <table class="table table-striped table-bordered" id="table1">
                                 <thead>
@@ -74,7 +72,7 @@ include "akses.php";
                                         <td class="text-center p-3" style="width: 100px">Dibuat Oleh</td>
                                         <td class="text-center p-3" style="width: 100px">Dibuat Tanggal</td>
                                         <?php  
-                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Gudang") { 
                                                 ?>
                                                      <td class="text-center p-3" style="width: 50px">Aksi</td>
                                                 <?php
@@ -86,12 +84,21 @@ include "akses.php";
                                     <?php
                                     $no = 1;
                                     include "koneksi.php";
-                                    $sql = "SELECT ibor.*, ibor.created_date AS created, pr.*, mr.*, us.nama_user, ket_out.*
+                                    $sql = "SELECT  
+                                                ibor.id_isi_br_out_reg,
+                                                ibor.qty,
+                                                ibor.created_date AS created, 
+                                                COALESCE(pr.nama_produk, ecat.nama_produk) AS nama_produk,
+                                                mr.nama_merk, 
+                                                us.nama_user, 
+                                                ket.ket_out
                                             FROM isi_br_out_reg AS ibor
                                             LEFT JOIN tb_produk_reguler pr ON(ibor.id_produk_reg = pr.id_produk_reg)
-                                            LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk)
+                                            LEFT JOIN tb_produk_ecat ecat ON(ibor.id_produk_reg = ecat.id_produk_ecat)
+                                            LEFT JOIN tb_merk mr ON(mr.id_merk = pr.id_merk OR mr.id_merk = ecat.id_merk)
                                             LEFT JOIN user us ON(ibor.id_user = us.id_user)
-                                            LEFT JOIN keterangan_out ket_out ON(ibor.id_ket_out = ket_out.id_ket_out)";
+                                            LEFT JOIN keterangan_out ket ON(ibor.id_ket_out = ket.id_ket_out)
+                                            ORDER BY ibor.created_date DESC";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
@@ -104,7 +111,7 @@ include "akses.php";
                                         <td><?php echo $data['nama_user'] ?></td>
                                         <td class="text-center"><?php echo $data['created'] ?></td>
                                         <?php  
-                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
+                                            if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Gudang") { 
                                                 ?>
                                                     <td class="text-center">
                                                         <a href="edit-br-out-reg.php?id=<?php echo base64_encode($data['id_isi_br_out_reg']) ?>"

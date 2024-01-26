@@ -178,7 +178,7 @@
                                         </tr>
                                         <?php $no++; ?>
                                         <?php } ?>
-                                    </tbody>
+                                    </tbody>ya 
                                 </table>
                             </div>
                         </div>
