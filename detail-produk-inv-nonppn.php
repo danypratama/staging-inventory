@@ -443,9 +443,9 @@ include "function/class-spk.php";
                 <div class="card-body p-3">
                     <div class="table-responsive">
                         <div class="text-start mb-3">
-                            <a href="invoice-reguler-selesai.php" class="btn btn-warning btn-detail mb-2">
+                            <button class="btn btn-warning btn-detail mb-2" onclick="goBack()">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
-                            </a>
+                            </button>
                             <!-- Button modal Bukti Terima -->
                             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#bukti">
                                 <i class="bi bi-file-earmark-image"></i> Bukti Terima
@@ -656,3 +656,8 @@ include "function/class-spk.php";
 
 </body>
 </html>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>

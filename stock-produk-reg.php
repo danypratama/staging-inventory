@@ -105,7 +105,7 @@ include "akses.php";
                     </thead>
                     <tbody>
                       <?php
-                      date_default_timezone_set('Asia/Jakarta');
+                      date_default_timezone_set('Asia/Jakarta'); 
                       include "koneksi.php";
                       include "function/class-function.php";
                       $no = 1;
@@ -140,7 +140,7 @@ include "akses.php";
                           <td class="text-center text-nowrap"><?php echo $data['kode_produk'] ?></td>
                           <td class="text-nowrap"><?php echo $data['nama_produk'] ?></td>
                           <td class="text-center text-nowrap"> <?php echo $data['nama_merk'] ?> </td>
-                          <?php echo "<td class='text-end text-nowrap" . $stockData['textColor'] . "' style='background-color: " . $stockData['backgroundColor'] . "'>" . $stockData['formattedStock'] . "</td>";  ?>
+                          <?php echo "<td class='text-end text-nowrap " . $stockData['textColor'] . "' style='background-color: " . $stockData['backgroundColor'] . "'>" . $stockData['formattedStock'] . "</td>"; ?>
                           <?php echo "<td class='text-end text-nowrap'>" . $stockData['status'] . "</td>"; ?>
                           <?php  
                           if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 

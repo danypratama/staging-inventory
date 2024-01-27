@@ -83,9 +83,9 @@ $(".delete-data").on("click", function (e) {
     text: "Data akan dihapus permanen",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Hapus",
+    confirmButtonColor: "#EB5406",
+    cancelButtonColor: "#437C17",
+    confirmButtonText: "Ya, Hapus Data",
   }).then((result) => {
     if (result.value) {
       window.location.href = getLink;
@@ -102,9 +102,9 @@ $(".update-data").on("click", function (e) {
     text: "Jenis pengiriman akan di ubah",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Ubah Pengiriman",
+    confirmButtonColor: "#1E90FF",
+    cancelButtonColor: "#437C17",
+    confirmButtonText: "Ya, Ubah Pengiriman",
   }).then((result) => {
     if (result.value) {
       window.location.href = getLink;
@@ -123,8 +123,8 @@ $(".cancel-data").on("click", function (e) {
     text: "Transaksi Ini Akan Dicancel Permanen",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
+    confirmButtonColor: "#EB5406",
+    cancelButtonColor: "#437C17",
     confirmButtonText: "Ya, Cancel Transaksi",
   }).then((result) => {
     if (result.value) {

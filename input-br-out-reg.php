@@ -73,8 +73,8 @@ include "akses.php";
                     <form method="post" action="proses/proses-br-out-reg.php" class="form">
                         <div class="row">
                             <input type="hidden" class="form-control" name="id_br" value="BR-OUT-<?php echo $year ?><?php echo $UUID ?><?php echo $month ?>">
-                            <div class="col-sm-6 mb-3">
-                                <label for="nama_produk">Nama Produk</label>
+                            <div class="col-sm-5 mb-3">
+                                <label>Nama Produk</label>
                                 <input type="hidden" class="form-control" name="id_produk" id="idProduk">
                                 <input type="text" class="form-control" name="nama_produk" id="namaProduk" placeholder="Pilih..." data-bs-toggle="modal" data-bs-target="#modalBarang" readonly>
                             </div>
@@ -88,12 +88,12 @@ include "akses.php";
                             </div>
                             <div class="col-sm-1 mb-3">
                                 <label>Qty</label>
-                                <input type="text" class="form-control" name="qty" id="qtyInput" disabled>
+                                <input type="text" class="form-control text-end" name="qty" id="qtyInput" autocomplete="off" disabled>
                             </div>
-                            <div class="col-sm-2 mb-3">
+                            <div class="col-sm-3 mb-3">
                                 <label>Keterangan</label>
-                                <select class="form-select" name="keterangan">
-                                    <option>Pilih...</option>
+                                <select class="form-select" name="keterangan" required>
+                                    <option value="">Pilih...</option>
                                     <?php
                                     $sql = mysqli_query($connect, "SELECT * FROM keterangan_out");
                                     while ($data = mysqli_fetch_array($sql)) {
@@ -304,27 +304,44 @@ function generate_uuid()
         $('#qtyInput').prop('disabled', false);
     }
 
+    function formatNumber(number) {
+        return number.toLocaleString('en-US');  // Menetapkan format angka menggunakan 'en-US'
+    }
+
     // select Produk Reguler
     $(document).on('click', '#table2 tbody tr', function(e) {
+        var stockValue = $(this).data('stockprod');
+        var formattedStock = formatNumber(stockValue);
+
+        console.log('Stock Value:', stockValue);
+        console.log('Formatted Stock:', formattedStock);
+
         $('#idProduk').val($(this).data('idprod'));
         $('#namaProduk').val($(this).data('namaprod'));
         $('#merkProduk').val($(this).data('merkprod'));
-        $('#stockProduk').val($(this).data('stockprod'));
+        $('#stockProduk').val(formattedStock);
         $('#modalBarang').modal('hide');
 
-        // Aktifkan input qtyActual
+        // Activate input qtyActual
         enableQtyActual();
     });
 
-     // select Produk Reguler
-     $(document).on('click', '#table3 tbody tr', function(e) {
+   
+    // select Produk Reguler
+    $(document).on('click', '#table3 tbody tr', function(e) {
+        var stockValue = $(this).data('stockprod');
+        var formattedStock = formatNumber(stockValue);
+
+        console.log('Stock Value:', stockValue);
+        console.log('Formatted Stock:', formattedStock);
+
         $('#idProduk').val($(this).data('idprod'));
         $('#namaProduk').val($(this).data('namaprod'));
         $('#merkProduk').val($(this).data('merkprod'));
-        $('#stockProduk').val($(this).data('stockprod'));
+        $('#stockProduk').val(formattedStock);
         $('#modalBarang').modal('hide');
 
-        // Aktifkan input qtyActual
+        // Activate input qtyActual
         enableQtyActual();
     });
 </script>
@@ -353,22 +370,48 @@ function generate_uuid()
 </script>
 
 <!-- Number Format -->
+<!-- Add the following script to your HTML file -->
 <script>
-    $(document).on('input', '#qtyInput', function(e) {
-        var qtyInput = $(this).val().replace(/\D/g, '');
-        var qtyAwal = qtyInput ? parseInt(qtyInput) : 0;
-        $(this).val(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
+    // Fungsi untuk menambahkan separator ribuan pada angka
+    function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
 
-        console.log(qtyAwal.toLocaleString('id-ID').replace(',', '.'));
 
-        // mendapatkan tombol dengan id "submitButton"
-        var submitButton = document.getElementById("submitButton");
+    $('#qtyInput').on('input', function() {
+        // Dapatkan nilai numerik dari stok dan kuantitas
+        var stockValue = parseFloat($('#stockProduk').val().replace(/,/g, '')) || 0;
+        var qtyValue = parseFloat($(this).val().replace(/,/g, '')) || 0;
 
-        // memeriksa apakah nilai qty sudah diisi atau tidak
-        if ($(this).val().trim() !== '' && parseInt($(this).val().replace(/\D/g, '')) > 0) {
-            submitButton.disabled = false;
+        // Setel nilai default jika qtyValue adalah NaN
+        if (isNaN(qtyValue)) {
+            qtyValue = 1;
+        }
+
+        // Periksa apakah kuantitas lebih besar dari stok
+        if (qtyValue > stockValue) {
+            qtyValue = stockValue;
+        }
+
+        // Format kuantitas dengan tanda koma
+        var formattedQty = numberWithCommas(qtyValue);
+
+        // Tampilkan informasi di konsol
+        // console.log('Stock Value:', stockValue);
+        // console.log('Original Quantity Value:', $(this).val());
+        // console.log('Parsed Quantity Value:', qtyValue);
+        // console.log('Formatted Quantity:', formattedQty);
+
+        // Perbarui nilai input dengan kuantitas yang diformat
+        $(this).val(formattedQty);
+
+        // Aktifkan atau nonaktifkan tombol berdasarkan nilai kuantitas
+        if (qtyValue > 0) {
+            $('#submitButton').prop('disabled', false);
         } else {
-            submitButton.disabled = true;
+            $('#submitButton').prop('disabled', true);
         }
     });
 </script>
+
+

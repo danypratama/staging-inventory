@@ -364,6 +364,9 @@ include 'function/class-finance.php';
                     </div>
                 </div>
                 <div class="table-responsive">
+                    <button class="btn btn-warning btn-detail mb-2" onclick="goBack()">
+                        <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
+                    </button>
                     <table id="table1" class="table table-striped nowrap" style="width:100%">
                         <thead>
                             <tr class="text-white" style="background-color: navy;">
@@ -513,6 +516,11 @@ include 'function/class-finance.php';
     <?php include "finance/page/js-filter-detail-cs.php"  ?>
 </body>
 </html>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 
 
 

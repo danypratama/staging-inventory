@@ -363,10 +363,6 @@ include "akses.php";
 
 <!-- Script Untuk Modal Edit -->
 <script>
-    $('#editModal').on('show.bs.modal', function () {
-        $('#modal2').modal('hide');
-    });
-
     $('#ubahMerk').on('show.bs.modal', function () {
         // Check if modal2 is open, if yes, hide it
         if ($('#modal2').hasClass('show')) {

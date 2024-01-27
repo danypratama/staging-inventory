@@ -137,7 +137,7 @@ include "akses.php";
                           <td class="text-center"><?php echo $no; ?></td>
                           <td><?php echo $data['nama_produk'] ?></td>
                           <td class="text-center"> <?php echo $data['nama_merk'] ?> </td>
-                          <?php echo "<td class='text-end " . $stockData['textColor'] . "' style='background-color: " . $stockData['backgroundColor'] . "'>" . $stockData['formattedStock'] . "</td>";  ?>
+                          <?php echo "<td class='text-end text-nowrap " . $stockData['textColor'] . "' style='background-color: " . $stockData['backgroundColor'] . "'>" . $stockData['formattedStock'] . "</td>"; ?>
                           <?php echo "<td class='text-end'>" . $stockData['status'] . "</td>"; ?>
                           <?php  
                             if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
