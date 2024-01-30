@@ -609,7 +609,7 @@ include "function/class-spk.php";
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Harga</h1>
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -621,11 +621,15 @@ include "function/class-spk.php";
                                                     <input type="text" class="form-control" name="nama_produk" id="nama_produk" required>
                                                 </div>
                                                 <div class="mb-3">
+                                                    <label><strong>Qty</strong></label>
+                                                    <input type="text" class="form-control" name="nama_produk" id="nama_produk" required>
+                                                </div>
+                                                <div class="mb-3">
                                                     <label><strong>Harga</strong></label>
                                                     <div class="input-group">
                                                         <span class="input-group-text" id="basic-addon1">Rp</span>
                                                         <input type="text" class="form-control text-end harga_produk" name="harga_produk" id="harga_produk" required>
-                                                        <input type="hidden" class="form-control text-end harga_produk" name="qty" id="qty" required>
+                                                        <input type="text" class="form-control text-end harga_produk" name="qty" id="qty" required>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">

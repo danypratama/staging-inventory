@@ -784,7 +784,10 @@ include "function/class-spk.php";
                             <label>Diambil Oleh</label>
                             <input type="text" name="diambil_oleh" class="form-control">
                         </div>
-
+                        <div class="mb-3">
+                            <label>Diambil Tanggal</label>
+                            <input type="text" id="date" name="diambil_tanggal" class="form-control">
+                        </div>
                          <div class="mb-3">
                             <label id="labelBukti1">Bukti Terima 1</label>
                             <br>
@@ -978,7 +981,7 @@ include "function/class-spk.php";
                         <div class="mb-3">
                             <label id="labelDate">Tanggal</label>
                             <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
-                                id="date" required="required">
+                                id="date" >
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" name="diterima_ekspedisi"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
@@ -1574,7 +1577,8 @@ $('#edit').on('show.bs.modal', function(event) {
 <!-- date picker with flatpick -->
 <script type="text/javascript">
     flatpickr("#date", {
-        dateFormat: "d/m/Y"
+        dateFormat: "d/m/Y",
+        defaultDate: "today", // Set default date to today
     });
 
     flatpickr("#tempo", {

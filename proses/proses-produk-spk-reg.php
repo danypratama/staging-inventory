@@ -124,7 +124,7 @@ if (isset($_POST['simpan-tmp'])) {
     $id_spk = $_POST['id_spk'];
     $alasan = $_POST['alasan'];
     $menu_cancel = 'Belum Diproses';
-    $user = $_SESSION['tiket_user'];
+    $user = $_SESSION['tiket_nama'];
     $time = date('d/m/Y, H:i:s');
 
     mysqli_begin_transaction($connect);
@@ -155,7 +155,7 @@ if (isset($_POST['simpan-tmp'])) {
     $id_spk = $_POST['id_spk'];
     $alasan = $_POST['alasan'];
     $menu_cancel = 'Dalam Proses';
-    $user = $_SESSION['tiket_user'];
+    $user = $_SESSION['tiket_nama'];
     $time = date('d/m/Y, H:i:s');
 
     mysqli_begin_transaction($connect);
@@ -186,7 +186,7 @@ if (isset($_POST['simpan-tmp'])) {
     $id_spk = $_POST['id_spk'];
     $alasan = $_POST['alasan'];
     $menu_cancel = 'Siap Kirim';
-    $user = $_SESSION['tiket_user'];
+    $user = $_SESSION['tiket_nama'];
     $time = date('d/m/Y, H:i:s');
 
     mysqli_begin_transaction($connect);

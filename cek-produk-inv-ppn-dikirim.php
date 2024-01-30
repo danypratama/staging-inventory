@@ -785,8 +785,11 @@ include "function/class-spk.php";
                             <label>Diambil Oleh</label>
                             <input type="text" name="diambil_oleh" class="form-control">
                         </div>
-
-                         <div class="mb-3">
+                        <div class="mb-3">
+                            <label>Diambil Tanggal</label>
+                            <input type="text" id="date" name="diambil_tanggal" class="form-control">
+                        </div>
+                        <div class="mb-3">
                             <label id="labelBukti1">Bukti Terima 1</label>
                             <br>
                             <input type="file" name="fileku1" id="fileku1" accept=".jpg, .jpeg, .png" onchange="compressAndPreviewImage(event)" required title="Pilih File">
@@ -1575,7 +1578,8 @@ $('#edit').on('show.bs.modal', function(event) {
 <!-- date picker with flatpick -->
 <script type="text/javascript">
     flatpickr("#date", {
-        dateFormat: "d/m/Y"
+        dateFormat: "d/m/Y",
+        defaultDate: "today", // Set default date to today
     });
 
     flatpickr("#tempo", {

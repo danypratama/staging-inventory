@@ -268,16 +268,27 @@ include "akses.php";
                         <li class="nav-item flex-fill" role="presentation">
                             <?php
                                 $sql_cancel = " SELECT 
-                                                    sr.id_spk_reg,
-                                                    sr.no_spk,
-                                                    sr.tgl_spk,
-                                                    sr.no_po,
-                                                    sr.menu_cancel,
-                                                    sr.note,
-                                                    cs.nama_cs, cs.alamat
-                                                FROM spk_reg AS sr
-                                                JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                                WHERE status_spk = 'Cancel Order'";
+                                                    no_spk,
+                                                    no_inv
+                                                FROM (
+                                                    SELECT 
+                                                        sr.no_spk,
+                                                        '' AS no_inv  
+                                                    FROM spk_reg AS sr
+                                                    JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                                    WHERE sr.status_spk = 'Cancel Order' AND sr.id_inv = ''
+                                                    UNION
+                                                    SELECT 
+                                                        GROUP_CONCAT(CONCAT(sr.no_spk, ', ') SEPARATOR '') AS no_spk,
+                                                        COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv
+                                                    FROM spk_reg AS sr
+                                                    LEFT JOIN tb_customer cs ON sr.id_customer = cs.id_cs
+                                                    LEFT JOIN inv_nonppn nonppn ON sr.id_inv = nonppn.id_inv_nonppn
+                                                    LEFT JOIN inv_ppn ppn ON sr.id_inv = ppn.id_inv_ppn
+                                                    LEFT JOIN inv_bum bum ON sr.id_inv = bum.id_inv_bum
+                                                    WHERE sr.status_spk = 'Cancel Order' AND sr.id_inv != ''
+                                                    GROUP BY COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv)
+                                                ) AS subquery";
                                  $query_cancel = mysqli_query($connect, $sql_cancel);
                                 $total_query_cancel = mysqli_num_rows($query_cancel);
                             ?>
@@ -358,7 +369,7 @@ include "akses.php";
                                                         nonppn.tgl_inv,
                                                         nonppn.kategori_inv,
                                                         nonppn.note_inv,
-                                                        sr.id_inv, 
+                                                        sr.id_spk_reg, 
                                                         sr.id_customer, 
                                                         sr.no_po, 
                                                         cs.nama_cs, 
@@ -402,8 +413,36 @@ include "akses.php";
                                                         ?>
                                                     </td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                        <a href="cek-produk-inv-nonppn.php?id=<?php echo base64_encode($data['id_inv_nonppn']) ?>" class="btn btn-primary btn-sm" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                        <button data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_inv_nonppn']; ?>" data-nama="<?php echo $data['no_inv']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </button>
                                                     </td>
+                                                    <!-- Modal Cancel -->
+                                                    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4><strong>Silahkan Isi Alasan</strong></h4>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form action="proses/proses-cancel-inv.php" method="POST">
+                                                                        <p>Apakah Anda Yakin Ingin Cancel <br>No.Invoice : <b id="no_inv"></b> (<b id="cs"></b>) ?</p>
+                                                                        <div class="mb-3">
+                                                                            <input type="hidden" name="id_inv" id="id_inv">
+                                                                            <Label>Alasan Cancel</Label>
+                                                                            <input type="text" class="form-control" name="alasan" required>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="submit" class="btn btn-primary" name="cancel-inv-nonppn" id="cancel">Ya, Cancel Transaksi</button>
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </tr>
                                                 <?php $no++ ?>
                                             <?php } ?>
@@ -504,8 +543,35 @@ include "akses.php";
                                                         ?>
                                                     </td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                        <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                        <button data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_inv_ppn']; ?>" data-nama="<?php echo $data['no_inv']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </button>
                                                     </td>
+                                                    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4><strong>Silahkan Isi Alasan</strong></h4>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form action="proses/proses-cancel-inv.php" method="POST">
+                                                                        <p>Apakah Anda Yakin Ingin Cancel <br>No.Invoice : <b id="no_inv"></b> (<b id="cs"></b>) ?</p>
+                                                                        <div class="mb-3">
+                                                                            <input type="hidden" name="id_inv" id="id_inv">
+                                                                            <Label>Alasan Cancel</Label>
+                                                                            <input type="text" class="form-control" name="alasan" required>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="submit" class="btn btn-primary" name="cancel-inv-ppn" id="cancel">Ya, Cancel Transaksi</button>
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </tr>
                                                 <?php $no++ ?>
                                             <?php } ?>
@@ -606,9 +672,36 @@ include "akses.php";
                                                         ?>
                                                     </td>
                                                     <td class="text-center text-nowrap">
-                                                        <a href="cek-produk-inv-bum.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2" title="Lihat Produk"><i class="bi bi-eye-fill"></i> Lihat</a>
+                                                        <a href="cek-produk-inv-bum.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
+                                                        <button data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_inv_bum']; ?>" data-nama="<?php echo $data['no_inv']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
+                                                <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4><strong>Silahkan Isi Alasan</strong></h4>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="proses/proses-cancel-inv.php" method="POST">
+                                                                    <p>Apakah Anda Yakin Ingin Cancel <br>No.Invoice : <b id="no_inv"></b> (<b id="cs"></b>) ?</p>
+                                                                    <div class="mb-3">
+                                                                        <input type="text" name="id_inv" id="id_inv">
+                                                                        <Label>Alasan Cancel</Label>
+                                                                        <input type="text" class="form-control" name="alasan" required>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="submit" class="btn btn-primary" name="cancel-inv-bum" id="cancel">Ya, Cancel Transaksi</button>
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <?php $no++ ?>
                                             <?php } ?>
                                         </tbody>
@@ -783,5 +876,25 @@ include "akses.php";
             "ordering": false,
             "autoWidth": false
         });
+    });
+</script>
+
+<script>
+    $('#cancelModal').on('show.bs.modal', function(event) {
+        // Mendapatkan data dari tombol yang ditekan
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var nama = button.data('nama');
+        var cs = button.data('cs');
+        
+        var modal = $(this);
+        var simpanBtn = modal.find('.modal-footer #cancel');
+        var namaInput = modal.find('.modal-body #no_inv');
+        var csInput = modal.find('.modal-body #cs');
+
+        // Menampilkan data
+        modal.find('.modal-body #id_inv').val(id);
+        namaInput.text(nama);
+        csInput.text(cs);
     });
 </script>

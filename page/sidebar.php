@@ -119,10 +119,10 @@
             </ul>
           </li>
           <!-- End Produk -->
-          <!-- Barang Masuk -->
+          <!-- Produk  Masuk -->
           <li class="nav-item">
             <a class="nav-link collapsed <?php if ($page == 'br-masuk') { echo 'active-link'; } ?>" data-bs-target="#barang-masuk" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-file-ruled-fill"></i><span>Barang Masuk</span><i class="bi bi-chevron-down ms-auto"></i>
+              <i class="bi bi-file-ruled-fill"></i><span>Produk Masuk</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="barang-masuk" class="nav-content collapse " data-bs-parent="#sidebar-nav">
               <li>
@@ -150,15 +150,15 @@
               </li>
             </ul>
           </li>
-          <!-- End Barang Masuk Nav -->
+          <!-- End Produk  Masuk Nav -->
 
-          <!-- Barang Keluar -->
+          <!-- Produk  Keluar -->
           <li class="nav-item">
             <a class="nav-link <?php if ($page == 'br-keluar') { echo 'active-link'; } ?>"  href="barang-keluar-reg.php">
-              <i class="bi bi-file-ruled"></i><span>Barang Keluar</span>
+              <i class="bi bi-file-ruled"></i><span>Produk  Keluar</span>
             </a>
           </li>
-          <!-- End Barang Keluar Nav -->
+          <!-- End Produk  Keluar Nav -->
 
           <!-- Perubahan Merk -->
           <li class="nav-item">
@@ -262,14 +262,14 @@
                 <a class="<?php if ($page2 == 'ket-in') {
                             echo 'active';
                           } ?>" href="keterangan-in.php">
-                  <i class="bi bi-circle"></i><span>Barang Masuk</span>
+                  <i class="bi bi-circle"></i><span>Produk  Masuk</span>
                 </a>
               </li>
               <li>
                 <a class="<?php if ($page2 == 'ket-out') {
                             echo 'active';
                           } ?>" href="keterangan-out.php">
-                  <i class="bi bi-circle"></i><span>Barang Keluar</span>
+                  <i class="bi bi-circle"></i><span>Produk  Keluar</span>
                 </a>
               </li>
             </ul>
@@ -373,10 +373,10 @@
             </ul>
           </li>
           <!-- End Produk -->
-          <!-- Barang Masuk -->
+          <!-- Produk  Masuk -->
           <li class="nav-item">
             <a class="nav-link collapsed <?php if ($page == 'br-masuk') { echo 'active-link'; } ?>" data-bs-target="#barang-masuk" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-file-ruled-fill"></i><span>Barang Masuk</span><i class="bi bi-chevron-down ms-auto"></i>
+              <i class="bi bi-file-ruled-fill"></i><span>Produk  Masuk</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="barang-masuk" class="nav-content collapse " data-bs-parent="#sidebar-nav">
               <li>
@@ -392,26 +392,26 @@
               </li>
             </ul>
           </li>
-          <!-- End Barang Masuk Nav -->
+          <!-- End Produk  Masuk Nav -->
 
           <li class="nav-item">
             <a class="nav-link collapsed <?php if ($page == 'br-keluar') { echo 'active-link'; } ?>" data-bs-target="#barang-keluar" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-file-ruled"></i><span>Barang Keluar</span><i class="bi bi-chevron-down ms-auto"></i>
+              <i class="bi bi-file-ruled"></i><span>Produk  Keluar</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="barang-keluar" class="nav-content collapse " data-bs-parent="#sidebar-nav">
               <li>
                 <a href="barang-keluar-reg.php">
-                  <i class="bi bi-circle"></i><span>Barang Keluar Reguler</span>
+                  <i class="bi bi-circle"></i><span>Produk  Keluar Reguler</span>
                 </a>
               </li>
               <!-- <li>
                 <a href="#">
-                  <i class="bi bi-circle"></i><span>Barang Keluar E-Cat</span>
+                  <i class="bi bi-circle"></i><span>Produk  Keluar E-Cat</span>
                 </a>
               </li> -->
             </ul>
           </li>
-          <!-- End Barang Keluar Nav -->
+          <!-- End Produk  Keluar Nav -->
 
           <li class="nav-item">
             <a class="nav-link collapsed <?php if ($page == 'transaksi') { echo 'active-link'; } ?>" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">

@@ -6,6 +6,7 @@
     if(isset($_POST['diambil-oleh'])){
         $id_inv = $_POST['id_inv'];
         $diambil_oleh = $_POST['diambil_oleh'];
+        $diambil_tanggal = $_POST['diambil_tanggal'];
 
         mysqli_begin_transaction($connect);
 
@@ -39,7 +40,7 @@
             if($update_bukti_terima -> num_rows > 0){
                 $update_bukti_terima = mysqli_query($connect, "UPDATE inv_bukti_terima SET bukti_satu = '$new_file1_name' WHERE id_inv = '$id_inv'");
 
-                $update_inv_penerima = mysqli_query($connect, "UPDATE inv_penerima SET nama_penerima = '$diambil_oleh' WHERE id_inv = '$id_inv'");
+                $update_inv_penerima = mysqli_query($connect, "UPDATE inv_penerima SET nama_penerima = '$diambil_oleh', tgl_terima = '$diambil_tanggal' WHERE id_inv = '$id_inv'");
 
                 $update_inv_nonppn = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
 
@@ -66,7 +67,7 @@
             } else {
                 $simpan_bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima (id_bukti_terima, id_inv, bukti_satu) VALUES ('$id_bukti_terima', '$id_inv', '$new_file1_name')");
 
-                $update_inv_penerima = mysqli_query($connect, "UPDATE inv_penerima SET nama_penerima = '$diambil_oleh' WHERE id_inv = '$id_inv'");
+                $update_inv_penerima = mysqli_query($connect, "UPDATE inv_penerima SET nama_penerima = '$diambil_oleh', tgl_terima = '$diambil_tanggal' WHERE id_inv = '$id_inv'");
 
                 $update_inv_nonppn = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Diterima' WHERE id_inv_nonppn = '$id_inv'");
                 
@@ -95,20 +96,20 @@
             $connect->rollback();
             $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
             ?>
-            <!-- Sweet Alert -->
-            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-            <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    title: "Error!",
-                    text: "<?php echo $error_message; ?>",
-                    icon: "error",
-                }).then(function() {
-                    window.location.href = "../invoice-reguler-dikirim.php?sort=baru";
-                });
-            });
-            </script>
+                <!-- Sweet Alert -->
+                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "<?php echo $error_message; ?>",
+                            icon: "error",
+                        }).then(function() {
+                            window.location.href = "../invoice-reguler-dikirim.php?sort=baru";
+                        });
+                    });
+                </script>
             <?php
         }
 

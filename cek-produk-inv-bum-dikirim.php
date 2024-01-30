@@ -784,7 +784,10 @@ include "function/class-spk.php";
                             <label>Diambil Oleh</label>
                             <input type="text" name="diambil_oleh" class="form-control">
                         </div>
-
+                        <div class="mb-3">
+                            <label>Diambil Tanggal</label>
+                            <input type="text" id="date" name="diambil_tanggal" class="form-control">
+                        </div>
                          <div class="mb-3">
                             <label id="labelBukti1">Bukti Terima 1</label>
                             <br>
@@ -1559,22 +1562,23 @@ function numberFormat(number) {
         $('#qtydisc').val(qty);
     });
 
-$('#edit').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    var idTrx = button.data('id');
-    var harga = button.data('harga');
-    var qty = button.data('qty');
+    $('#edit').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var idTrx = button.data('id');
+        var harga = button.data('harga');
+        var qty = button.data('qty');
 
-    $('#id_trx').val(idTrx);
-    $('#harga_produk').val(harga);
-    $('#qty').val(qty);
-});
+        $('#id_trx').val(idTrx);
+        $('#harga_produk').val(harga);
+        $('#qty').val(qty);
+    });
 </script>
 
 <!-- date picker with flatpick -->
 <script type="text/javascript">
     flatpickr("#date", {
-        dateFormat: "d/m/Y"
+        dateFormat: "d/m/Y",
+        defaultDate: "today", // Set default date to today
     });
 
     flatpickr("#tempo", {

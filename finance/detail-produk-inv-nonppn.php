@@ -355,7 +355,7 @@ include "../function/class-spk.php";
                                                                 <p style="float: right;"> :</p>
                                                             </div>
                                                             <div class="col-7">
-                                                                <?php echo date('d F Y', strtotime($tgl_terima)) ?>
+                                                                <?php echo $tgl_terima?>
                                                             </div>
                                                         </div>
                                                     <?php

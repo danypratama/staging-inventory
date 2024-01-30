@@ -287,16 +287,27 @@ include "akses.php";
             <li class="nav-item flex-fill" role="presentation">
                 <?php
                     $sql_cancel = " SELECT 
-                                        sr.id_spk_reg,
-                                        sr.no_spk,
-                                        sr.tgl_spk,
-                                        sr.no_po,
-                                        sr.menu_cancel,
-                                        sr.note,
-                                        cs.nama_cs, cs.alamat
-                                    FROM spk_reg AS sr
-                                    JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
-                                    WHERE status_spk = 'Cancel Order'";
+                                        no_spk,
+                                        no_inv
+                                    FROM (
+                                        SELECT 
+                                            sr.no_spk,
+                                            '' AS no_inv  
+                                        FROM spk_reg AS sr
+                                        JOIN tb_customer cs ON(sr.id_customer = cs.id_cs)
+                                        WHERE sr.status_spk = 'Cancel Order' AND sr.id_inv = ''
+                                        UNION
+                                        SELECT 
+                                            GROUP_CONCAT(CONCAT(sr.no_spk, ', ') SEPARATOR '') AS no_spk,
+                                            COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv
+                                        FROM spk_reg AS sr
+                                        LEFT JOIN tb_customer cs ON sr.id_customer = cs.id_cs
+                                        LEFT JOIN inv_nonppn nonppn ON sr.id_inv = nonppn.id_inv_nonppn
+                                        LEFT JOIN inv_ppn ppn ON sr.id_inv = ppn.id_inv_ppn
+                                        LEFT JOIN inv_bum bum ON sr.id_inv = bum.id_inv_bum
+                                        WHERE sr.status_spk = 'Cancel Order' AND sr.id_inv != ''
+                                        GROUP BY COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv)
+                                    ) AS subquery";
                     $query_cancel = mysqli_query($connect, $sql_cancel);
                     $total_query_cancel = mysqli_num_rows($query_cancel);
                 ?>
@@ -395,7 +406,7 @@ include "akses.php";
                                 ?>
                                   <td class="text-center text-nowrap">
                                     <a href="detail-produk-spk-reg.php?id=<?php echo base64_encode($data['id_spk_reg']) ?>" id="detail-spk" class="btn btn-primary btn-sm" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
-                                    <button href="#" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_spk_reg']; ?>" data-nama="<?php echo $data['no_spk']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                    <button data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_spk_reg']; ?>" data-nama="<?php echo $data['no_spk']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
                                       <i class="bi bi-x-circle"></i>
                                     </button>
                                   </td>

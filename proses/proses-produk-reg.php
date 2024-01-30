@@ -363,13 +363,16 @@
 			$sql_delete_produk = "DELETE FROM tb_produk_reguler WHERE id_produk_reg = '$idh'";
 			$stmt_delete_produk = mysqli_query($connect, $sql_delete_produk);
 
+			$sql_delete_produk = "DELETE FROM stock_produk_reguler WHERE id_produk_reg = '$idh'";
+			$stmt_delete_stock = mysqli_query($connect, $sql_delete_produk);
+
 
 			// Menghapus data dari tabel qr_link
 			$sql_delete_qr = "DELETE FROM qr_link WHERE id_produk_qr = '$idh'";
 			$stmt_delete_qr = mysqli_query($connect, $sql_delete_qr);
 
 			// Menjalankan penghapusan
-			if ($stmt_delete_produk && $stmt_delete_qr) {
+			if ($stmt_delete_produk && $stmt_delete_qr && $stmt_delete_stock) {
 				// Hapus gambar terkait
 				unlink("../gambar/upload-produk-reg/$gambar");
 				unlink("../gambar/QRcode/$gambar_qr");
@@ -416,13 +419,17 @@
 			$sql_delete_produk = "DELETE FROM tb_produk_ecat WHERE id_produk_ecat = '$idh'";
 			$stmt_delete_produk = mysqli_query($connect, $sql_delete_produk);
 
+			// Menghapus data dari tabel tb_produk_reguler
+			$sql_delete_produk = "DELETE FROM stock_produk_ecat WHERE id_produk_ecat = '$idh'";
+			$stmt_delete_stock = mysqli_query($connect, $sql_delete_produk);
+
 
 			// Menghapus data dari tabel qr_link
 			$sql_delete_qr = "DELETE FROM qr_link_ecat WHERE id_produk_qr = '$idh'";
 			$stmt_delete_qr = mysqli_query($connect, $sql_delete_qr);
 
 			// Menjalankan penghapusan
-			if ($stmt_delete_produk && $stmt_delete_qr) {
+			if ($stmt_delete_produk && $stmt_delete_qr && $stmt_delete_stock) {
 				// Hapus gambar terkait
 				unlink("../gambar/upload-produk-ecat/$gambar");
 				unlink("../gambar/QRcode-ecat/$gambar_qr");
