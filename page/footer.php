@@ -1,8 +1,8 @@
 <footer id="footer" class="footer">
   <div class="copyright">
-    &copy; 2023 <strong><span>PT.Karsa Mandiri Alkesindo</span></strong>. All Rights Reserved
+    &copy;2024 <strong><span>PT.Karsa Mandiri Alkesindo</span></strong>. All Rights Reserved
     <br>
-    Version 3.0
+    Version 3.1
   </div>
   <div class="credits">
     <!-- All the links in the footer should remain intact. -->

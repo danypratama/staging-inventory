@@ -19,8 +19,10 @@
         color: black;
         letter-spacing: 0.5px;
     }
-    table{
-        font-size: 18px;
+    .table-custom{
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 16px;
         color: black !important;
     }
   </style>
@@ -89,12 +91,12 @@
                 </p>
             </div>
         </div>
-        <table class="table table-bordered border-dark">
+        <table class="table-custom table-bordered border-dark">
             <thead>
                 <tr>
-                    <th class="text-center col-1">No</th>
-                    <th class="text-center col-8">Nama Produk</th>
-                    <th class="text-center col-3">Qty</th>
+                    <th class="text-center p-2">No</th>
+                    <th class="text-center p-2">Nama Produk</th>
+                    <th class="text-center p-2">Qty</th>
                 </tr>
             </thead>
             <tbody>
@@ -129,9 +131,9 @@
                         }
                 ?>
                 <tr>
-                    <td class="text-center"><?php echo $no ?></td>
-                    <td><?php echo $data_trx['nama_produk_spk'] ?></td>
-                    <td class="text-center"><?php echo $data_trx['qty']. '&nbsp;' .$satuan_produk. '' ?></td>
+                    <td class="text-center p-1"><?php echo $no ?></td>
+                    <td class="p-1"><?php echo $data_trx['nama_produk_spk'] ?></td>
+                    <td class="text-center p-1"><?php echo $data_trx['qty']. '&nbsp;' .$satuan_produk. '' ?></td>
                 </tr>
                 <?php $no++ ?>
                 <?php } ?>

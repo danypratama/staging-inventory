@@ -1,4 +1,5 @@
 <?php  
+session_start();
 include "../koneksi.php";
 
 if(isset($_POST['simpan-bill'])){
@@ -12,6 +13,7 @@ if(isset($_POST['simpan-bill'])){
     $total_tagihan = intval($total_tagihan); // Mengubah string harga menjadi integer
     $no_tagihan = mysqli_real_escape_string($connect, $_POST['no_tagihan']);
     $tgl_tagihan = mysqli_real_escape_string($connect, $_POST['tgl_tagihan']);
+    $jenis_faktur = mysqli_real_escape_string($connect, $_POST['jenis_faktur']);
     
     foreach($id_inv as $id_inv_array){
         $id_inv_escape[] = mysqli_real_escape_string($connect, $id_inv_array);
@@ -25,7 +27,7 @@ if(isset($_POST['simpan-bill'])){
         $id_inv_count = count($id_inv_escape);
         for ($i = 0; $i < $id_inv_count; $i++){
 
-            $sql_tagihan = mysqli_query($connect, "INSERT IGNORE INTO finance_tagihan (id_tagihan, no_tagihan, tgl_tagihan, total_tagihan) VALUES ('$id_tagihan','$no_tagihan', '$tgl_tagihan', '$total_tagihan')");
+            $sql_tagihan = mysqli_query($connect, "INSERT IGNORE INTO finance_tagihan (id_tagihan, no_tagihan, tgl_tagihan, jenis_faktur, total_tagihan) VALUES ('$id_tagihan','$no_tagihan', '$tgl_tagihan', '$jenis_faktur', '$total_tagihan')");
             $id_inv_array = $id_inv_escape[$i];
 
             $sql_finance = mysqli_query($connect, "UPDATE finance SET id_tagihan = '$id_tagihan', status_tagihan = 1  WHERE id_inv = '$id_inv_array'");
@@ -35,9 +37,10 @@ if(isset($_POST['simpan-bill'])){
         }
         // Commit the transaction
         mysqli_commit($connect);
+        // $_SESSION['info'] = 'Disimpan';
+        $_SESSION['info'] = 'No tagihan berhasil dibuat';
         // Redirect to the invoice page
         header("Location:../finance-inv.php?date_range=weekly");
-        exit();
     } catch (Exception $e) {
         // Rollback the transaction if an error occurs
         mysqli_rollback($connect);
@@ -60,6 +63,10 @@ if(isset($_POST['simpan-bill'])){
             </script>
             <?php
     } 
+} else if(isset($_POST['ubah-jenis-faktur'])){
+    $id_bill = $_POST['id_bill'];
+    $jenis_faktur = $_POST['jenis_faktur'];
+    $update = mysqli_query($connect, "UPDATE finance_tagihan SET jenis_faktur = '$jenis_faktur' WHERE id_tagihan = '$id_bill'");
 }
 
 function uuid() {

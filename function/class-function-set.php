@@ -13,7 +13,7 @@ class StockStatusSet {
         } else if ($stock >= $low_lev && $stock <= $min_stock) {
             $status = 'Low';
             $backgroundColor = '#ff4500';
-            $textColor = '';
+            $textColor = 'text-white';
         } else if ($stock >= $min_stock && $stock <= $high_lev) {
             $status = 'Medium';
             $backgroundColor = '#ffff00';

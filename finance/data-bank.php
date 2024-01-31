@@ -55,7 +55,9 @@ include 'akses.php';
             <div class="card p-3">
                 <div class="row">
                     <div class="col-md-2 mb-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bank"><i class="bi bi-plus-circle"></i> Tambah Data Bank</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBank">
+                            <i class="bi bi-plus-circle"></i> Tambah Data Bank
+                        </button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -99,7 +101,7 @@ include 'akses.php';
         </section>
     </main><!-- End #main -->
     <!-- Modal Bank-->
-    <div class="modal fade" id="bank" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="addBank" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div class="modal-header">

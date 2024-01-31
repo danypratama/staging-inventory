@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .img-fluid{
+            height: 500px !important;
+        }
+    </style>
 </head>
 <body>
     <?php
@@ -84,10 +89,10 @@
                     echo '
                         <div class="card mb-3">
                             <div class="row g-0">
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                 <div class="card-body">
                                     <h5 class="card-title">Bukti Transfer</h5>
                                     <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
@@ -160,10 +165,10 @@
                     echo '
                         <div class="card mb-3">
                             <div class="row g-0">
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                 <div class="card-body">
                                     <h5 class="card-title">Bukti Transfer</h5>
                                     <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
@@ -233,10 +238,10 @@
                     echo '
                         <div class="card mb-3">
                             <div class="row g-0">
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                 <div class="card-body">
                                     <h5 class="card-title">Bukti Transfer</h5>
                                     <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>

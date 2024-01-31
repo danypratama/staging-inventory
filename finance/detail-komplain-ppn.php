@@ -61,7 +61,7 @@
             <section>
                 <?php  
                     $id = base64_decode($_GET['id']);
-                    include "../query/detail-komplain-bum.php";
+                    include "../query/detail-komplain-ppn.php";
                     $id_inv = $data_kondisi['id_inv'];
                 ?>
                 <div class="card p-2">     
@@ -327,7 +327,7 @@
                                 <a href="#" class="nav-link active">Original</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a href="detail-komplain-revisi-bum.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Revisi</a>
+                                <a href="detail-komplain-revisi-ppn.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Revisi</a>
                             </li>
                         </ul>
                         <div class="tab-content pt-2" id="myTabContent">
@@ -346,7 +346,7 @@
                                                 <?php  
                                                     if($data_detail['kategori_inv'] == 'diskon'){
                                                         ?>
-                                                            <th class="text-center text-nowrap p-3">Diskon</th>
+                                                             <th class="text-center text-nowrap p-3">Diskon</th>
                                                         <?php
                                                     }
                                                 

@@ -47,6 +47,7 @@ include "akses.php";
                                         bill.no_tagihan,
                                         bill.status_cetak,
                                         bill.id_driver,
+                                        bill.jenis_faktur,
                                         fnc.id_tagihan AS id_tagihan_finance,
                                         spk.id_inv,
                                         spk.id_customer,
@@ -65,6 +66,7 @@ include "akses.php";
                     $status_cetak = $data_bill_cs['status_cetak'];
                     $id_driver = $data_bill_cs['id_driver'];
                     $id_customer = $data_bill_cs['id_customer'];
+                    $jenis_faktur = $data_bill_cs['jenis_faktur'];
                 ?>
                 <div class="card-header text-center">
                     <h5><strong>DETAIL TAGIHAN</strong></h5>
@@ -144,6 +146,11 @@ include "akses.php";
                             <a href="list-tagihan-penjualan.php?date_range=weekly" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
+                            <!-- Button Edit Jenis Faktur -->
+                            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#ubahJenisFaktur">
+                                <i class="bi bi-pencil"></i> Ubah Jenis Faktur Tagihan
+                            </button>
+
                             <a href="cetak-tagihan.php?id=<?php echo base64_encode($id_bill)?>" class="btn btn-secondary btn-detail mb-2">
                                 <i class="bi bi-printer"></i> Cetak Tagihan
                             </a>
@@ -317,6 +324,30 @@ include "akses.php";
                 </div>
         </section>
     </main><!-- End #main -->
+    <!-- Modal -->
+    <div class="modal fade" id="ubahJenisFaktur" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="proses/bill.php" method="post">
+                        <div class="mb-3">
+                            <label>Jenis Faktur Tagihan</label>
+                            <input type="text" name="id_bill" value="<?php echo $id_bill ?>">
+                            <input type="text" class="form-control" name="jenis_faktur" value="<?php echo $jenis_faktur ?>" maxlength="25" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary" name="ubah-jenis-faktur">Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Bayar -->
     <div class="modal fade" id="sudahBayar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -400,7 +431,7 @@ include "akses.php";
                                                                 <img src="<?php echo $logo_img ?>" class="img-bank" alt="...">
                                                             </div>
                                                             <div class="col-2 text-end">
-                                                                <input class="form-check-input mt-3" type="radio" id="id_bank_<?php echo $row['id_bank']; ?>" name="id_bank_pt" value="<?php echo $data_bank['id_bank_pt']; ?>">
+                                                                <input class="form-check-input mt-3" type="radio" id="id_bank_<?php echo $data_bank['id_bank_pt']; ?>" name="id_bank_pt" value="<?php echo $data_bank['id_bank_pt']; ?>">
                                                             </div>
                                                         </div>
                                                         <p class="card-text">
@@ -639,23 +670,23 @@ include "akses.php";
 
     <!-- Modal utama History -->
     <div class="modal fade" id="history" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="historyLabel">History Payment</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="card">
-            <div class="card-body" id="detail_id">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historyLabel">History Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                <div class="card-body" id="detail_id">
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-        </div>
-        </div>
-    </div>
     </div>
     <!-- End Modal utama History -->
     <!-- Modal gambar History -->

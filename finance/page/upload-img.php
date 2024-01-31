@@ -19,33 +19,26 @@
                 img.onload = function() {
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext('2d');
-                    var targetWidth = 500;
-                    var targetHeight = 500;
-                    var width = img.width;
-                    var height = img.height;
+
+                    var originalWidth = img.width;
+                    var originalHeight = img.height;
 
                     // Menghitung aspek rasio gambar
-                    var aspectRatio = width / height;
+                    var aspectRatio = originalWidth / originalHeight;
 
-                    // Menentukan dimensi yang akan digunakan untuk memangkas gambar
-                    var trimWidth = width;
-                    var trimHeight = height;
-                    if (aspectRatio > 1) {
-                        trimWidth = Math.min(width, height * aspectRatio);
-                        trimHeight = trimWidth / aspectRatio;
-                    } else {
-                        trimHeight = Math.min(height, width / aspectRatio);
-                        trimWidth = trimHeight * aspectRatio;
-                    }
+                    // Menentukan persentase lebar yang diinginkan (contoh: 65%)
+                    var targetWidthPercentage = 65;
 
-                    // Menghitung koordinat pemangkasan
-                    var trimX = (width - trimWidth) / 2;
-                    var trimY = (height - trimHeight) / 2;
+                    // Menghitung targetWidth berdasarkan persentase
+                    var targetWidth = (originalWidth * targetWidthPercentage) / 100;
+
+                    // Menghitung targetHeight berdasarkan aspek rasio
+                    var targetHeight = targetWidth / aspectRatio;
 
                     // Menggambar gambar yang dipangkas ke dalam canvas
                     canvas.width = targetWidth;
                     canvas.height = targetHeight;
-                    ctx.drawImage(img, trimX, trimY, trimWidth, trimHeight, 0, 0, targetWidth, targetHeight);
+                    ctx.drawImage(img, 0, 0, originalWidth, originalHeight, 0, 0, targetWidth, targetHeight);
 
                     // Mengubah gambar menjadi data URL
                     var compressedImageData = canvas.toDataURL('image/jpeg', 1.0);
@@ -63,8 +56,8 @@
 
                     console.log("Ukuran gambar setelah kompresi:", targetWidth, "x", targetHeight);
                     console.log("Ukuran memori gambar setelah kompresi:", formatBytes(compressedFileSize));
-                }
-            }
+                };
+            };
             reader.readAsDataURL(file);
         }
 
@@ -91,7 +84,7 @@
     }
 
     function compressAndPreviewImage2(event) {
-            var file = event.target.files[0];
+        var file = event.target.files[0];
             var reader = new FileReader();
             reader.onload = function(e) {
                 var img = new Image();
@@ -99,33 +92,26 @@
                 img.onload = function() {
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext('2d');
-                    var targetWidth = 500;
-                    var targetHeight = 500;
-                    var width = img.width;
-                    var height = img.height;
+
+                    var originalWidth = img.width;
+                    var originalHeight = img.height;
 
                     // Menghitung aspek rasio gambar
-                    var aspectRatio = width / height;
+                    var aspectRatio = originalWidth / originalHeight;
 
-                    // Menentukan dimensi yang akan digunakan untuk memangkas gambar
-                    var trimWidth = width;
-                    var trimHeight = height;
-                    if (aspectRatio > 1) {
-                        trimWidth = Math.min(width, height * aspectRatio);
-                        trimHeight = trimWidth / aspectRatio;
-                    } else {
-                        trimHeight = Math.min(height, width / aspectRatio);
-                        trimWidth = trimHeight * aspectRatio;
-                    }
+                    // Menentukan persentase lebar yang diinginkan (contoh: 65%)
+                    var targetWidthPercentage = 65;
 
-                    // Menghitung koordinat pemangkasan
-                    var trimX = (width - trimWidth) / 2;
-                    var trimY = (height - trimHeight) / 2;
+                    // Menghitung targetWidth berdasarkan persentase
+                    var targetWidth = (originalWidth * targetWidthPercentage) / 100;
+
+                    // Menghitung targetHeight berdasarkan aspek rasio
+                    var targetHeight = targetWidth / aspectRatio;
 
                     // Menggambar gambar yang dipangkas ke dalam canvas
                     canvas.width = targetWidth;
                     canvas.height = targetHeight;
-                    ctx.drawImage(img, trimX, trimY, trimWidth, trimHeight, 0, 0, targetWidth, targetHeight);
+                    ctx.drawImage(img, 0, 0, originalWidth, originalHeight, 0, 0, targetWidth, targetHeight);
 
                     // Mengubah gambar menjadi data URL
                     var compressedImageData = canvas.toDataURL('image/jpeg', 1.0);
@@ -137,14 +123,14 @@
                     previewElement.classList.add('preview-image');
 
                     // Menampilkan pratinjau gambar
-                    var imagePreview2 = document.getElementById('imagePreview2');
-                    imagePreview2.innerHTML = '';
-                    imagePreview2.appendChild(previewElement);
+                    var imagePreview = document.getElementById('imagePreview');
+                    imagePreview.innerHTML = '';
+                    imagePreview.appendChild(previewElement);
 
                     console.log("Ukuran gambar setelah kompresi:", targetWidth, "x", targetHeight);
-                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes2(compressedFileSize));
-                }
-            }
+                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes(compressedFileSize));
+                };
+            };
             reader.readAsDataURL(file);
         }
 
@@ -169,7 +155,7 @@
     }
 
     function compressAndPreviewImage3(event) {
-            var file = event.target.files[0];
+        var file = event.target.files[0];
             var reader = new FileReader();
             reader.onload = function(e) {
                 var img = new Image();
@@ -177,33 +163,26 @@
                 img.onload = function() {
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext('2d');
-                    var targetWidth = 500;
-                    var targetHeight = 500;
-                    var width = img.width;
-                    var height = img.height;
+
+                    var originalWidth = img.width;
+                    var originalHeight = img.height;
 
                     // Menghitung aspek rasio gambar
-                    var aspectRatio = width / height;
+                    var aspectRatio = originalWidth / originalHeight;
 
-                    // Menentukan dimensi yang akan digunakan untuk memangkas gambar
-                    var trimWidth = width;
-                    var trimHeight = height;
-                    if (aspectRatio > 1) {
-                        trimWidth = Math.min(width, height * aspectRatio);
-                        trimHeight = trimWidth / aspectRatio;
-                    } else {
-                        trimHeight = Math.min(height, width / aspectRatio);
-                        trimWidth = trimHeight * aspectRatio;
-                    }
+                    // Menentukan persentase lebar yang diinginkan (contoh: 65%)
+                    var targetWidthPercentage = 65;
 
-                    // Menghitung koordinat pemangkasan
-                    var trimX = (width - trimWidth) / 2;
-                    var trimY = (height - trimHeight) / 2;
+                    // Menghitung targetWidth berdasarkan persentase
+                    var targetWidth = (originalWidth * targetWidthPercentage) / 100;
+
+                    // Menghitung targetHeight berdasarkan aspek rasio
+                    var targetHeight = targetWidth / aspectRatio;
 
                     // Menggambar gambar yang dipangkas ke dalam canvas
                     canvas.width = targetWidth;
                     canvas.height = targetHeight;
-                    ctx.drawImage(img, trimX, trimY, trimWidth, trimHeight, 0, 0, targetWidth, targetHeight);
+                    ctx.drawImage(img, 0, 0, originalWidth, originalHeight, 0, 0, targetWidth, targetHeight);
 
                     // Mengubah gambar menjadi data URL
                     var compressedImageData = canvas.toDataURL('image/jpeg', 1.0);
@@ -215,14 +194,14 @@
                     previewElement.classList.add('preview-image');
 
                     // Menampilkan pratinjau gambar
-                    var imagePreview3 = document.getElementById('imagePreview3');
-                    imagePreview3.innerHTML = '';
-                    imagePreview3.appendChild(previewElement);
+                    var imagePreview = document.getElementById('imagePreview');
+                    imagePreview.innerHTML = '';
+                    imagePreview.appendChild(previewElement);
 
                     console.log("Ukuran gambar setelah kompresi:", targetWidth, "x", targetHeight);
-                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes3(compressedFileSize));
-                }
-            }
+                    console.log("Ukuran memori gambar setelah kompresi:", formatBytes(compressedFileSize));
+                };
+            };
             reader.readAsDataURL(file);
         }
 </script>

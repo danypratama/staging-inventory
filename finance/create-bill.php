@@ -100,17 +100,21 @@ include 'akses.php';
                         <h5><b>Buat Tagihan</b></h5>
                     </div>
                     <div class="row mb-1">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label>No. Tagihan</label>
-                            <input type="text" class="form-control" name="no_tagihan" value="<?php echo $no_tagihan ?>" readonly>
+                            <input type="text" class="form-control bg-light" name="no_tagihan" value="<?php echo $no_tagihan ?>" readonly>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label>Tgl. Tagihan</label>
-                            <input type="text" class="form-control" name="tgl_tagihan" id="tgl_tagihan" readonly>
-                      </div>
-                        <div class="col-md-4 mb-3">
                             <label>Customer</label>
-                            <input type="text" class="form-control" name="customer" value="<?php echo $nama_cs ?>" readonly>
+                            <input type="text" class="form-control bg-light" name="customer" value="<?php echo $nama_cs ?>" readonly>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label>Tgl. Tagihan</label>
+                            <input type="text" class="form-control" id="date" name="tgl_tagihan" id="tgl_tagihan">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label>Jenis Faktur Tagihan</label>
+                            <input type="text" class="form-control" name="jenis_faktur"  maxlength="25" required>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -320,4 +324,11 @@ include 'akses.php';
     var day = String(date.getDate()).padStart(2, "0");
     return day + "/" + month + "/" + year;
   }
+</script>
+
+<script type="text/javascript">
+  flatpickr("#date", {
+    dateFormat: "d/m/Y",
+    defaultDate: new Date(),
+  });
 </script>

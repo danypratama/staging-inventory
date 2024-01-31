@@ -2,7 +2,6 @@ var notifikasi = $(".info-data").data("infodata");
 
 if (
   notifikasi == "Disimpan" ||
-  notifikasi == "No SPK berhasil dibuat" ||
   notifikasi == "Direfund" ||
   notifikasi == "Dibatalkan" ||
   notifikasi == "Dihapus" ||
@@ -44,6 +43,7 @@ if (
   });
 } else if (
   notifikasi == "Tidak Ada Perubahan Data" ||
+  notifikasi == "No SPK berhasil dibuat" ||
   notifikasi == "No Izin Edar Berhasil Diubah"
 ) {
   Swal.fire({
