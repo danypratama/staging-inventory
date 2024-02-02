@@ -62,23 +62,27 @@ include "akses.php";
                                 <label class="fw-bold">Tanggal Jatuh Tempo</label>
                                 <div class="input-group flex-nowrap">
                                     <input type="text" class="form-control" name="tanggal_tempo" id="date">
-                                    <button class="input-group-text bg-danger text-white" id="addon-wrapping"> X </button>
+                                    <button type="button" class="input-group-text bg-danger text-white" id="resetTempo"> X </button>
                                 </div>
                             </div>
                             <div class="col-mb-3">
                                 <label class="fw-bold mb-2">Jenis Diskon</label><br>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="jenis_diskon" id="inlineRadio1" value="Tanpa Diskon">
-                                    <label class="form-check-label" for="inlineRadio1">Tanpa Diskon</label>
+                                    <input class="form-check-input" type="radio" name="jenis_diskon" value="Tanpa Diskon">
+                                    <label class="form-check-label">Tanpa Diskon</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="jenis_diskon" id="inlineRadio2" value="Diskon Satuan">
-                                    <label class="form-check-label" for="inlineRadio2">Diskon Satuan</label>
+                                    <input class="form-check-input" type="radio" name="jenis_diskon" value="Diskon Satuan">
+                                    <label class="form-check-label">Diskon Satuan</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="jenis_diskon" id="inlineRadio2" value="Spesial Diskon">
-                                    <label class="form-check-label" for="inlineRadio2">Spesial Diskon</label>
+                                    <input class="form-check-input" type="radio" name="jenis_diskon" value="Spesial Diskon">
+                                    <label class="form-check-label">Spesial Diskon</label>
                                 </div>
+                            </div>
+                            <div class="mb-3 mt-2" id="sp_disc" style="display: none;">
+                                <label class="fw-bold">Spesial Diskon</label>
+                                <input type="text" class="form-control" name="sp_disc">
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -184,9 +188,29 @@ include "akses.php";
 <!-- Script Select Data Supplier -->
 <script>
   $(document).on('click', '#table2 tbody tr', function(e) {
-    $('#id_sp').val($(this).data('id'));
+    $('#id_sp').val($(this).data('id')); 
     $('#nama_sp').val($(this).data('nama'));
     $('#alamat_sp').val($(this).data('alamat'));
     $('#modalCs').modal('hide');
   });
+</script>
+
+<script>
+    // Menambahkan event listener untuk setiap radio button
+    var radioButtons = document.getElementsByName('jenis_diskon');
+    var spDisc = document.getElementById('sp_disc');
+
+    radioButtons.forEach(function(radioButton) {
+        radioButton.addEventListener('change', function() {
+            // Menampilkan value ke dalam console log saat radio button diubah
+            console.log('Jenis Diskon yang dipilih:', this.value);
+            if(this.value == 'Spesial Diskon'){
+                spDisc.style.display = 'block';
+            } else if (this.value == 'Diskon Satuan'){
+                spDisc.style.display = 'none';
+            } else if (this.value == 'Tanpa Diskon'){
+                spDisc.style.display = 'none';
+            }
+        });
+    });
 </script>

@@ -372,13 +372,13 @@ include "akses.php";
                                         trx.*, 
                                         spr.stock, 
                                         tpr.nama_produk, 
-                                        tpr.harga_produk, mr.* 
+                                        tpr.harga_produk, mr.nama_merk 
                                         FROM inv_ppn AS ppn
-                                        JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                        JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                        JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                        JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                        JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                        LEFT JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                        LEFT JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                        LEFT JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                        LEFT JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                        LEFT JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
                                         WHERE ppn.id_inv_ppn = '$id_inv_ppn' AND status_trx = '1' ORDER BY no_spk ASC";
                             $query_cek = mysqli_query($connect, $sql_cek);
                             $data_cek = mysqli_fetch_array($query_cek);
@@ -435,13 +435,13 @@ include "akses.php";
                                             trx.*, 
                                             spr.stock, 
                                             tpr.nama_produk, 
-                                            tpr.harga_produk, mr.* 
+                                            tpr.harga_produk, mr.nama_merk 
                                             FROM inv_ppn AS ppn
-                                            JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
-                                            JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                            JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                            JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                            JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                            LEFT JOIN spk_reg sr ON (ppn.id_inv_ppn = sr.id_inv)
+                                            LEFT JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
+                                            LEFT JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
+                                            LEFT JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
+                                            LEFT JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
                                             WHERE ppn.id_inv_ppn = '$id_ppn_decode' AND status_trx = '1' ORDER BY no_spk ASC";
                                 $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                 while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {

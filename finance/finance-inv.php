@@ -714,45 +714,61 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                 </tr>
               </table>
             </form>   
-            <!-- Export Excel -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
             <script>
                 document.getElementById("export-button").addEventListener("click", function () {
-                    // Ambil data dari tabel HTML
-                    var data = [];
-                    var table = document.getElementById('table2');
-                    var rows = table.getElementsByTagName('tr');
-                    for (var i = 0; i < rows.length; i++) {
-                        var row = [], cols = rows[i].getElementsByTagName('td');
-                        for (var j = 0; j < cols.length; j++) {
-                            row.push(cols[j].innerText);
-                        }
-                        data.push(row);
-                    }
+                  // Inisialisasi DataTable
+                  var table = $('#table2').DataTable();
 
-                    // Membuat worksheet baru
-                    var worksheet = XLSX.utils.aoa_to_sheet(data);
+                  // Mengambil data dari semua halaman DataTable
+                  var data = [];
+                  table.rows().every(function () {
+                      var rowData = this.data();
+                      // Mengambil hanya kolom yang diinginkan (mulai dari indeks 1)
+                      var selectedColumns = rowData.slice(1, 11); // Sesuaikan dengan indeks kolom yang diinginkan
+                      data.push(selectedColumns);
+                  });
 
-                    // Membuat workbook dan menambahkan worksheet ke dalamnya
-                    var workbook = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+                  // Menambahkan header khusus di bagian atas
+                  var header = ["No", "No. Invoice", "Jenis Inv", "Customer", "Tgl. Invoice", "Tgl. Tempo", "Total Tagihan", "Status Pembayaran", "Status Tempo", "Status Tagihan"];
+                  data.unshift(header);
 
-                    // Mengkonversi workbook ke dalam bentuk blob
-                    var excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-                    var blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                  // Membuat worksheet baru
+                  var worksheet = XLSX.utils.aoa_to_sheet(data);
 
-                    // Buat object URL untuk mengunduh file Excel
-                    var url = URL.createObjectURL(blob);
+                  // Set properti kolom untuk menjaga lebar default
+                  var wscols = [];
+                  for (var i = 0; i < header.length; i++) {
+                      // Menetapkan lebar khusus untuk kolom "Customer"
+                      if (i === 3) {
+                          wscols.push({ wch: 35 }); // Sesuaikan dengan kebutuhan
+                      } else {
+                          wscols.push({ wch: header[i].length + 7 });
+                      }
+                  }
+                  worksheet['!cols'] = wscols;
 
-                    // Buat elemen anchor untuk mengunduh file dan klik secara otomatis
-                    var a = document.createElement("a");
-                    a.href = url;
-                    a.download = "data-invoice-nonppn.xlsx";
-                    a.click();
+                  // Membuat workbook dan menambahkan worksheet ke dalamnya
+                  var workbook = XLSX.utils.book_new();
+                  XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
 
-                    // Hapus object URL untuk membersihkan sumber daya
-                    window.URL.revokeObjectURL(url);
-                });
+                  // Mengkonversi workbook ke dalam bentuk blob
+                  var excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+                  var blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                  // Buat object URL untuk mengunduh file Excel
+                  var url = URL.createObjectURL(blob);
+
+                  // Buat elemen anchor untuk mengunduh file dan klik secara otomatis
+                  var a = document.createElement("a");
+                  a.href = url;
+                  a.download = "data-invoice-nonppn.xlsx";
+                  a.click();
+
+                  // Hapus object URL untuk membersihkan sumber daya
+                  window.URL.revokeObjectURL(url);
+              });
             </script>
           </div>
         </div>

@@ -1,8 +1,8 @@
 <?php
-	$server = "localhost";//nama server
-	$user = "mandiria_staging";//usernya
-	$password = "karsa_2023";//password
-	$db = "mandiria_staging";//database
+	$server = "anzio-db.id.domainesia.com";//nama server
+	$user = "mandir36_staging";//usernya
+	$password = "mandir36_staging";//password
+	$db = "mandir36_staging";//database
 
 	// Koneksi dan memilih database di server
 	$connect = mysqli_connect($server,$user,$password,$db);
@@ -24,4 +24,5 @@
             opcache_reset();
         }
     }
+
 ?>

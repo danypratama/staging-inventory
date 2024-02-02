@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style-generate-ppn.css">
 </head>
 
@@ -56,13 +56,17 @@
     $dateStringTempo = $data['tgl_tempo'];
     ?>
     <div class="invoice">
-        <h3 align='right'><strong>INVOICE</strong></h3>
+    <h2 align='right'><strong>INVOICE</strong></h2>
         <div class="invoice-header">
             <div class="col-header-1">
                 <!-- Kolom pertama -->
-                <div class="ket-in-1">
-                    No. Invoice <br>
+                <img src="assets/img/header-kma.jpg" style="width: 460px; height: 70px;">
+            </div>
+            <div class="col-header-2">
+                <!-- Kolom kedua -->
+                <div class="col-ket-in-1">
                     Tgl. Invoice <br>
+                    No. Invoice <br>
                     <?php
                     if (!empty($dateStringTempo)) {
                         echo "Tgl.Jatuh Tempo";
@@ -70,9 +74,9 @@
                     ?>
                 </div>
 
-                <div class="ket-in-2">
-                    &nbsp;: <?php echo $data['no_inv'] ?> <br>
+                <div class="col-ket-in-2">
                     &nbsp;: <?php echo $tgl_inv_format ?> <br>
+                    &nbsp;: <?php echo $data['no_inv'] ?> <br>
                     <?php
                     if (!empty($dateStringTempo)) {
                         $datePartsTempo = explode('/', $dateStringTempo);
@@ -81,21 +85,17 @@
                         $yearTempo = $datePartsTempo[2];
 
                         $tgl_tempo_format = $dayTempo . ' ' . $bulan[$monthTempo] . ' ' . $yearTempo;
-                        echo "&nbsp;: " . $tgl_tempo_format;
+                        echo "&nbsp;:" . $tgl_tempo_format;
                     }
                     ?>
                 </div>
             </div>
-            <div class="col-header-2">
-                <!-- Kolom kedua -->
-                Kepada : <br>
-                <?php echo $data['nama_cs'] ?> <br>
-                <?php echo $data['alamat'] ?>
-            </div>
         </div>
-        <!-- Kolom kedua -->
-        <?php
-        $sql2 = "SELECT 
+        <div class="invoice-header">
+            <div class="col-header-1">
+                <!-- Kolom pertama -->
+                <?php
+                $sql2 = "SELECT 
                 ppn.*, 
                 sr.id_user, sr.id_customer, sr.id_inv, sr.no_spk, sr.no_po, sr.tgl_pesanan,
                 cs.nama_cs, cs.alamat, ordby.order_by, sl.nama_sales 
@@ -105,50 +105,59 @@
                 JOIN tb_orderby ordby ON(sr.id_orderby = ordby.id_orderby)
                 JOIN tb_sales sl ON(sr.id_sales = sl.id_sales)
                 WHERE ppn.id_inv_ppn = '$id_inv'";
-        $query2 = mysqli_query($connect, $sql2);
-        $rowIndex = 0;
-        $totalRows = mysqli_num_rows($query2);
-        $dataCount = 0;
-        $output = ''; // Variabel untuk menyimpan hasil output
-        while ($data2 = mysqli_fetch_array($query2)) {
-            $dataCount++;
-            // Periksa jika nilai no_po tidak kosong
-            if (!empty($data2['no_po'])) {
-                // Tampilkan nilai kolom pada setiap baris
-                $output .= $data2['no_po'];
+                $query2 = mysqli_query($connect, $sql2);
+                $rowIndex = 0;
+                $totalRows = mysqli_num_rows($query2);
+                $dataCount = 0;
+                $output = ''; // Variabel untuk menyimpan hasil output
+                while ($data2 = mysqli_fetch_array($query2)) {
+                    $dataCount++;
+                    // Periksa jika nilai no_po tidak kosong
+                    if (!empty($data2['no_po'])) {
+                        // Tampilkan nilai kolom pada setiap baris
+                        $output .= $data2['no_po'];
 
-                // Tambahkan koma jika bukan baris terakhir
-                if ($rowIndex < $totalRows - 1 && $dataCount < $totalRows) {
-                    $output .= ', ';
+                        // Tambahkan koma jika bukan baris terakhir
+                        if ($rowIndex < $totalRows - 1 && $dataCount < $totalRows) {
+                            $output .= ', ';
+                        }
+                    }
+
+                    $rowIndex++;
                 }
-            }
 
-            $rowIndex++;
-        }
+                // Tambahkan tanda titik di akhir data
+                if (!empty($output)) {
+                    $output .= '.';
 
-        // Tambahkan tanda titik di akhir data
-        if (!empty($output)) {
-            $output .= '.';
+                    // Tampilkan hanya jika ada data yang ditampilkan
+                    echo "<div class='invoice-header'><div class='col-header-3'>No.PO :  <br>"  . $output . "</div></div>";
+                }
+                ?>
 
-            // Tampilkan hanya jika ada data yang ditampilkan
-            echo "<div class='invoice-header'><div class='col-header-3'>No.PO :  <br>"  . $output . "</div></div>";
-        }
-        ?>
+            </div>
+            <div class="col-header-2">
+                <!-- Kolom kedua -->
+                Kepada : <br>
+                <?php echo $data['cs_inv'] ?> <br>
+                <?php echo $data['alamat'] ?>
+            </div>
+        </div>
 
         <div class="invoice-body">
             <table class="invoice-table">
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
-                        <th style="width: 200px;">Nama Produk</th>
-                        <th style="width: 40px;">Qty</th>
-                        <th style="width: 80px;">Harga</th>
+                        <th style="width: 350px;">Nama Produk</th>
+                        <th style="width: 60px;">Qty</th>
+                        <th style="width: 75px;">Harga</th>
                         <?php
                         if ($data['kategori_inv'] == 'Diskon') {
-                            echo '<th style="width: 40px;">Disc</th>';
+                            echo '<th style="width: 60px;">Disc</th>';
                         }
                         ?>
-                        <th style="width: 80px;">Total</th>
+                        <th style="width: 90px;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -160,6 +169,7 @@
                     $month = date('m');
                     $id_ppn_decode = base64_decode($_GET['id']);
                     $no = 1;
+                    $sub_total_tampil = 0;
                     $grand_total = 0;
                     $sub_total_spdisc = 0;
                     $sql_trx = "SELECT
@@ -178,7 +188,9 @@
                                     trx.disc,
                                     trx.total_harga,
                                     trx.status_trx,
+                                    trx.created_date,
                                     tpr.nama_produk,
+                                    tpr.satuan,
                                     mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
                                     tpsm.nama_set_marwa,
                                     tpsm.harga_set_marwa,
@@ -192,7 +204,7 @@
                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
                                 WHERE ppn.id_inv_ppn = '$id_ppn_decode'
                                 GROUP BY trx.id_produk, tpsm.nama_set_marwa, trx.nama_produk_spk, mr_set.nama_merk, mr_produk.nama_merk
-                                ORDER BY no_spk ASC";
+                                ORDER BY trx.created_date ASC";
                     $trx_produk_reg = mysqli_query($connect, $sql_trx);
                     while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
                         $id_inv_update = $data_trx['id_inv_ppn'];
@@ -201,19 +213,29 @@
                         $kat_inv = $data_trx['kategori_inv'];
                         $qty = $data_trx['total_qty'];
                         $harga = $data_trx['harga'];
+                        $satuan = $data_trx['satuan'];
                         $disc = $data_trx['disc'] / 100;
                         $tampil_disc = $data_trx['disc'];
                         $tampil_spdisc = $data_trx['sp_disc'];
                         $harga_disc = $harga * $disc;
                         $total = $harga - $harga_disc;
                         $sub_total = floor($total * $qty);
+                        $sub_total_tampil += $sub_total;
                         $sub_total_fix = floor($sub_total - $sub_total_spdisc);
                         $grand_total += floor($sub_total_fix);
+                        $id_produk = $data_trx['id_produk'];
+                        $satuan_produk = '';
+                        $id_produk_substr = substr($id_produk, 0, 2);
+                        if ($id_produk_substr == 'BR') {
+                            $satuan_produk = $satuan;
+                        } else {
+                            $satuan_produk = 'Set';
+                        }
                     ?>
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
                             <td><?php echo $data_trx['nama_produk_spk'] ?></td>
-                            <td align="right"><?php echo number_format($data_trx['total_qty'], 0, '.', '.') ?></td>
+                            <td align="right"> <?php echo number_format($data_trx['total_qty'], 0, '.', '') . ' ' . $satuan_produk; ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga'], 0, '.', '.') ?></td>
                             <?php
                             if ($data_trx['kategori_inv'] == 'Diskon') {
