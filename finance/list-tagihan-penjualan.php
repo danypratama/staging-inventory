@@ -122,33 +122,29 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                   <?php  
                     include "koneksi.php";
                     $no = 1;
-                    $sql = "SELECT tagihan.id_tagihan AS tagihan_id,
-                                    tagihan.no_tagihan,
-                                    tagihan.tgl_tagihan,
-                                    tagihan.total_tagihan,
-                                    fnc.id_tagihan AS id_tagihan_fnc,
-                                    fnc.id_inv,
-                                    fnc.jenis_inv,
-                                    fnc.status_lunas,
-                                    COALESCE(byr.total_bayar, 0) AS total_pembayaran,
-                                    nonppn.id_inv_nonppn,
-                                    nonppn.cs_inv AS cs_nonppn,
-                                    ppn.id_inv_ppn,
-                                    ppn.cs_inv AS cs_ppn,
-                                    bum.id_inv_bum,
-                                    bum.cs_inv AS cs_bum                                
-                              FROM finance_tagihan AS tagihan
-                              LEFT JOIN finance fnc ON (tagihan.id_tagihan = fnc.id_tagihan)
-                              LEFT JOIN (
-                                  SELECT id_tagihan, SUM(total_bayar) AS total_bayar
-                                  FROM finance_bayar
-                                  GROUP BY id_tagihan
-                              ) byr ON (tagihan.id_tagihan = byr.id_tagihan)
-                              LEFT JOIN inv_nonppn nonppn ON (fnc.id_inv = nonppn.id_inv_nonppn)
-                              LEFT JOIN inv_ppn ppn ON (fnc.id_inv = ppn.id_inv_ppn)
-                              LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
-                              GROUP BY tagihan_id, id_tagihan_fnc -- Menambahkan id_tagihan_fnc ke dalam GROUP BY
-                              ORDER BY no_tagihan ASC";
+                    $sql = "SELECT  
+                                  tagihan.id_tagihan AS tagihan_id,
+                                  tagihan.no_tagihan,
+                                  tagihan.tgl_tagihan,
+                                  tagihan.jenis_faktur,
+                                  tagihan.total_tagihan,
+                                  fnc.status_lunas,
+                                  COALESCE(byr.total_bayar, 0) AS total_pembayaran,
+                                  nonppn.cs_inv AS cs_nonppn,
+                                  ppn.cs_inv AS cs_ppn,
+                                  bum.cs_inv AS cs_bum                                
+                            FROM finance_tagihan AS tagihan
+                            LEFT JOIN finance fnc ON (tagihan.id_tagihan = fnc.id_tagihan)
+                            LEFT JOIN (
+                                SELECT id_tagihan, SUM(total_bayar) AS total_bayar
+                                FROM finance_bayar
+                                GROUP BY id_tagihan
+                            ) byr ON (tagihan.id_tagihan = byr.id_tagihan)
+                            LEFT JOIN inv_nonppn nonppn ON (fnc.id_inv = nonppn.id_inv_nonppn)
+                            LEFT JOIN inv_ppn ppn ON (fnc.id_inv = ppn.id_inv_ppn)
+                            LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
+                            GROUP BY tagihan_id -- Menambahkan id_tagihan_fnc ke dalam GROUP BY
+                            ORDER BY no_tagihan ASC";
                     $query = mysqli_query($connect, $sql);
                     while ($data = mysqli_fetch_array($query)) {
                       $total_bayar = $data ['total_pembayaran'];
@@ -159,7 +155,15 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                   ?>
                   <tr>
                     <td class="text-center"><?php echo $no; ?></td>
-                    <td class="text-center text-nowrap"><?php echo $data['no_tagihan'] ?></td>
+                    <td class="text-center text-nowrap">
+                      <?php echo $data['no_tagihan'] ?><br>
+                      <?php 
+                        if($data['jenis_faktur'] != ''){
+                          echo "(" . $data['jenis_faktur'] . ")";
+                        }
+                         
+                      ?>
+                    </td>
                     <td class="text-center text-nowrap"><?php echo $data['tgl_tagihan'] ?></td>
                     <td>
                       <?php
