@@ -437,9 +437,9 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                     <td class="text-center p-3">Pilih</td>
                     <td class="text-center p-3">No</td>
                     <td class="text-center p-3">No. Invoice</td>
+                    <td class="text-center p-3">Tgl. Invoice</td>
                     <td class="text-center p-3">Jenis Inv</td>
                     <td class="text-center p-3">Customer</td>
-                    <td class="text-center p-3">Tgl. Invoice</td>
                     <td class="text-center p-3">Tgl. Tempo</td>
                     <td class="text-center p-3">Total Tagihan</td>
                     <td class="text-center p-3">Status Pembayaran</td>
@@ -579,7 +579,6 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                               COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo) AS tgl_tempo,
                               STR_TO_DATE(COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo), '%d/%m/%Y') AS tgl_tempo_convert,
                               COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
-
                               -- nonppn
                               nonppn.id_inv_nonppn AS id_inv_nonppn,
                               nonppn.no_inv AS no_inv_nonppn,
@@ -599,7 +598,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                           LEFT JOIN inv_ppn ppn ON (fnc.id_inv = ppn.id_inv_ppn)
                           LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
                           LEFT JOIN finance_tagihan ft ON (fnc.id_tagihan = ft.id_tagihan)
-                          WHERE ($sort_option)";
+                          WHERE ($sort_option) ORDER BY nonppn.no_inv, ppn.no_inv, bum.no_inv";
 
                   //Tambahkan kondisi pencarian berdasarkan nama pelanggan jika $_GET['cs'] sudah diset
                   if (isset($_GET['cs'])) {
@@ -637,9 +636,9 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                       </td>
                           <td class="text-center text-nowrap"><?php echo $no ?></td>
                           <td class="text-nowrap text-center"><?php echo $no_inv ?></td>
+                          <td class="text-nowrap text-center"><?php echo date('d/m/Y', strtotime($tgl_inv)) ?></td>
                           <td class="text-center text-nowrap"><?php echo strtoupper($data['jenis_inv'])?></td>
                           <td class="text-nowrap"><?php echo $cs_inv ?></td>
-                          <td class="text-nowrap text-center"><?php echo date('d/m/Y', strtotime($tgl_inv)) ?></td>
                           <td class="text-nowrap text-center">
                             <?php 
                               if(!empty($tgl_tempo_cek)){
@@ -715,7 +714,6 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
               </table>
             </form>   
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
-            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
             <script>
                 document.getElementById("export-button").addEventListener("click", function () {
                   // Inisialisasi DataTable
@@ -731,7 +729,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                   });
 
                   // Menambahkan header khusus di bagian atas
-                  var header = ["No", "No. Invoice", "Jenis Inv", "Customer", "Tgl. Invoice", "Tgl. Tempo", "Total Tagihan", "Status Pembayaran", "Status Tempo", "Status Tagihan"];
+                  var header = ["No", "No. Invoice", "Tgl. Invoice", "Jenis Inv", "Customer", "Tgl. Tempo", "Total Tagihan", "Status Pembayaran", "Status Tempo", "Status Tagihan"];
                   data.unshift(header);
 
                   // Membuat worksheet baru
@@ -741,7 +739,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                   var wscols = [];
                   for (var i = 0; i < header.length; i++) {
                       // Menetapkan lebar khusus untuk kolom "Customer"
-                      if (i === 3) {
+                      if (i === 4) {
                           wscols.push({ wch: 35 }); // Sesuaikan dengan kebutuhan
                       } else {
                           wscols.push({ wch: header[i].length + 7 });
@@ -763,7 +761,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                   // Buat elemen anchor untuk mengunduh file dan klik secara otomatis
                   var a = document.createElement("a");
                   a.href = url;
-                  a.download = "data-invoice-nonppn.xlsx";
+                  a.download = "data-invoice-tagihan.xlsx";
                   a.click();
 
                   // Hapus object URL untuk membersihkan sumber daya

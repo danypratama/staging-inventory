@@ -88,6 +88,7 @@ include "akses.php";
                     cs.alamat AS alamat_cs,  -- Menampilkan kolom alamat_cs dari tabel tb_customer
                     STR_TO_DATE(ft.tgl_tagihan, '%d/%m/%Y') AS tgl_tagihan,
                     ft.no_tagihan,
+                    ft.cs_tagihan,
                     ft.jenis_faktur,
                     COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                     COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
@@ -123,7 +124,17 @@ include "akses.php";
         <div class="col-sm-6 p-3">
             <div class="col-10 border border-dark text-start p-2">
                 Kepada, Yth<br>
-                <b style="color: black;"><?php echo $data['nama_cs'] ?></b><br>
+                <?php  
+                  if($data['cs_tagihan']!= ''){
+                    ?>
+                      <b style="color: black;"><?php echo $data['cs_tagihan'] ?></b><br>
+                    <?php
+                  } else {
+                    ?>
+                      <b style="color: black;"><?php echo $data['nama_cs'] ?></b><br>
+                    <?php
+                  }
+                ?>
                 <?php echo $data['alamat_cs'] ?>
             </div>
         </div>

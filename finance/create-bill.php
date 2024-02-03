@@ -106,7 +106,7 @@ include 'akses.php';
                         </div>
                         <div class="col-md-4 mb-3">
                             <label>Customer</label>
-                            <input type="text" class="form-control bg-light" name="customer" value="<?php echo $nama_cs ?>" readonly>
+                            <input type="text" class="form-control" name="cs" value="<?php echo $nama_cs ?>" required>
                         </div>
                         <div class="col-md-2 mb-3">
                             <label>Tgl. Tagihan</label>

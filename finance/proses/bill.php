@@ -13,6 +13,7 @@ if(isset($_POST['simpan-bill'])){
     $total_tagihan = intval($total_tagihan); // Mengubah string harga menjadi integer
     $no_tagihan = mysqli_real_escape_string($connect, $_POST['no_tagihan']);
     $tgl_tagihan = mysqli_real_escape_string($connect, $_POST['tgl_tagihan']);
+    $cs_tagihan = mysqli_real_escape_string($connect, $_POST['cs']);
     $jenis_faktur = mysqli_real_escape_string($connect, $_POST['jenis_faktur']);
     
     foreach($id_inv as $id_inv_array){
@@ -27,7 +28,7 @@ if(isset($_POST['simpan-bill'])){
         $id_inv_count = count($id_inv_escape);
         for ($i = 0; $i < $id_inv_count; $i++){
 
-            $sql_tagihan = mysqli_query($connect, "INSERT IGNORE INTO finance_tagihan (id_tagihan, no_tagihan, tgl_tagihan, jenis_faktur, total_tagihan) VALUES ('$id_tagihan','$no_tagihan', '$tgl_tagihan', '$jenis_faktur', '$total_tagihan')");
+            $sql_tagihan = mysqli_query($connect, "INSERT IGNORE INTO finance_tagihan (id_tagihan, no_tagihan, tgl_tagihan, cs_tagihan, jenis_faktur, total_tagihan) VALUES ('$id_tagihan','$no_tagihan', '$tgl_tagihan', '$cs_tagihan', '$jenis_faktur', '$total_tagihan')");
             $id_inv_array = $id_inv_escape[$i];
 
             $sql_finance = mysqli_query($connect, "UPDATE finance SET id_tagihan = '$id_tagihan', status_tagihan = 1  WHERE id_inv = '$id_inv_array'");
