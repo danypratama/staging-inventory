@@ -141,7 +141,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
