@@ -144,7 +144,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                 $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
-                            $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
+                                $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
                                                             (id_bayar, id_bank_pt, id_tagihan, id_finance, id_bukti, metode_pembayaran, keterangan_bayar, total_bayar, tgl_bayar, created_by) 
                                                             VALUES 
                                                             ('$id_bayar', '$id_bank_pt', '$id_bill', '$id_finance', '$id_bukti', '$metode_bayar', '$keterangan_bayar', '$nominal', '$tgl_bayar', '$user')");
@@ -177,6 +177,11 @@ if(isset($_POST['simpan-pembayaran'])){
                             $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$id_bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
 
                             $sql_cs_bank = '';
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }      
 
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
@@ -184,7 +189,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -301,7 +306,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -366,7 +371,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -545,7 +550,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -602,7 +607,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -721,7 +726,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -772,7 +777,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -953,7 +958,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -1010,7 +1015,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -1128,7 +1133,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
@@ -1194,7 +1199,7 @@ if(isset($_POST['simpan-pembayaran'])){
                                                             VALUES 
                                                             ('$id_bank_cs', '$id_cs', '$bank_pengirim', '$rek_pengirim', '$nama_pengirim', '$created_by')");
                             } else {
-                                $sql_cs_bank = '';
+                                $sql_cs_bank = mysqli_query($connect, "UPDATE bank_cs SET id_bank = '$bank_pengirim', no_rekening = '$rek_pengirim', atas_nama = '$nama_pengirim' WHERE id_bank_cs = '$id_bank_pengirim'");
                             }
 
                             $sql_bayar = mysqli_query($connect, "INSERT IGNORE INTO finance_bayar 
