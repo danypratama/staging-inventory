@@ -135,6 +135,12 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }      
+
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
@@ -300,6 +306,12 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }      
+
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
@@ -360,12 +372,13 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
-                            if($cek_data->num_rows == 0){
-                                if($id_bank_pengirim != ''){
-                                    $bank_pengirim = $id_bank_pengirim;
-                                } else {
-                                    $bank_pengirim = $id_bank_select;
-                                }       
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }    
+
+                            if($cek_data->num_rows == 0){   
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
@@ -544,6 +557,12 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }    
+
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
@@ -600,6 +619,12 @@ if(isset($_POST['simpan-pembayaran'])){
                             $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
 
                             $sql_cs_bank = '';
+                            
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }    
 
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
@@ -720,6 +745,12 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }    
+
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
@@ -766,12 +797,13 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }       
+
                             if($cek_data->num_rows == 0){
-                                if($id_bank_pengirim != ''){
-                                    $bank_pengirim = $id_bank_pengirim;
-                                } else {
-                                    $bank_pengirim = $id_bank_select;
-                                }       
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
@@ -952,6 +984,12 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }      
+
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
@@ -1008,6 +1046,12 @@ if(isset($_POST['simpan-pembayaran'])){
                             $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
 
                             $sql_cs_bank = '';
+
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }     
 
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
@@ -1126,7 +1170,12 @@ if(isset($_POST['simpan-pembayaran'])){
                             $cek_data = mysqli_query($connect, "SELECT id_bank_cs, id_cs, id_bank, no_rekening, atas_nama FROM bank_cs WHERE id_cs = '$id_cs' AND id_bank = '$bank_pengirim' AND no_rekening = '$rek_pengirim' AND atas_nama = '$nama_pengirim'");
 
                             $sql_cs_bank = '';
-
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            } 
+                                  
                             if($cek_data->num_rows == 0){
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
@@ -1188,12 +1237,13 @@ if(isset($_POST['simpan-pembayaran'])){
 
                             $sql_cs_bank = '';
 
+                            if($id_bank_pengirim != ''){
+                                $bank_pengirim = $id_bank_pengirim;
+                            } else {
+                                $bank_pengirim = $id_bank_select;
+                            }       
+
                             if($cek_data->num_rows == 0){
-                                if($id_bank_pengirim != ''){
-                                    $bank_pengirim = $id_bank_pengirim;
-                                } else {
-                                    $bank_pengirim = $id_bank_select;
-                                }       
                                 $sql_cs_bank = mysqli_query($connect, "INSERT IGNORE INTO bank_cs 
                                                             (id_bank_cs, id_cs, id_bank, no_rekening, atas_nama, created_by) 
                                                             VALUES 
