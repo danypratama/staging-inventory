@@ -44,7 +44,8 @@ include "akses.php";
                     <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                     <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                     <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                    <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 100px">Total Invoice</th>
+                    <th class="text-center p-3 text-nowrap" style="width: 100px">Status Pembayaran</th>
                     <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                 </tr>
             </thead>
@@ -77,7 +78,7 @@ include "akses.php";
                                 WHERE status_transaksi = 'Transaksi Selesai' AND
                                 STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') >= STR_TO_DATE('$start_date', '%d/%m/%Y') AND
                                 STR_TO_DATE(bum.tgl_inv, '%d/%m/%Y') <= STR_TO_DATE('$end_date', '%d/%m/%Y')
-                        GROUP BY no_inv";
+                        GROUP BY no_inv ORDER BY no_inv";
                 $query = mysqli_query($connect, $sql);
                 while ($data = mysqli_fetch_array($query)) {
                 ?>
@@ -87,8 +88,17 @@ include "akses.php";
                         <td class="text-nowrap"><?php echo $data['tgl_inv'] ?></td>
                         <td class="text-nowrap"><?php echo $data['no_po'] ?></td>
                         <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['kategori_inv'] ?></td>
-                        <td class="text-nowrap"><?php echo $data['note_inv'] ?></td>
+                        <td class="text-nowrap text-center"><?php echo $data['kategori_inv'] ?></td>
+                        <td class="text-nowrap text-end"><?php echo number_format($data['total_inv']) ?></td>
+                        <td class="text-nowrap text-center">
+                            <?php 
+                            if($data['status_pembayaran'] == 0){
+                                echo "Belum Bayar";
+                            } else {
+                                echo "Sudah Bayar";
+                            }
+                            ?>
+                        </td>
                         <td class="text-center text-nowrap">
                             <a href="cek-produk-inv-bum-selesai.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm mb-2"><i class="bi bi-eye-fill"></i> Lihat</a>
                         </td>

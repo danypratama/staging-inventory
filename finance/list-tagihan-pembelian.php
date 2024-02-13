@@ -38,6 +38,9 @@ include "akses.php";
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
+        <!-- SWEET ALERT -->
+        <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) { echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
+        <!-- END SWEET ALERT -->
         <div class="card">
             <div class="card-body p-3">
                 <a href="form-pembelian.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah data pembelian</a>

@@ -216,7 +216,7 @@ include "akses.php";
                             </td>
                             <td class="text-nowrap text-center">
                               <button class="btn btn-success btn-sm" title="Terima" data-bs-toggle="modal" data-bs-target="#terima" data-id="<?php echo $data_request['id_user']; ?>" data-nama="<?php echo $data_request['nama_user']; ?>"><i class="bi bi-check-circle-fill"></i></button>
-                              <button class="btn btn-danger btn-sm" title="Tolak" data-bs-toggle="modal" data-bs-target="#tolak"><i class="bi bi-x-circle"></i></button>
+                              <button class="btn btn-danger btn-sm" title="Tolak" data-bs-toggle="modal" data-bs-target="#tolak" data-bs-target="#terima" data-id="<?php echo $data_request['id_user']; ?>" data-nama="<?php echo $data_request['nama_user']; ?>"><i class="bi bi-x-circle"></i></button>
                             </td>
                           </tr>
                           <?php $no++; ?>
@@ -271,11 +271,14 @@ include "akses.php";
         <h1 class="modal-title fs-5" id="exampleModalLabel">Konfirmasi</h1>
       </div>
       <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <form action="proses/proses-user.php" method="POST">
+          <input type="hidden" id="id_user" name="id_user">
+          Apakah anda yakin ingin menolak permintaan <b id="nama_user"></b>?
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary" name="tolak-user">Ya, tolak</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -283,6 +286,22 @@ include "akses.php";
 
 <script>
   $('#terima').on('show.bs.modal', function(event) {
+      // Mendapatkan data dari tombol yang ditekan
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      var nama = button.data('nama');
+ 
+      // Membuat Variable untuk menampilkan data
+      var modal = $(this);
+      var idInput = modal.find('.modal-body #id_user');
+      var namaInput = modal.find('.modal-body #nama_user');
+    
+      // Menampilkan data
+      idInput.val(id);
+      namaInput.text(nama); 
+  });
+
+  $('#tolak').on('show.bs.modal', function(event) {
       // Mendapatkan data dari tombol yang ditekan
       var button = $(event.relatedTarget);
       var id = button.data('id');

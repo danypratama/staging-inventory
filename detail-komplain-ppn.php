@@ -52,11 +52,11 @@
 
         <main id="main" class="main">
             <!-- Loading -->
-            <div class="loader loader">
+            <!-- <div class="loader loader">
                 <div class="loading">
                     <img src="img/loading.gif" width="200px" height="auto">
                 </div>
-            </div>
+            </div> -->
             <!-- ENd Loading -->
             <section>
                 <?php  
@@ -315,7 +315,7 @@
                                 <div class="p-1 text-end">
                                     <button class="btn border-dark">
                                         <b>Total Invoice Original</b><br>
-                                        Rp. <?php echo number_format($data_total['total_inv']); ?>
+                                        Rp. <a id="grandTotal" style="color:black; font-size:15px;"></a>
                                     </button>
                                 </div>
                             </div>
@@ -356,13 +356,15 @@
                                         </thead>
                                         <tbody>
                                             <?php
-                                                $no = 1;  
+                                                $no = 1; 
+                                                $sub_total = 0; 
                                                 include "function/class-spk.php";
                                                 while($data = mysqli_fetch_array($query)){
                                                     $satuan = detailSpkFnc::getSatuan($data['id_produk']);
                                                     $total_harga =  $data['harga'] * $data['qty'];
                                                     $discount = $data['disc'] / 100; // 50% diskon
-                                                    $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon          
+                                                    $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon  
+                                                    $sub_total += $harga_final;          
                                             ?>
                                             <tr>
                                                 <td class="text-center text-nowrap"><?php echo $no ?></td>
@@ -386,6 +388,12 @@
                                             <?php } ?>
                                         </tbody>
                                     </table>
+                                    <!-- Menampilkan Total Invoice -->
+                                    <?php  
+                                        $grand_total = $sub_total + $data_detail['ongkir'];
+                                        $grand_total_ppn = $grand_total * 1.11;
+                                        $grand_total_formated = number_format($grand_total_ppn);
+                                    ?>
                                 </div>
                             </div>
                         </div><!-- End Default Tabs -->
@@ -482,6 +490,10 @@
         </div>
     </div>
 </div>
+<script>
+    var grandTotal = '<?php echo $grand_total_formated ?>';
+    document.getElementById('grandTotal').innerHTML = grandTotal;
+</script>
 
 
 

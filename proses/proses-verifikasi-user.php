@@ -19,6 +19,6 @@
         header("Location:../login.php");
     } else {
        $_SESSION['alert'] = 'Verifikasi tidak berhasil';
-       header("Location:verifikasi-otp-user.php?id=$id_verifikasi_encode");
+       header("Location:../login.php");
     }
 ?>

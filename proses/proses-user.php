@@ -94,6 +94,17 @@
 			header("Location:../data-user.php");
 		}
 
+	}elseif(isset($_POST["tolak-user"])) {
+		$id_user = htmlspecialchars($_POST['id_user']);
+		// Update approval user
+		$update = $connect->query("DELETE FROM user WHERE id_user = '$id_user'");
+		if($update){
+			$_SESSION['info'] = "Ditolak";
+			header("Location:../data-user.php");
+		} else {
+			$_SESSION['info'] = "Data Gagal Disimpan";
+			header("Location:../data-user.php");
+		}
 	//Edit 
 	}elseif(isset($_POST["edit-user"])) {
 		$id_update = $_POST['id_user_role'];

@@ -32,16 +32,37 @@ include "akses.php";
                 <h5><strong>Form Pembelian Barang Lokal</strong></h5>
             </div>
             <div class="card-body p-3">
-                <form action="" method="post">
+                <form action="proses/pembelian.php" method="post">
+                    <?php
+                        $year = date('y');
+                        $day = date('d');
+                        $month = date('m');
+                        $years = date('Y');
+
+                        include "koneksi.php";
+                        $thn  = date('Y');
+                        $sql  = mysqli_query($connect, "SELECT max(no_trx) as maxID, STR_TO_DATE(tgl_pembelian, '%d/%m/%Y') AS tgl FROM inv_pembelian_lokal WHERE YEAR(STR_TO_DATE(tgl_pembelian, '%d/%m/%Y')) = '$years'");
+                        $data = mysqli_fetch_array($sql);
+
+                        $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
+                        $kode = $data['maxID'];
+                        $ket1 = "/PB-KMA/";
+                        $bln = $array_bln[date('n')];
+                        $ket2 = "/";
+                        $ket3 = date("Y");
+                        $urutkan = (int)substr($kode, 0, 3);
+                        $urutkan++;
+                        $no_spk = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
+                    ?>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
                                 <label class="fw-bold">No Transaksi Pembelian</label>
-                                <input type="text" class="form-control" name="no_trx" id="">
+                                <input type="text" class="form-control" name="no_trx" value="<?php echo $no_spk ?>" readonly>
                             </div>
                             <div class="mb-3">
                                 <label class="fw-bold">Tanggal Pembelian</label>
-                                <input type="text" class="form-control" name="tanggal" id="date">
+                                <input type="text" class="form-control" name="tgl_pembelian" id="date">
                             </div>
                             <div class="mb-3">
                                 <label class="fw-bold">No Invoice Pembelian</label>
@@ -61,7 +82,7 @@ include "akses.php";
                             <div class="mb-3 mt-2">
                                 <label class="fw-bold">Tanggal Jatuh Tempo</label>
                                 <div class="input-group flex-nowrap">
-                                    <input type="text" class="form-control" name="tanggal_tempo" id="date">
+                                    <input type="text" class="form-control" name="tgl_tempo" id="date">
                                     <button type="button" class="input-group-text bg-danger text-white" id="resetTempo"> X </button>
                                 </div>
                             </div>
@@ -97,13 +118,23 @@ include "akses.php";
                             </div>
                             <div class="mb-3">
                                 <label class="fw-bold">Note Pembelian</label>
-                                <textarea class="form-control" name="note" rows="5"></textarea>
+                                <textarea class="form-control" name="note" rows="5" maxlength="150"></textarea>
                             </div>
+                        </div>
+                        <div class="mt-3 p-3 border-top text-center">
+                            <button type="submit" class="btn btn-primary" name="simpan-pembelian">Simpan</button>
+                            <button type="button" class="btn btn-secondary" onclick="redirectToPage()">Batal</button>   
                         </div>
                     </div>
                 </form>
             </div>
         </div>
+        <script>
+            function redirectToPage() {
+                // Ganti URL pada window.location.href dengan URL yang diinginkan
+                window.location.href = "list-tagihan-pembelian.php";
+            }
+        </script>
     </section>
   </main><!-- End #main -->
 

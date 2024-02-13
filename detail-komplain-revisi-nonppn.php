@@ -103,11 +103,11 @@
 
         <main id="main" class="main">
             <!-- Loading -->
-            <div class="loader loader">
+            <!-- <div class="loader loader">
                 <div class="loading">
                     <img src="img/loading.gif" width="200px" height="auto">
                 </div>
-            </div>
+            </div> -->
             <!-- ENd Loading -->
             <section>
                 <?php  
