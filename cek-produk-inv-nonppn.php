@@ -620,10 +620,10 @@ include "function/class-spk.php";
                                                     <label><strong>Nama Produk</strong></label>
                                                     <input type="text" class="form-control" name="nama_produk" id="nama_produk" required>
                                                 </div>
-                                                <div class="mb-3">
+                                                <!-- <div class="mb-3">
                                                     <label><strong>Qty</strong></label>
                                                     <input type="text" class="form-control" name="nama_produk" id="nama_produk" required>
-                                                </div>
+                                                </div> -->
                                                 <div class="mb-3">
                                                     <label><strong>Harga</strong></label>
                                                     <div class="input-group">

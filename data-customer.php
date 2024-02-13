@@ -46,10 +46,7 @@ include "akses.php";
     </div><!-- End Page Title -->
     <section>
       <!-- SWEET ALERT -->
-      <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) {
-                                              echo $_SESSION['info'];
-                                            }
-                                            unset($_SESSION['info']); ?>"></div>
+      <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) { echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
       <!-- END SWEET ALERT -->
       <div class="container-fluid">
         <div class="card">
@@ -119,7 +116,7 @@ include "akses.php";
                       <td><?php echo $data['no_telp']; ?></td>
                       <td><?php echo $data['email']; ?></td>
                       <?php
-                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
                           ?>
                             <td class="text-center text-nowrap">
                               <!-- Button  modal detail -->
@@ -133,6 +130,21 @@ include "akses.php";
                               </button>
                               <!-- End Modal Edit -->
                               <a href="proses/proses-cs.php?hapus-cs=<?php echo $id_cs ?>" class="btn btn-danger btn-sm delete-data" data-bs-delay="0" title="Hapus Data"><i class="bi bi-trash"></i></a>
+                            </td>
+                          <?php 
+                        } else if ($data_role['role'] == "Admin Penjualan"){
+                          ?>
+                            <td class="text-center text-nowrap">
+                              <!-- Button  modal detail -->
+                              <button type="button" class="btn btn-primary btn-sm btn-detail" data-bs-toggle="modal" data-bs-target="#detailCs" title="Detail" data-jenis="<?php echo $data['jenis_usaha']; ?>" data-cs="<?php echo $data['nama_cs']; ?>" data-email="<?php echo $data['email']; ?>" data-cp="<?php echo $data['nama_cp']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-npwp="<?php echo $data['npwp']; ?>" data-createdby="<?php echo $data['user_created']; ?>" data-created="<?php echo $data['created_date']; ?>" data-updated="<?php echo $data['updated_date']; ?>" data-updatedby="<?php echo $data['user_updated']; ?>">
+                                <i class="bi bi-eye-fill"></i>
+                              </button>
+                              <!-- End Modal Detail -->
+                              <!-- Modal Edit -->
+                              <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal2" data-jenis="<?php echo $data['jenis_usaha']; ?>" data-id="<?php echo $data['id_cs']; ?>" data-nama="<?php echo $data['nama_cs']; ?>" data-alamat="<?php echo $data['alamat']; ?>" data-cp="<?php echo $data['nama_cp']; ?>" data-telp="<?php echo $data['no_telp']; ?>" data-email="<?php echo $data['email']; ?>" data-npwp="<?php echo $data['npwp']; ?>" title="Edit Data">
+                                <i class="bi bi-pencil"></i>
+                              </button>
+                              <!-- End Modal Edit -->
                             </td>
                           <?php 
                         }

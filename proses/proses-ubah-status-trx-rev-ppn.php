@@ -154,7 +154,7 @@
                                                         FROM tmp_produk_komplain AS tpr
                                                         WHERE tpr.id_inv = '$id_inv'");
 
-                    if ($update_inv && $create_finance && $create_finance && $update_inv_revisi && $update_inv_komplain && $query_history_produk) {
+                    if ($update_inv && $create_finance && $update_inv_revisi && $update_inv_komplain && $query_history_produk) {
                         // Commit transaksi
                         $connect->commit();
                         ?>

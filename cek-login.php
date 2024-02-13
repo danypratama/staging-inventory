@@ -49,9 +49,7 @@ if (isset($_POST['login'])) {
     $password = mysqli_real_escape_string($connect, $_POST['password']);
 
     // Query untuk mencari data user dari database
-    $query = "SELECT * FROM user 
-            --   JOIN user_history ON (user_history.id_user = user.id_user) 
-              WHERE username = '$username'";
+    $query = "SELECT * FROM user WHERE username = '$username'";
     $result = mysqli_query($connect, $query);
 
     // Periksa apakah username ditemukan
@@ -62,103 +60,108 @@ if (isset($_POST['login'])) {
 
         // Verifikasi password
         if (password_verify($password, $password_hash)) {
-            // Password benar, simpan data user ke session dan arahkan ke halaman dashboard
-            //ambil data dari nama kolom operator
-            $_SESSION['tiket_id'] = $row['id_user'];
-            $_SESSION['tiket_user'] = $row['username'];
-            $_SESSION['tiket_pass'] = $row['password'];
-            $_SESSION['tiket_nama'] = $row['nama_user'];
-            $_SESSION['tiket_role'] = $row['id_user_role'];
-            $_SESSION['tiket_jenkel'] = $row['jenkel'];
-            $_SESSION['ip'] = $ip_address;
-            $_SESSION['last_login'] = $row['last_login'];
-            $_SESSION['os'] = $row['perangkat'];
-            $_SESSION['lokasi'] = $row['lokasi'];
-            $_SESSION['encoded_id'] = $encoded_id;
-            $_SESSION['id_history'] = $UUID;
-            $id_role =  $_SESSION['tiket_role'];
+            if($row['approval'] == 1){
+                 // Password benar, simpan data user ke session dan arahkan ke halaman dashboard
+                //ambil data dari nama kolom operator
+                $_SESSION['tiket_id'] = $row['id_user'];
+                $_SESSION['tiket_user'] = $row['username'];
+                $_SESSION['tiket_pass'] = $row['password'];
+                $_SESSION['tiket_nama'] = $row['nama_user'];
+                $_SESSION['tiket_role'] = $row['id_user_role'];
+                $_SESSION['tiket_jenkel'] = $row['jenkel'];
+                $_SESSION['ip'] = $ip_address;
+                $_SESSION['last_login'] = $row['last_login'];
+                $_SESSION['os'] = $row['perangkat'];
+                $_SESSION['lokasi'] = $row['lokasi'];
+                $_SESSION['encoded_id'] = $encoded_id;
+                $_SESSION['id_history'] = $UUID;
+                $id_role =  $_SESSION['tiket_role'];
 
 
-            // Update User Login Session
-            $id_history =  $_SESSION['encoded_id'];
-            $id_user = $_SESSION['tiket_id'];
-            
-            $online = 'Online';
-            $timezone = time() + (60 * 60 * 7);
-            $today = gmdate('d/m/Y G:i:s', $timezone);
-
-            // Cek History terlebih dahulu
-            // Cek apakah data sudah ada berdasarkan id_user dan ip_login
-            $checkQuery = "SELECT * FROM user_history WHERE id_user = '$id_user' AND ip_login = '$ip_address' AND jenis_perangkat = '$device'";
-            $checkResult = mysqli_query($connect, $checkQuery);
-
-            if (mysqli_num_rows($checkResult) > 0) {
-                // Data sudah ada, lakukan UPDATE
-                $updateQuery = "UPDATE user_history 
-                                SET 
-                                    id_history = '$UUID',
-                                    login_time = '$today',
-                                    logout_time = '',
-                                    perangkat = '$os',
-                                    jenis_perangkat = '$device',
-                                    lokasi = '$locationString',
-                                    status_perangkat = '$online'
-                                WHERE id_user = '$id_user' AND ip_login = '$ip_address'";
+                // Update User Login Session
+                $id_history =  $_SESSION['encoded_id'];
+                $id_user = $_SESSION['tiket_id'];
                 
-                $updateResult = mysqli_query($connect, $updateQuery);
-                $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
-                                JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
-                                WHERE u.id_user_role = '$id_role'";
-                $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
-                $data_role = mysqli_fetch_array($query_role);
-                $role = $data_role['role']; 
-                echo $role;
-                if($role == 'Finance'){
-                    header("Location: finance/dashboard.php");
-                } else if ($role == 'Driver'){
-                    header("Location: driver/dashboard.php");
-                } else if ($role == 'Admin Gudang'){
-                    header("Location: dashboard.php");
+                $online = 'Online';
+                $timezone = time() + (60 * 60 * 7);
+                $today = gmdate('d/m/Y G:i:s', $timezone);
+
+                // Cek History terlebih dahulu
+                // Cek apakah data sudah ada berdasarkan id_user dan ip_login
+                $checkQuery = "SELECT * FROM user_history WHERE id_user = '$id_user' AND ip_login = '$ip_address' AND jenis_perangkat = '$device'";
+                $checkResult = mysqli_query($connect, $checkQuery);
+
+                if (mysqli_num_rows($checkResult) > 0) {
+                    // Data sudah ada, lakukan UPDATE
+                    $updateQuery = "UPDATE user_history 
+                                    SET 
+                                        id_history = '$UUID',
+                                        login_time = '$today',
+                                        logout_time = '',
+                                        perangkat = '$os',
+                                        jenis_perangkat = '$device',
+                                        lokasi = '$locationString',
+                                        status_perangkat = '$online'
+                                    WHERE id_user = '$id_user' AND ip_login = '$ip_address'";
+                    
+                    $updateResult = mysqli_query($connect, $updateQuery);
+                    $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                    JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                    WHERE u.id_user_role = '$id_role'";
+                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                    $role = $data_role['role']; 
+                    echo $role;
+                    if($role == 'Finance'){
+                        header("Location: finance/dashboard.php");
+                    } else if ($role == 'Driver'){
+                        header("Location: driver/dashboard.php");
+                    } else if ($role == 'Admin Gudang'){
+                        header("Location: dashboard.php");
+                    } else {
+                        header("Location: dashboard.php");
+                    }
                 } else {
-                    header("Location: dashboard.php");
+                    // Data belum ada, lakukan INSERT
+                    // Simpan History
+                    $history = mysqli_query($connect, "INSERT INTO user_history 
+                                            (id_history, id_user, login_time, ip_login, perangkat, jenis_perangkat, lokasi, status_perangkat) 
+                                            VALUES 
+                                            ('$UUID', '$id_user', '$today', '$ip_address', '$os', '$device', '$locationString', '$online')");
+
+                    $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                    JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                    WHERE u.id_user_role = '$id_role'";
+                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                    $data_role = mysqli_fetch_array($query_role);
+                    $role = $data_role['role']; 
+                    if($role == 'Finance'){
+                        header("Location: finance/dashboard.php");
+                    } else if ($role == 'Driver'){
+                        header("Location: driver/dashboard.php");
+                    } else if ($role == 'Admin Gudang'){
+                        header("Location: dashboard.php");
+                    } else {
+                        header("Location: dashboard.php");
+                    }
                 }
             } else {
-                // Data belum ada, lakukan INSERT
-                // Simpan History
-                $history = mysqli_query($connect, "INSERT INTO user_history 
-                                        (id_history, id_user, login_time, ip_login, perangkat, jenis_perangkat, lokasi, status_perangkat) 
-                                        VALUES 
-                                        ('$UUID', '$id_user', '$today', '$ip_address', '$os', '$device', '$locationString', '$online')");
-
-                $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
-                                JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
-                                WHERE u.id_user_role = '$id_role'";
-                $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
-                $data_role = mysqli_fetch_array($query_role);
-                $role = $data_role['role']; 
-                echo $role;
-                if($role == 'Finance'){
-                    header("Location: finance/dashboard.php");
-                } else if ($role == 'Driver'){
-                    header("Location: driver/dashboard.php");
-                } else if ($role == 'Admin Gudang'){
-                    header("Location: dashboard.php");
-                } else {
-                    header("Location: dashboard.php");
-                }
+                // Akun belum di approval
+                $_SESSION['alert'] = 'Akun belum disetujui oleh admin';
+                header("Location: login.php");
             }
+           
         } else {
             // Password salah, kembali ke halaman login
             header("Location: login.php?gagal");
         }
     } else {
         // Username tidak ditemukan, kembali ke halaman login
-        header("Location: login.php?gagal");
+        header("Location: login.php?belum_terdaftar");
     }
 }
 
 // <!-- Generate UUID -->
-
 function generate_uuid()
 {
     return sprintf(
@@ -174,3 +177,4 @@ function generate_uuid()
     );
 }
 // <!-- End Generate UUID -->
+?>

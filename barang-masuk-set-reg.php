@@ -77,6 +77,7 @@ include "akses.php";
                                         <td class="text-center p-3" style="width: 250px">Nama Set Produk </td>
                                         <td class="text-center p-3" style="width: 100px">Merk</td>
                                         <td class="text-center p-3" style="width: 80px">Qty</td>
+                                        <td class="text-center p-3" style="width: 120px">Dibuat Oleh</td>
                                         <?php  
                                             if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Gudang") { 
                                                 ?>
@@ -90,11 +91,13 @@ include "akses.php";
                                     <?php
                                     include "koneksi.php";
                                     $no = 1;
-                                    $sql = "SELECT tsm.*, tpsm.nama_set_marwa, tpsm.kode_set_marwa, tpsm.id_merk, mr.nama_merk
-                                            FROM tr_set_marwa AS tsm
+                                    $sql = "SELECT 
+                                                tsm.*, tpsm.nama_set_marwa, tpsm.kode_set_marwa, tpsm.id_merk, mr.nama_merk, us.nama_user 
+                                            FROM tr_set_marwa AS tsm 
                                             LEFT JOIN tb_produk_set_marwa tpsm ON(tsm.id_set_marwa = tpsm.id_set_marwa)
-                                            LEFT JOIN tb_merk mr ON(tpsm.id_merk = mr.id_merk)
-                                            ORDER BY tsm.created_date";
+                                            LEFT JOIN tb_merk mr ON(tpsm.id_merk = mr.id_merk) 
+                                            LEFT JOIN user us ON (tsm.id_user = us.id_user) 
+                                            ORDER BY tsm.created_date;";
                                     $query = mysqli_query($connect, $sql);
                                     while ($data = mysqli_fetch_array($query)) {
                                     ?>
@@ -104,6 +107,7 @@ include "akses.php";
                                             <td><?php echo $data['nama_set_marwa'] ?></td>
                                             <td class="text-center"><?php echo $data['nama_merk'] ?></td>
                                             <td class="text-end"><?php echo $data['qty'] ?></td>
+                                            <td class="text-end"><?php echo $data['nama_user'] ?></td>
                                             <?php  
                                                 if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Gudang") { 
                                                     ?>

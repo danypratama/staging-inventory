@@ -58,7 +58,7 @@ if(isset($_POST['simpan-bill'])){
                     text: "<?php echo $error_message; ?>",
                     icon: "error",
                 }).then(function() {
-                    window.location.href = "../finance-inv.php?date_range=weekly";
+                    window.location.href = "../finance-inv.php?date_range=monthly";
                 });
                 });
             </script>
@@ -66,8 +66,29 @@ if(isset($_POST['simpan-bill'])){
     } 
 } else if(isset($_POST['ubah-jenis-faktur'])){
     $id_bill = $_POST['id_bill'];
-    $jenis_faktur = $_POST['jenis_faktur'];
-    $update = mysqli_query($connect, "UPDATE finance_tagihan SET jenis_faktur = '$jenis_faktur' WHERE id_tagihan = '$id_bill'");
+    $id_bill_encode = base64_encode($id_bill);
+    $jenis_faktur = htmlspecialchars($_POST['jenis_faktur']);
+    $cs_tagihan = htmlspecialchars($_POST['cs']);
+    $tgl_tagihan = htmlspecialchars($_POST['tgl']);
+    $update = mysqli_query($connect, "UPDATE finance_tagihan SET tgl_tagihan = '$tgl_tagihan', cs_tagihan = '$cs_tagihan', jenis_faktur = '$jenis_faktur' WHERE id_tagihan = '$id_bill'");
+    if($update){
+        ?>
+        <!-- Sweet Alert -->
+        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                title: "Success",
+                text: "Data berhasil diubah",
+                icon: "success",
+            }).then(function() {
+                window.location.href = "../detail-bill.php?id=<?php echo $id_bill_encode ?>";
+            });
+            });
+        </script>
+    <?php
+    }
 }
 
 function uuid() {

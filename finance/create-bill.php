@@ -114,7 +114,7 @@ include 'akses.php';
                         </div>
                         <div class="col-md-3 mb-3">
                             <label>Jenis Faktur Tagihan</label>
-                            <input type="text" class="form-control" name="jenis_faktur"  maxlength="25" required>
+                            <input type="text" class="form-control" name="jenis_faktur"  maxlength="25">
                         </div>
                     </div>
                     <div class="mb-3">

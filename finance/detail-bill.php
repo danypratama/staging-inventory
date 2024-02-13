@@ -47,6 +47,7 @@ include "akses.php";
                                         bill.no_tagihan,
                                         bill.status_cetak,
                                         bill.id_driver,
+                                        bill.cs_tagihan,
                                         bill.jenis_faktur,
                                         fnc.id_tagihan AS id_tagihan_finance,
                                         spk.id_inv,
@@ -67,6 +68,7 @@ include "akses.php";
                     $id_driver = $data_bill_cs['id_driver'];
                     $id_customer = $data_bill_cs['id_customer'];
                     $jenis_faktur = $data_bill_cs['jenis_faktur'];
+                    $cs_tagihan = $data_bill_cs['cs_tagihan'];
                 ?>
                 <div class="card-header text-center">
                     <h5><strong>DETAIL TAGIHAN</strong></h5>
@@ -329,15 +331,23 @@ include "akses.php";
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah customer tagihan dan jenis faktur</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="proses/bill.php" method="post">
                         <div class="mb-3">
                             <label>Jenis Faktur Tagihan</label>
-                            <input type="text" name="id_bill" value="<?php echo $id_bill ?>">
+                            <input type="hidden" name="id_bill" value="<?php echo $id_bill ?>">
                             <input type="text" class="form-control" name="jenis_faktur" value="<?php echo $jenis_faktur ?>" maxlength="25" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Customer Tagihan</label>
+                            <input type="text" class="form-control" name="cs" value="<?php echo $cs_tagihan ?>" maxlength="40">
+                        </div>
+                        <div class="mb-3">
+                            <label>Tgl. Tagihan</label>
+                            <input type="text" class="form-control" name="tgl" id="date" value="<?php echo $tgl_tagihan ?>" required>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -940,7 +950,6 @@ include "akses.php";
 <script type="text/javascript">
     flatpickr("#date", {
     dateFormat: "d/m/Y",
-    defaultDate: new Date(),
   });
 </script>
 

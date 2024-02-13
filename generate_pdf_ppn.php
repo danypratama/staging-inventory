@@ -256,17 +256,21 @@
             $sp_disc = $data_inv['sp_disc'] / 100;
             $ongkir = $data_inv['ongkir'];
             $sub_total_spdisc = $grand_total * $sp_disc;
-            $grand_total_fix = $grand_total - $sub_total_spdisc + $ongkir;
+            $grand_total_fix = $grand_total - $sub_total_spdisc;
+            $ppn_input = 11 / 100;
+            $ppn = $grand_total_fix * $ppn_input;
+            $grand_total_ppn = $grand_total_fix * 1.11 + $ongkir;
             ?>
             <div class="col-payment-1">
                 <!-- Kolom pertama -->
                 Terbilang :<br>
-                <?php echo terbilang($grand_total_fix) ?>
+                <?php echo terbilang($grand_total_ppn) ?>
 
             </div>
             <div class="col-payment-2">
                 <!-- Kolom kedua -->
                 <div class="grand-total">
+                    Sub total (Rp):<br>
 
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
@@ -274,33 +278,33 @@
                         echo "<br>";
                     }
                     ?>
-
+                    PPN 11% :<br>
                     <?php
                     if ($ongkir != 0) {
                         echo "Ongkir (Rp):";
                         echo "<br>";
                     }
                     ?>
-
-                    Grand total (Rp):
+                    Grand Total (Rp):
                 </div>
                 <div class="amount">
-
+                    <?php echo number_format($sub_total_tampil, 0, '.', '.') ?>
+                    <br>
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
                         echo $data_inv['sp_disc'] . '(%)';
                         echo "<br>";
                     }
                     ?>
-
+                    <?php echo number_format($ppn, 0, '.', '.') ?>
+                    <br>
                     <?php
                     if ($ongkir != 0) {
                         echo number_format($ongkir, 0, '.', '.');
                         echo "<br>";
                     }
                     ?>
-
-                    <?php echo number_format($grand_total_fix, 0, '.', '.') ?>
+                    <?php echo number_format($grand_total_ppn, 0, '.', '.') ?>
                 </div>
             </div>
         </div>
@@ -321,33 +325,9 @@
         }
 
         ?>
+        <br>
         <div class="invoice-footer">
-            <div class="col1">
-                <!-- Kolom pertama -->
-                <p>Disetujui oleh:</p>
-                <br>
-                <p>_____________</p>
-            </div>
-            <div class="col2">
-                <!-- Kolom kedua -->
-                <p>Diantar oleh:</p>
-                <br>
-                <p>_____________</p>
-            </div>
-            <div class="col3">
-                <!-- Kolom ketiga -->
-                <p>Diterima oleh:</p>
-                <br>
-                <p>_____________</p>
-            </div>
-            <div class="col4">
-                <!-- Kolom keempat -->
-                <p></p>
-                METODE PEMBAYARAN :<br>
-                TRANSFER BANK BCA <br>
-                NO. REK : 521 134 7105 <br>
-                ATAS NAMA : LASINO <br>
-            </div>
+            <img src="assets/img/footer-invoice.jpg" style="width: 800px;">
         </div>
     </div>
 </body>

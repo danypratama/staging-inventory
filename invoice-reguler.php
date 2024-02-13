@@ -544,11 +544,11 @@ include "akses.php";
                                                     </td>
                                                     <td class="text-center text-nowrap">
                                                         <a href="cek-produk-inv-ppn.php?id=<?php echo base64_encode($data['id_inv_ppn']) ?>" class="btn btn-primary btn-sm" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
-                                                        <button data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_inv_ppn']; ?>" data-nama="<?php echo $data['no_inv']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                                        <button data-bs-toggle="modal" data-bs-target="#cancelModalPpn" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_inv_ppn']; ?>" data-nama="<?php echo $data['no_inv']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
                                                             <i class="bi bi-x-circle"></i>
                                                         </button>
                                                     </td>
-                                                    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal fade" id="cancelModalPpn" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog modal-dialog-centered">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -673,12 +673,12 @@ include "akses.php";
                                                     </td>
                                                     <td class="text-center text-nowrap">
                                                         <a href="cek-produk-inv-bum.php?id=<?php echo base64_encode($data['id_inv_bum']) ?>" class="btn btn-primary btn-sm" title="Lihat Produk"><i class="bi bi-eye-fill"></i></a>
-                                                        <button data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_inv_bum']; ?>" data-nama="<?php echo $data['no_inv']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
+                                                        <button data-bs-toggle="modal" data-bs-target="#cancelModalBum" class="btn btn-danger btn-sm" title="Cancel Order" data-id="<?php echo $data['id_inv_bum']; ?>" data-nama="<?php echo $data['no_inv']; ?>" data-cs ="<?php echo $data['nama_cs'] ?>">
                                                             <i class="bi bi-x-circle"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
-                                                <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal fade" id="cancelModalBum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -689,7 +689,7 @@ include "akses.php";
                                                                 <form action="proses/proses-cancel-inv.php" method="POST">
                                                                     <p>Apakah Anda Yakin Ingin Cancel <br>No.Invoice : <b id="no_inv"></b> (<b id="cs"></b>) ?</p>
                                                                     <div class="mb-3">
-                                                                        <input type="text" name="id_inv" id="id_inv">
+                                                                        <input type="hidden" name="id_inv" id="id_inv">
                                                                         <Label>Alasan Cancel</Label>
                                                                         <input type="text" class="form-control" name="alasan" required>
                                                                     </div>
@@ -897,4 +897,41 @@ include "akses.php";
         namaInput.text(nama);
         csInput.text(cs);
     });
+
+    $('#cancelModalPpn').on('show.bs.modal', function(event) {
+        // Mendapatkan data dari tombol yang ditekan
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var nama = button.data('nama');
+        var cs = button.data('cs');
+        
+        var modal = $(this);
+        var simpanBtn = modal.find('.modal-footer #cancel');
+        var namaInput = modal.find('.modal-body #no_inv');
+        var csInput = modal.find('.modal-body #cs');
+
+        // Menampilkan data
+        modal.find('.modal-body #id_inv').val(id);
+        namaInput.text(nama);
+        csInput.text(cs);
+    });
+    
+    $('#cancelModalBum').on('show.bs.modal', function(event) {
+        // Mendapatkan data dari tombol yang ditekan
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var nama = button.data('nama');
+        var cs = button.data('cs');
+        
+        var modal = $(this);
+        var simpanBtn = modal.find('.modal-footer #cancel');
+        var namaInput = modal.find('.modal-body #no_inv');
+        var csInput = modal.find('.modal-body #cs');
+
+        // Menampilkan data
+        modal.find('.modal-body #id_inv').val(id);
+        namaInput.text(nama);
+        csInput.text(cs);
+    });
+
 </script>

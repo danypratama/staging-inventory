@@ -46,12 +46,11 @@
                               });
                           </script>
                   <?php } ?>
-                  <form action="proses/proses-user.php" class="row g-3 needs-validation" method="POST">
+                  <form action="proses/proses-user.php" class="row g-3" method="POST">
                     <div class="col-12">
                       <label for="yourName" class="form-label">Nama Lengkap</label>
                       <input type="hidden" name="id_user" class="form-control" value="USER<?php echo $UUID ?>">
                       <input type="text" name="nama_lengkap" class="form-control" id="yourName" required oninput="validateInput(this)">
-                      <div class="invalid-feedback">Silahkan isi nama lengkap!</div>
                     </div>
 
                     <div class="col-12">
@@ -61,13 +60,11 @@
                         <option value="Laki-Laki">Laki-Laki</option>
                         <option value="Perempuan">Perempuan</option>
                       </select>
-                      <div class="invalid-feedback">Silahkan isi Jenis Kelamin!</div>
                     </div>
 
                     <div class="col-12">
                       <label for="yourEmail" class="form-label">E-mail</label>
                       <input type="email" name="email" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Silahkan isi email anda!</div>
                     </div>
 
                     <div class="col-12">
@@ -83,7 +80,6 @@
                               <option value="<?php echo $data['id_user_role']; ?>"><?php echo $data['role']; ?></option>
                           <?php } ?>
                         </select>
-                      <div class="invalid-feedback">Silahkan isi role user!</div>
                       </div>
                     </div>
 
@@ -91,7 +87,6 @@
                       <label for="yourUsername" class="form-label">Nama User</label>
                       <div class="input-group has-validation">
                         <input type="text" name="username" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Silahkan isi nama user!</div>
                       </div>
                     </div>
 
@@ -99,7 +94,6 @@
                       <label for="yourPassword" class="form-label">Password</label>
                       <input type="password" name="password" class="form-control form-control form-password" required oninput="validateInput(this)">
                       <input type="hidden" class="form-control" name="created" value="<?php echo date('d/m/Y, G:i') ?>">
-                      <div class="invalid-feedback">Silahkan isi password!</div>
                     </div>
 
                     <div class="col-12">

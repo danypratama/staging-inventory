@@ -1,5 +1,5 @@
 body {
-  font-family: "Calibri", sans-serif;
+  font-family: 'Calibri', sans-serif;
   letter-spacing: 0.8px;
   background-color: aliceblue;
   font-size: 14px;
@@ -127,7 +127,7 @@ img {
 .table {
   width: 100%;
   margin-bottom: 1rem;
-  color: #333;
+  color: black;
   border-collapse: collapse;
 }
 
