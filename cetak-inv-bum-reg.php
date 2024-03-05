@@ -146,7 +146,8 @@
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
-                        <th style="width: 350px;">Nama Produk</th>
+                        <th style="width: 300px;">Nama Produk</th>
+                        <th style="width: 100px;">No Batch</th>
                         <th style="width: 60px;">Qty</th>
                         <th style="width: 75px;">Harga</th>
                         <?php
@@ -185,7 +186,8 @@
                                     trx.total_harga,
                                     trx.status_trx,
                                     trx.created_date,
-                                    COALESCE(tpr.nama_produk, tpsm.nama_set_marwa, tpe.nama_produk, tpse.nama_set_ecat) AS nama_produk, 
+                                    COALESCE(tpr.nama_produk, tpsm.nama_set_marwa, tpe.nama_produk, tpse.nama_set_ecat) AS nama_produk,
+                                    COALESCE(tpr.no_batch, tpsm.no_batch, tpe.no_batch, tpse.no_batch) AS no_batch, 
                                     COALESCE(tpr.satuan, tpe.satuan) AS satuan,
                                     COALESCE(mr_produk.nama_merk, mr_set.nama_merk, mr_produk_ecat.nama_merk, mr_set_ecat.nama_merk) AS merk_produk
                                 FROM inv_bum AS bum
@@ -231,6 +233,7 @@
                         <tr>
                             <td align="center"><?php echo $no; ?></td>
                             <td><?php echo $data_trx['nama_produk_spk'] ?></td>
+                            <td align="center"><?php echo $data_trx['no_batch'] ?></td>
                             <td align="right"> <?php echo number_format($data_trx['total_qty'], 0, '.', '') . ' ' . $satuan_produk; ?></td>
                             <td align="right"><?php echo number_format($data_trx['harga'], 0, '.', '.') ?></td>
                             <?php
@@ -320,15 +323,15 @@
         <div class="invoice-footer">
             <div class="col1">
                 <!-- Kolom pertama -->
-                <p>Disetujui oleh:</p>
+                <p>Mengetahui:</p>
                 <br>
-                <p>_____________</p>
+                <p>H. Lasino</p>
             </div>
             <div class="col2">
                 <!-- Kolom kedua -->
-                <p>Diantar oleh:</p>
+                <p>Disetujui oleh:</p>
                 <br>
-                <p>_____________</p>
+                <p>Lisa Ayu F</p>
             </div>
             <div class="col3">
                 <!-- Kolom ketiga -->

@@ -28,9 +28,16 @@ include "akses.php";
     }
 
     .sph-img {
+        display: flex;
         margin-top: 0.2cm;
         margin-left: 0.5cm; /* Tambahkan jarak kiri */
         margin-right: 0.5cm; /* Tambahkan jarak kanan */
+        align-items: center;
+    }
+
+    .img{
+      width: 14cm;
+      height: 1.8cm;  
     }
 
     .sph-content {
@@ -102,7 +109,7 @@ include "akses.php";
                   LEFT JOIN finance fnc ON (spk.id_inv = fnc.id_inv)
                   LEFT JOIN finance_tagihan ft ON (fnc.id_tagihan = ft.id_tagihan)
                   LEFT JOIN tb_customer cs ON (spk.id_customer = cs.id_cs)
-                  WHERE ft.id_tagihan = '$id_bill'";
+                  WHERE ft.id_tagihan = '$id_bill' ORDER BY tgl_inv ASC";
       $query = mysqli_query($connect, $sql_data);
       $query_data = mysqli_query($connect, $sql_data);
       $data = mysqli_fetch_array($query);
@@ -114,7 +121,7 @@ include "akses.php";
       if( $id_inv_substr == "PPN"){
         ?>
           <div class="sph-img">
-            <img src="assets/img/header-sph.jpg" class="card-img-top">
+            <img src="assets/img/header-finance.jpg" height="70px" width="500px" class="img">
           </div>
         <?php
       }

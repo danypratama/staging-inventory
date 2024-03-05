@@ -16,6 +16,9 @@ include "akses.php";
     <?php include "page/head.php"; ?>
 
     <style>
+        table{
+            padding: 0 !important;
+        }
         @media (max-width: 767px) {
 
             /* Tambahkan aturan CSS khusus untuk tampilan mobile di bawah 767px */
@@ -344,12 +347,12 @@ include "akses.php";
                                         <thead>
                                             <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">No. Invoice</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Tgl. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 250px">Note Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Jenis Pengiriman</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                             </tr>
@@ -398,7 +401,7 @@ include "akses.php";
                                                     </td>
                                                     <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                                                     <td class="text-center text-nowrap"><?php echo $data['kategori_inv'] ?></td>
-                                                    <td class="text-nowrap">
+                                                    <td>
                                                         <?php
                                                             $note = $data['note_inv'];
 
@@ -447,12 +450,12 @@ include "akses.php";
                                         <thead>
                                             <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">No. Invoice</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Tgl. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 250px">Note Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Jenis Pengiriman</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                             </tr>
@@ -501,7 +504,7 @@ include "akses.php";
                                                     </td>
                                                     <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                                                     <td class="text-center text-nowrap"><?php echo $data['kategori_inv'] ?></td>
-                                                    <td class="text-nowrap">
+                                                    <td>
                                                         <?php
                                                             $note = $data['note_inv'];
 
@@ -550,12 +553,12 @@ include "akses.php";
                                         <thead>
                                             <tr class="text-white" style="background-color: navy;">
                                                 <th class="text-center p-3 text-nowrap" style="width: 30px">No</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">No. Invoice</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 150px">Tgl. Invoice</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">No. Invoice</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Tgl. Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 150px">No. PO</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 250px">Nama Customer</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Kat. Inv</th>
-                                                <th class="text-center p-3 text-nowrap" style="width: 100px">Note</th>
+                                                <th class="text-center p-3 text-nowrap" style="width: 250px">Note Invoice</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 100px">Jenis Pengiriman</th>
                                                 <th class="text-center p-3 text-nowrap" style="width: 80px">Aksi</th>
                                             </tr>
@@ -604,7 +607,7 @@ include "akses.php";
                                                     </td>
                                                     <td class="text-nowrap"><?php echo $data['nama_cs'] ?></td>
                                                     <td class="text-center text-nowrap"><?php echo $data['kategori_inv'] ?></td>
-                                                    <td class="text-nowrap">
+                                                    <td>
                                                         <?php
                                                             $note = $data['note_inv'];
 

@@ -3,16 +3,17 @@ session_start();
 include "../koneksi.php";
 
 if (isset($_POST['simpan-set-marwa'])) {
-    $id_set_marwa = $_POST['id_set_marwa'];
-    $kode_set = $_POST['kode_barang'];
-    $nama_set_marwa = $_POST['nama_set_marwa'];
-    $id_lokasi = $_POST['id_lokasi'];
-    $katjual = $_POST['kategori_penjualan'];
-    $merk = $_POST['merk'];
-    $harga = $_POST['harga'];
-    $stock = $_POST['stock'];
-    $id_user = $_POST['id_user'];
-    $created = $_POST['created_date'];
+    $id_set_marwa = htmlspecialchars($_POST['id_set_marwa']);
+    $kode_set = htmlspecialchars($_POST['kode_barang']);
+    $no_batch = htmlspecialchars($_POST['no_batch']);
+    $nama_set_marwa = htmlspecialchars($_POST['nama_set_marwa']);
+    $id_lokasi = htmlspecialchars($_POST['id_lokasi']);
+    $katjual = htmlspecialchars($_POST['kategori_penjualan']);
+    $merk = htmlspecialchars($_POST['merk']);
+    $harga = htmlspecialchars($_POST['harga']);
+    $stock = htmlspecialchars($_POST['stock']);
+    $id_user = htmlspecialchars($_POST['id_user']);
+    $created = htmlspecialchars($_POST['created_date']);
 
     // Mengubah format menjadi int
     $harga = intval(preg_replace("/[^0-9]/", "", $harga));
@@ -24,29 +25,30 @@ if (isset($_POST['simpan-set-marwa'])) {
         echo "<script>document.location.href='../data-produk-set-marwa.php'</script>";
     } else {
         mysqli_query($connect, "INSERT INTO tb_produk_set_marwa
-                    (id_set_marwa, kode_set_marwa, nama_set_marwa, id_user, id_lokasi, id_kat_penjualan, id_merk, harga_set_marwa, stock, created_date) 
+                    (id_set_marwa, kode_set_marwa, no_batch, nama_set_marwa, id_user, id_lokasi, id_kat_penjualan, id_merk, harga_set_marwa, stock, created_date) 
                     VALUES 
-                    ('$id_set_marwa', '$kode_set', '$nama_set_marwa', '$id_user', '$id_lokasi', '$katjual', '$merk', '$harga', '$stock', '$created')");
+                    ('$id_set_marwa', '$kode_set', '$no_batch', '$nama_set_marwa', '$id_user', '$id_lokasi', '$katjual', '$merk', '$harga', '$stock', '$created')");
 
         $_SESSION['info'] = 'Disimpan';
         echo "<script>document.location.href='../data-produk-set-marwa.php'</script>";
     }
 } elseif (isset($_POST['edit-set-marwa'])) {
-    $id_set_marwa = $_POST['id_set_marwa'];
-    $kode_set = $_POST['kode_barang'];
-    $nama_set_marwa = $_POST['nama_set_marwa'];
-    $id_lokasi = $_POST['id_lokasi'];
-    $katjual = $_POST['kategori_penjualan'];
-    $merk = $_POST['merk'];
-    $harga = $_POST['harga'];
-    $id_user = $_POST['id_user'];
-    $updated = $_POST['updated_date'];
-
+    $id_set_marwa = htmlspecialchars($_POST['id_set_marwa']);
+    $kode_set = htmlspecialchars($_POST['kode_barang']);
+    $no_batch = htmlspecialchars($_POST['no_batch']);
+    $nama_set_marwa = htmlspecialchars($_POST['nama_set_marwa']);
+    $id_lokasi = htmlspecialchars($_POST['id_lokasi']);
+    $katjual = htmlspecialchars($_POST['kategori_penjualan']);
+    $merk = htmlspecialchars($_POST['merk']);
+    $harga = htmlspecialchars($_POST['harga']);
+    $id_user = htmlspecialchars($_POST['id_user']);
+    $updated = htmlspecialchars($_POST['updated_date']);
     $harga = intval(preg_replace("/[^0-9]/", "", $harga));
 
     $update = mysqli_query($connect, "UPDATE tb_produk_set_marwa
     								  SET 
                                       kode_set_marwa = '$kode_set',
+                                      no_batch = '$no_batch',
                                       nama_set_marwa = '$nama_set_marwa',
                                       id_lokasi = '$id_lokasi',
                                       id_kat_penjualan = '$katjual',

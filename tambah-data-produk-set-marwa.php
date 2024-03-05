@@ -34,17 +34,25 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-header text-center">
-            <h4>Tambah Data Produk Set Marwa</h4>
+            <h5>Tambah Data Produk Set Marwa</h5>
           </div>
           <div class="card-body p-3">
             <form action="proses/proses-produk-set-marwa.php" method="POST">
               <?php 
                   $UUID = generate_uuid();
               ?>
+              <input type="hidden" class="form-control" name="id_set_marwa" value="SETMRW<?php echo $UUID; ?>">
               <div class="mb-3">
-                  <label class="form-label"><strong>Kode Produk Set</strong></label>
-                  <input type="hidden" class="form-control" name="id_set_marwa" value="SETMRW<?php echo $UUID; ?>">
-                  <input type="text" class="form-control" name="kode_barang" required>
+                <div class="row">
+                  <div class="col-sm-8 mb-3">
+                    <label class="form-label"><strong>Kode Produk Set</strong></label>
+                    <input type="text" class="form-control" name="kode_barang" required>
+                  </div>
+                  <div class="col-sm-4 mb-3">
+                    <label class="form-label"><strong>No. Batch</strong></label>
+                    <input type="text" class="form-control" name="no_batch">
+                  </div>
+                </div>
               </div>
               <div class="mb-3">
                   <label class="form-label"><strong>Nama Produk Set</strong></label>
@@ -103,18 +111,16 @@ include "akses.php";
                     <label class="form-label"><strong>Harga Produk Set</strong></label>
                     <input type="text" class="form-control" name="harga" id="inputBudget" required>
                   </div>
-                    <div class="col-sm">
-                      <!-- <label class="form-label"><strong>Stok</strong></label> -->
-                      <input type="hidden" class="form-control" name="stock" value="0" required>
-                      <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>" required>
-                      <input type="hidden" class="form-control" name="created_date" id="datetime-input" required>
-                    </div>
-                  </div> 
-                </div>
-                <div class="mb-3 pt-3 text-end">
-                    <button type="submit" name="simpan-set-marwa" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
-                    <a href="data-produk-set-marwa.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
-                </div>
+                  <!-- <label class="form-label"><strong>Stok</strong></label> -->
+                  <input type="hidden" class="form-control" name="stock" value="0" required>
+                  <input type="hidden" class="form-control" name="id_user" value="<?php echo $_SESSION['tiket_id'] ?>" required>
+                  <input type="hidden" class="form-control" name="created_date" id="datetime-input" required>
+                </div> 
+              </div>
+              <div class="mb-3 pt-3 text-end">
+                  <button type="submit" name="simpan-set-marwa" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>
+                  <a href="data-produk-set-marwa.php" class="btn btn-secondary btn-md"><i class="bi bi-x"></i> Tutup</a>
+              </div>
             </form>
         </div>  
     </section>

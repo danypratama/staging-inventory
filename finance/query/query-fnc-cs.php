@@ -76,7 +76,8 @@ $sort_option = "STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), 
 // Lakukan sesuatu dengan $sort_option, misalnya memproses data dari database
 }  
 $sql = "SELECT
-            subq.cs_inv, subq.tgl_inv, subq.id_customer, subq.nama_cs, SUM(subq.total_bayar) AS total_bayar, subq.id_finance,
+            subq.cs_inv, subq.tgl_inv, subq.id_customer, subq.nama_cs, 
+            SUM(subq.total_bayar) AS total_bayar, subq.id_finance,
             MAX(subq.status_transaksi) AS status_transaksi,
             SUM(CASE WHEN subq.status_transaksi = 'Transaksi Selesai' THEN 1 ELSE 0 END) AS total_transaksi_selesai,
             SUM(CASE WHEN subq.status_transaksi <> 'Transaksi Selesai' THEN 1 ELSE 0 END) AS total_transaksi_belum_selesai,
@@ -84,23 +85,29 @@ $sql = "SELECT
             SUM(CASE WHEN subq.status_transaksi <> 'Transaksi Selesai' THEN subq.total_inv ELSE 0 END) AS total_nominal_inv_belum_selesai
             FROM (
             SELECT
-                spk.id_inv, spk.id_customer, cs.nama_cs, SUM(fb.total_bayar) AS total_bayar, fb.id_finance,
+                spk.id_customer, cs.nama_cs, fnc.id_finance,
                 COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
                 COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv) AS tgl_inv,
                 COALESCE(nonppn.status_transaksi, ppn.status_transaksi, bum.status_transaksi) AS status_transaksi,
                 COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
-                fnc.total_inv AS nominal_inv
+                fnc.total_inv AS nominal_inv,
+                COALESCE(fb.total_bayar, 0) AS total_bayar
             FROM spk_reg AS spk
             LEFT JOIN inv_nonppn nonppn ON spk.id_inv = nonppn.id_inv_nonppn
             LEFT JOIN inv_ppn ppn ON spk.id_inv = ppn.id_inv_ppn
             LEFT JOIN inv_bum bum ON spk.id_inv = bum.id_inv_bum
             LEFT JOIN tb_customer cs ON spk.id_customer = cs.id_cs
             LEFT JOIN finance fnc ON spk.id_inv = fnc.id_inv
-            LEFT JOIN finance_bayar fb ON fnc.id_finance = fb.id_finance
+            LEFT JOIN (
+                SELECT id_finance, SUM(total_bayar) AS total_bayar
+                FROM finance_bayar
+                GROUP BY id_finance
+            ) fb ON fnc.id_finance = fb.id_finance
             WHERE $sort_option
-            GROUP BY spk.id_inv, spk.id_customer, cs.nama_cs, fb.id_finance, cs_inv, tgl_inv, status_transaksi, nominal_inv
+            GROUP BY spk.id_customer, cs.nama_cs, fnc.id_finance, cs_inv, tgl_inv, status_transaksi, nominal_inv
             ) AS subq
-            GROUP BY subq.nama_cs ORDER BY subq.nama_cs ASC";
+            GROUP BY subq.id_customer, subq.nama_cs
+            ORDER BY subq.nama_cs ASC";
 
 $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
 $query2 = mysqli_query($connect, $sql) or die(mysqli_error($connect));

@@ -154,7 +154,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                       $total_tagihan = $data['total_tagihan'];
                       $total_sisa_tagihan = $total_tagihan - $total_bayar;
                       $tgl_tagihan = $data['tgl_tagihan'];
-                      $no_tagihan = $data['no_tagihan'];
+                      $no_tagihan = $data['no_tagihan']
                   ?>
                   <tr>
                     <td class="text-center"><?php echo $no; ?></td>
@@ -171,9 +171,9 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                         }
                       ?>
                     </td>
-                    <td class="text-end"><?php echo number_format($data['total_tagihan'],0,'.','.')?></td>
-                    <td class="text-end"><?php echo number_format($total_bayar,0,'.','.')?></td>
-                    <td class="text-end">
+                    <td class="text-center"><?php echo number_format($data['total_tagihan'])?></td>
+                    <td><?php echo number_format($total_bayar,0,'.','.')?></td>
+                    <td>
                       <?php
                         if($total_sisa_tagihan == 0){
                           echo '

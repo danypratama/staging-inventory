@@ -122,13 +122,12 @@ include "akses.php";
                           tkp.min_stock, 
                           tkp.max_stock,
                           SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) AS substr_id_produk
-                      FROM tb_produk_reguler AS tpr
-                      LEFT JOIN stock_produk_reguler AS spr ON (tpr.id_produk_reg = spr.id_produk_reg)
+                      FROM  stock_produk_reguler AS spr
+                      LEFT JOIN tb_produk_reguler AS tpr ON (tpr.id_produk_reg = spr.id_produk_reg)
                       LEFT JOIN tb_kat_penjualan AS tkp ON (tkp.id_kat_penjualan = spr.id_kat_penjualan)
                       LEFT JOIN tb_produk_set_marwa AS tpsm ON (tpsm.id_set_marwa = spr.id_produk_reg)
                       LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
                       LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
-                      WHERE SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) = 'BR'
                       ORDER BY nama_produk ASC";
               $query = mysqli_query($connect, $sql);
               while ($data = mysqli_fetch_array($query)) {

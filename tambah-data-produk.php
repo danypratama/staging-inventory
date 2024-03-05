@@ -82,17 +82,25 @@ include "akses.php";
                             <label class="form-check-label" for="inlineRadio2">E-Catalog</label>
                           </div>
                         </div>
+                        <input type="hidden" class="form-control" name="id_produk" id="id_produk">
                         <div class="mb-3">
-                            <label class="form-label"><strong>Kode Produk</strong></label>
-                            <input type="hidden" class="form-control" name="id_produk" id="id_produk" value="">
-                            <input type="text" class="form-control" name="kode_produk" required>
+                          <div class="row">
+                            <div class="col-sm-8 mb-3">
+                              <label class="form-label"><strong>Kode Produk</strong></label>
+                              <input type="text" class="form-control" name="kode_produk" required>
+                            </div>
+                            <div class="col-sm-4 mb-3">
+                              <label class="form-label"><strong>No. Batch</strong></label>
+                              <input type="text" class="form-control" name="no_batch">
+                            </div>
+                          </div>
                         </div>
                         <div class="row">
-                          <div class="col-8 mb-3">
+                          <div class="col-sm-8 mb-3">
                               <label class="form-label"><strong>Nama Produk</strong></label>
                               <input type="text" class="form-control" name="nama_produk" required>
                           </div>
-                          <div class="col-4 mb-3">
+                          <div class="col-sm-4 mb-3">
                               <label class="form-label"><strong>Kode Katalog</strong></label>
                               <input type="text" class="form-control" name="kode_katalog" required>
                           </div>

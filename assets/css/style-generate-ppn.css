@@ -5,9 +5,12 @@ body {
 
 .invoice {
   width: 90%;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 1.5cm;
+  padding-top: 0cm;
+  padding-left: 1cm;
+  padding-right: 1.5cm;
+  padding-bottom: 0.5cm;
   background-color: #ffffff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
@@ -89,7 +92,7 @@ body {
 .invoice-table td {
   padding: 0.1cm;
   border: 1px solid Black;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .invoice-payment {

@@ -21,10 +21,10 @@ include "function/class-spk.php";
             pointer-events: none;
         }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         /* Menghilangkan garis pada input */
         input {
             border: none;

@@ -34,17 +34,25 @@ include "akses.php";
       <div class="container-fluid">
         <div class="card">
           <div class="card-header text-center">
-            <h4>Tambah Data Produk Set Marwa</h4>
+            <h4>Tambah Data Produk Set E-Cat</h4>
           </div>
           <div class="card-body p-3">
             <form action="proses/proses-produk-set-ecat.php" method="POST">
               <?php 
                   $UUID = generate_uuid();
               ?>
+              <input type="hidden" class="form-control" name="id_set_ecat" value="SETECAT<?php echo $UUID; ?>">
               <div class="mb-3">
-                  <label class="form-label"><strong>Kode Produk Set</strong></label>
-                  <input type="hidden" class="form-control" name="id_set_ecat" value="SETECAT<?php echo $UUID; ?>">
-                  <input type="text" class="form-control" name="kode_barang" required>
+                <div class="row">
+                  <div class="col-sm-8 mb-3">
+                    <label class="form-label"><strong>Kode Produk Set</strong></label>
+                    <input type="text" class="form-control" name="kode_barang" required>
+                  </div>
+                  <div class="col-sm-4 mb-3">
+                    <label class="form-label"><strong>No. Batch</strong></label>
+                    <input type="text" class="form-control" name="no_batch">
+                  </div>
+                </div>
               </div>
               <div class="mb-3">
                   <label class="form-label"><strong>Nama Produk Set</strong></label>
@@ -103,11 +111,8 @@ include "akses.php";
                     <label class="form-label"><strong>Harga Produk Set</strong></label>
                     <input type="text" class="form-control" name="harga" id="inputBudget" required>
                   </div>
-                    <div class="col-sm">
-                      <input type="hidden" class="form-control" name="nama_user" value="<?php echo $_SESSION['tiket_nama'] ?>" required>
-                      <input type="hidden" class="form-control" name="created_date" id="datetime-input" required>
-                    </div>
-                  </div> 
+                  <input type="hidden" class="form-control" name="nama_user" value="<?php echo $_SESSION['tiket_nama'] ?>" required>
+                  <input type="hidden" class="form-control" name="created_date" id="datetime-input" required>
                 </div>
                 <div class="mb-3 pt-3 text-end">
                     <button type="submit" name="simpan-set-ecat" class="btn btn-primary btn-md"><i class="bx bx-save"></i> Simpan Data</button>

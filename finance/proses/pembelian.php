@@ -11,6 +11,7 @@ if(isset($_POST['simpan-pembelian'])){
     $no_trx = htmlspecialchars($_POST['no_trx']);
     $tgl_pembelian = htmlspecialchars($_POST['tgl_pembelian']);
     $no_inv = htmlspecialchars($_POST['no_inv']);
+    $kat_pembelian = htmlspecialchars($_POST['kat_pembelian']);
     $jenis_trx = htmlspecialchars($_POST['jenis_trx']);
     $tgl_tempo = htmlspecialchars($_POST['tgl_tempo']);
     $jenis_disc = htmlspecialchars($_POST['jenis_diskon']);
@@ -19,12 +20,12 @@ if(isset($_POST['simpan-pembelian'])){
     $sp_disc = htmlspecialchars($_POST['sp_disc']);
     
     $simpan_data = $connect->query("INSERT INTO inv_pembelian_lokal 
-                                        (id_inv_pembelian, id_sp, no_trx, tgl_pembelian, no_inv, jenis_trx, tgl_tempo, jenis_disc, sp_disc, note)
+                                        (id_inv_pembelian, id_sp, no_trx, tgl_pembelian, no_inv, kategori_pembelian, jenis_trx, tgl_tempo, jenis_disc, sp_disc, note)
                                         VALUES
-                                        ('$id_inv_pembelian', '$id_sp', '$no_trx', '$tgl_pembelian', '$no_inv', '$jenis_trx', '$tgl_tempo', '$jenis_disc', '$sp_disc', '$note')");
+                                        ('$id_inv_pembelian', '$id_sp', '$no_trx', '$tgl_pembelian', '$no_inv', '$kat_pembelian', '$jenis_trx', '$tgl_tempo', '$jenis_disc', '$sp_disc', '$note')");
     if($simpan_data){
         $_SESSION['info'] = 'Disimpan';
-        header("Location:../list-tagihan-pembelian.php");
+        header("Location:../data-pembelian.php");
     }
 }
 

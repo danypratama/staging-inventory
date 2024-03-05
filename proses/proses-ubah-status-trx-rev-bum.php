@@ -129,14 +129,7 @@
                     $jenis_inv = $_POST['jenis_inv'];
                     $total_inv = $_POST['total_inv'];
 
-                    $update_inv = '';
-                    if($jenis_inv == 'nonppn'){
-                        $update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Transaksi Selesai' WHERE id_inv_nonppn = '$id_inv'");
-                    } else if ($jenis_inv == 'ppn') {
-                        $update_inv = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Transaksi Selesai' WHERE id_inv_ppn = '$id_inv'");
-                    } else if($jenis_inv == 'bum'){
-                        $update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Transaksi Selesai' WHERE id_inv_bum = '$id_inv'");
-                    }
+                    $update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Komplain Selesai' WHERE id_inv_bum = '$id_inv'");
 
                     $create_finance = mysqli_query($connect, "INSERT INTO finance(id_finance, id_inv, total_inv, jenis_inv) VALUES ('$id_finance', '$id_inv', '$total_inv', '$jenis_inv')");
 

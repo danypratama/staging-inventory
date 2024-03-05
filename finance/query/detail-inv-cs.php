@@ -77,13 +77,40 @@
     }
     $total_nominal_trx = 0;
     $total_nominal_bayar = 0;
-    $sql = "SELECT 
+    // $sql = "SELECT DISTINCT
+    //             fnc.jenis_inv,
+    //             fnc.status_pembayaran,
+    //             fnc.status_lunas,
+    //             COALESCE(fnc.status_tagihan, 0) AS status_tagihan,
+    //             spk.id_customer,  -- Menampilkan kolom id_customer dari tabel spk_reg
+    //             cs.nama_cs AS nama_cs,  -- Menampilkan kolom nama_cs dari tabel tb_customer
+    //             COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
+    //             COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
+    //             COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
+    //             COALESCE(nonppn.status_transaksi, ppn.status_transaksi, bum.status_transaksi) AS status_trx,
+    //             STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), '%d/%m/%Y') AS tgl_inv,
+    //             COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo) AS tgl_tempo,
+    //             STR_TO_DATE(COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo), '%d/%m/%Y') AS tgl_tempo_convert,
+    //             COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
+    //             ft.no_tagihan,
+    //             SUM(fb.total_bayar) AS total_bayar
+    //         FROM spk_reg AS spk
+    //         LEFT JOIN inv_nonppn nonppn ON (spk.id_inv = nonppn.id_inv_nonppn)
+    //         LEFT JOIN inv_ppn ppn ON (spk.id_inv = ppn.id_inv_ppn)
+    //         LEFT JOIN inv_bum bum ON (spk.id_inv = bum.id_inv_bum)
+    //         LEFT JOIN finance fnc ON (spk.id_inv = fnc.id_inv)
+    //         LEFT JOIN finance_tagihan ft ON (fnc.id_tagihan = ft.id_tagihan)
+    //         LEFT JOIN finance_bayar fb ON (fnc.id_finance = fb.id_finance)
+    //         LEFT JOIN tb_customer cs ON (spk.id_customer = cs.id_cs)
+    //         WHERE spk.id_customer = '$id_cs' AND $sort_option GROUP BY COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv)";
+
+    $sql =" SELECT
                 fnc.jenis_inv,
                 fnc.status_pembayaran,
                 fnc.status_lunas,
                 COALESCE(fnc.status_tagihan, 0) AS status_tagihan,
-                spk.id_customer,  -- Menampilkan kolom id_customer dari tabel spk_reg
-                cs.nama_cs AS nama_cs,  -- Menampilkan kolom nama_cs dari tabel tb_customer
+                spk.id_customer,
+                cs.nama_cs AS nama_cs,
                 COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                 COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
                 COALESCE(nonppn.cs_inv, ppn.cs_inv, bum.cs_inv) AS cs_inv,
@@ -93,16 +120,21 @@
                 STR_TO_DATE(COALESCE(nonppn.tgl_tempo, ppn.tgl_tempo, bum.tgl_tempo), '%d/%m/%Y') AS tgl_tempo_convert,
                 COALESCE(nonppn.total_inv, ppn.total_inv, bum.total_inv) AS total_inv,
                 ft.no_tagihan,
-                SUM(fb.total_bayar) AS total_bayar
+                COALESCE(total_bayar, 0) AS total_bayar
             FROM spk_reg AS spk
             LEFT JOIN inv_nonppn nonppn ON (spk.id_inv = nonppn.id_inv_nonppn)
             LEFT JOIN inv_ppn ppn ON (spk.id_inv = ppn.id_inv_ppn)
             LEFT JOIN inv_bum bum ON (spk.id_inv = bum.id_inv_bum)
             LEFT JOIN finance fnc ON (spk.id_inv = fnc.id_inv)
             LEFT JOIN finance_tagihan ft ON (fnc.id_tagihan = ft.id_tagihan)
-            LEFT JOIN finance_bayar fb ON (fnc.id_finance = fb.id_finance)
+            LEFT JOIN (
+                SELECT id_finance, SUM(total_bayar) AS total_bayar
+                FROM finance_bayar
+                GROUP BY id_finance
+            ) fb ON (fnc.id_finance = fb.id_finance)
             LEFT JOIN tb_customer cs ON (spk.id_customer = cs.id_cs)
-            WHERE spk.id_customer = '$id_cs' AND $sort_option GROUP BY COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv)";
+            WHERE spk.id_customer = '$id_cs' AND COALESCE(nonppn.status_transaksi, ppn.status_transaksi, bum.status_transaksi) <> 'Cancel Order'
+            GROUP BY COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv);";
     $query = mysqli_query($connect, $sql);
     $query_nominal = mysqli_query($connect, $sql);
     $total_trx = mysqli_num_rows($query);

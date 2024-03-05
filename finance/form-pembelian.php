@@ -1,6 +1,5 @@
 <?php
-$page = 'list-tagihan';
-$page2 = 'tagihan-pembelian';
+$page = 'pembelian';
 include "akses.php";
 ?>
 <!DOCTYPE html>
@@ -64,11 +63,26 @@ include "akses.php";
                                 <label class="fw-bold">Tanggal Pembelian</label>
                                 <input type="text" class="form-control" name="tgl_pembelian" id="date">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-mb-3">
+                                <label class="fw-bold mb-2">Kategori Pembelian</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_pembelian" value="Alkes">
+                                    <label class="form-check-label">Alat Kesehatan</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_pembelian" value="Non Alkes" disabled>
+                                    <label class="form-check-label">Non Alat Kesehatan</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_pembelian" value="Semua Kategori" disabled>
+                                    <label class="form-check-label">Semua Kategori</label>
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-2">
                                 <label class="fw-bold">No Invoice Pembelian</label>
                                 <input type="text" class="form-control" name="no_inv" id="">
                             </div>
-                            <div class="col-mb-3">
+                            <div class="col-mb-3 mt-2">
                                 <label class="fw-bold mb-2">Jenis Transaksi</label><br>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="jenis_trx" value="PPN">
@@ -86,6 +100,8 @@ include "akses.php";
                                     <button type="button" class="input-group-text bg-danger text-white" id="resetTempo"> X </button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-sm-6">
                             <div class="col-mb-3">
                                 <label class="fw-bold mb-2">Jenis Diskon</label><br>
                                 <div class="form-check form-check-inline">
@@ -105,8 +121,6 @@ include "akses.php";
                                 <label class="fw-bold">Spesial Diskon</label>
                                 <input type="text" class="form-control" name="sp_disc">
                             </div>
-                        </div>
-                        <div class="col-sm-6">
                             <div class="mb-3">
                                 <label class="fw-bold">Nama Supllier</label>
                                 <input type="hidden" class="form-control" name="id_sp" id="id_sp">
@@ -132,7 +146,7 @@ include "akses.php";
         <script>
             function redirectToPage() {
                 // Ganti URL pada window.location.href dengan URL yang diinginkan
-                window.location.href = "list-tagihan-pembelian.php";
+                window.location.href = "data-pembelian.php";
             }
         </script>
     </section>

@@ -1,17 +1,19 @@
 <?php
 session_start();
 include "../koneksi.php";
+date_default_timezone_set('Asia/Jakarta');
 
 if (isset($_POST['simpan-set-ecat'])) {
-    $id_set_ecat = $_POST['id_set_ecat'];
-    $kode_set = $_POST['kode_barang'];
-    $nama_set_ecat = $_POST['nama_set_ecat'];
-    $id_lokasi = $_POST['id_lokasi'];
-    $katjual = $_POST['kategori_penjualan'];
-    $merk = $_POST['merk'];
-    $harga = $_POST['harga'];
-    $nama_user = $_POST['nama_user'];
-    $created = $_POST['created_date'];
+    $id_set_ecat = htmlspecialchars($_POST['id_set_ecat']);
+    $kode_set = htmlspecialchars($_POST['kode_barang']);
+    $no_batch = htmlspecialchars($_POST['no_batch']);
+    $nama_set_ecat = htmlspecialchars($_POST['nama_set_ecat']);
+    $id_lokasi = htmlspecialchars($_POST['id_lokasi']);
+    $katjual = htmlspecialchars($_POST['kategori_penjualan']);
+    $merk = htmlspecialchars($_POST['merk']);
+    $harga = htmlspecialchars($_POST['harga']);
+    $nama_user = htmlspecialchars($_POST['nama_user']);
+    $created = htmlspecialchars($_POST['created_date']);
 
     // Mengubah format menjadi int
     $harga = intval(preg_replace("/[^0-9]/", "", $harga));
@@ -23,37 +25,39 @@ if (isset($_POST['simpan-set-ecat'])) {
         echo "<script>document.location.href='../data-produk-set-ecat.php'</script>";
     } else {
         mysqli_query($connect, "INSERT INTO tb_produk_set_ecat
-                    (id_set_ecat, kode_set_ecat, nama_set_ecat, id_lokasi, id_kat_penjualan, id_merk, harga_set_ecat, created_date, created_by) 
+                    (id_set_ecat, kode_set_ecat, no_batch, nama_set_ecat, id_lokasi, id_kat_penjualan, id_merk, harga_set_ecat, created_date, created_by) 
                     VALUES 
-                    ('$id_set_ecat', '$kode_set', '$nama_set_ecat', '$id_lokasi', '$katjual', '$merk', '$harga', '$created', '$nama_user')");
+                    ('$id_set_ecat', '$kode_set', '$no_batch', '$nama_set_ecat', '$id_lokasi', '$katjual', '$merk', '$harga', '$created', '$nama_user')");
 
         $_SESSION['info'] = 'Disimpan';
         echo "<script>document.location.href='../data-produk-set-ecat.php'</script>";
     }
 } elseif (isset($_POST['edit-set-ecat'])) {
-    $id_set_ecat = $_POST['id_set_ecat'];
-    $kode_set = $_POST['kode_barang'];
-    $nama_set_ecat = $_POST['nama_set_ecat'];
-    $id_lokasi = $_POST['id_lokasi'];
-    $katjual = $_POST['kategori_penjualan'];
-    $merk = $_POST['merk'];
-    $harga = $_POST['harga'];
-    $nama_user = $_POST['nama_user'];
-    $updated = $_POST['updated_date'];
-
+    $id_set_ecat = htmlspecialchars($_POST['id_set_ecat']);
+    $kode_set = htmlspecialchars($_POST['kode_barang']);
+    $no_batch = htmlspecialchars($_POST['no_batch']);
+    $nama_set_ecat = htmlspecialchars($_POST['nama_set_ecat']);
+    $id_lokasi = htmlspecialchars($_POST['id_lokasi']);
+    $katjual = htmlspecialchars($_POST['kategori_penjualan']);
+    $merk = htmlspecialchars($_POST['merk']);
+    $harga = htmlspecialchars($_POST['harga']);
+    $nama_user = $_SESSION['tiket_nama'];
+    $updated = htmlspecialchars($_POST['updated_date']);
+    $updated_date = date('d/m/Y H:i:s');
     $harga = intval(preg_replace("/[^0-9]/", "", $harga));
 
     $update = mysqli_query($connect, "UPDATE tb_produk_set_ecat
     								  SET 
                                       kode_set_ecat = '$kode_set',
+                                      no_batch = '$no_batch',
                                       nama_set_ecat = '$nama_set_ecat',
                                       id_lokasi = '$id_lokasi',
                                       id_kat_penjualan = '$katjual',
                                       id_merk = '$merk',
                                       harga_set_ecat = '$harga',
-                                      updated_date = '$nama_user'
+                                      updated_date = '$updated_date',
+                                      updated_by = '$nama_user'
                                       WHERE id_set_ecat = '$id_set_ecat'");
-
     if ($update) {
         $_SESSION['info'] = 'Diupdate';
         echo "<script>document.location.href='../data-produk-set-ecat.php'</script>";

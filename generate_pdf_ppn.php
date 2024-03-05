@@ -60,7 +60,7 @@
         <div class="invoice-header">
             <div class="col-header-1">
                 <!-- Kolom pertama -->
-                <img src="assets/img/header-kma.jpg" style="width: 460px; height: 70px;">
+                <img src="assets/img/header-kma.jpg" style="width: 430px; height: 70px;">
             </div>
             <div class="col-header-2">
                 <!-- Kolom kedua -->
@@ -327,7 +327,7 @@
         ?>
         <br>
         <div class="invoice-footer">
-            <img src="assets/img/footer-invoice.jpg" style="width: 800px;">
+            <img src="assets/img/footer-invoice.jpg" style="width: 730px;">
         </div>
     </div>
 </body>

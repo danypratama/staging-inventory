@@ -44,6 +44,14 @@
       </a>
     </li>
     <!-- End Data SPK -->
+
+    <!-- Data Pembelian -->
+    <li class="nav-item">
+      <a class="nav-link <?php if ($page == 'pembelian') { echo 'active-link'; } ?>" href="data-pembelian.php">
+        <i class="bi bi-bar-chart"></i><span>Data Pembelian</span>
+      </a>
+    </li>
+    <!-- End Data SPK -->
     
     <!-- Data Finance -->
     <li class="nav-item">

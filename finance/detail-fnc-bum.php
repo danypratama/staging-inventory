@@ -2,6 +2,7 @@
 $page  = 'finance';
 $page2 = 'inv-bum';
 include "akses.php";
+include "function/class-spk.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -235,7 +236,7 @@ include "akses.php";
                                 }
                             ?>
 
-                            <?php  
+<?php  
                                 $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
                                 $data_status_kirim = mysqli_fetch_array($status_kirim);
                                 $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
@@ -255,11 +256,10 @@ include "akses.php";
                                                                             WHERE sk.dikirim_driver = '$driver'");
                                 $data_driver_kirim = mysqli_fetch_array($driver_kirim);
 
-                                $penerima =  mysqli_query($connect,"SELECT id_inv, nama_penerima, tgl_terima 
+                                $penerima =  mysqli_query($connect,"SELECT id_inv, nama_penerima 
                                                                 FROM inv_penerima
                                                                 WHERE id_inv = '$id_inv'");
                                 $data_penerima = mysqli_fetch_array($penerima);
-                                $tgl_terima = $data_penerima["tgl_terima"];
                             ?>
 
                             <?php
@@ -284,6 +284,48 @@ include "akses.php";
                                         </div>
                                     </div>
                                     <?php
+                                }else if($jenis_pengiriman == 'Diambil Langsung'){
+                                    ?>
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <p style="float: left;">Jenis Pengiriman</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                <?php echo $jenis_pengiriman ?>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    if(!empty($data_status_kirim['jenis_penerima'])){
+                                        ?>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Jenis Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                    <?php  
+                                                        if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                            ?>
+                                                                (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Nama Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_penerima['nama_penerima'] ?>
+                                                </div>
+                                            </div>
+                                        <?php
+                                    }
                                 } else {
                                     ?>
                                         <div class="row mt-2">
@@ -304,16 +346,24 @@ include "akses.php";
                                                         <p style="float: right;"> :</p>
                                                     </div>
                                                     <div class="col-7">
-                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> (<?php echo $data_penerima['nama_penerima'] ?>)
+                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                        <?php  
+                                                            if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                                ?>
+                                                                    (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                                <?php
+                                                            }
+                                                        ?>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-5">
-                                                        <p style="float: left;">Diterima Tanggal</p>
+                                                        <p style="float: left;">Nama Penerima</p>
                                                         <p style="float: right;"> :</p>
                                                     </div>
                                                     <div class="col-7">
-                                                        <?php echo date('d F Y', strtotime($tgl_terima)) ?>
+                                                        <?php echo $data_penerima['nama_penerima'] ?>
                                                     </div>
                                                 </div>
                                             <?php
@@ -356,7 +406,7 @@ include "akses.php";
                 <div class="card-body p-3">
                     <div class="table-responsive">
                         <div class="text-start mb-3">
-                            <a href="finance-inv.php?date_range=weekly" class="btn btn-warning btn-detail mb-2">
+                            <a href="finance-inv.php?date_range=monthly" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
                             <!-- Button modal Bukti Terima -->
@@ -390,36 +440,40 @@ include "akses.php";
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <?php
-                            if ($total_data != 0) {
-                                if ($data_cek['kategori_inv'] != 'Diskon') {
-                                    echo '
-                                        <thead>
-                                            <tr class="text-white" style="background-color: #051683;">
-                                                <th class="text-center text-nowrap p-3" style="width:20px">No</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">No. SPK</th>
-                                                <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
-                                            </tr>
-                                        </thead>';
+                                if ($data['kategori_inv'] == 'Diskon') {
+                                   ?>
+                                    <thead>
+                                        <tr class="text-white" style="background-color: #051683;">
+                                            <th class="text-center text-nowrap p-3" style="width:20px">No</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">No. SPK</th>
+                                            <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Diskon</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <?php
                                 } else {
-                                    echo '
-                                        <thead>
-                                            <tr class="text-white" style="background-color: #051683;">
-                                                <th class="text-center text-nowrap p-3" style="width:20px">No</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">No. SPK</th>
-                                                <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Diskon</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
-                                            </tr>
-                                        </thead>';
+                                    ?>
+                                    <thead>
+                                        <tr class="text-white" style="background-color: #051683;">
+                                            <th class="text-center text-nowrap p-3" style="width:20px">No</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">No. SPK</th>
+                                            <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <?php
+                                    
                                 }
-                            }
+                            
                             ?>
                             <tbody>
                                 <?php
@@ -430,36 +484,58 @@ include "akses.php";
                                 $id_bum_decode = base64_decode($_GET['id']);
                                 $no = 1;
                                 $sql_trx = "SELECT 
-                                            bum.id_inv_bum,
-                                            sr.id_inv, sr.no_spk,
-                                            trx.*, 
-                                            spr.stock, 
-                                            tpr.nama_produk, 
-                                            tpr.harga_produk, mr.* 
+                                                bum.id_inv_bum, 
+                                                bum.kategori_inv,
+                                                
+                                                spk.id_inv, 
+                                                spk.no_spk,
+                                                trx.id_transaksi,
+                                                trx.id_produk,
+                                                trx.nama_produk_spk,
+                                                trx.harga,
+                                                trx.qty,
+                                                trx.disc,
+                                                trx.total_harga,
+                                                trx.status_trx,
+                                                tpr.nama_produk,
+                                                tpr.satuan,
+                                                mr_produk.nama_merk AS merk_produk, -- Nama merk untuk produk reguler
+                                                tpsm.nama_set_marwa,
+                                                tpsm.harga_set_marwa,
+                                                mr_set.nama_merk AS merk_set -- Nama merk untuk produk set
                                             FROM inv_bum AS bum
-                                            JOIN spk_reg sr ON (bum.id_inv_bum = sr.id_inv)
-                                            JOIN transaksi_produk_reg trx ON(sr.id_spk_reg = trx.id_spk)
-                                            JOIN stock_produk_reguler spr ON(trx.id_produk = spr.id_produk_reg)
-                                            JOIN tb_produk_reguler tpr ON(trx.id_produk = tpr.id_produk_reg)
-                                            JOIN tb_merk mr ON (tpr.id_merk = mr.id_merk)
+                                            LEFT JOIN spk_reg spk ON (bum.id_inv_bum = spk.id_inv)
+                                            LEFT JOIN transaksi_produk_reg trx ON trx.id_spk = spk.id_spk_reg
+                                            LEFT JOIN tb_produk_reguler tpr ON trx.id_produk = tpr.id_produk_reg
+                                            LEFT JOIN tb_produk_set_marwa tpsm ON trx.id_produk = tpsm.id_set_marwa
+                                            LEFT JOIN tb_merk mr_produk ON tpr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
+                                            LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
                                             WHERE bum.id_inv_bum = '$id_bum_decode' AND status_trx = '1' ORDER BY no_spk ASC";
                                 $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                 while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
+                                    $namaProduk = detailSpkFnc::getDetail($data_trx['nama_produk'], $data_trx['nama_set_marwa']);
+                                    $id_produk = $data_trx['id_produk'];
+                                    $satuan = $data_trx['satuan'];
+                                    $nama_merk = detailSpkFnc::getMerk($data_trx['merk_produk'], $data_trx['merk_set']);
                                     $disc = $data_trx['disc'];
-                                    $id_spk = $data_trx['id_spk'];
+                                    $id_produk_substr = substr($id_produk, 0, 2);
+                                    if ($id_produk_substr == 'BR') {
+                                        $satuan_produk = $satuan;
+                                    } else {
+                                        $satuan_produk = 'Set';
+                                    }
                                 ?>
                                     <tr>
                                         <td class="text-center"><?php echo $no; ?></td>
                                         <td class="text-center"><?php echo $data_trx['no_spk']; ?></td>
-                                        <td class="text-nowrap"><?php echo $data_trx['nama_produk'] ?></td>
-                                        <td class="text-center"><?php echo $data_trx['nama_merk'] ?></td>
+                                        <td class="text-nowrap"><?php echo $data_trx['nama_produk_spk'] ?></td>
+                                        <td class="text-center"><?php echo $satuan_produk ?></td>
+                                        <td class="text-center"><?php echo $nama_merk ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['harga']) ?></td>
                                         <?php
-                                        if ($total_data != 0) {
-                                            if ($data_cek['kategori_inv'] == 'Diskon') {
+                                            if ($data['kategori_inv'] == 'Diskon') {
                                                 echo "<td class='text-end'>" . $disc . "</td>";
                                             }
-                                        }
                                         ?>
                                         <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['total_harga']) ?></td>

@@ -9,6 +9,7 @@
         $kode = $_POST['kode_produk'];
         $nama = htmlspecialchars($_POST['nama_produk']);
 		$kode_katalog = htmlspecialchars($_POST['kode_katalog']);
+		$no_batch = htmlspecialchars($_POST['no_batch']);
 		$satuan = $_POST['satuan']; 
         $merk = $_POST['merk'];
         $harga = $_POST['harga'];
@@ -86,9 +87,9 @@
 				move_uploaded_file($tmp_file, $target_file);
 
 				$sql = "INSERT INTO tb_produk_reguler
-				(id_produk_reg, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, kode_katalog, satuan, harga_produk, gambar, created_date, created_by)
+				(id_produk_reg, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, no_batch, kode_katalog, satuan, harga_produk, gambar, created_date, created_by)
 				VALUES
-				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$kode_katalog', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
+				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$no_batch', '$kode_katalog', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
 				$query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
 
 				$qr = mysqli_query($connect, "INSERT INTO qr_link
@@ -144,9 +145,9 @@
 				$target_file = $direktori_tujuan . $nama_file_baru;
 				move_uploaded_file($tmp_file, $target_file);
 				$sql = "INSERT INTO tb_produk_ecat
-				(id_produk_ecat, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, kode_katalog, satuan, harga_produk, gambar, created_date, created_by)
+				(id_produk_ecat, id_merk, id_kat_produk, id_kat_penjualan, id_grade, id_lokasi, kode_produk, nama_produk, no_batch, kode_katalog, satuan, harga_produk, gambar, created_date, created_by)
 				VALUES
-				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$kode_katalog', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
+				('$id_produk', '$merk', '$kat_produk', '$kat_penjualan', '$grade', '$lokasi', '$kode', '$nama', '$no_batch', '$kode_katalog', '$satuan', '$harga', '$nama_file_baru', '$created', '$created_by')";
  				$query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
 
 				
@@ -163,6 +164,7 @@
 	}elseif(isset($_POST["edit-produk-reg"])) {
 		$id_produk = htmlspecialchars($_POST['id_produk']);
         $kode = htmlspecialchars($_POST['kode_produk']);
+		$no_batch = htmlspecialchars($_POST['no_batch']);
         $nama = htmlspecialchars($_POST['nama_produk']);
 		$kode_katalog = htmlspecialchars($_POST['kode_katalog']);
 		$satuan = $_POST['satuan'];
@@ -194,6 +196,7 @@
 									id_grade = '$grade',
 									id_lokasi = '$lokasi',
 									kode_produk = '$kode',
+									no_batch = '$no_batch',
 									nama_produk = '$nama',
 									kode_katalog = '$kode_katalog',
 									satuan = '$satuan',
@@ -227,6 +230,7 @@
 									id_grade = '$grade',
 									id_lokasi = '$lokasi',
 									kode_produk = '$kode',
+									no_batch = '$no_batch',
 									nama_produk = '$nama',
 									kode_katalog = '$kode_katalog',
 									satuan = '$satuan',
@@ -244,6 +248,7 @@
 	}elseif(isset($_POST["edit-produk-ecat"])) {
 		$id_produk = htmlspecialchars($_POST['id_produk']);
 		$kode = htmlspecialchars($_POST['kode_produk']);
+		$no_batch = htmlspecialchars($_POST['no_batch']);
 		$nama = htmlspecialchars($_POST['nama_produk']);
 		$kode_katalog = htmlspecialchars($_POST['kode_katalog']);
 		$satuan = $_POST['satuan'];
@@ -275,6 +280,7 @@
 													id_grade = '$grade',
 													id_lokasi = '$lokasi',
 													kode_produk = '$kode',
+													no_batch = '$no_batch',
 													nama_produk = '$nama',
 													kode_katalog = '$kode_katalog',
 													satuan = '$satuan',
@@ -326,6 +332,7 @@
 									id_grade = '$grade',
 									id_lokasi = '$lokasi',
 									kode_produk = '$kode',
+									no_batch = '$no_batch',
 									nama_produk = '$nama',
 									kode_katalog = '$kode_katalog',
 									satuan = '$satuan',

@@ -314,15 +314,15 @@
         <div class="invoice-footer">
             <div class="col1">
                 <!-- Kolom pertama -->
-                <p>Disetujui oleh:</p>
+                <p>Mengetahui:</p>
                 <br>
-                <p>_____________</p>
+                <p>H. Lasino</p>
             </div>
             <div class="col2">
                 <!-- Kolom kedua -->
-                <p>Diantar oleh:</p>
+                <p>Disetujui oleh:</p>
                 <br>
-                <p>_____________</p>
+                <p>Lisa Ayu F</p>
             </div>
             <div class="col3">
                 <!-- Kolom ketiga -->

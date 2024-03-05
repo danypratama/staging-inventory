@@ -48,32 +48,40 @@ include "akses.php";
           <div class="card-body p-3">
             <form action="proses/proses-produk-set-marwa.php" method="POST">
               <?php
-              //tangkap URL dengan $_GET
-              $ide = base64_decode($_GET['edit-set-marwa']);
+                //tangkap URL dengan $_GET
+                $ide = base64_decode($_GET['edit-set-marwa']);
 
-              // Menampilkan data
-              $sql = "SELECT prs.*,
-                            prs.created_date as 'produk_created',
-                            prs.created_date as 'produk_updated',    
-                            uc.nama_user as user_created, 
-                            uu.nama_user as user_updated,
-                            kj.nama_kategori as nama_kat,
-                            mr.*,
-                            lok.*
-                            FROM tb_produk_set_marwa as prs
-                            LEFT JOIN user uc ON (prs.id_user = uc.id_user)
-                            LEFT JOIN user uu ON (prs.user_updated = uu.id_user)
-                            LEFT JOIN tb_merk mr ON (prs.id_merk = mr.id_merk)
-                            LEFT JOIN tb_kat_penjualan kj ON (prs.id_kat_penjualan = kj.id_kat_penjualan)
-                            LEFT JOIN tb_lokasi_produk lok ON (prs.id_lokasi = lok.id_lokasi)
-                            WHERE prs.id_set_marwa = '$ide'";
-              $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
-              $row = mysqli_fetch_array($query);
+                // Menampilkan data
+                $sql = "SELECT prs.*,
+                              prs.created_date as 'produk_created',
+                              prs.created_date as 'produk_updated',    
+                              uc.nama_user as user_created, 
+                              uu.nama_user as user_updated,
+                              kj.nama_kategori as nama_kat,
+                              mr.*,
+                              lok.*
+                              FROM tb_produk_set_marwa as prs
+                              LEFT JOIN user uc ON (prs.id_user = uc.id_user)
+                              LEFT JOIN user uu ON (prs.user_updated = uu.id_user)
+                              LEFT JOIN tb_merk mr ON (prs.id_merk = mr.id_merk)
+                              LEFT JOIN tb_kat_penjualan kj ON (prs.id_kat_penjualan = kj.id_kat_penjualan)
+                              LEFT JOIN tb_lokasi_produk lok ON (prs.id_lokasi = lok.id_lokasi)
+                              WHERE prs.id_set_marwa = '$ide'";
+                $query = mysqli_query($connect, $sql) or die(mysqli_error($connect, $sql));
+                $row = mysqli_fetch_array($query);
               ?>
+              <input type="hidden" class="form-control" name="id_set_marwa" value="<?php echo $row['id_set_marwa']; ?>">
               <div class="mb-3">
-                <label class="form-label"><strong>Kode Produk Set</strong></label>
-                <input type="hidden" class="form-control" name="id_set_marwa" value="<?php echo $row['id_set_marwa']; ?>">
-                <input type="text" class="form-control" name="kode_barang" value="<?php echo $row['kode_set_marwa'] ?>" readonly>
+                  <div class="row">
+                    <div class="col-sm-8 mb-3">
+                        <label class="form-label"><strong>Kode Produk Set</strong></label>
+                        <input type="text" class="form-control" name="kode_barang" value="<?php echo $row['kode_set_marwa'] ?>">
+                    </div>
+                    <div class="col-sm-4 mb-3">
+                        <label class="form-label"><strong>No. Batch</strong></label>
+                        <input type="text" class="form-control" name="no_batch" value="<?php echo $row['no_batch'] ?>">
+                    </div>
+                  </div>
               </div>
               <div class="mb-3">
                 <label class="form-label"><strong>Nama Produk Set</strong></label>

@@ -235,8 +235,7 @@ include "function/class-spk.php";
                                         </div>';
                                 }
                             ?>
-
-                            <?php  
+  <?php  
                                 $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
                                 $data_status_kirim = mysqli_fetch_array($status_kirim);
                                 $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];
@@ -256,11 +255,10 @@ include "function/class-spk.php";
                                                                             WHERE sk.dikirim_driver = '$driver'");
                                 $data_driver_kirim = mysqli_fetch_array($driver_kirim);
 
-                                $penerima =  mysqli_query($connect,"SELECT id_inv, nama_penerima, tgl_terima 
+                                $penerima =  mysqli_query($connect,"SELECT id_inv, nama_penerima 
                                                                 FROM inv_penerima
                                                                 WHERE id_inv = '$id_inv'");
                                 $data_penerima = mysqli_fetch_array($penerima);
-                                $tgl_terima = $data_penerima["tgl_terima"];
                             ?>
 
                             <?php
@@ -285,6 +283,48 @@ include "function/class-spk.php";
                                         </div>
                                     </div>
                                     <?php
+                                }else if($jenis_pengiriman == 'Diambil Langsung'){
+                                    ?>
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <p style="float: left;">Jenis Pengiriman</p>
+                                                <p style="float: right;"> :</p>
+                                            </div>
+                                            <div class="col-7">
+                                                <?php echo $jenis_pengiriman ?>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    if(!empty($data_status_kirim['jenis_penerima'])){
+                                        ?>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Jenis Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                    <?php  
+                                                        if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                            ?>
+                                                                (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <p style="float: left;">Nama Penerima</p>
+                                                    <p style="float: right;"> :</p>
+                                                </div>
+                                                <div class="col-7">
+                                                    <?php echo $data_penerima['nama_penerima'] ?>
+                                                </div>
+                                            </div>
+                                        <?php
+                                    }
                                 } else {
                                     ?>
                                         <div class="row mt-2">
@@ -305,16 +345,24 @@ include "function/class-spk.php";
                                                         <p style="float: right;"> :</p>
                                                     </div>
                                                     <div class="col-7">
-                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> (<?php echo $data_penerima['nama_penerima'] ?>)
+                                                        <?php echo $data_status_kirim['jenis_penerima'] ?> 
+                                                        <?php  
+                                                            if(!empty($data_ekspedisi_kirim['nama_ekspedisi'])){
+                                                                ?>
+                                                                    (<?php echo $data_ekspedisi_kirim['nama_ekspedisi'] ?>)
+                                                                <?php
+                                                            }
+                                                        ?>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-5">
-                                                        <p style="float: left;">Diterima Tanggal</p>
+                                                        <p style="float: left;">Nama Penerima</p>
                                                         <p style="float: right;"> :</p>
                                                     </div>
                                                     <div class="col-7">
-                                                        <?php echo date('d F Y', strtotime($tgl_terima)) ?>
+                                                        <?php echo $data_penerima['nama_penerima'] ?>
                                                     </div>
                                                 </div>
                                             <?php
@@ -357,7 +405,7 @@ include "function/class-spk.php";
                 <div class="card-body p-3">
                     <div class="table-responsive">
                         <div class="text-start mb-3">
-                            <a href="finance-inv.php?date_range=weekly" class="btn btn-warning btn-detail mb-2">
+                            <a href="finance-inv.php?date_range=monthly" class="btn btn-warning btn-detail mb-2">
                                 <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                             </a>
                             <!-- Button modal Bukti Terima -->
@@ -384,45 +432,45 @@ include "function/class-spk.php";
                             $query_cek = mysqli_query($connect, $sql_cek);
                             $data_cek = mysqli_fetch_array($query_cek);
                             $total_data = mysqli_num_rows($query_cek);
-                            $total_inv = $data_cek['total_inv'];
                             ?>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <?php
-                            if ($total_data != 0) {
-                                if ($data_cek['kategori_inv'] != 'Diskon') {
-                                    echo '
-                                        <thead>
-                                            <tr class="text-white" style="background-color: #051683;">
-                                                <th class="text-center text-nowrap p-3" style="width:20px">No</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">No. SPK</th>
-                                                <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
-                                            </tr>
-                                        </thead>';
+                                if ($data['kategori_inv'] == 'Diskon') {
+                                   ?>
+                                    <thead>
+                                        <tr class="text-white" style="background-color: #051683;">
+                                            <th class="text-center text-nowrap p-3" style="width:20px">No</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">No. SPK</th>
+                                            <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Diskon</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <?php
                                 } else {
-                                    echo '
-                                        <thead>
-                                            <tr class="text-white" style="background-color: #051683;">
-                                                <th class="text-center text-nowrap p-3" style="width:20px">No</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">No. SPK</th>
-                                                <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
-                                                <th class="text-center text-nowrap p-3" style="width:100px">Diskon</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
-                                                <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
-                                            </tr>
-                                        </thead>';
+                                    ?>
+                                    <thead>
+                                        <tr class="text-white" style="background-color: #051683;">
+                                            <th class="text-center text-nowrap p-3" style="width:20px">No</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">No. SPK</th>
+                                            <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
+                                            <th class="text-center text-nowrap p-3" style="width:100px">Harga</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Qty Order</th>
+                                            <th class="text-center text-nowrap p-3" style="width:80px">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <?php
+                                    
                                 }
-                            }
                             ?>
                             <tbody>
                                 <?php
@@ -482,11 +530,9 @@ include "function/class-spk.php";
                                         <td class="text-center"><?php echo $nama_merk ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['harga']) ?></td>
                                         <?php
-                                        if ($total_data != 0) {
-                                            if ($data_cek['kategori_inv'] == 'Diskon') {
+                                            if ($data['kategori_inv'] == 'Diskon') {
                                                 echo "<td class='text-end'>" . $disc . "</td>";
                                             }
-                                        }
                                         ?>
                                         <td class="text-end"><?php echo number_format($data_trx['qty']) ?></td>
                                         <td class="text-end"><?php echo number_format($data_trx['total_harga']) ?></td>

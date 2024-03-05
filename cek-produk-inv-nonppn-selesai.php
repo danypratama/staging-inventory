@@ -275,7 +275,7 @@ include "function/class-spk.php";
                                 }
                             ?>
 
-<?php  
+                            <?php  
                                 $status_kirim = mysqli_query($connect, "SELECT jenis_pengiriman, dikirim_ekspedisi, jenis_penerima, dikirim_driver, dikirim_oleh, penanggung_jawab FROM status_kirim WHERE id_inv = '$id_inv'");
                                 $data_status_kirim = mysqli_fetch_array($status_kirim);
                                 $jenis_pengiriman =  $data_status_kirim['jenis_pengiriman'];

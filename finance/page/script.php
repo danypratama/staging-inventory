@@ -12,6 +12,15 @@
         plugins: ["clear_button"],
     });
 </script>
+<script type="text/javascript">
+    $('.selectize-js-2').selectize({
+        plugins: ["clear_button"],
+        onChange: function(value) {
+            // Menampilkan data yang dipilih ke dalam console log
+            // console.log('Selected value:', value);
+        }
+    });
+</script>
 <!-- End Selectize JS -->
 
 <!-- date picker with flatpick -->

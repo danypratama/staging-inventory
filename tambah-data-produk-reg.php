@@ -1,13 +1,14 @@
 <?php
-$page = 'produk';
-$page2 = 'data-produk';
-include "akses.php";
+    $page = 'data';
+    $page2 = 'data-produk';
+    include "akses.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
   <title>Inventory KMA</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
@@ -18,16 +19,12 @@ include "akses.php";
       cursor: pointer;
     }
 
-    #table3{
-      cursor: pointer;
-    }
-
     .fileUpload {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
   .fileUpload input.upload {
       position: unset;
@@ -71,17 +68,6 @@ include "akses.php";
                         <?php 
                           $UUID = generate_uuid();
                         ?>
-                        <div class="mb-3 mt-2">
-                          <label><strong>Jenis Produk</strong></label><br>
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="jenis_produk" id="inlineRadio1" value="reg" required>
-                            <label class="form-check-label" for="inlineRadio1">Reguler</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="jenis_produk" id="inlineRadio2" value="ecat" required>
-                            <label class="form-check-label" for="inlineRadio2">E-Catalog</label>
-                          </div>
-                        </div>
                         <div class="mb-3">
                             <label class="form-label"><strong>Kode Produk</strong></label>
                             <input type="hidden" class="form-control" name="id_produk" value="BR-REG<?php echo $UUID; ?>">
@@ -93,14 +79,6 @@ include "akses.php";
                         </div>
                         <div class="mb-3">
                           <div class="row">
-                            <div class="col mb-3">
-                              <label class="form-label"><strong>Satuan</strong></label>
-                              <select name="satuan" class="form-control">
-                                <option value="">Pilih...</option>
-                                <option value="Pcs">Pcs</option>
-                                <option value="Set">Set</option>
-                              </select>
-                            </div>
                             <div class="col-sm mb-3">
                               <label class="form-label"><strong>Merk</strong></label>
                               <select class="selectize-js form-select" name="merk" required>
@@ -142,39 +120,39 @@ include "akses.php";
                             </div>
                         </div>
                         <div class="mb-3">
-                          <div class="row">
-                            <div class="col-sm mb-3">
-                              <label class="form-label"><strong>Kategori Produk</strong></label>
-                              <input type="hidden" class="form-control" name="kategori_produk" id="idKatProduk">
-                              <input type="text" placeholder="Pilih..." class="form-control" name="nama_kat_produk" id="namaKatProduk" data-bs-toggle="modal" data-bs-target="#modalkatprod" readonly>
+                            <div class="row">
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>Kategori Produk</strong></label>
+                                <input type="hidden" class="form-control" name="kategori_produk" id="idKatProduk">
+                                <input type="text" placeholder="Pilih..." class="form-control" name="nama_kat_produk" id="namaKatProduk" data-bs-toggle="modal" data-bs-target="#modalkatprod" readonly>
+                              </div>
+                              <div class="col-sm mb-3">
+                                <label class="form-label"><strong>Kategori Penjualan</strong></label>
+                                <select class="selectize-js form-select" name="kategori_penjualan" required>
+                                <option value="">Pilih...</option>
+                                <?php 
+                                    include "koneksi.php";
+                                    $sql = "SELECT * FROM tb_kat_penjualan ";
+                                    $query = mysqli_query($connect,$sql) or die (mysqli_error($connect));
+                                    while ($data = mysqli_fetch_array($query)){?>
+                                    <option value="<?php echo $data['id_kat_penjualan']; ?>"><?php echo $data['nama_kategori']; ?></option>
+                                <?php } ?>
+                                </select>
+                              </div>
+                              <div class="col-sm">
+                                <label class="form-label"><strong>Grade Produk</strong></label>
+                                <select class="selectize-js form-select" name="grade" required>
+                                <option value="">Pilih...</option>
+                                <?php 
+                                    include "koneksi.php";
+                                    $sql = "SELECT * FROM tb_produk_grade ";
+                                    $query = mysqli_query($connect,$sql) or die (mysqli_error($connect));
+                                    while ($data = mysqli_fetch_array($query)){?>
+                                    <option value="<?php echo $data['id_grade']; ?>"><?php echo $data['nama_grade']; ?></option>
+                                <?php } ?>
+                                </select>
+                              </div>
                             </div>
-                            <div class="col-sm mb-3">
-                              <label class="form-label"><strong>Kategori Penjualan</strong></label>
-                              <select class="selectize-js form-select" name="kategori_penjualan" required>
-                              <option value="">Pilih...</option>
-                              <?php 
-                                  include "koneksi.php";
-                                  $sql = "SELECT * FROM tb_kat_penjualan ";
-                                  $query = mysqli_query($connect,$sql) or die (mysqli_error($connect));
-                                  while ($data = mysqli_fetch_array($query)){?>
-                                  <option value="<?php echo $data['id_kat_penjualan']; ?>"><?php echo $data['nama_kategori']; ?></option>
-                              <?php } ?>
-                              </select>
-                            </div>
-                            <div class="col-sm mb-3">
-                              <label class="form-label"><strong>Grade Produk</strong></label>
-                              <select class="selectize-js form-select" name="grade" required>
-                              <option value="">Pilih...</option>
-                              <?php 
-                                  include "koneksi.php";
-                                  $sql = "SELECT * FROM tb_produk_grade ";
-                                  $query = mysqli_query($connect,$sql) or die (mysqli_error($connect));
-                                  while ($data = mysqli_fetch_array($query)){?>
-                                  <option value="<?php echo $data['id_grade']; ?>"><?php echo $data['nama_grade']; ?></option>
-                              <?php } ?>
-                              </select>
-                            </div>
-                          </div>
                         </div>
                         <div class="preview-image">
                           <img id="imagePreview" src="#" alt="Preview Image" style="display:none;">

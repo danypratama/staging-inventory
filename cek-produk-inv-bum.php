@@ -887,7 +887,7 @@ include "function/class-spk.php";
                                     <option value="">Pilih...</option>
                                     <?php
                                     include "koneksi.php";
-                                    $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver'");
+                                    $sql_driver = mysqli_query($connect, "SELECT us.id_user_role, us.id_user, us.nama_user, us.approval, rl.role FROM user AS us JOIN user_role rl ON (us.id_user_role = rl.id_user_role) WHERE rl.role = 'Driver' AND approval = '1'");
                                     while ($data_driver = mysqli_fetch_array($sql_driver)) {
                                     ?>
                                         <option value="<?php echo $data_driver['id_user'] ?>"><?php echo $data_driver['nama_user'] ?></option>

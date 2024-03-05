@@ -88,8 +88,10 @@ include "akses.php";
                 <tbody>   
                   <?php  
                       $no = 1;
-                      $sql_isi = " SELECT 
-                                      ipsm.id_isi_set_marwa, ipsm.id_set_marwa, ipsm.id_produk, ipsm.qty, tpr.nama_produk, tpr.harga_produk 
+                      $sql_isi = " SELECT DISTINCT
+                                      ipsm.id_isi_set_marwa, ipsm.id_set_marwa, ipsm.id_produk, ipsm.qty, 
+                                      COALESCE(tpr.nama_produk,  tpsm.nama_set_marwa) AS nama_produk, 
+                                      COALESCE(tpr.harga_produk,  tpsm.harga_set_marwa) AS harga_produk
                                     FROM isi_produk_set_marwa ipsm
                                     LEFT JOIN tb_produk_reguler tpr ON (ipsm.id_produk = tpr.id_produk_reg)
                                     LEFT JOIN tb_produk_set_marwa tpsm ON (ipsm.id_set_marwa = tpsm.id_set_marwa)

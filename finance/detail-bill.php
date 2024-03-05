@@ -375,6 +375,15 @@ include "akses.php";
                 <div class="modal-body">
                     <form action="proses/bayar.php" method="POST" enctype="multipart/form-data">
                         <div class="card-body">
+                            <?php  
+                                date_default_timezone_set('Asia/Jakarta');
+                                $uuid = uuid();
+                                $day = date('d');
+                                $month = date('m');
+                                $year = date('y');
+                                $id_bayar = "BYR" . $year . "" . $month . "" . $uuid . "" . $day ;
+                            ?>
+                            <input type="hidden" name="id_bayar" value="<?php echo $id_bayar ?>">
                             <input type="hidden" name="id_cs" value="<?php echo $id_customer ?>">
                             <input type="hidden" id="id_inv" name="id_inv">
                             <input type="hidden" id="jenis_inv" name="jenis_inv">
@@ -994,3 +1003,14 @@ include "akses.php";
 </style>
 <!-- kode JS Dikirim -->
 <!-- End Modal Bukti Terima -->
+<?php  
+    function uuid() {
+        $data = openssl_random_pseudo_bytes(16);
+        assert(strlen($data) == 16);
+    
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+    
+        return vsprintf('%s%s%s', str_split(bin2hex($data), 4));
+    }
+?>
