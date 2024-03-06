@@ -260,7 +260,7 @@
 
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
-                        echo 'Spesial Diskon :';
+                        echo 'Spesial Diskon &nbsp;' . $data_inv['sp_disc'] . '%:';
                         echo "<br>";
                     }
                     ?>
@@ -278,7 +278,7 @@
 
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
-                        echo $data_inv['sp_disc'] . '(%)';
+                        echo number_format($sub_total_spdisc, 0, '.', '.');
                         echo "<br>";
                     }
                     ?>

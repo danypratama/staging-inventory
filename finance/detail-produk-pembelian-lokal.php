@@ -302,6 +302,9 @@ include "akses.php";
                             </div>
                         </div>
                     </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editDetailsData"><i class="bi bi-pencil"></i> Edit details data</button>
+                    </div>
                 </div>
                 <div class="col-md-12 p-3">
                     <a href="data-pembelian.php" class="btn btn-warning mb-3"><i class="bi bi-arrow-left-circle"></i> Halaman sebelumnya</a>
@@ -406,14 +409,16 @@ include "akses.php";
                                             <?php } ?>
                                             <?php 
                                                 $ongkir = 0;
-                                                if($data_status_kirim['free_ongkir'] == 1){
-                                                    $ongkir = 0;
-                                                } else {
-                                                   $ongkir = $data_status_kirim['nominal_ongkir'];
+                                                if($total_data_pengiriman != 0){
+                                                    if($data_status_kirim['free_ongkir'] == 1){
+                                                        $ongkir = 0;
+                                                    } else {
+                                                       $ongkir = $data_status_kirim['nominal_ongkir'];
+                                                    }
+    
+                                                   $grand_total = $total_pembelian + $ongkir;
+                                                   $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total' WHERE id_inv_pembelian = '$id_inv_pembelian'");
                                                 }
-
-                                               $grand_total = $total_pembelian + $ongkir;
-                                               $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total' WHERE id_inv_pembelian = '$id_inv_pembelian'");
                                             ?>
                                         </tbody>
                                     </table>
@@ -569,6 +574,73 @@ include "akses.php";
                     ?>
                 </div>
             </div>
+             <!-- Modal Edit Details-->
+             <div class="modal fade" id="editDetailsData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Details Data</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="proses/pembelian.php" method="POST">
+                                <input type="hidden" name="id_inv" value="<?php echo $id_inv_pembelian ?>">
+                                <div class="mb-3">
+                                    <label class="fw-bold">Tgl. Pembelian</label>
+                                    <input type="text" class="form-control" id="date" name="tgl_pembelian" value="<?php echo $data_inv_pembelian['tgl_pembelian'] ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-bold">No. Invoice Pembelian</label>
+                                    <input type="text" class="form-control" name="no_inv_pembelian" value="<?php echo $data_inv_pembelian['tgl_pembelian'] ?>">
+                                </div>
+                                <div class="col-mb-3 mt-2">
+                                    <label class="fw-bold mb-2">Jenis Transaksi</label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="jenis_trx" value="PPN" <?php echo ($data_inv_pembelian['jenis_trx'] == 'PPN') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="inlineRadio1">PPN</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="jenis_trx" value="Non PPN" <?php echo ($data_inv_pembelian['jenis_trx'] == 'Non PPN') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="inlineRadio2">Non PPN</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3 mt-2">
+                                    <label class="fw-bold">Tanggal Jatuh Tempo</label>
+                                    <div class="input-group flex-nowrap">
+                                        <input type="text" class="form-control" name="tgl_tempo" id="dateTempo" value="<?php echo $data_inv_pembelian['tgl_tempo'] ?>">
+                                        <button type="button" class="input-group-text bg-danger text-white" id="resetTempo"> X </button>
+                                    </div>
+                                </div>
+                                <div class="col-mb-3">
+                                    <label class="fw-bold mb-2">Jenis Diskon</label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="jenis_diskon" value="Tanpa Diskon" <?php echo ($data_inv_pembelian['jenis_disc'] == 'Tanpa Diskon') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label">Tanpa Diskon</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="jenis_diskon" value="Diskon Satuan" <?php echo ($data_inv_pembelian['jenis_disc'] == 'Diskon Satuan') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label">Diskon Satuan</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="jenis_diskon" value="Spesial Diskon" <?php echo ($data_inv_pembelian['jenis_disc'] == 'Spesial Diskon') ? 'checked' : ''; ?>>
+                                        <label class="form-check-label">Spesial Diskon</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3 mt-2" id="sp_disc" style="display: none;">
+                                    <label class="fw-bold">Spesial Diskon</label>
+                                    <input type="text" class="form-control" name="sp_disc" value="<?php echo $data_inv_pembelian['sp_disc'] ?>">
+                                </div>
+                                <div class="modal-footer mt-3">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                    <button type="submit" class="btn btn-primary" name="edit-detail">Simpan Perubahan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Edit Details -->
+            
             <!-- Modal Barang -->
             <div class="modal fade" id="modalBarang" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -1448,7 +1520,45 @@ function generate_uuid()
     });
 </script>
 
+<!-- date picker with flatpick -->
+<script type="text/javascript">
+    flatpickr("#dateTempo", {
+        dateFormat: "d/m/Y",
+    });
+</script>
+<!-- end date picker -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var resetButton = document.getElementById("resetTempo");
+        var inputTanggalTempo = document.getElementById("dateTempo");
 
+        // Mendengarkan klik pada tombol resetTempo
+        resetButton.addEventListener("click", function () {
+            // Mereset nilai input tanggal_tempo menjadi kosong
+            inputTanggalTempo.value = "";
+        });
+    });
+</script>
+
+<script>
+    // Menambahkan event listener untuk setiap radio button
+    var radioButtons = document.getElementsByName('jenis_diskon');
+    var spDisc = document.getElementById('sp_disc');
+
+    radioButtons.forEach(function(radioButton) {
+        radioButton.addEventListener('change', function() {
+            // Menampilkan value ke dalam console log saat radio button diubah
+            console.log('Jenis Diskon yang dipilih:', this.value);
+            if(this.value == 'Spesial Diskon'){
+                spDisc.style.display = 'block';
+            } else if (this.value == 'Diskon Satuan'){
+                spDisc.style.display = 'none';
+            } else if (this.value == 'Tanpa Diskon'){
+                spDisc.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 
 

@@ -447,7 +447,7 @@ include "akses.php";
                                 <td class="text-center">
                                     <a href="detail-produk-pembelian-lokal.php?id='<?php echo base64_encode($data_pembelian['id_inv']) ?>'" class="btn btn-primary btn-sm" title="Detail Pembelian"><i class="bi bi-eye"></i></a>
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-success btn-sm btn-ubah-status" data-bs-toggle="modal" data-bs-target="#ubahStatusDiterima" data-id="<?php echo $data_pembelian['id_inv'] ?>" data-nofaktur="<?php echo $data_pembelian['no_inv']; ?>" data-nominal="<?php echo number_format($data_pembelian['total_pembelian']) ?>" data-tglpembelian="<?php echo $data_pembelian['tgl_pembelian']; ?>">
+                                    <button type="button" class="btn btn-success btn-sm btn-ubah-status" data-bs-toggle="modal" data-bs-target="#ubahStatusDiterima" data-id="<?php echo $data_pembelian['id_inv'] ?>" data-sp="<?php echo $data_pembelian['nama_sp']; ?>" data-nofaktur="<?php echo $data_pembelian['no_inv']; ?>" data-nominal="<?php echo number_format($data_pembelian['total_pembelian']) ?>" data-tglpembelian="<?php echo $data_pembelian['tgl_pembelian']; ?>">
                                         <i class="bi bi-send"></i>
                                     </button>
                                 </td>
@@ -470,11 +470,20 @@ include "akses.php";
                 </div>
                 <div class="modal-body">
                     <div class="text-center mb-3"><h5 class="fw-bold">Konfirmasi Penerimaan Barang</h5></div>
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="proses/status-kirim-pembelian.php" method="POST" enctype="multipart/form-data">
+                        <?php  
+                            $year = date('y');
+                            $day = date('d');
+                            $month = date('m');
+                            $uuid = uuid();
+                            $generate_uuid = "BP". $year . "" . $month . "" . $uuid . "" . $day ;
+                        ?>
+                        <input type="hidden" name="id_bukti_terima" class="form-control bg-light" value="<?php echo $generate_uuid ?>">
                         <input type="hidden" id="id_inv" name="id_inv" class="form-control bg-light">
+                        <input type="hidden" id="sp" name="nama_sp" class="form-control bg-light">
                         <div class="mb-3">
                             <label class="fw-bold">No Faktur Pembelian</label>
-                            <input type="text" id="no_faktur" class="form-control bg-light" readonly>
+                            <input type="text" id="no_faktur" name="no_faktur" class="form-control bg-light" readonly>
                         </div>
                         <div class="mb-3">
                             <label class="fw-bold">Nominal Pembelian</label>
@@ -485,8 +494,8 @@ include "akses.php";
                             <input type="text" id="tgl_pembelian" class="form-control bg-light" readonly>
                         </div>
                         <div class="mb-3">
-                            <label class="fw-bold">Tanggal Pembelian</label>
-                            <input type="text" id="date" class="form-control">
+                            <label class="fw-bold">Tanggal Terima</label>
+                            <input type="text" id="date" name="tgl_terima" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label class="fw-bold">Bukti Terima (*)</label>
@@ -496,8 +505,8 @@ include "akses.php";
                         </div>
                         <div class="mb-3 preview-image" id="imagePreview"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshPage()">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshPage()">Tutup</button>
+                            <button type="submit" class="btn btn-primary" name="upload">Proses Diterima</button>
                         </div>
                     </form>
                 </div>
@@ -526,27 +535,35 @@ include "akses.php";
 </body>
 
 </html>
+<?php  
+    function uuid() {
+        $data = openssl_random_pseudo_bytes(16);
+        assert(strlen($data) == 16);
+
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+        return vsprintf('%s%s', str_split(bin2hex($data), 4));
+    }
+
+?>
 <script>
-    $(document).ready(function () {
-        // Function to handle button click event
-        $('.btn-ubah-status').on('click', function () {
-            // Get data attributes from the button
-            var id = $(this).data('id');
-            var noFaktur = $(this).data('nofaktur');
-            var nominal = $(this).data('nominal');
-            var tglPembelian = $(this).data('tglpembelian');
-
-            // Set values in the modal
-            $('#id_inv').val(id);
-            $('#no_faktur').val(noFaktur);
-            $('#nominal').val(nominal);
-            $('#tgl_pembelian').val(tglPembelian);
-
-            // Show the modal
-            $('#ubahStatusDiterima').modal('show');
-
-        });
-    });
+    // untuk menampilkan data pada atribut <td>
+    $('#ubahStatusDiterima').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var sp = button.data('sp');
+        var noFaktur = button.data('nofaktur');
+        var nominal = button.data('nominal');
+        var tglPembelian = button.data('tglpembelian');
+        
+        var modal = $(this);
+        modal.find('.modal-body #id_inv').val(id);
+        modal.find('.modal-body #sp').val(sp);
+        modal.find('.modal-body #no_faktur').val(noFaktur);
+        modal.find('.modal-body #nominal').val(nominal);
+        modal.find('.modal-body #tgl_pembelian').val(tglPembelian);
+    })
 </script>
 <script>
     function refreshPage() {

@@ -223,7 +223,7 @@ if (isset($_POST['simpan-inv-br-in-lokal'])) {
         if (!$update_data) {
             throw new Exception("Error updating data");
         }
-        // Commit the transaction
+        // Commit the  
         mysqli_commit($connect);
         // Redirect to the invoice page
         $_SESSION['info'] = "Disimpan";

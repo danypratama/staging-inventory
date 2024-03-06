@@ -713,7 +713,8 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                 </tr>
               </table>
             </form>   
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+            <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script> -->
+            <script src="assets/js/export-excel.js"></script>
             <script>
                 document.getElementById("export-button").addEventListener("click", function () {
                   // Inisialisasi DataTable

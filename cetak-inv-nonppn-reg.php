@@ -270,10 +270,10 @@
             <div class="col-payment-2">
                 <!-- Kolom kedua -->
                 <div class="grand-total">
-
+                    
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
-                        echo 'Spesial Diskon :';
+                        echo 'Spesial Diskon &nbsp;' . $data_inv['sp_disc'] . '%:';
                         echo "<br>";
                     }
                     ?>
@@ -282,7 +282,7 @@
                     if ($ongkir != 0) {
                         echo "Ongkir (Rp):";
                         echo "<br>";
-                    }
+                    }  
                     ?>
 
                     Grand total (Rp):
@@ -291,7 +291,7 @@
 
                     <?php
                     if ($kat_inv == 'Spesial Diskon' && $sp_disc != 0) {
-                        echo $data_inv['sp_disc'] . '(%)';
+                        echo number_format($sub_total_spdisc, 0, '.', '.');
                         echo "<br>";
                     }
                     ?>

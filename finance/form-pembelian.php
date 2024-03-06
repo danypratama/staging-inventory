@@ -66,15 +66,15 @@ include "akses.php";
                             <div class="col-mb-3">
                                 <label class="fw-bold mb-2">Kategori Pembelian</label><br>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="jenis_pembelian" value="Alkes">
+                                    <input class="form-check-input" type="radio" name="kat_pembelian" value="Alkes">
                                     <label class="form-check-label">Alat Kesehatan</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="jenis_pembelian" value="Non Alkes" disabled>
+                                    <input class="form-check-input" type="radio" name="kat_pembelian" value="Non Alkes" disabled>
                                     <label class="form-check-label">Non Alat Kesehatan</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="jenis_pembelian" value="Semua Kategori" disabled>
+                                    <input class="form-check-input" type="radio" name="kat_pembelian" value="Semua Kategori" disabled>
                                     <label class="form-check-label">Semua Kategori</label>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@ include "akses.php";
                             <div class="mb-3">
                                 <label class="fw-bold">Nama Supllier</label>
                                 <input type="hidden" class="form-control" name="id_sp" id="id_sp">
-                                <input type="text" class="form-control" id="nama_sp" data-bs-toggle="modal" data-bs-target="#modalSp" readonly>
+                                <input type="text" class="form-control" id="nama_sp" name="nama_sp" data-bs-toggle="modal" data-bs-target="#modalSp" readonly>
                             </div>
                             <div class="mb-3">
                                 <label class="fw-bold">Alamat Supplier</label>
