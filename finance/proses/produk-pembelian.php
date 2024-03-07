@@ -67,7 +67,7 @@ if (isset($_POST['simpan-trx'])) {
     $updated_by = $_SESSION['tiket_nama'];
     $time = date('d-m-Y, H:i:s');
 
-    $update = mysqli_query($connect, "UPDATE trx_produk_pembelian SET nama_produk = '$nama_produk', harga = '$harga', qty = '$qty', total_harga = '$total_setelah_disc', updated_date = '$time', updated_by = '$updated_by' WHERE id_trx_produk = '$id_trx'");
+    $update = mysqli_query($connect, "UPDATE trx_produk_pembelian SET nama_produk = '$nama_produk', harga = '$harga', qty = '$qty', disc = '$disc', total_harga = '$total_setelah_disc', updated_date = '$time', updated_by = '$updated_by' WHERE id_trx_produk = '$id_trx'");
     if ($update) {
         $_SESSION['info'] = "Diupdate";
         header("Location:../detail-produk-pembelian-lokal.php?id='$id_inv_encode'");

@@ -187,7 +187,7 @@ include "akses.php";
                             $queryString = $_SERVER['QUERY_STRING'];
 
                             // Daftar parameter yang ingin dihapus
-                            $parametersToRemove = ['status_bayar', 'jenis_inv', 'status_tagihan'];
+                            $parametersToRemove = ['status_pembelian', 'status_pembayaran'];
 
                             // Simpan nilai-nilai filter dalam variabel terpisah
                             $dateRangeFilter = '';
@@ -224,18 +224,18 @@ include "akses.php";
 
                             // Menyimpan nilai-nilai filter yang telah diaplikasikan
                             $dateRangeFilter = isset($_GET['date_range']) ? $_GET['date_range'] : '';
-                            $statusBayarFilter = isset($_GET['status_bayar']) ? $_GET['status_bayar'] : '';
+                            $statusBayarFilter = isset($_GET['status_pembayaran']) ? $_GET['status_pembayaran'] : '';
                             $jenisInvFilter = isset($_GET['jenis_inv']) ? $_GET['jenis_inv'] : '';
-                            $statusTagihanFilter = isset($_GET['status_tagihan']) ? $_GET['status_tagihan'] : '';
+                            $statusPembelianFilter = isset($_GET['status_pembelian']) ? $_GET['status_pembelian'] : '';
 
                             // Menambah atau mengganti nilai parameter status_bayar dalam URL
-                            $queryString = addOrReplaceParameter($queryString, 'status_bayar', $statusBayarFilter);
+                            $queryString = addOrReplaceParameter($queryString, 'status_pembayaran', $statusBayarFilter);
 
                             // Menambah atau mengganti nilai parameter jenis_inv dalam URL
                             $queryString = addOrReplaceParameter($queryString, 'jenis_inv', $jenisInvFilter);
 
                             // Menambah atau mengganti nilai parameter status_tagihan dalam URL
-                            $queryString = addOrReplaceParameter($queryString, 'status_tagihan', $statusTagihanFilter);
+                            $queryString = addOrReplaceParameter($queryString, 'status_pembelian', $statusPembelianFilter);
 
                             // echo $queryString;
                         ?>
@@ -246,7 +246,7 @@ include "akses.php";
                                 $queryString = addOrReplaceParameter($queryString, 'date_range', $dateRangeFilter);
                             }
                         ?>
-                         <label>Filter Tanggal Pembelian :</label>
+                        <label>Filter Tanggal Pembelian :</label>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle btn-filter" data-bs-toggle="dropdown" aria-expanded="false">
                                 <?php
@@ -372,12 +372,58 @@ include "akses.php";
                         </div>
                     </div>
                     <div class="col-md-3 me-2 mb-2">
-                        <label>Filter status pembelian :</label>
-                        <select name="" class="form-select id="">
-                            <option value="">Pilih Status</option>
-                            <option value=""></option>
-                            <option value=""></option>
-                        </select>
+                        <div class="card">
+                            <label>Status Pembelian :</label>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php
+                                    // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                                    $statusPembelian = isset($_GET['status_pembelian']) ? $_GET['status_pembelian'] : 'Semua';
+                                    if ($statusPembelian === "Semua" || $statusPembelian === "") {
+                                    echo "Semua Status Pembelian";
+                                    } elseif ($statusPembelian === "Belum Diterima") {
+                                    echo "Belum Diterima";
+                                    } elseif ($statusPembelian === "Sudah Diterima") {
+                                    echo "Sudah Diterima";
+                                    }
+                                ?>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=">Semua</a>
+                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === 'Belum Diterima' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=Belum Diterima">Belum Diterima</a>
+                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === 'Sudah Diterima' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=Sudah Diterima">Sudah Diterima</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 me-2 mb-2">
+                        <div class="card">
+                            <label>Status Pembayaran :</label>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php
+                                    // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                                    $statusPembayaran = isset($_GET['status_pembayaran']) ? $_GET['status_pembayaran'] : 'Semua';
+                                    if ($statusPembayaran === "Semua" || $statusPembayaran === "") {
+                                    echo "Semua Status Pembayaran";
+                                    } elseif ($statusPembayaran === "Belum Bayar") {
+                                    echo "Belum Bayar";
+                                    } elseif ($statusPembayaran === "Sudah Bayar") {
+                                    echo "Sudah Bayar";
+                                    }
+                                ?>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=">Semua</a>
+                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === 'Belum Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=Belum Bayar">Belum Bayar</a>
+                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === 'Sudah Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=Sudah Bayar">Sudah Bayar</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -405,6 +451,73 @@ include "akses.php";
                             <?php  
                                 include "koneksi.php";
                                 $no = 1;
+                                $sort_option ="";
+                                if(isset($_GET['date_range']))
+                                {
+                                    if($_GET['date_range'] == "today")
+                                    {
+                                        $sort_option = "DATE(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = CURDATE()";
+                                    }
+
+                                    elseif($_GET['date_range'] == "weekly")
+                                    {
+                                        $sort_option = "
+                                                        WEEK(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = WEEK(CURDATE())
+                                                        AND YEAR(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = YEAR(CURDATE())
+                                                    ";
+                                    }
+
+                                    elseif($_GET['date_range'] == "monthly")
+                                    {
+
+                                        $sort_option = "
+                                                        MONTH(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = MONTH(CURDATE())
+                                                        AND YEAR(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = YEAR(CURDATE())
+                                                    "; 
+                                        
+                                    }
+
+                                    elseif($_GET['date_range'] == "lastMonth")
+                                    {
+                                        $sort_option = " 
+                                                        MONTH(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                                                        AND YEAR(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                                                        ";  
+                                    }
+
+                                    elseif($_GET['date_range'] == "year")
+                                    {
+                                        $sort_option = "YEAR(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = YEAR(CURDATE())";
+                                    }
+
+                                    elseif($_GET['date_range'] == "lastyear")
+                                    {
+                                        $sort_option = "YEAR(STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y')) = YEAR(CURDATE()) - 1";
+                                    } 
+
+                                    elseif($_GET['date_range'] == "pilihTanggal")
+                                    {
+
+                                        if (isset($_GET["start_date"]) && isset($_GET["end_date"])) {
+                                            $dt1 = $_GET["start_date"];
+                                            $dt2 = $_GET["end_date"];
+                                            $format_dt1 = date('d/m/Y', strtotime($dt1));
+                                            $format_dt2 = date('d/m/Y', strtotime($dt2));
+                                            $sort_option .= "STR_TO_DATE(pb.tgl_pembelian, '%d/%m/%Y') BETWEEN STR_TO_DATE('$format_dt1', '%d/%m/%Y') AND STR_TO_DATE('$format_dt2', '%d/%m/%Y')";
+                                        }
+                                    } 
+
+                                }
+
+                                if(isset($_GET['status_pembayaran'])){
+                                    if($_GET['status_pembayaran'] == "Belum Bayar"){
+                                        $sort_option .= "AND status_pembayaran = '0'";
+                                    }else if ($_GET['status_pembayaran'] == "Sudah Bayar"){
+                                        $sort_option .= "AND status_pembayaran = '1'";
+                                    }
+                                }
+
+
                                 $sql_pembelian = $connect->query(" SELECT 
                                                                         pb.id_inv_pembelian AS id_inv,
                                                                         pb.no_trx,
@@ -417,9 +530,10 @@ include "akses.php";
                                                                         sp.nama_sp
                                                                     FROM inv_pembelian_lokal AS pb
                                                                     LEFT JOIN tb_supplier sp ON (pb.id_sp = sp.id_sp)
-                                                                    ORDER BY no_trx ASC
+                                                                    WHERE $sort_option ORDER BY no_trx ASC
                                                                 ");
                                 while($data_pembelian = mysqli_fetch_array($sql_pembelian)){
+                                    $id_inv_pembelian = $data_pembelian['id_inv']; 
                                     $status_pembelian = "";
                                     $status_pembayaran = "";
                                     if($data_pembelian['status_pembelian'] == '0'){
@@ -446,10 +560,26 @@ include "akses.php";
                                 <td class="text-center"><?php echo $status_pembayaran; ?></td>
                                 <td class="text-center">
                                     <a href="detail-produk-pembelian-lokal.php?id='<?php echo base64_encode($data_pembelian['id_inv']) ?>'" class="btn btn-primary btn-sm" title="Detail Pembelian"><i class="bi bi-eye"></i></a>
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-success btn-sm btn-ubah-status" data-bs-toggle="modal" data-bs-target="#ubahStatusDiterima" data-id="<?php echo $data_pembelian['id_inv'] ?>" data-sp="<?php echo $data_pembelian['nama_sp']; ?>" data-nofaktur="<?php echo $data_pembelian['no_inv']; ?>" data-nominal="<?php echo number_format($data_pembelian['total_pembelian']) ?>" data-tglpembelian="<?php echo $data_pembelian['tgl_pembelian']; ?>">
-                                        <i class="bi bi-send"></i>
-                                    </button>
+                                    <?php  
+                                        $cek_bukti_terima = $connect->query("SELECT id_inv_pembelian FROM inv_bukti_terima_pembelian WHERE id_inv_pembelian = '$id_inv_pembelian'");
+                                        $total_row_bukti = mysqli_num_rows($cek_bukti_terima);
+                                        
+                                        if($total_row_bukti == 0){
+                                            ?>
+                                                <button type="button" class="btn btn-success btn-sm btn-ubah-status" data-bs-toggle="modal" data-bs-target="#ubahStatusDiterima" data-id="<?php echo $data_pembelian['id_inv'] ?>" data-sp="<?php echo $data_pembelian['nama_sp']; ?>" data-nofaktur="<?php echo $data_pembelian['no_inv']; ?>" data-nominal="<?php echo number_format($data_pembelian['total_pembelian']) ?>" data-tglpembelian="<?php echo $data_pembelian['tgl_pembelian']; ?>">
+                                                    <i class="bi bi-send"></i>
+                                                </button>
+                                            <?php
+                                        } else {
+                                            ?>
+                                                <!-- Bukti terima -->
+                                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#buktiTerima" data-id="<?php echo $data_pembelian['id_inv'] ?>">
+                                                   <i class="bi bi-info-circle"></i>
+                                                </button>
+                                            <?php
+                                        }
+                                    ?>
+                                    <!-- Button Diterima -->
                                 </td>
                             </tr>
                             <?php $no++; ?>
@@ -524,6 +654,24 @@ include "akses.php";
     <!-- kode JS Dikirim -->
     <!-- End Modal Bukti Terima -->
 
+    <!-- Modal bukti terima-->
+    <div class="modal fade" id="buktiTerima" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Bukti Terima</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="result"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
   </main><!-- End #main -->
 
   <!-- Footer -->
@@ -547,6 +695,7 @@ include "akses.php";
     }
 
 ?>
+
 <script>
     // untuk menampilkan data pada atribut <td>
     $('#ubahStatusDiterima').on('show.bs.modal', function(event) {
@@ -569,4 +718,29 @@ include "akses.php";
     function refreshPage() {
         location.reload();
     }
+</script>
+
+<script>
+    $('#buktiTerima').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        
+        var modal = $(this);
+        modal.find('.modal-body #id_inv').val(id);
+        
+        // Menggunakan AJAX untuk mengirim nilai id_inv ke file PHP
+        $.ajax({
+            type: 'POST',
+            url: 'bukti-terima-pembelian.php',  // Ganti dengan path yang benar
+            data: { id_inv: id },
+            success: function(response) {
+                // Memasukkan hasil respons ke dalam modal body
+                modal.find('.modal-body #result').html(response);
+            },
+            error: function(error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    });
 </script>

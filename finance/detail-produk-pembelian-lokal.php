@@ -145,6 +145,7 @@ include "akses.php";
                                                                 pb.status_pembayaran,
                                                                 pb.jenis_trx,
                                                                 pb.jenis_disc,
+                                                                pb.sp_disc,
                                                                 pb.note,
                                                                 sp.nama_sp,
                                                                 sp.alamat
@@ -180,7 +181,15 @@ include "akses.php";
                                         </tr>
                                         <tr>
                                             <td class="col-md-3 text-nowrap">Jenis Diskon</td>
-                                            <td class="col-md-9 text-nowrap">: <?php echo $data_inv_pembelian['jenis_disc'] ?></td>
+                                            <td class="col-md-9 text-nowrap">: <?php 
+                                                                                    if ($data_inv_pembelian['jenis_disc'] == 'Spesial Diskon'){
+                                                                                        echo 'Spesial Diskon (' . $data_inv_pembelian['sp_disc'] . '%)';
+                                                                                    } else {
+                                                                                        echo $data_inv_pembelian['jenis_disc'];
+                                                                                    }
+                                                                                             
+                                                                                ?>
+                                            </td>
                                         </tr>
                                     </thead>
                                 </table>
@@ -307,7 +316,7 @@ include "akses.php";
                     </div>
                 </div>
                 <div class="col-md-12 p-3">
-                    <a href="data-pembelian.php" class="btn btn-warning mb-3"><i class="bi bi-arrow-left-circle"></i> Halaman sebelumnya</a>
+                    <a href="data-pembelian.php?date_range=year" class="btn btn-warning mb-3"><i class="bi bi-arrow-left-circle"></i> Halaman sebelumnya</a>
                     <button type="button" class="btn btn-primary btn-detail mb-3" data-bs-toggle="modal" data-bs-target="#modalBarang"><i class="bi bi-plus-circle"></i> Tambah produk</button>
                     <?php  
                         $cek_data_pengiriman = $connect->query("SELECT id_inv_pembelian FROM status_kirim_pembelian WHERE id_inv_pembelian = '$id_inv_pembelian' ");
@@ -585,13 +594,15 @@ include "akses.php";
                         <div class="modal-body">
                             <form action="proses/pembelian.php" method="POST">
                                 <input type="hidden" name="id_inv" value="<?php echo $id_inv_pembelian ?>">
+                                <input type="hidden" name="nama_sp" value="<?php echo $data_inv_pembelian['nama_sp'] ?>">
                                 <div class="mb-3">
                                     <label class="fw-bold">Tgl. Pembelian</label>
                                     <input type="text" class="form-control" id="date" name="tgl_pembelian" value="<?php echo $data_inv_pembelian['tgl_pembelian'] ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label class="fw-bold">No. Invoice Pembelian</label>
-                                    <input type="text" class="form-control" name="no_inv_pembelian" value="<?php echo $data_inv_pembelian['tgl_pembelian'] ?>">
+                                    <input type="hidden" class="form-control" name="no_inv_pembelian_lama" value="<?php echo $data_inv_pembelian['no_inv'] ?>">
+                                    <input type="text" class="form-control" name="no_inv_pembelian" value="<?php echo $data_inv_pembelian['no_inv'] ?>">
                                 </div>
                                 <div class="col-mb-3 mt-2">
                                     <label class="fw-bold mb-2">Jenis Transaksi</label><br>
