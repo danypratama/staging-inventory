@@ -147,6 +147,7 @@ include "akses.php";
                                                                 pb.jenis_disc,
                                                                 pb.sp_disc,
                                                                 pb.note,
+                                                                pb.path_inv,
                                                                 sp.nama_sp,
                                                                 sp.alamat
                                                             FROM inv_pembelian_lokal AS pb
@@ -156,6 +157,7 @@ include "akses.php";
                                                         ");
                         $data_inv_pembelian = mysqli_fetch_array($sql_pembelian);
                         $jenis_disc = $data_inv_pembelian['jenis_disc'];
+                        $sp_disc = $data_inv_pembelian['sp_disc'] / 100;
                     
                     ?>
                     <div class="col mb-2">
@@ -424,9 +426,9 @@ include "akses.php";
                                                     } else {
                                                        $ongkir = $data_status_kirim['nominal_ongkir'];
                                                     }
-    
-                                                   $grand_total = $total_pembelian + $ongkir;
-                                                   $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total' WHERE id_inv_pembelian = '$id_inv_pembelian'");
+                                                    $sub_total_spdisc = $total_pembelian * $sp_disc;
+                                                    $grand_total = $total_pembelian - $sub_total_spdisc + $ongkir;
+                                                    $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total' WHERE id_inv_pembelian = '$id_inv_pembelian'");
                                                 }
                                             ?>
                                         </tbody>
@@ -583,8 +585,8 @@ include "akses.php";
                     ?>
                 </div>
             </div>
-             <!-- Modal Edit Details-->
-             <div class="modal fade" id="editDetailsData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- Modal Edit Details-->
+            <div class="modal fade" id="editDetailsData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -595,13 +597,14 @@ include "akses.php";
                             <form action="proses/pembelian.php" method="POST">
                                 <input type="hidden" name="id_inv" value="<?php echo $id_inv_pembelian ?>">
                                 <input type="hidden" name="nama_sp" value="<?php echo $data_inv_pembelian['nama_sp'] ?>">
+                                <input type="hidden" name="path_inv" value="<?php echo $data_inv_pembelian['path_inv'] ?>">
+                                <input type="hidden" class="form-control" name="no_inv_pembelian_lama" value="<?php echo $data_inv_pembelian['no_inv'] ?>">
                                 <div class="mb-3">
                                     <label class="fw-bold">Tgl. Pembelian</label>
                                     <input type="text" class="form-control" id="date" name="tgl_pembelian" value="<?php echo $data_inv_pembelian['tgl_pembelian'] ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label class="fw-bold">No. Invoice Pembelian</label>
-                                    <input type="hidden" class="form-control" name="no_inv_pembelian_lama" value="<?php echo $data_inv_pembelian['no_inv'] ?>">
                                     <input type="text" class="form-control" name="no_inv_pembelian" value="<?php echo $data_inv_pembelian['no_inv'] ?>">
                                 </div>
                                 <div class="col-mb-3 mt-2">

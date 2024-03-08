@@ -112,7 +112,7 @@
             compressAndResizeImage($file1_destination, $compressed_file1_destination, 500, 500, 100);
             unlink($file1_destination);
 
-            $update_data = mysqli_query($connect, "UPDATE inv_pembelian_lokal SET status_pembelian = '1' WHERE id_inv_pembelian = '$id_inv_pembelian'");
+            $update_data = mysqli_query($connect, "UPDATE inv_pembelian_lokal SET status_pembelian = '1', tgl_terima = '$tgl_terima' WHERE id_inv_pembelian = '$id_inv_pembelian'");
             $insert_data = $connect->query("INSERT INTO inv_bukti_terima_pembelian 
                                                 (id_bukti_terima, id_inv_pembelian, bukti_pembelian, created_by) 
                                                 VALUES 
@@ -125,7 +125,7 @@
             mysqli_commit($connect);
             // Redirect to the invoice page
             $_SESSION['info'] = "Disimpan";
-            header("Location:../data-pembelian.php");
+            header("Location:../data-pembelian.php?date_range=year");
             exit();
         } catch (Exception $e) {
             // Rollback the transaction if an error occurs
@@ -143,7 +143,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../data-pembelian.php";
+                        window.location.href = "../data-pembelian.php?date_range=year";
                     });
                     });
                 </script>

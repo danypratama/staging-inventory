@@ -44,16 +44,17 @@ if(isset($_POST['simpan-pembelian'])){
     }
     
     $simpan_data = $connect->query("INSERT INTO inv_pembelian_lokal 
-                                        (id_inv_pembelian, id_sp, no_trx, tgl_pembelian, no_inv, kategori_pembelian, jenis_trx, tgl_tempo, jenis_disc, sp_disc, note)
+                                        (id_inv_pembelian, id_sp, no_trx, tgl_pembelian, no_inv, kategori_pembelian, jenis_trx, tgl_tempo, jenis_disc, sp_disc, note, path_inv)
                                         VALUES
-                                        ('$id_inv_pembelian', '$id_sp', '$no_trx', '$tgl_pembelian', '$no_inv', '$kat_pembelian', '$jenis_trx', '$tgl_tempo', '$jenis_disc', '$sp_disc', '$note')");
+                                        ('$id_inv_pembelian', '$id_sp', '$no_trx', '$tgl_pembelian', '$no_inv', '$kat_pembelian', '$jenis_trx', '$tgl_tempo', '$jenis_disc', '$sp_disc', '$note', '$encoded_folder_name')");
     if($simpan_data){
         $_SESSION['info'] = 'Disimpan';
-        header("Location:../data-pembelian.php");
+        header("Location:../data-pembelian.php?date_range=year");
     }
 } else if (isset($_POST['edit-detail'])){
     $id_inv_pembelian = htmlspecialchars($_POST['id_inv']);
     $nama_sp = htmlspecialchars($_POST['nama_sp']);
+    $path_inv = htmlspecialchars($_POST['path_inv']);
     $id_inv_pembelian_encode = base64_encode($id_inv_pembelian);
     $tgl_pembelian = htmlspecialchars($_POST['tgl_pembelian']);
     $no_inv_pembelian_lama = htmlspecialchars($_POST['no_inv_pembelian_lama']);
@@ -62,8 +63,6 @@ if(isset($_POST['simpan-pembelian'])){
     $tgl_tempo = htmlspecialchars($_POST['tgl_tempo']);
     $jenis_disc = htmlspecialchars($_POST['jenis_diskon']);
     $sp_disc = htmlspecialchars($_POST['sp_disc']);
-    echo $nama_sp;
-    echo $no_inv_pembelian_lama;
 
     // Begin transaction
     mysqli_begin_transaction($connect);
@@ -72,17 +71,14 @@ if(isset($_POST['simpan-pembelian'])){
         // Periksa karakter nama supplier yang tidak valid
         $nama_sp_replace = preg_replace("/[^a-zA-Z0-9]/", "_", $nama_sp);
         // Convert $no_inv_bum to the desired format
-        $no_inv_lama_converted = str_replace('/', '_', $no_inv_pembelian_lama);
+        $no_inv_lama_converted = $path_inv;
         $no_inv_baru_converted = str_replace('/', '_', $no_inv_pembelian);
 
         // Generate folder name based on invoice details for both old and new values
         $folder_name_lama = $no_inv_lama_converted;
 
-        // Encode a portion of the folder name for both old and new values
-        $encoded_portion_lama = base64_encode($folder_name_lama);
-
         // Combine the original $no_inv, encoded portion, and underscore for both old value
-        $encoded_folder_name_lama = $no_inv_lama_converted . '_' . $encoded_portion_lama;
+        $encoded_folder_name_lama = $no_inv_lama_converted;
 
         // Set the path for the customer's folder for old value
         $customer_folder_path_lama = "../gambar/pembelian/" .  $nama_sp_replace . "/" . $encoded_folder_name_lama . "/";
@@ -91,29 +87,18 @@ if(isset($_POST['simpan-pembelian'])){
         $folder_name_baru = $no_inv_baru_converted;
 
         // Encode a portion of the folder name for new value
-        $encoded_portion_baru = base64_encode($folder_name_baru);
+        $encoded_partion_baru = base64_encode($folder_name_baru);
 
         // Combine the original $no_inv, encoded portion, and underscore for new value
-        $encoded_folder_name_baru = $no_inv_baru_converted . '_' . $encoded_portion_baru;
+        $encoded_folder_name_baru = $no_inv_baru_converted . '_' . $encoded_partion_baru;
 
         // Set the path for the customer's folder for new value
         $customer_folder_path_baru = "../gambar/pembelian/" .  $nama_sp_replace . "/" . $encoded_folder_name_baru . "/";
 
-        // Rename the customer's folder if it exists for the old value
-        if (is_dir($customer_folder_path_lama)) {
-            if (rename($customer_folder_path_lama, $customer_folder_path_baru)) {
-                echo 'Folder berhasil diubah nama dari ' . $encoded_folder_name_lama . ' menjadi ' . $encoded_folder_name_baru;
-            } else {
-                echo 'Gagal mengubah nama folder.';
-                print_r(error_get_last()); // Menampilkan pesan kesalahan
-            }
-        } else {
-            echo 'Folder dengan nama ' . $encoded_folder_name_lama . ' tidak ditemukan.';
-        }
-       
         if($jenis_disc == 'Tanpa Diskon'){
+            echo "tanpa diskon";
             $update_data_produk = $connect->query("UPDATE trx_produk_pembelian SET 
-                                            disc = '0'  b 
+                                            disc = '0'
                                             WHERE id_inv_pembelian = '$id_inv_pembelian'
                                         ");
             $update_data = $connect->query("UPDATE inv_pembelian_lokal SET 
@@ -122,11 +107,22 @@ if(isset($_POST['simpan-pembelian'])){
                                                 jenis_trx = '$jenis_trx',
                                                 tgl_tempo = '$tgl_tempo',
                                                 jenis_disc = '$jenis_disc',
-                                                sp_disc = '0'
+                                                sp_disc = '0',
+                                                path_inv = '$encoded_folder_name_baru'
                                                 WHERE id_inv_pembelian = '$id_inv_pembelian'
                                             ");
             if($update_data_produk && $update_data){
+                if (is_dir($customer_folder_path_lama)) {
+                    if (rename($customer_folder_path_lama, $customer_folder_path_baru)) {
+                    } else {
+                        echo 'Gagal mengubah nama folder.';
+                        print_r(error_get_last()); // Menampilkan pesan kesalahan
+                    }
+                } else {  
+                    echo 'Folder dengan nama ' . $customer_folder_path_lama . ' tidak ditemukan.';
+                }
                 mysqli_commit($connect);
+                // Rename the customer's folder if it exists for the old value
                 $_SESSION['info'] = 'Diupdate';
                 header("Location:../detail-produk-pembelian-lokal.php?id=$id_inv_pembelian_encode");
             }
@@ -141,10 +137,20 @@ if(isset($_POST['simpan-pembelian'])){
                                                 jenis_trx = '$jenis_trx',
                                                 tgl_tempo = '$tgl_tempo',
                                                 jenis_disc = '$jenis_disc',
-                                                sp_disc = '$sp_disc'
+                                                sp_disc = '$sp_disc',
+                                                path_inv = '$encoded_folder_name_baru'
                                                 WHERE id_inv_pembelian = '$id_inv_pembelian'
                                             ");
             if($update_data_produk && $update_data){
+                if (is_dir($customer_folder_path_lama)) {
+                    if (rename($customer_folder_path_lama, $customer_folder_path_baru)) {
+                    } else {
+                        echo 'Gagal mengubah nama folder.';
+                        print_r(error_get_last()); // Menampilkan pesan kesalahan
+                    }
+                } else {  
+                    echo 'Folder dengan nama ' . $customer_folder_path_lama . ' tidak ditemukan.';
+                }
                 mysqli_commit($connect);
                 $_SESSION['info'] = 'Diupdate';
                 header("Location:../detail-produk-pembelian-lokal.php?id=$id_inv_pembelian_encode");
@@ -160,11 +166,22 @@ if(isset($_POST['simpan-pembelian'])){
                                                 jenis_trx = '$jenis_trx',
                                                 tgl_tempo = '$tgl_tempo',
                                                 jenis_disc = '$jenis_disc',
-                                                sp_disc = '0'
+                                                sp_disc = '0',
+                                                path_inv = '$encoded_folder_name_baru'
                                                 WHERE id_inv_pembelian = '$id_inv_pembelian'
                                             ");
             if($update_data_produk && $update_data){
                 mysqli_commit($connect);
+                // Rename the customer's folder if it exists for the old value
+                if (is_dir($customer_folder_path_lama)) {
+                    if (rename($customer_folder_path_lama, $customer_folder_path_baru)) {
+                    } else {
+                        echo 'Gagal mengubah nama folder.';
+                        print_r(error_get_last()); // Menampilkan pesan kesalahan
+                    }
+                } else {  
+                    echo 'Folder dengan nama ' . $customer_folder_path_lama . ' tidak ditemukan.';
+                }
                 $_SESSION['info'] = 'Diupdate';
                 header("Location:../detail-produk-pembelian-lokal.php?id=$id_inv_pembelian_encode");
             }

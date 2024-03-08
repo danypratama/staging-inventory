@@ -656,7 +656,7 @@ include "akses.php";
 
     <!-- Modal bukti terima-->
     <div class="modal fade" id="buktiTerima" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Bukti Terima</h1>
@@ -730,14 +730,15 @@ include "akses.php";
         
         // Menggunakan AJAX untuk mengirim nilai id_inv ke file PHP
         $.ajax({
-            type: 'POST',
+            type: 'POST', // Metode pengiriman data, dalam hal ini menggunakan POST
             url: 'bukti-terima-pembelian.php',  // Ganti dengan path yang benar
-            data: { id_inv: id },
+            data: { id_inv: id }, // Data yang akan dikirim ke server, dalam hal ini nilai id_inv
             success: function(response) {
                 // Memasukkan hasil respons ke dalam modal body
                 modal.find('.modal-body #result').html(response);
             },
             error: function(error) {
+                // Fungsi ini akan dijalankan jika terjadi kesalahan saat melakukan permintaan
                 // Handle error
                 console.error(error);
             }

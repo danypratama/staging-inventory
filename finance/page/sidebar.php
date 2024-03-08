@@ -47,7 +47,7 @@
 
     <!-- Data Pembelian -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'pembelian') { echo 'active-link'; } ?>" href="data-pembelian.php">
+      <a class="nav-link <?php if ($page == 'pembelian') { echo 'active-link'; } ?>" href="data-pembelian.php?date_range=year">
         <i class="bi bi-bar-chart"></i><span>Data Pembelian</span>
       </a>
     </li>
@@ -74,6 +74,11 @@
         <li>
           <a class="<?php if ($page2 == 'tagihan-pembelian') { echo 'active'; } ?>" href="list-tagihan-pembelian.php">
             <i class="bi bi-circle"></i><span>Pembelian</span>
+          </a>
+        </li>
+        <li>
+          <a class="<?php if ($page2 == 'tagihan-refund') { echo 'active'; } ?>" href="list-pembayaran-refund.php">
+            <i class="bi bi-circle"></i><span>Pembayaran Refund</span>
           </a>
         </li>
       </ul>

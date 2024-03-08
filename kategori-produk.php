@@ -224,13 +224,19 @@ include "akses.php";
             <input type="hidden" class="form-control" name="updated" value="<?php echo date('d/m/Y, G:i') ?>">
             <input type="hidden" class="form-control" name="user_updated" value="<?php echo $_SESSION['tiket_id'] ?>">
           </div>
-          <div class="mb-3">
+          <div class="mb-3 mt-2">
             <label class="form-label">Tgl. Terbit</label>
-            <input type="text" class="form-control" name="tgl_terbit" id="terbit">
+            <div class="input-group flex-nowrap">
+              <input type="text" class="form-control" name="tgl_terbit" id="terbit">
+              <button type="button" class="input-group-text bg-danger text-white" id="resetTerbit"> X </button>
+            </div>
           </div>
-          <div class="mb-3">
-            <label class="form-label">Tgl. Berlaku Sampai</label>
-            <input type="text" class="form-control" name="exp_date" id="exp">
+          <div class="mb-3 mt-2">
+          <label class="form-label">Tgl. Berlaku Sampai</label>
+            <div class="input-group flex-nowrap">
+              <input type="text" class="form-control" name="exp_date" id="exp">
+              <button type="button" class="input-group-text bg-danger text-white" id="resetExp"> X </button>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -417,112 +423,137 @@ include "akses.php";
     });
 </script>
 
+
 <!-- Script untuk modal edit -->
 <script>
- $('#modal2').on('show.bs.modal', function(event) {
-    // Menampilkan data
-    var button = $(event.relatedTarget);
-    var id = button.data('id');
-    var nama = button.data('nama');
-    var merk = button.data('merk');
-    var nie = button.data('nie');
-    var terbit = button.data('terbit');
-    var exp = button.data('exp');
-    var modal = $(this);
-    var simpanBtn = modal.find('.modal-footer #simpan');
-    var namaInput = modal.find('.modal-body #nama_kategori');
-    var merkInput = modal.find('.modal-body #merk'); // Corrected ID for merk select
-    var nieInput = modal.find('.modal-body #nie');
-    var terbitInput = modal.find('.modal-body #terbit'); // Corrected ID for exp input
-    var expInput = modal.find('.modal-body #exp'); // Corrected ID for exp input
+  $(document).ready(function() {
+    $('#modal2').on('show.bs.modal', function(event) {
+      // Menampilkan data
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      var nama = button.data('nama');
+      var merk = button.data('merk');
+      var nie = button.data('nie');
+      var terbit = button.data('terbit');
+      var exp = button.data('exp');
+      var modal = $(this);
+      var simpanBtn = modal.find('.modal-footer #simpan');
+      var namaInput = modal.find('.modal-body #nama_kategori');
+      var merkInput = modal.find('.modal-body #merk');
+      var nieInput = modal.find('.modal-body #nie');
+      var terbitInput = modal.find('.modal-body #terbit');
+      var expInput = modal.find('.modal-body #exp');
+      var resetTerbit = modal.find('#resetTerbit'); // Menggunakan modal.find untuk mencari elemen di dalam modal
+      var resetExp = modal.find('#resetExp'); // Menggunakan modal.find untuk mencari elemen di dalam modal
 
-    modal.find('.modal-body #id_kat_produk').val(id);
-    namaInput.val(nama);
-    merkInput.val(merk);
-    nieInput.val(nie);
-    terbitInput.val(terbit);
-    expInput.val(exp);
+      modal.find('.modal-body #id_kat_produk').val(id);
+      namaInput.val(nama);
+      merkInput.val(merk);
+      nieInput.val(nie);
+      terbitInput.val(terbit);
+      expInput.val(exp);
 
-    // Pengecekan data, dan buttun disable or enable saat data di ubah
-    // dan data kembali ke nilai awal
-    var originalNama = namaInput.val();
-    var originalMerk = merkInput.val();
-    var originalNie = nieInput.val();
-    var originalTerbit = terbitInput.val();
-    var originalExp = expInput.val();
+      // Pengecekan data, dan tombol disable atau enable saat data diubah
+      // dan data kembali ke nilai awal
+      var originalNama = namaInput.val();
+      var originalMerk = merkInput.val();
+      var originalNie = nieInput.val();
+      var originalTerbit = terbitInput.val();
+      var originalExp = expInput.val();
 
-    namaInput.on('input', function() {
-      var currentNama = $(this).val();
-      var currentMerk = merkInput.val();
-      var currentNie = nieInput.val();
-      var currentTerbit = terbitInput.val();
-      var currentExp = expInput.val();
+      namaInput.on('input', function() {
+        var currentNama = $(this).val();
+        var currentMerk = merkInput.val();
+        var currentNie = nieInput.val();
+        var currentTerbit = terbitInput.val();
+        var currentExp = expInput.val();
 
-      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
+        if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
+          simpanBtn.prop('disabled', false);
+        } else {
+          simpanBtn.prop('disabled', true);
+        }
+      });
+
+      nieInput.on('input', function() {
+        var currentNie = $(this).val();
+        var currentNama = namaInput.val();
+        var currentMerk = merkInput.val();
+        var currentTerbit = terbitInput.val();
+        var currentExp = expInput.val();
+
+        if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
+          simpanBtn.prop('disabled', false);
+        } else {
+          simpanBtn.prop('disabled', true);
+        }
+      });
+
+      merkInput.on('input', function() {
+        var currentMerk = $(this).val();
+        var currentNama = namaInput.val();
+        var currentNie = nieInput.val();
+        var currentTerbit = terbitInput.val();
+        var currentExp = expInput.val();
+
+        if (currentNama !== originalNama || currentMerk !== originalMerk || currentNie !== originalNie || currentTerbit != originalTerbit || currentExp !== originalExp) {
+          simpanBtn.prop('disabled', false);
+        } else {
+          simpanBtn.prop('disabled', true);
+        }
+      });
+
+      terbitInput.on('input', function() {
+        var currentTerbit = $(this).val();
+        var currentNama = namaInput.val();
+        var currentNie = nieInput.val();
+        var currentExp = expInput.val();
+        var currentMerk = merkInput.val();
+
+        console.log('Tanggal Terbit:', currentTerbit); // Tampilkan pada console log
+
+        if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
+          simpanBtn.prop('disabled', false);
+        } else {
+          simpanBtn.prop('disabled', true);
+        }
+      });
+
+      expInput.on('input', function() {
+        var currentExp = $(this).val();
+        var currentNama = namaInput.val();
+        var currentNie = nieInput.val();
+        var currentTerbit = terbitInput.val();
+        var currentMerk = merkInput.val();
+
+        if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
+          simpanBtn.prop('disabled', false);
+        } else {
+          simpanBtn.prop('disabled', true);
+        }
+      });
+
+      // Mendengarkan klik pada tombol resetTerbit
+      resetTerbit.on("click", function() {
+        // Mereset nilai input terbitInput menjadi nilai awal
+        terbitInput.val('');
+
+        // Memastikan bahwa tombol simpan dinonaktifkan setelah mereset nilai
         simpanBtn.prop('disabled', false);
-      } else {
-        simpanBtn.prop('disabled', true);
-      }
-    });
+      });
 
-    nieInput.on('input', function() {
-      var currentNie = $(this).val();
-      var currentNama = namaInput.val();
-      var currentMerk = merkInput.val();
-      var currentTerbit = terbitInput.val();
-      var currentExp = expInput.val();
+      // Mendengarkan klik pada tombol resetExp
+      resetExp.on("click", function() {
+        // Mereset nilai input terbitInput menjadi nilai awal
+        expInput.val('');
 
-      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
+        // Memastikan bahwa tombol simpan dinonaktifkan setelah mereset nilai
         simpanBtn.prop('disabled', false);
-      } else {
+      });
+
+      modal.find('form').on('reset', function() {
         simpanBtn.prop('disabled', true);
-      }
-    });
-
-    merkInput.on('input', function() {
-      var currentMerk = $(this).val();
-      var currentNama = namaInput.val();
-      var currentNie = nieInput.val();
-      var currentTerbit = terbitInput.val();
-      var currentExp = expInput.val();
-
-      if (currentNama !== originalNama || currentMerk !== originalMerk || currentNie !== originalNie || currentTerbit != originalTerbit || currentExp !== originalExp) {
-        simpanBtn.prop('disabled', false);
-      } else {
-        simpanBtn.prop('disabled', true);
-      }
-    });
-
-    terbitInput.on('input', function() {
-      var currentTerbit = $(this).val();
-      var currentNama = namaInput.val();
-      var currentNie = nieInput.val();
-      var currentExp = expInput.val();
-      var currentMerk = merkInput.val();
-
-      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
-        simpanBtn.prop('disabled', false);
-      } else {
-        simpanBtn.prop('disabled', true);
-      }
-    });
-
-    expInput.on('input', function() {
-      var currentExp = $(this).val();
-      var currentNama = namaInput.val();
-      var currentNie = nieInput.val();
-      var currentTerbit = terbitInput.val();
-      var currentMerk = merkInput.val();
-
-      if (currentNama != originalNama || currentMerk != originalMerk || currentNie != originalNie || currentTerbit != originalTerbit || currentExp != originalExp) {
-        simpanBtn.prop('disabled', false);
-      } else {
-        simpanBtn.prop('disabled', true);
-      }
-    });
-
-    modal.find('form').on('reset', function() {
-      simpanBtn.prop('disabled', true);
+      });
     });
   });
 </script>
