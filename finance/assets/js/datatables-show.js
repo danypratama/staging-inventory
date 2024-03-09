@@ -20,17 +20,17 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  var table = $("#table3").DataTable({
+  $("#table3").DataTable({
+    responsive: true,
     lengthChange: false,
-    ordering: false,
     autoWidth: false,
   });
 });
 
 $(document).ready(function () {
-  var table = $("#table4").DataTable({
+  $("#table4").DataTable({
+    responsive: true,
     lengthChange: false,
-    ordering: false,
     autoWidth: false,
   });
 });
