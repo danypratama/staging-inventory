@@ -301,7 +301,7 @@ include "akses.php";
                                                             <tr>
                                                                 <td class="col-md-3 text-nowrap">Nominal Ongkir</td>
                                                                 <td class="col-md-9 wrap-text">: <?php 
-                                                                        if($data_status_kirim['free_ongkir'] == 0){
+                                                                        if($data_status_kirim['free_ongkir'] == 1){
                                                                             echo "0 (Free Ongkir)";
                                                                         } else {
                                                                             echo number_format($data_status_kirim['nominal_ongkir']);
