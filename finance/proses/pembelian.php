@@ -123,7 +123,7 @@ if(isset($_POST['simpan-pembelian'])){
                 }
                 mysqli_commit($connect);
                 // Rename the customer's folder if it exists for the old value
-                $_SESSION['info'] = 'Diupdate';
+                $_SESSION['info-update'] = 'Diupdate';
                 header("Location:../detail-produk-pembelian-lokal.php?id=$id_inv_pembelian_encode");
             }
         } else if ($jenis_disc == 'Spesial Diskon'){
@@ -152,7 +152,7 @@ if(isset($_POST['simpan-pembelian'])){
                     echo 'Folder dengan nama ' . $customer_folder_path_lama . ' tidak ditemukan.';
                 }
                 mysqli_commit($connect);
-                $_SESSION['info'] = 'Diupdate';
+                $_SESSION['info-update'] = 'Diupdate';
                 header("Location:../detail-produk-pembelian-lokal.php?id=$id_inv_pembelian_encode");
             }
         } else if ($jenis_disc == 'Diskon Satuan'){
@@ -182,7 +182,7 @@ if(isset($_POST['simpan-pembelian'])){
                 } else {  
                     echo 'Folder dengan nama ' . $customer_folder_path_lama . ' tidak ditemukan.';
                 }
-                $_SESSION['info'] = 'Diupdate';
+                $_SESSION['info-update'] = 'Diupdate';
                 header("Location:../detail-produk-pembelian-lokal.php?id=$id_inv_pembelian_encode");
             }
         }

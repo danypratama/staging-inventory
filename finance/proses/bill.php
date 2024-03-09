@@ -73,21 +73,21 @@ if(isset($_POST['simpan-bill'])){
     $update = mysqli_query($connect, "UPDATE finance_tagihan SET tgl_tagihan = '$tgl_tagihan', cs_tagihan = '$cs_tagihan', jenis_faktur = '$jenis_faktur' WHERE id_tagihan = '$id_bill'");
     if($update){
         ?>
-        <!-- Sweet Alert -->
-        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                title: "Success",
-                text: "Data berhasil diubah",
-                icon: "success",
-            }).then(function() {
-                window.location.href = "../detail-bill.php?id=<?php echo $id_bill_encode ?>";
-            });
-            });
-        </script>
-    <?php
+            <!-- Sweet Alert -->
+            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    title: "Success",
+                    text: "Data berhasil diubah",
+                    icon: "success",
+                }).then(function() {
+                    window.location.href = "../detail-bill.php?id=<?php echo $id_bill_encode ?>";
+                });
+                });
+            </script>
+        <?php
     }
 }
 

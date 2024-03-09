@@ -598,7 +598,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                           LEFT JOIN inv_ppn ppn ON (fnc.id_inv = ppn.id_inv_ppn)
                           LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
                           LEFT JOIN finance_tagihan ft ON (fnc.id_tagihan = ft.id_tagihan)
-                          WHERE ($sort_option) ORDER BY nonppn.no_inv, ppn.no_inv, bum.no_inv";
+                          WHERE ($sort_option) and fnc.status_tagihan = 0 ORDER BY nonppn.no_inv, ppn.no_inv, bum.no_inv";
 
                   //Tambahkan kondisi pencarian berdasarkan nama pelanggan jika $_GET['cs'] sudah diset
                   if (isset($_GET['cs'])) {
