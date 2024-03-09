@@ -112,18 +112,43 @@ include "akses.php";
 </head>
 
 <body>
-  <!-- nav header -->
-  <?php include "page/nav-header.php" ?>
-  <!-- end nav header -->
+    <!-- nav header -->
+    <?php include "page/nav-header.php" ?>
+    <!-- end nav header -->
 
-  <!-- sidebar  -->
-  <?php include "page/sidebar.php"; ?>
-  <!-- end sidebar -->
+    <!-- sidebar  -->
+    <?php include "page/sidebar.php"; ?>
+    <!-- end sidebar -->
 
     <main id="main" class="main">
         <section class="section dashboard">
-            <!-- SWEET ALERT -->
-            <div class="info-data" data-infodata="<?php if (isset($_SESSION['info'])) { echo $_SESSION['info']; } unset($_SESSION['info']); ?>"></div>
+            <?php
+                if (isset($_SESSION['info-update'])) {
+                    // Menambahkan script JavaScript untuk menampilkan SweetAlert
+                    echo '<script>
+                            var notifikasi = "' . $_SESSION['info-update'] . '";
+                            Swal.fire({
+                                icon: "success",
+                                title: "Sukses",
+                                text: "Data Berhasil Diupdate",
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                        </script>';
+                    // Unset session setelah output JavaScript
+                    unset($_SESSION['info-update']);
+                }
+            ?>
+
+            <?php
+                if (isset($_SESSION['info'])) {
+                    echo '<div class="info-data" data-infodata="' . $_SESSION['info'] . '"></div>';
+                    unset($_SESSION['info']);
+                }
+            ?>
+
+
+
             <!-- END SWEET ALERT -->
             <div class="card">
                 <div class="card-header text-center">
@@ -389,6 +414,7 @@ include "akses.php";
                                             <?php
                                                 $total_pembelian = 0;
                                                 while($data_produk = mysqli_fetch_array($sql_pembelian_produk)){
+                                                    $id_trx_produk = $data_produk['id_trx_produk'];
                                                     $id_produk = $data_produk['id_produk'];
                                                     $satuan = $data_produk['satuan'];
                                                     $satuan_produk = '';
@@ -399,6 +425,14 @@ include "akses.php";
                                                         $satuan_produk = 'Set';
                                                     } 
                                                     $total_pembelian += $data_produk['total_harga'];
+
+                                                    $harga = $data_produk['harga'];
+                                                    $qty = $data_produk['qty'];
+                                                    $disc = $data_produk['disc'] / 100;
+                                                    $sub_harga =  $harga * $qty;
+                                                    $sub_harga_disc = $sub_harga * $disc;
+                                                    $final_harga = $sub_harga - $sub_harga_disc;
+                                                    $update_total_harga = $connect->query("UPDATE trx_produk_pembelian SET total_harga = '$final_harga' WHERE id_trx_produk = '$id_trx_produk'")
                                             ?>
                                             <tr>
                                                 <td class="text-center"><?php echo $no; ?></td>

@@ -114,24 +114,27 @@ include "akses.php";
                   $query = mysqli_query($connect, $sql) or die(mysqli_error($connect));
                   while ($data = mysqli_fetch_array($query)) {
                     $id_kat = base64_encode($data['id_kat_produk']);
+                    $tanggal_sekarang = date('Y-m-d');
                     $tanggal_awal = new DateTime();
                     $tanggal_awal->setTime(0, 0, 0);  // Set waktu ke 00:00:00
+
 
                     if ($data['berlaku_sampai'] == '') {
                         $selisih = "Tanggal Berlaku Tidak Ada";
                     } else {
-                        // Tanggal akhir dari data yang diambil dari database
-                        $tanggal_berlaku_sampai = DateTime::createFromFormat('Y-m-d', $data['tanggal_berlaku_sampai']);
-                        $tanggal_berlaku_sampai->setTime(0, 0, 0);  // Set waktu ke 00:00:00
+                      // Tanggal akhir dari data yang diambil dari database
+                      $tanggal_berlaku_sampai = DateTime::createFromFormat('Y-m-d', $data['tanggal_berlaku_sampai']);
+                      $tanggal_berlaku_sampai->setTime(0, 0, 0);  // Set waktu ke 00:00:00
 
-                        // Menghitung selisih waktu
-                        $selisih = $tanggal_awal->diff($tanggal_berlaku_sampai);
+                      // Menghitung selisih waktu
+                      $selisih = $tanggal_awal->diff($tanggal_berlaku_sampai, true); // Menggunakan parameter true untuk mengaktifkan selisih waktu negatif
 
-                        // Menyimpan selisih ke dalam variabel dengan nama yang diinginkan
-                        $sisa_tahun = $selisih->y;
-                        $sisa_bulan = $selisih->m;
-                        $sisa_hari = $selisih->d;
+                      // Menyimpan selisih ke dalam variabel dengan nama yang diinginkan
+                      $sisa_tahun = $selisih->y;
+                      $sisa_bulan = $selisih->m;
+                      $sisa_hari = $selisih->d;
                     }
+
 
                   ?>
                     <tr>
@@ -139,7 +142,15 @@ include "akses.php";
                       <td class="text-nowrap"><?php echo $data['nama_kategori'] ?></td>
                       <td class="text-center text-nowrap"><?php echo $data['nama_merk'] ?></td>
                       <td class="text-center text-nowrap"><?php echo $data['no_izin_edar'] ?></td>
-                      <td class="text-center text-nowrap"><?php echo $data['tgl_terbit'] ?></td>
+                      <td class="text-center text-nowrap">
+                        <?php
+                          if($data['tgl_terbit'] == ''){
+                            echo 'Tanggal Terbit Tidak Ada';
+                          } else {
+                            echo $data['tgl_terbit'];
+                          }
+                        ?>
+                      </td>
                       <td class="text-center text-nowrap">
                         <?php 
                           if ($data['berlaku_sampai'] == '') {
@@ -150,25 +161,89 @@ include "akses.php";
                         ?>
                       
                       </td>
-                      <td class="text-center text-nowrap">
-                        <?php
-                          if ($data['berlaku_sampai'] == '') {
-                              echo 'Tanggal Berlaku Tidak Ada';
-                          } else if ($sisa_tahun == '0' && $sisa_bulan == '0' && $sisa_hari == '0') {
-                              echo "Expired";
-                          } else if ($sisa_tahun == '0' && $sisa_bulan == '0') {
-                              echo $sisa_hari . ' Hari';
-                          } else if ($sisa_tahun == '0' && $sisa_hari == '0') {
-                              echo $sisa_bulan . ' Bulan';
-                          } else if ($sisa_bulan == '0') {
-                              echo $sisa_tahun . ' Tahun ' . $sisa_hari . ' Hari';
-                          } else if ($sisa_tahun != '0' && $sisa_bulan != '0' && $sisa_hari != '0') {
-                              echo $sisa_tahun . ' Tahun ' . $sisa_bulan . ' Bulan ' . $sisa_hari . ' Hari';
-                          } else {
-                              echo $sisa_bulan . ' Bulan ' . $sisa_hari . ' Hari';
-                          }
-                        ?>
-                      </td>
+                      <?php
+                        if ($data['berlaku_sampai'] == '') {
+                          ?>
+                             <td class="text-center text-nowrap">
+                                  Tanggal Berlaku Tidak Ada 
+                              </td>
+                          <?php
+                        } else if ($data['tanggal_berlaku_sampai'] < $tanggal_sekarang ) {
+                          ?>
+                            <td class="text-center text-nowrap text-white" style="background-color: red;">
+                              Expired <br>
+                              (<?php echo 'Lewat ' . $sisa_hari . ' Hari'; ?>)
+                            </td>
+                          <?php
+                        } else if ($sisa_tahun == '0' && $sisa_bulan == '0' && $sisa_hari == '0') {
+                          ?>
+                            <td class="text-center text-nowrap text-white" style="background-color: red;">
+                              Expired <br>
+                              (<?php echo $sisa_hari . ' Hari'; ?>)
+                            </td>
+                          <?php
+                        } else if ($sisa_tahun == '0' && $sisa_bulan == '0') {
+                            if($sisa_hari <= 20 ){
+                              ?>
+                                <td class="text-center text-nowrap" style="background-color: orange;">
+                                  Urgent <br>
+                                  (<?php echo $sisa_hari . ' Hari'; ?>)
+                                </td>
+                              <?php
+                            } else if ($sisa_hari > 20){
+                              ?>
+                                <td class="text-center text-nowrap" style="background-color: yellow;">
+                                  Darurat <br>
+                                  (<?php echo $sisa_hari . ' Hari'; ?>)
+                                </td>
+                              <?php
+                            }
+                        } else if ($sisa_tahun == '0' && $sisa_hari == '0') {
+                          ?>
+                            <td class="text-center text-nowrap" style="background-color: yellow;">
+                              Darurat <br>
+                              (<?php echo $sisa_bulan . ' Bulan '; ?>)
+                            </td>
+                          <?php
+                        } else if ($sisa_bulan == '0') {
+                          ?>
+                            <td class="text-center text-nowrap text-white" style="background-color: green;">
+                              Masih Aman <br>
+                              (<?php echo $sisa_tahun . ' Tahun ' . $sisa_hari . ' Hari'; ?>)
+                            </td>
+                          <?php
+                        } else if ($sisa_tahun != '0' && $sisa_bulan != '0' && $sisa_hari != '0') {
+                          ?>
+                            <td class="text-center text-nowrap text-white" style="background-color: green;">
+                              Masih Aman <br>
+                              (<?php  echo $sisa_tahun . ' Tahun ' . $sisa_bulan . ' Bulan ' . $sisa_hari . ' Hari'; ?>)
+                            </td>
+                          <?php
+                        } else {
+                            if($sisa_bulan == 1 && $sisa_hari > 10){
+                              ?>
+                                <td class="text-center text-nowrap text-white" style="background-color: green;">
+                                  Masih Aman <br>
+                                  (<?php echo $sisa_bulan . ' Bulan ' . $sisa_hari . ' Hari'; ?>)
+                                </td>
+                              <?php
+                            } else if ($sisa_bulan == 1 && $sisa_hari < 10){
+                              ?>
+                                <td class="text-center text-nowrap" style="background-color: yellow;">
+                                  Darurat <br>
+                                  (<?php echo $sisa_bulan . ' Bulan ' . $sisa_hari . ' Hari'; ?>)
+                                </td>
+                              <?php
+                            } else if ($sisa_bulan > 1 && $sisa_hari > 0){
+                              ?>
+                                <td class="text-center text-nowrap text-white" style="background-color: green;">
+                                  Masih Aman <br>
+                                  (<?php echo $sisa_bulan . ' Bulan ' . $sisa_hari . ' Hari'; ?>)
+                                </td>
+                              <?php
+                            }
+                        }
+                      ?>
                       <?php  
                         if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang") { 
                           ?>
