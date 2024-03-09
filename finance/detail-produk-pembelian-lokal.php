@@ -802,7 +802,7 @@ include "akses.php";
                                                     <span class="visually-hidden">Loading...</span>
                                                 </div>
                                             </div>
-                                            <table class="table table-striped table-bordered" id="table4">
+                                            <table class="table table-striped table-bordered" id="table5">
                                                 <thead>
                                                     <tr class="text-white" style="background-color: #051683;">
                                                         <td class="text-center p-3 text-nowrap" style="width: 50px">No</td>
