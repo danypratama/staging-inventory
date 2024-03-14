@@ -70,7 +70,7 @@
                             text: "Data Berhasil Disimpan",
                             icon: "success",
                         }).then(function() {
-                            window.location.href = "../invoice-reguler-diterima.php";
+                            window.location.href = "../invoice-reguler-selesai.php";
                         });
                         });
                     </script>
@@ -91,7 +91,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../invoice-reguler-diterima.php";
+                        window.location.href = "../invoice-reguler-selesai.php";
                     });
                     });
                 </script>
@@ -100,9 +100,12 @@
         } else {
             $connect->begin_transaction();
             try{
+                // Hapus data pada bagian finance
+                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
+
+                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
+
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Komplain' WHERE id_inv_nonppn = '$id_inv'");
-            
-                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
 
                 $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
 
@@ -125,11 +128,7 @@
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
 
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                if ( $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref && $del_finance && $del_history_produk ) {
+                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
                     // Commit transaksi
                     $connect->commit();
                     ?>
@@ -143,7 +142,7 @@
                             text: "Data Berhasil Disimpan",
                             icon: "success",
                         }).then(function() {
-                            window.location.href = "../invoice-reguler-diterima.php";
+                            window.location.href = "../invoice-reguler-selesai.php";
                         });
                         });
                     </script>
@@ -164,7 +163,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../invoice-reguler-diterima.php";
+                        window.location.href = "../invoice-reguler-selesai.php";
                     });
                     });
                 </script>
@@ -200,6 +199,11 @@
             $refund = $_POST['refund'];
             $connect->begin_transaction();
             try{
+                // Hapus data pada bagian finance
+                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
+
+                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
+
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Komplain' WHERE id_inv_ppn = '$id_inv'");
 
                 $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
@@ -223,11 +227,7 @@
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                if ( $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref && $del_finance && $del_history_produk) {
+                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
                     // Commit transaksi
                     $connect->commit();
                     ?>
@@ -241,7 +241,7 @@
                             text: "Data Berhasil Disimpan",
                             icon: "success",
                         }).then(function() {
-                            window.location.href = "../invoice-reguler-diterima.php";
+                            window.location.href = "../invoice-reguler-selesai.php";
                         });
                         });
                     </script>
@@ -262,7 +262,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../invoice-reguler-diterima.php";
+                        window.location.href = "../invoice-reguler-selesai.php";
                     });
                     });
                 </script>
@@ -271,9 +271,12 @@
         } else {
             $connect->begin_transaction();
             try{
+                // Hapus data pada bagian finance
+                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
+
+                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
+
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_ppn SET status_transaksi = 'Komplain' WHERE id_inv_ppn = '$id_inv'");
-            
-                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
 
                 $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
 
@@ -296,11 +299,7 @@
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
 
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                if ( $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref && $del_finance && $del_history_produk ) {
+                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
                     // Commit transaksi
                     $connect->commit();
                     ?>
@@ -314,7 +313,7 @@
                             text: "Data Berhasil Disimpan",
                             icon: "success",
                         }).then(function() {
-                            window.location.href = "../invoice-reguler-diterima.php";
+                            window.location.href = "../invoice-reguler-selesai.php";
                         });
                         });
                     </script>
@@ -335,7 +334,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../invoice-reguler-diterima.php";
+                        window.location.href = "../invoice-reguler-selesai.php";
                     });
                     });
                 </script>
@@ -371,6 +370,11 @@
             $refund = $_POST['refund'];
             $connect->begin_transaction();
             try{
+                // Hapus data pada bagian finance
+                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
+
+                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
+
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Komplain' WHERE id_inv_bum = '$id_inv'");
 
                 $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
@@ -394,11 +398,7 @@
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
 
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                if ( $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref && $del_finance && $del_history_produk) {
+                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
                     // Commit transaksi
                     $connect->commit();
                     ?>
@@ -412,7 +412,7 @@
                             text: "Data Berhasil Disimpan",
                             icon: "success",
                         }).then(function() {
-                            window.location.href = "../invoice-reguler-diterima.php";
+                            window.location.href = "../invoice-reguler-selesai.php";
                         });
                         });
                     </script>
@@ -433,7 +433,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../invoice-reguler-diterima.php";
+                        window.location.href = "../invoice-reguler-selesai.php";
                     });
                     });
                 </script>
@@ -442,9 +442,12 @@
         } else {
             $connect->begin_transaction();
             try{
+                // Hapus data pada bagian finance
+                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
+
+                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
+
                 $query_update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Komplain' WHERE id_inv_bum = '$id_inv'");
-            
-                $query_update_status = mysqli_query($connect, "UPDATE status_kirim SET jenis_penerima = 'Customer' WHERE id_inv = '$id_inv'");
 
                 $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
 
@@ -466,11 +469,8 @@
                                                             FROM spk_reg AS spk
                                                             LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
                                                             WHERE spk.id_inv = '$id_inv'");
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
 
-                if ( $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref && $del_finance && $del_history_produk) {
+                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
                     // Commit transaksi
                     $connect->commit();
                     ?>
@@ -484,7 +484,7 @@
                             text: "Data Berhasil Disimpan",
                             icon: "success",
                         }).then(function() {
-                            window.location.href = "../invoice-reguler-diterima.php";
+                            window.location.href = "../invoice-reguler-selesai.php";
                         });
                         });
                     </script>
@@ -505,7 +505,7 @@
                         text: "<?php echo $error_message; ?>",
                         icon: "error",
                     }).then(function() {
-                        window.location.href = "../invoice-reguler-diterima.php";
+                        window.location.href = "../invoice-reguler-selesai.php";
                     });
                     });
                 </script>

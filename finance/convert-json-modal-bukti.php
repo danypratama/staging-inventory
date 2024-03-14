@@ -89,17 +89,17 @@
                     echo '
                         <div class="card mb-3">
                             <div class="row g-0">
-                            <div class="col-md-6">
-                                <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <h5 class="card-title">Bukti Transfer</h5>
-                                    <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
-                                    <p class="card-text" style="font-size: 16px">Rek Pengirim : '.$rek.'</p>
-                                    <p class="card-text" style="font-size: 16px">Bank Pengirim : '.$bank.'</p>
+                                <div class="col-md-6">
+                                    <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
                                 </div>
-                            </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Bukti Transfer</h5>
+                                        <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
+                                        <p class="card-text" style="font-size: 16px">Rek Pengirim : '.$rek.'</p>
+                                        <p class="card-text" style="font-size: 16px">Bank Pengirim : '.$bank.'</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>  
                     ';
@@ -165,17 +165,17 @@
                     echo '
                         <div class="card mb-3">
                             <div class="row g-0">
-                            <div class="col-md-6">
-                                <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <h5 class="card-title">Bukti Transfer</h5>
-                                    <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
-                                    <p class="card-text" style="font-size: 16px">Rek Pengirim : '.$rek.'</p>
-                                    <p class="card-text" style="font-size: 16px">Bank Pengirim : '.$bank.'</p>
+                                <div class="col-md-6">
+                                    <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
                                 </div>
-                            </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Bukti Transfer</h5>
+                                        <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
+                                        <p class="card-text" style="font-size: 16px">Rek Pengirim : '.$rek.'</p>
+                                        <p class="card-text" style="font-size: 16px">Bank Pengirim : '.$bank.'</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>  
                     ';
@@ -238,17 +238,17 @@
                     echo '
                         <div class="card mb-3">
                             <div class="row g-0">
-                            <div class="col-md-6">
-                                <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <h5 class="card-title">Bukti Transfer</h5>
-                                    <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
-                                    <p class="card-text" style="font-size: 16px">Rek Pengirim : '.$rek.'</p>
-                                    <p class="card-text" style="font-size: 16px">Bank Pengirim : '.$bank.'</p>
+                                <div class="col-md-6">
+                                    <img src="'.$bukti_tf.'" class="img-fluid" alt="...">
                                 </div>
-                            </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Bukti Transfer</h5>
+                                        <p class="card-text" style="font-size: 16px">Nama Pengirim : '.$an.'</p>
+                                        <p class="card-text" style="font-size: 16px">Rek Pengirim : '.$rek.'</p>
+                                        <p class="card-text" style="font-size: 16px">Bank Pengirim : '.$bank.'</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>  
                     ';

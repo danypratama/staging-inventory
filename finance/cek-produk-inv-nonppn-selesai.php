@@ -36,6 +36,26 @@ include "../function/class-spk.php";
             overflow: hidden;
             text-overflow: ellipsis; /* Menggantikan teks yang terpotong dengan elipsis (...) jika terlalu panjang */
         }
+        /* style validasi */
+        .form-control.error {
+            border-color: #dc3545;
+        }
+
+        .form-select.error {
+            border-color: #dc3545 !important;
+        }
+
+        .form-check-input.error {
+            border-color: #dc3545 !important;
+        }
+
+        .error {
+            border-color: #dc3545 !important;
+        }
+
+        .error-message {
+            color: #dc3545;  
+        }
         @media only screen and (max-width: 500px) {
             body {
                 font-size: 14px;
@@ -661,14 +681,14 @@ include "../function/class-spk.php";
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Komplain Invoice</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="proses/komplain.php" method="POST">
+                    <form action="proses/komplain.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_inv" value="<?php echo $id_inv; ?>">
                         <div id="tidak_sesuai_form">
                             <div class="mb-3">
                                 <label><b>Tanggal Komplain</b></label>
-                                <input type="text" class="form-control" name="tgl" id="tgl_komplain" required>
+                                <input type="text" class="form-control" name="tgl" id="tgl_komplain" maxlength="10" required>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" style="display:block;">
                                 <label><b>Pilih Kategori Komplain</b></label>
                                 <select name="kat_komplain" id="kat_komplain" class="form-select" required>
                                     <option value="">Pilih Kategori...</option>
@@ -769,9 +789,69 @@ include "../function/class-spk.php";
 
 </body>
 </html>
-<!-- Flat picker js -->
 <script>
-     flatpickr("#tgl_komplain", {
-        dateFormat: "d/m/Y"
+    flatpickr("#tgl_komplain", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        monthSelectorType: "static", // Menggunakan tampilan bulan statis
+        onReady: function(selectedDates, dateStr, instance) {
+            var input = instance.input;
+            input.addEventListener('input', function(event) {
+                var val = input.value;
+
+                // Memeriksa jika nilai kosong, atur nilai kembali menjadi kosong
+                if (val === '') {
+                    input.value = '';
+                    return;
+                }
+
+                // Memeriksa apakah panjang string adalah 2
+                if (val.length === 2 && !val.includes('/')) {
+                    var day = parseInt(val);
+                    if (isNaN(day) || day > 31) {
+                        // Jika nilai tidak valid, atur nilai menjadi 31
+                        val = '31';
+                        val += '/';
+                    } else {
+                        val += '/';
+                    }
+                } else if (val.length === 5 && !val.includes('/', 3)) {
+                    var parts = val.split('/');
+                    var day = parseInt(parts[0]);
+                    var month = parseInt(parts[1]);
+
+                    // Memeriksa apakah nilai bulan melebihi 12
+                    if (month > 12) {
+                        // Jika ya, atur nilai bulan menjadi 12
+                        parts[1] = '12';
+                    }
+
+                    // Menggabungkan kembali bagian-bagian tanggal setelah diperiksa
+                    val = parts.join('/');
+                    val += '/';
+                }
+                
+                input.value = val;
+            });
+
+            // Menangani tombol backspace
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Backspace') {
+                    var val = input.value;
+                    var lastIndex = val.lastIndexOf('/');
+                    if (lastIndex === val.length - 1) {
+                        // Jika '/' adalah karakter terakhir, hapus 3 karakter terakhir (termasuk '/')
+                        input.value = val.slice(0, -1);
+                    }
+                }
+            });
+            
+            var monthDropdown = instance.monthElements[0];
+
+            // Menghentikan penutupan dropdown pilihan bulan saat dibuka
+            monthDropdown.addEventListener('mousedown', function(event) {
+                event.stopPropagation();
+            });
+        }
     });
 </script>

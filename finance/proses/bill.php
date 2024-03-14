@@ -15,11 +15,11 @@ if(isset($_POST['simpan-bill'])){
     $tgl_tagihan = mysqli_real_escape_string($connect, $_POST['tgl_tagihan']);
     $cs_tagihan = mysqli_real_escape_string($connect, $_POST['cs']);
     $jenis_faktur = mysqli_real_escape_string($connect, $_POST['jenis_faktur']);
+
     
     foreach($id_inv as $id_inv_array){
         $id_inv_escape[] = mysqli_real_escape_string($connect, $id_inv_array);
     }
-
     // Begin transaction
     mysqli_begin_transaction($connect);
 
@@ -29,9 +29,20 @@ if(isset($_POST['simpan-bill'])){
         for ($i = 0; $i < $id_inv_count; $i++){
 
             $sql_tagihan = mysqli_query($connect, "INSERT IGNORE INTO finance_tagihan (id_tagihan, no_tagihan, tgl_tagihan, cs_tagihan, jenis_faktur, total_tagihan) VALUES ('$id_tagihan','$no_tagihan', '$tgl_tagihan', '$cs_tagihan', '$jenis_faktur', '$total_tagihan')");
-            $id_inv_array = $id_inv_escape[$i];
 
-            $sql_finance = mysqli_query($connect, "UPDATE finance SET id_tagihan = '$id_tagihan', status_tagihan = 1  WHERE id_inv = '$id_inv_array'");
+            $id_inv_array = $id_inv_escape[$i];
+            $formattedInvIds = implode("', '", (array)$id_inv_array);
+
+            // Tambahkan tanda kutip pada awal dan akhir string
+            $formattedInvIds = "'" . $formattedInvIds . "'";
+
+            // Gantikan koma dengan koma dan spasi
+            $formattedInvIds = str_replace(",", "', '", $formattedInvIds);
+
+            // Lakukan sesuatu dengan data yang dipilih yang telah digabungkan
+            // echo $formattedInvIds;
+
+            $sql_finance = mysqli_query($connect, "UPDATE finance SET id_tagihan = '$id_tagihan', status_tagihan = 1  WHERE id_inv IN($formattedInvIds)");
             if (!$sql_finance && !$sql_tagihan) {
                 throw new Exception("Error updating data");
             }
@@ -41,7 +52,7 @@ if(isset($_POST['simpan-bill'])){
         // $_SESSION['info'] = 'Disimpan';
         $_SESSION['info'] = 'No tagihan berhasil dibuat';
         // Redirect to the invoice page
-        header("Location:../finance-inv.php?date_range=weekly");
+        header("Location:../finance-inv.php?date_range=monthly");
     } catch (Exception $e) {
         // Rollback the transaction if an error occurs
         mysqli_rollback($connect);

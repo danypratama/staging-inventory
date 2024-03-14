@@ -135,11 +135,11 @@
                     $inv_id = substr($id_inv_substr, 0, 3);
                     $jenis_inv = "";
                     if ($inv_id == "NON"){
-                        $jenis_inv = "nonppn";
-                    } else if ($inv_id == "PPN"){
                         $jenis_inv = "ppn";
                     } else if ($inv_id == "BUM"){
-                        $jenis_inv = "bum";
+                        $jenis_inv = "ppn";
+                    } else if ($inv_id == "BUM"){
+                        $jenis_inv = "ppn";
                     }
 
 
@@ -502,7 +502,7 @@
                                             <?php
                                         } else {
                                             ?>
-                                                 <button class="btn border-dark">
+                                                <button class="btn border-dark">
                                                     <?php  
                                                     $total_harga_revisi = 0;
                                                     while($data_total = mysqli_fetch_array($query_produk_total)){
@@ -533,69 +533,76 @@
                                 </li>
                             </ul>
                             <div class="card p-3">
-                               
-                                    <?php  
-                                        if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
-                                            ?>
-                                                <div class="d-flex justify-content-start mb-3 flex-wrap">
+                                <?php  
+                                    if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
+                                        ?>
+                                            <div class="d-flex justify-content-start mb-3 flex-wrap">
+                                                <?php  
+                                                    if($status_kmpl == '0') {
+                                                        ?> 
+                                                            <div class="p-2" id="edit" style="display: block;">
+                                                                <button type="button" class="btn btn-warning" id="edit-button">
+                                                                    <i class="bi bi-pencil"></i> Edit Data Produk
+                                                                </button>            
+                                                            </div>   
+                                                        <?php 
+                                                    } else {
+                                                        ?> 
+                                                            <div class="p-2" id="edit" style="display: none;">
+                                                                <button type="button" class="btn btn-warning" id="edit-button">
+                                                                    <i class="bi bi-pencil"></i> Edit Data Produk
+                                                                </button>            
+                                                            </div>   
+                                                        <?php 
+                                                    }
+                                                ?>
+                                                <div class="p-2" id="selesai-edit" style="display: none;">
+                                                    <button type="button" class="btn btn-warning" id="selesai-edit-button">
+                                                        <i class="bi bi-pencil"></i> Selesai Edit
+                                                    </button>            
+                                                </div>    
+                                                <div class="p-2">
+                                                    <button type="button" class="btn btn-primary tambahData" data-inv="<?php echo $id_inv ?>" data-bs-toggle="modal" data-bs-target="#tambahData" style="display: none;">
+                                                        <i class="bi bi-plus-circle"></i> Tambah data produk
+                                                    </button>   
+                                                </div>
+                                                <div class="p-2 text-start">
                                                     <?php  
-                                                        if($status_kmpl == '0') {
-                                                            ?> 
-                                                                <div class="p-2" id="edit" style="display: block;">
-                                                                    <button type="button" class="btn btn-warning" id="edit-button">
-                                                                        <i class="bi bi-pencil"></i> Edit Data Produk
-                                                                    </button>            
-                                                                </div>   
-                                                            <?php 
-                                                        }
-                                                    ?>
-                                                    <div class="p-2" id="selesai-edit" style="display: none;">
-                                                        <button type="button" class="btn btn-warning" id="selesai-edit-button">
-                                                            <i class="bi bi-pencil"></i> Selesai Edit
-                                                        </button>            
-                                                    </div>    
-                                                    <div class="p-2">
-                                                        <button type="button" class="btn btn-primary tambahData" data-inv="<?php echo $id_inv ?>" data-bs-toggle="modal" data-bs-target="#tambahData" style="display: none;">
-                                                            <i class="bi bi-plus-circle"></i> Tambah data produk
-                                                        </button>   
-                                                    </div>
-                                                    <div class="p-2 text-start">
-                                                        <?php  
-                                                            $id_komplain = $id;
-                                                            $sql_komplain = mysqli_query($connect, "SELECT status_refund, status_retur FROM komplain_kondisi WHERE id_komplain = '$id_komplain'");
-                                                            $data_status_refund = mysqli_fetch_array($sql_komplain);
-                                                            if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
-                                                                ?>
-                                                                    <a href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#bayarRefund">
-                                                                        <i></i> Pembayaran Refund
-                                                                    </a>   
-                                                                <?php
-                                                            }
-                                                        ?>
-                                                    </div>
-                                                    <!-- kode untuk kondisi button cetak -->
-                                                    <?php  
-                                                        $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
-                                                        $cek_rev = mysqli_fetch_array($sql_rev);
-                                                        $total_data = mysqli_num_rows($sql_rev);
-                                                    
-                                                    ?>
-                                                    <?php  
-                                                        if($total_data != '0'){
+                                                        $id_komplain = $id;
+                                                        $sql_komplain = mysqli_query($connect, "SELECT status_refund, status_retur FROM komplain_kondisi WHERE id_komplain = '$id_komplain'");
+                                                        $data_status_refund = mysqli_fetch_array($sql_komplain);
+                                                        if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
                                                             ?>
-                                                                <div class="p-2 text-start">
-                                                                    <a href="cetak-inv-revisi-ppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
-                                                                        <i></i> Cetak Invoice Revisi PPN
-                                                                    </a> 
-                                                                </div>       
+                                                                <a href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#bayarRefund">
+                                                                    <i></i> Pembayaran Refund
+                                                                </a>   
                                                             <?php
                                                         }
-                                                    
-                                                    ?>   
-                                                </div>                    
-                                            <?php
-                                        }
-                                    ?>                               
+                                                    ?>
+                                                </div>
+                                                <!-- kode untuk kondisi button cetak -->
+                                                <?php  
+                                                    $sql_rev = mysqli_query($connect, "SELECT id_inv, no_inv_revisi FROM inv_revisi WHERE id_inv = '$id_inv' ORDER BY no_inv_revisi DESC LIMIT 1");
+                                                    $cek_rev = mysqli_fetch_array($sql_rev);
+                                                    $total_data = mysqli_num_rows($sql_rev);
+                                                
+                                                ?>
+                                                <?php  
+                                                    if($total_data != '0'){
+                                                        ?>
+                                                            <div class="p-2 text-start">
+                                                                <a href="cetak-inv-revisi-ppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                                    <i></i> Cetak Invoice Revisi BUM
+                                                                </a> 
+                                                            </div>   
+                                                        <?php
+                                                    }
+                                                
+                                                ?>                             
+                                            </div>
+                                        <?php
+                                    }
+                                ?>
                                 <div class="table-responsive p-3">
                                     <table class="table table-bordered table-striped" id="table2">
                                         <thead>
@@ -640,7 +647,7 @@
                                                 <?php  
                                                     if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
                                                         ?>
-                                                             <td class="text-center">
+                                                            <td class="text-center">
                                                                 <div class="text-center aksi" style="display: none;">
                                                                     <button class="btn btn-warning btn-sm" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editData" data-id="<?php echo $data_tmp['id_tmp'] ?>" data-id-produk="<?php echo $data_tmp['id_produk'] ?>" data-nama="<?php echo $data_tmp['nama_produk'] ?>" data-merk="<?php echo $data_tmp['merk'] ?>" data-harga="<?php echo $data_tmp['harga']  ?>" data-disc="<?php echo $data_tmp['disc'] ?>" data-stock="<?php if($data_tmp['stock'] == 0){echo '0';}else{echo $data_tmp['stock'] + $data_tmp['qty'];} ?>" data-qty="<?php echo $data_tmp['qty'] ?>" data-qty-edit="<?php echo $data_tmp['qty'] ?>">
                                                                         <i class="bi bi-pencil"></i>  
@@ -987,7 +994,18 @@
                                             <label class="form-check-label" for="selesai">Transaksi Selesai</label>
                                         </div>
                                     <?php
-                                } 
+                                } else {
+                                    ?>
+                                        <div class="form-check form-check-inline" style="display: none;">
+                                            <input class="form-check-input" type="radio" name="status_kirim" id="dikirim" value="dikirim">
+                                            <label class="form-check-label" for="dikirim">Dikirim</label>
+                                        </div>
+                                        <div class="form-check form-check-inline" style="display: none;">
+                                            <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai">
+                                            <label class="form-check-label" for="selesai">Transaksi Selesai</label>
+                                        </div>
+                                    <?php
+                                }
                             } else if ($total_data_rev == '0' && $status_kmpl == '0'){
                                 ?>
                                     <div class="form-check form-check-inline">
@@ -999,16 +1017,28 @@
                                         <label class="form-check-label" for="selesai">Transaksi Selesai</label>
                                     </div>
                                 <?php
+                            } else {
+                                ?>
+                                    <div class="form-check form-check-inline" style="display: none;">
+                                        <input class="form-check-input" type="radio" name="status_kirim" id="dikirim" value="dikirim">
+                                        <label class="form-check-label" for="dikirim">Dikirim</label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display: none;">
+                                        <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai">
+                                        <label class="form-check-label" for="selesai">Transaksi Selesai</label>
+                                    </div>
+                                <?php
                             }
                         ?>
                     </div>
                     <div id="trxKirim" style="display: none;">
                         <div class="mb-3">
                             <label>Jenis Pengiriman</label>
-                            <select class="form-select" name="jenis_pengiriman" id="jenis_pengiriman" required>
+                            <select class="form-select" name="jenis_pengiriman" id="jenis_pengiriman">
                                 <option value="">Pilih</option>
                                 <option value="Driver">Driver</option>
                                 <option value="Ekspedisi">Expedisi</option>
+                                <option value="Diambil Langsung">Diambil Langsung</option>
                             </select>
                         </div>
                     </div>
@@ -1064,6 +1094,10 @@
                             <input type="text" class="form-control" name="pj" id="penanggung_jawab">
                         </div>
                     </div>
+                    <div class="mb-3" id="jenis_diambil" style="display: none;">
+                        <label id="labelDiambil">Diambil Oleh</label>
+                        <input type="text" name="diambil_oleh" id="diambil" class="form-control">          
+                    </div>
                     <div class="mb-3" id="tanggal" style="display: none;">
                         <label id="labelDate">Tanggal</label>
                         <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
@@ -1095,11 +1129,13 @@
                     var jenisPengiriman = document.getElementById('jenis_pengiriman');
                     var jenisEkspedisi = document.getElementById('jenis_ekspedisi');
                     var jenisDriver = document.getElementById('jenis_driver');
+                    var jenisDiambil = document.getElementById('jenis_diambil');
                     var ekspedisi = document.getElementById('ekspedisi');
                     var pengirim = document.getElementById('pengirim');
                     var resi = document.getElementById('resi');
                     var jenis_ongkir = document.getElementById('jenis_ongkir');
                     var bukti = document.getElementById('bukti');
+                    var diambil = document.getElementById('diambil');
                     var tanggal = document.getElementById('tanggal');
                     var ongkos_kirim = document.getElementById('ongkos_kirim');
                     var penanggung_jawab = document.getElementById('penanggung_jawab');
@@ -1111,6 +1147,7 @@
                         if (dikirim.checked) {
                             trxKirim.style.display = 'block';
                             jenisPengiriman.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
+                            jenisPengiriman.setAttribute('required', 'true');
                             tanggal.style.display = 'none'; // Tampilkan jenis pengiriman saat dikirim dipilih
                         }
                     });
@@ -1131,12 +1168,15 @@
                         if (this.value === 'Driver') {
                             jenisDriver.style.display = 'block';
                             jenisEkspedisi.style.display = 'none';
+                            jenisDiambil.style.display = 'none';
                             ekspedisi.value = '';
                             ekspedisi.removeAttribute('required');
                             resi.value = '';
                             resi.removeAttribute('required');
                             jenis_ongkir.value = '';
                             jenis_ongkir.removeAttribute('required');
+                            diambil.value = '';
+                            diambil.removeAttribute('required');
                             tanggal.value = '';
                             tanggal.removeAttribute('required');
                             pengirim.style.display = 'block';
@@ -1158,9 +1198,28 @@
                             ongkos_kirim.removeAttribute('required');
                             penanggung_jawab.value = '';
                             penanggung_jawab.removeAttribute('required');
+                            diambil.value = '';
+                            diambil.removeAttribute('required');
                             bukti.style.display = 'block';
                             dikirim_oleh.value = '';
                             dikirim_oleh.removeAttribute('required');
+                            tanggal.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
+                        } else if (this.value === 'Diambil Langsung') {
+                            jenisDriver.style.display = 'none';
+                            jenisDiambil.style.display = 'block';
+                            diambil.setAttribute('required', 'true');
+                            pengirim.value = '';
+                            jenisEkspedisi.style.display = 'none';
+                            ekspedisi.value = '';
+                            ekspedisi.removeAttribute('required');
+                            resi.value = '';
+                            resi.removeAttribute('required');
+                            jenis_ongkir.value = '';
+                            jenis_ongkir.removeAttribute('required');
+                            tanggal.value = '';
+                            tanggal.removeAttribute('required');
+                            pengirim.style.display = 'none';
+                            pengirim.removeAttribute('required');
                             tanggal.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
                         } else {
                             jenisEkspedisi.style.display = 'none';
@@ -1463,23 +1522,23 @@
                         <input type="text" class="form-control bg-light" name="merk" id="merk_edit" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="harga">Harga</label>
+                        <label for="harga_edit">Harga</label>
                         <input type="text" class="form-control" name="harga" id="harga_edit" oninput="formatNumberHarga(this)" required>
                     </div>
                     <div class="mb-3">
-                        <label for="harga">Diskon</label>
+                        <label for="disc_edit">Diskon</label>
                         <input type="text" class="form-control" name="disc" id="disc_edit" oninput="validasiDiskon(this)" required>
                     </div>
                     <div class="mb-3" style="display: none;">
-                        <label for="qty_order">Stock</label>
+                        <label for="stock_edit">Stock</label>
                         <input type="hidden" class="form-control bg-light" name="stock" id="stock_edit" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="qty_order">Qty Sebelumnya</label>
+                        <label for="qty_original">Qty Sebelumnya</label>
                         <input type="text" class="form-control bg-light" name="qty" id="qty_original" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="qty_order">Qty Revisi</label>
+                        <label for="qty_edit">Qty Revisi</label>
                         <input type="text" class="form-control" name="qty_edit" id= "qty_edit" oninput="formatNumberHarga(this)" required>
                     </div>
                     <div class="modal-footer">
@@ -1742,6 +1801,7 @@
             }
         });
     }
+
 </script>
 
 

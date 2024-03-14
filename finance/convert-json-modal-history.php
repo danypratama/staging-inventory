@@ -109,21 +109,21 @@
             </tbody>
         </table>
     </div>
-</body>
-</html>
-<script>
-    $(document).ready(function(){
-        $('.view_bukti').click(function(){
-            var data_id = $(this).data("id")
-            $.ajax({
-                url: "convert-json-modal-bukti.php",
-                method: "POST",
-                data: {data_id: data_id},
-                success: function(data){
-                    $("#detail_bukti").html(data)
-                    $("#bukti").modal('show')
-                }
+    <script>
+        $(document).ready(function(){
+            $('.view_bukti').click(function(){
+                var data_id = $(this).data("id")
+                $.ajax({
+                    url: "convert-json-modal-bukti.php",
+                    method: "POST",
+                    data: {data_id: data_id},
+                    success: function(data){
+                        $("#detail_bukti").html(data)
+                        $("#bukti").modal('show')
+                    }
+                })
             })
         })
-    })
-</script>
+    </script>
+</body>
+</html>

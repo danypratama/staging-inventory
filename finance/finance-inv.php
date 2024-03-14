@@ -320,20 +320,20 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                         </div>
                       </div>
                     </div>
-                    <div class="col">
+                    <!-- <div class="col">
                       <div class="card">
                         <div class="btn-group">
                           <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
                             <?php
                               // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
-                              $statusBayar = isset($_GET['status_bayar']) ? $_GET['status_bayar'] : 'Semua';
-                              if ($statusBayar === "Semua" || $statusBayar === "") {
-                                echo "Semua Status Bayar";
-                              } elseif ($statusBayar === "Belum Bayar") {
-                                echo "Status Belum Bayar";
-                              } elseif ($statusBayar === "Sudah Bayar") {
-                                echo "Status Sudah Bayar";
-                              }
+                              // $statusBayar = isset($_GET['status_bayar']) ? $_GET['status_bayar'] : 'Semua';
+                              // if ($statusBayar === "Semua" || $statusBayar === "") {
+                              //   echo "Semua Status Bayar";
+                              // } elseif ($statusBayar === "Belum Bayar") {
+                              //   echo "Status Belum Bayar";
+                              // } elseif ($statusBayar === "Sudah Bayar") {
+                              //   echo "Status Sudah Bayar";
+                              // }
                             ?>
                           </button>
                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -345,7 +345,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="col">
                       <div class="card">
                         <div class="btn-group">
@@ -375,20 +375,20 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                         </div>
                       </div>
                     </div>  
-                    <div class="col">
+                    <!-- <div class="col">
                       <div class="card">
                         <div class="btn-group">
                           <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
                             <?php
                               // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
-                              $statusTagihan = isset($_GET['status_tagihan']) ? $_GET['status_tagihan'] : 'Semua';
-                              if ($statusTagihan === "Semua" || $statusTagihan === "") {
-                                echo "Semua Status Tagihan";
-                              } elseif ($statusTagihan === "Belum Dibuat") {
-                                echo "Belum Dibuat";
-                              } elseif ($statusTagihan === "Sudah Dibuat") {
-                                echo "Sudah Dibuat";
-                              }
+                              // $statusTagihan = isset($_GET['status_tagihan']) ? $_GET['status_tagihan'] : 'Semua';
+                              // if ($statusTagihan === "Semua" || $statusTagihan === "") {
+                              //   echo "Semua Status Tagihan";
+                              // } elseif ($statusTagihan === "Belum Dibuat") {
+                              //   echo "Belum Dibuat";
+                              // } elseif ($statusTagihan === "Sudah Dibuat") {
+                              //   echo "Sudah Dibuat";
+                              // }
                             ?>
                           </button>
                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -400,7 +400,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                           </div>
                         </div>
                       </div>
-                    </div>   
+                    </div>    -->
                   </div> 
               </div>
             </div>
@@ -427,9 +427,12 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
             }
           ?>
           <div class="table-responsive">
-            <form id="invoiceForm" name="proses" method="GET">
-              <div class="col-md-2 mb-3 mt-2">
-                <input id="createBill" type="button" name="inv-nonppn" class="btn btn-primary btn-md" value="Buat Tagihan" onclick="submitForm('create-bill.php')">
+              <div class="col-md-8 mb-3 mt-2">
+                <form action="create-bill.php" method="GET" onsubmit="prepareFormData()">
+                    <!-- <textarea type="hidden" id="idInv" name="inv_id[]" class="form-control" cols="80" rows="10"></textarea> -->
+                    <input type="hidden" id="idInv" name="inv_id[]" class="form-control">
+                    <button type="submit" id="createBill" class="btn btn-primary btn-md">Buat Tagihan</button>
+                </form>
               </div>
               <table id="table2" class="table table-striped nowrap" style="width:100%">
                 <thead>
@@ -442,9 +445,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                     <td class="text-center p-3">Customer</td>
                     <td class="text-center p-3">Tgl. Tempo</td>
                     <td class="text-center p-3">Total Tagihan</td>
-                    <td class="text-center p-3">Status Pembayaran</td>
                     <td class="text-center p-3">Status Tempo</td>
-                    <td class="text-center p-3">Status Tagihan</td>
                     <td class="text-center p-3">Aksi</td>
                   </tr>
                 </thead>
@@ -559,13 +560,6 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                       }
                     }
 
-                    // if (isset($_GET["start_date"]) && isset($_GET["end_date"])) {
-                    //   $dt1 = $_GET["start_date"];
-                    //   $dt2 = $_GET["end_date"];
-                    //   $format_dt1 = date('d/m/Y', strtotime($dt1));
-                    //   $format_dt2 = date('d/m/Y', strtotime($dt2));
-                    //   $sort_option .= "STR_TO_DATE(COALESCE(nonppn.tgl_inv, ppn.tgl_inv, bum.tgl_inv), '%d/%m/%Y') BETWEEN STR_TO_DATE('$format_dt1', '%d/%m/%Y') AND STR_TO_DATE('$format_dt2', '%d/%m/%Y')";
-                    // }
                     
                     $sql = "SELECT 
                               -- finance
@@ -598,7 +592,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                           LEFT JOIN inv_ppn ppn ON (fnc.id_inv = ppn.id_inv_ppn)
                           LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
                           LEFT JOIN finance_tagihan ft ON (fnc.id_tagihan = ft.id_tagihan)
-                          WHERE ($sort_option) and fnc.status_tagihan = 0 ORDER BY nonppn.no_inv, ppn.no_inv, bum.no_inv";
+                          WHERE ($sort_option) AND fnc.status_tagihan = '0' ORDER BY nonppn.no_inv, ppn.no_inv, bum.no_inv";
 
                   //Tambahkan kondisi pencarian berdasarkan nama pelanggan jika $_GET['cs'] sudah diset
                   if (isset($_GET['cs'])) {
@@ -625,84 +619,66 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                     $status_lunas = $data['status_lunas'];
                   ?>
                       <tr>
-                      <td class="text-center">
-                        <?php  
-                          if($data['status_tagihan'] == 0){
-                            ?>
-                              <input type="checkbox" name="inv_id[]" id="inv" value="<?php echo $id_inv ?>" data-customer="<?php echo $cs_inv ?>" data-jenis="<?php echo $data['jenis_inv'] ?>">
-                            <?php
-                          }
-                        ?>
-                      </td>
-                          <td class="text-center text-nowrap"><?php echo $no ?></td>
-                          <td class="text-nowrap text-center"><?php echo $no_inv ?></td>
-                          <td class="text-nowrap text-center"><?php echo date('d/m/Y', strtotime($tgl_inv)) ?></td>
-                          <td class="text-center text-nowrap"><?php echo strtoupper($data['jenis_inv'])?></td>
-                          <td class="text-nowrap"><?php echo $cs_inv ?></td>
-                          <td class="text-nowrap text-center">
-                            <?php 
-                              if(!empty($tgl_tempo_cek)){
-                                echo date('d/m/Y', strtotime($tgl_tempo));
-                              } else {
-                                echo "Tidak Ada Tempo";
-                              }
-                            ?>
-                          </td>
-                          <td class="text-nowrap text-end"><?php echo number_format($data['total_inv'])?></td>
-                          <td class="text-nowrap text-center">
-                            <?php
-                              if($data['status_pembayaran'] == 1){
-                                echo "Sudah Bayar";
-                              }else{
-                                echo "Belum Bayar";
-                              }
-                            ?>
-                          </td>    
+                        <td class="text-center">
                           <?php  
-                            if (!empty($tgl_tempo_cek) && $status_lunas == '0') {
-                              $timestamp_tgl_tempo = strtotime($tgl_tempo);
-                              $timestamp_now = strtotime($date_now);
-                              // Hitung selisih timestamp
-                              $selisih_timestamp = $timestamp_tgl_tempo - $timestamp_now;
-                              // Konversi selisih timestamp ke dalam hari
-                              $selisih_hari = floor($selisih_timestamp / (60 * 60 * 24));
-                              if ($tgl_tempo > $date_now){
-                                  echo '<td class="text-end text-nowrap bg-secondary text-white">'. "Tempo < " .$selisih_hari. " Hari".'</td>';
-                              } else if ($tgl_tempo < $date_now){
-                                  echo '<td class="text-end text-nowrap bg-danger text-white">'. "Tempo > " . abs($selisih_hari). " Hari".'</td>';
-                              } else if ($tgl_tempo == $date_now) {
-                                echo '<td class="text-end text-nowrap">Jatuh Tempo Hari ini</td>';
-                              } else {
-                                echo '<td class="text-end text-nowrap">Tidak Ada Tempo</td>';
-                              }
-                            } else {
-                                if ($status_lunas == '1'){
-                                  echo '<td class="text-center text-nowrap">Sudah Lunas</td>';
-                                } else {
-                                  echo '<td class="text-center text-nowrap">Tidak Ada Tempo</td>';
-                                }
+                            if ($data['status_tagihan'] == 0) {
+                                ?>
+                                  <input type="checkbox" name="inv_id[]" id="inv" value="<?php echo $id_inv ?>" data-customer="<?php echo $cs_inv ?>" data-jenis="<?php echo $data['jenis_inv'] ?>" onclick="updateInputValue(this)">
+                                <?php
                             }
-                          ?> 
-                          <td class="text-center">
-                            <?php
-                              if (isset($data['status_tagihan']) && $data['status_tagihan'] == 0) {
-                                  echo "Belum Dibuat";
+                          ?>
+                        </td>
+                        <td class="text-center text-nowrap"><?php echo $no ?></td>
+                        <td class="text-nowrap text-center"><?php echo $no_inv ?></td>
+                        <td class="text-nowrap text-center"><?php echo date('d/m/Y', strtotime($tgl_inv)) ?></td>
+                        <td class="text-center text-nowrap"><?php echo strtoupper($data['jenis_inv'])?></td>
+                        <td class="text-nowrap"><?php echo $cs_inv ?></td>
+                        <td class="text-nowrap text-center">
+                          <?php 
+                            if(!empty($tgl_tempo_cek)){
+                              echo date('d/m/Y', strtotime($tgl_tempo));
+                            } else {
+                              echo "Tidak Ada Tempo";
+                            }
+                          ?>
+                        </td>
+                        <td class="text-nowrap text-end"><?php echo number_format($data['total_inv'])?></td>
+                        <?php  
+                          if (!empty($tgl_tempo_cek) && $status_lunas == '0') {
+                            $timestamp_tgl_tempo = strtotime($tgl_tempo);
+                            $timestamp_now = strtotime($date_now);
+                            // Hitung selisih timestamp
+                            $selisih_timestamp = $timestamp_tgl_tempo - $timestamp_now;
+                            // Konversi selisih timestamp ke dalam hari
+                            $selisih_hari = floor($selisih_timestamp / (60 * 60 * 24));
+                            if ($tgl_tempo > $date_now){
+                                echo '<td class="text-end text-nowrap bg-secondary text-white">'. "Tempo < " .$selisih_hari. " Hari".'</td>';
+                            } else if ($tgl_tempo < $date_now){
+                                echo '<td class="text-end text-nowrap bg-danger text-white">'. "Tempo > " . abs($selisih_hari). " Hari".'</td>';
+                            } else if ($tgl_tempo == $date_now) {
+                              echo '<td class="text-end text-nowrap">Jatuh Tempo Hari ini</td>';
+                            } else {
+                              echo '<td class="text-end text-nowrap">Tidak Ada Tempo</td>';
+                            }
+                          } else {
+                              if ($status_lunas == '1'){
+                                echo '<td class="text-center text-nowrap">Sudah Lunas</td>';
                               } else {
-                                  echo (isset($data['no_tagihan']) ? ' ' . $data['no_tagihan'] : '');
+                                echo '<td class="text-center text-nowrap">Tidak Ada Tempo</td>';
                               }
+                          }
+                        ?> 
+                        <td class="text-center text-nowrap">
+                            <?php
+                            if ($data['jenis_inv'] == 'nonppn') {
+                                echo '<a href="detail-fnc-nonppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                            } elseif ($data['jenis_inv'] == 'ppn') {
+                                echo '<a href="detail-fnc-ppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                            } elseif ($data['jenis_inv'] == 'bum') {
+                                echo '<a href="detail-fnc-bum.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                            }
                             ?>
-                          </td>
-                          <td class="text-center text-nowrap">
-                              <?php
-                              if ($data['jenis_inv'] == 'nonppn') {
-                                  echo '<a href="detail-fnc-nonppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
-                              } elseif ($data['jenis_inv'] == 'ppn') {
-                                  echo '<a href="detail-fnc-ppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
-                              } elseif ($data['jenis_inv'] == 'bum') {
-                                  echo '<a href="detail-fnc-bum.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
-                              }
-                              ?>
-                          </td>
+                        </td>
                       </tr>
                   <?php $no++ ?>
                   <?php } ?>
@@ -712,7 +688,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                   <p id="total-count" style="display: none;">Jumlah data yang ditampilkan: 0</p>
                 </tr>
               </table>
-            </form>   
+            
             <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script> -->
             <script src="assets/js/export-excel.js"></script>
             <script>
@@ -851,274 +827,6 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
     </div>
   </div>
 </div>
-<script>
-    // Fungsi untuk memeriksa apakah setidaknya satu checkbox dicentang
-    // function isAnyCheckboxChecked() {
-    //     var checkboxes = document.getElementsByName("inv_id[]");
-    //     for (var i = 0; i < checkboxes.length; i++) {
-    //         if (checkboxes[i].checked) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // // Fungsi yang dipanggil ketika ada perubahan pada checkbox
-    // function updateButtonState() {
-    //     var createBillButton = document.getElementById("createBill");
-    //     createBillButton.disabled = !isAnyCheckboxChecked();
-    // }
-
-    // // Menambahkan event listener ke setiap checkbox
-    // var checkboxes = document.getElementsByName("inv_id[]");
-    // for (var i = 0; i < checkboxes.length; i++) {
-    //     checkboxes[i].addEventListener("change", updateButtonState);
-    // }
-
-    // // Memeriksa status awal tombol saat halaman dimuat
-    // updateButtonState();
-</script>
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const checkboxes = document.querySelectorAll('input[name="cs[]"]');
-    const maxSelection = 1;
-    const submitButton = document.querySelector('.modal-footer button[type="submit"]');
-    const errorNotification = document.createElement('div');
-    errorNotification.className = 'alert alert-danger mt-2';
-    errorNotification.style.display = 'none';
-    errorNotification.innerHTML = `Anda hanya dapat memilih ${maxSelection} customer.`;
-
-    // Sisipkan notifikasi kesalahan ke dalam modal body
-    const modalBody = document.querySelector('.modal-body');
-    modalBody.appendChild(errorNotification);
-
-    checkboxes.forEach(function(checkbox) {
-      checkbox.addEventListener('change', function() {
-        const selectedCheckboxes = document.querySelectorAll('input[name="cs[]"]:checked');
-
-        // Aktifkan tombol "Oke" jika minimal satu kotak centang dipilih
-        if (selectedCheckboxes.length >= 1) {
-          submitButton.removeAttribute('disabled');
-          errorNotification.style.display = 'none'; // Sembunyikan notifikasi kesalahan jika ada
-        } else {
-          submitButton.setAttribute('disabled', 'disabled');
-        }
-
-        // Nonaktifkan kotak centang yang tidak dipilih setelah 3 dipilih
-        if (selectedCheckboxes.length > maxSelection) {
-          this.checked = false;
-          errorNotification.style.display = 'block'; // Tampilkan notifikasi kesalahan
-        } else {
-          checkboxes.forEach(function(checkbox) {
-            checkbox.disabled = false;
-          });
-        }
-      });
-    });
-
-    // Function to construct the URL and submit the form
-    function submitForm() {
-      const selectedCheckboxes = document.querySelectorAll('input[name="cs[]"]:checked');
-      const selectedCs = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
-
-      // Check if there are selected items
-      if (selectedCs.length > 0) {
-        // Clear the existing buttons
-        const csDiv = document.getElementById('cs');
-        csDiv.innerHTML = '';
-
-        // Generate buttons for each selected item
-        selectedCs.forEach(cs => {
-          // Split the selected item using "+"
-          const csParts = cs.split('+');
-
-          csParts.forEach((csPart, index) => {
-            const inputGroup = document.createElement('div');
-            inputGroup.className = 'input-group mb-3';
-
-            const inputText = document.createElement('input');
-            inputText.type = 'text';
-            inputText.className = 'form-control';
-            inputText.value = csPart;
-            inputText.readOnly = true;
-
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'btn btn-outline-dark deleteButton';
-            deleteButton.setAttribute('data-cs', cs);
-            deleteButton.addEventListener('click', function() {
-              // Handle button click to remove the selected item
-              selectedCs.splice(index, 1);
-              submitForm();
-            });
-
-            const buttonText = document.createElement('span');
-            buttonText.className = 'text-dark';
-            buttonText.textContent = 'X';
-
-            deleteButton.appendChild(buttonText);
-
-            inputGroup.appendChild(inputText);
-            inputGroup.appendChild(deleteButton);
-
-            csDiv.appendChild(inputGroup);
-          });
-        });
-
-        // Continue with your code to update the URL and redirect
-        var dateRange = "<?php echo $_GET['date_range']; ?>";
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('date_range', dateRange);
-        urlParams.set('cs[]', selectedCs.join('+'));
-        const finalUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        window.location.href = finalUrl;
-      } else {
-        // Handle the case when no items are selected (optional)
-        console.log('No items selected.');
-      }
-    }
-
-    // Add a click event listener to the "Oke" button to trigger form submission
-    submitButton.addEventListener('click', function(event) {
-      event.preventDefault(); // Prevent the default form submission
-      submitForm();
-    });
-
-
-
-  });
-</script>
-
-
-
-<script>
-    // Add event listener to each button with class "deleteButton"
-    var buttons = document.querySelectorAll('.deleteButton');
-    buttons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            var dataToDelete = this.getAttribute('data-cs');
-            console.log("Data yang akan dihapus:", dataToDelete);
-            deleteData(dataToDelete);
-        });
-    });
-
-    function deleteData(dataToDelete) {
-        // Get the current URL parameters
-        var urlParams = new URLSearchParams(window.location.search);
-
-        // Remove the dataToDelete from the URL parameters
-        var newCSParams = [];
-        urlParams.getAll('cs[]').forEach(function(value) {
-            if (value !== dataToDelete) {
-                newCSParams.push(value);
-            }
-        });
-
-        // Set the new 'cs' parameter in the URL
-        urlParams.delete('cs[]');
-        newCSParams.forEach(function(value) {
-            urlParams.append('cs[]', value);
-        });
-
-        // Check if all customer buttons are deleted and update the URL accordingly
-        if (newCSParams.length === 0) {
-            var dateRange = "<?php echo $_GET['date_range']; ?>";
-            urlParams.set('date_range', dateRange);
-            console.log('baseUrl');
-        }
-
-        // Get the current page URL without the query string
-        var currentURL = window.location.href.split('?')[0];
-
-        // Build the new URL with the updated query string
-        var newURL = currentURL + (urlParams.toString() ? '?' + urlParams.toString() : '');
-
-        // Update the URL without refreshing the page
-        window.history.replaceState({}, document.title, newURL);
-
-        // Reload the page
-        window.location.reload();
-    }
-</script>
-
-<script>
-  // function filterInv() {
-  //   const filterSelect = document.getElementById("filterSelectInv");
-  //   const filterValue = filterSelect.value.toLowerCase().trim();
-  
-  //   const rows = document.querySelectorAll("#table2 tbody tr");
-  //   let dataFound = false; // Gunakan variabel untuk mengecek apakah data sesuai dengan filter ditemukan
-
-  //   for (const row of rows) {
-  //     const statusInvCell = row.getElementsByTagName("td")[3];
-  //     if (statusInvCell) {
-  //       const statusInv = statusInvCell.innerText.toLowerCase().trim();
-
-  //       if (filterValue === "all" || statusInv === filterValue) {
-  //         row.style.display = "table-row";
-  //         dataFound = true; // Set dataFound menjadi true jika ada data yang sesuai dengan filter
-  //       } else {
-  //         row.style.display = "none";
-  //       }
-  //     }
-  //   }
-
-  //   // Tampilkan pesan "Data Tidak Ditemukan" jika tidak ada data yang sesuai dengan filter
-  //   const messageRow = document.getElementById("messageRow");
-  //   if (!dataFound) {
-  //     messageRow.style.display = "table-row";
-  //   } else {
-  //     messageRow.style.display = "none";
-  //   }
-  // }
-
-  // // Panggil fungsi filterStatus() saat halaman dimuat dan atur opsi select ke "all" secara default.
-  // filterInv();
-  // document.getElementById("filterSelectInv").value = "all";
-
-  // // Tambahkan event listener untuk elemen select
-  // document.getElementById("filterSelectInv").addEventListener("change", filterInv);
-</script>
-
-<script>
-  // document.addEventListener('DOMContentLoaded', function () {
-  //   const filterSelectTagihan = document.getElementById('filterSelectTagihan');
-  //   const dataTable = document.getElementById('table2');
-
-  //   filterSelectTagihan.addEventListener('change', applyFilters);
-
-  //   function applyFilters() {
-  //       const selectedValue = filterSelectTagihan.value;
-  //       const rows = dataTable.getElementsByTagName('tr');
-
-  //       for (let i = 1; i < rows.length; i++) {
-  //           const row = rows[i];
-  //           const cell = row.cells[10]; // Pastikan indeks 10 sesuai dengan kolom nomor tagihan
-
-  //           // Memeriksa apakah ada cell pada baris tersebut
-  //           if (cell) {
-  //               const cellValue = cell.textContent.trim();
-  //               let showRow = false;
-
-  //               if (selectedValue === 'all') {
-  //                   showRow = true;
-  //               } else if (selectedValue === 'Belum' && cellValue === 'Belum Dibuat') {
-  //                   showRow = true;
-  //               } else if (selectedValue === 'Sudah' && cellValue !== 'Belum Dibuat') {
-  //                   showRow = true;
-  //               }
-
-  //               row.style.display = showRow ? '' : 'none';
-  //           }
-  //       }
-  //   }
-
-  //   // Inisialisasi filter pada awal halaman
-  //   applyFilters();});
-
-
-</script>
 
 <!-- Checkbox saat buat Bill -->
 <script>
@@ -1130,7 +838,7 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
       const selectedCustomers = new Set(checkedCheckboxes.map(checkbox => checkbox.getAttribute("data-customer")));
       const selectedJenis = new Set(checkedCheckboxes.map(checkbox => checkbox.getAttribute("data-jenis")));
 
-      if (checkedCheckboxes.length <= 10 && selectedCustomers.size === 1) {
+      if (checkedCheckboxes.length <= 20 && selectedCustomers.size === 1) {
           // Check if "nonppn" and "bum" are selected together, and "ppn" is not selected
           const isNonPPNSelected = selectedJenis.has("nonppn");
           const isBUMSelected = selectedJenis.has("bum");
@@ -1160,16 +868,10 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", function () {
-            // Limit selection to a maximum of 5 checkboxes
+            // Limit selection to a maximum of 20 checkboxes
             const checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
-            if (checkedCount > 10) {
+            if (checkedCount > 20) {
                 this.checked = false;
-                Swal.fire({
-                    title: '<strong>Batas Maksimum Pemilihan</strong>',
-                    icon: 'info',
-                    html: 'Anda hanya dapat memilih maksimal 5 data.',
-                    confirmButtonText: 'OK'
-                });
             }
 
             updateButtonState();
@@ -1178,6 +880,49 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
 
     checkInitialCheckbox();
 </script>
+<script>
+  function updateInputValue(checkbox) {
+      var inputValue = document.getElementById('idInv').value;
+      var checkboxValue = encodeURIComponent(checkbox.value);
+      var maxData = 20;
+
+      // Cek apakah checkbox dicentang atau tidak
+      if (checkbox.checked) {
+          // Jika dicentang, tambahkan nilai checkbox ke nilai input jika belum mencapai batas
+          var values = inputValue.split(',');
+          if (values.length < maxData) {
+              if (inputValue.length > 0) {
+                  inputValue += ',' + checkboxValue;
+              } else {
+                  inputValue = checkboxValue;
+              }
+          } else {
+              // Jika sudah mencapai batas, batasi pemilihan checkbox
+              checkbox.checked = false;
+              Swal.fire({
+                  title: '<strong>Anda Sudah Mencapai Batas Maksimum Pemilihan</strong>',
+                  icon: 'info',
+                  html: 'Anda hanya dapat memilih maksimal 20 data.',
+                  confirmButtonText: 'OK'
+              });
+          }
+      } else {
+          // Jika tidak dicentang, hapus nilai checkbox dari nilai input
+          inputValue = inputValue.split(',').filter(function (value) {
+              return value !== checkboxValue;
+          }).join(',');
+      }
+
+      // Perbarui nilai input
+      document.getElementById('idInv').value = inputValue;
+  }
+</script>
+
+
+
+
+
+
 
 <script>
   function submitForm(action) {

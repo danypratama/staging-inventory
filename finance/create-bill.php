@@ -9,7 +9,8 @@ include 'akses.php';
     <?php include 'page/head.php'; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>Inventory KMA</title>
 </head>
 <body>
     <!-- nav header -->
@@ -21,7 +22,7 @@ include 'akses.php';
     <!-- end sidebar --> 
     <main id="main" class="main">
         <section>
-            <form action="proses/bill.php" method="POST">
+        <form action="proses/bill.php" method="POST">
                 <div class="card p-3">
                     <?php  
                        if (isset($_GET['inv_id'])) {
@@ -34,6 +35,19 @@ include 'akses.php';
                             // Misalnya, tampilkan daftar ID SPK yang dipilih
                             foreach ($selectedInvIds as $invId) {
                                 echo '<input type="hidden" name="id_inv[]" value="' . $invId . '">';
+                                // Lakukan sesuatu dengan data yang dipilih
+                                // Jika Anda ingin menggabungkan elemen-elemen dengan pemisah, gunakan implode seperti sebelumnya
+                                // hasil dari implode adalah 'BUM-2402dfa7b610809202', 'BUM-2402cb47f1c3ee2302'
+                                $formattedInvIds = implode("', '", $selectedInvIds);
+
+                                // Tambahkan tanda kutip pada awal dan akhir string
+                                $formattedInvIds = "'" . $formattedInvIds . "'";
+
+                                // Gantikan koma dengan koma dan spasi
+                                $formattedInvIds = str_replace(",", "', '", $formattedInvIds);
+
+                                // Lakukan sesuatu dengan data yang dipilih yang telah digabungkan
+                                // echo $formattedInvIds;
                                 $sql = mysqli_query($connect, "SELECT DISTINCT
                                                                     sr.id_customer, sr.id_inv, cs.nama_cs, 
                                                                     nonppn.id_inv_nonppn, 
@@ -61,7 +75,7 @@ include 'akses.php';
                                                             LEFT JOIN inv_nonppn nonppn ON (sr.id_inv = nonppn.id_inv_nonppn)
                                                             LEFT JOIN inv_ppn ppn ON (sr.id_inv = ppn.id_inv_ppn)
                                                             LEFT JOIN inv_bum bum ON (sr.id_inv = bum.id_inv_bum)
-                                                            WHERE sr.id_inv = '$invId'");
+                                                            WHERE sr.id_inv IN($formattedInvIds)");
                                 
                                 // Pengecekan apakah data ditemukan
                                 if ($sql) {
@@ -132,28 +146,9 @@ include 'akses.php';
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
-                            <?php  
-                                if (isset($_GET['inv_id'])) {
-                                    $selectedInvIds = $_GET['inv_id'];
-                                    $no = 1;
-
-                                    // Lakukan sesuatu dengan data yang dipilih
-                                    // Misalnya, tampilkan daftar ID SPK yang dipilih
-                                    foreach ($selectedInvIds as $invId) {
-                                    }
-
-                                    // Jika Anda ingin menggabungkan elemen-elemen dengan pemisah, gunakan implode seperti sebelumnya
-                                    // hasil dari implode adalah '001', '002'
-                                    $formattedInvIds = implode(", ", array_map(function($invId) {
-                                        return "'" . $invId . "'";
-                                    }, $selectedInvIds));
-
-                                    // Lakukan sesuatu dengan data yang dipilih yang telah digabungkan
-                                    // echo $formattedInvIds;
-                                }
-                            ?>
                             <thead>
                                 <?php  
+                                    $no = 1;
                                     $sql = mysqli_query($connect, "SELECT DISTINCT
                                                                     sr.id_customer, sr.id_inv, cs.nama_cs,
                                                                     nonppn.id_inv_nonppn, 
@@ -179,7 +174,7 @@ include 'akses.php';
                                                                 LEFT JOIN inv_nonppn nonppn ON (sr.id_inv = nonppn.id_inv_nonppn)
                                                                 LEFT JOIN inv_ppn ppn ON (sr.id_inv = ppn.id_inv_ppn)
                                                                 LEFT JOIN inv_bum bum ON (sr.id_inv = bum.id_inv_bum)
-                                                                WHERE sr.id_inv IN($formattedInvIds)");
+                                                                WHERE sr.id_inv IN($formattedInvIds) ORDER BY nonppn.no_inv, bum.no_inv, ppn.no_inv");
                                     $total_data = mysqli_num_rows($sql);
                                 ?>
                                 <tr class="text-white" style="background-color: navy;">
@@ -241,6 +236,7 @@ include 'akses.php';
                                     </td>
                                     <td class="text-center text-nowrap">
                                         <?php
+                                            // untuk di server ubah menjadi != '0000-00-00'
                                             if ($data['tgl_tempo'] != '') {
                                                 echo date('d/m/Y',strtotime($data['tgl_tempo_nonppn']));
                                             } else {
@@ -264,7 +260,7 @@ include 'akses.php';
                                         if($total_data > 1){
                                             ?>
                                                 <td class="text-center">
-                                                    <button class="btn btn-danger btn-sm" type="button" data-id="<?php echo $data['id_inv']; ?>">Hapus Data</button>
+                                                    <button class="btn btn-danger btn-sm" type="button" data-id="<?php echo $data['id_inv']; ?>" onclick="removeValue(this)">Hapus Data</button>
                                                 </td>
                                             <?php
                                         }
@@ -273,39 +269,6 @@ include 'akses.php';
                                 <?php $no++ ?>
                                 <?php } ?>
                             </tbody>
-                            <script>
-                                // Fungsi untuk memperbarui URL dengan array yang baru
-                                function updateURL(newArray) {
-                                    const currentURL = new URL(window.location.href);
-                                    currentURL.searchParams.delete('inv_id[]'); // Hapus semua parameter inv_id[] dari URL
-
-                                    newArray.forEach(item => {
-                                        currentURL.searchParams.append('inv_id[]', item);
-                                    });
-
-                                    history.replaceState({}, '', currentURL);
-                                }
-
-                                // Menangkap klik tombol "Hapus Data"
-                                document.addEventListener('click', function(event) {
-                                    if (event.target && event.target.classList.contains('btn-danger')) {
-                                        const deletedId = event.target.getAttribute('data-id');
-                                        const selectedIds = <?php echo json_encode($selectedInvIds); ?>;
-
-                                        // Hapus data dari array selectedIds
-                                        const updatedIds = selectedIds.filter(id => id !== deletedId);
-
-                                        // Perbarui URL
-                                        updateURL(updatedIds);
-
-                                        // Hapus elemen baris dari tampilan
-                                        event.target.closest('tr').remove();
-
-                                        // Reload halaman
-                                        location.reload();
-                                    }
-                                });
-                            </script>
                         </table>
                     </div>
                     <div class="text-end">
@@ -318,23 +281,68 @@ include 'akses.php';
     </main>
 </body>
 </html>
-
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var inputTglTagihan = document.getElementById("tgl_tagihan");
-    var currentDate = new Date();
-    var formattedDate = formatDate(currentDate);
-    inputTglTagihan.value = formattedDate;
-  });
+    // function removeValue(button) {
+    //     // Pastikan tombol yang ditekan memiliki atribut data-id
+    //     var dataIdValue = button.getAttribute('data-id');
 
-  function formatDate(date) {
-    var year = date.getFullYear();
-    var month = String(date.getMonth() + 1).padStart(2, "0");
-    var day = String(date.getDate()).padStart(2, "0");
-    return day + "/" + month + "/" + year;
-  }
+    //     if (dataIdValue !== null) {
+    //         console.log('Data-id:', dataIdValue);
+
+    //         // Mendapatkan URL saat ini
+    //         var currentUrl = window.location.href;
+
+    //         // Membuat regular expression untuk mencari dan menghapus nilai dari URL
+    //         var regex = new RegExp('%2C' + encodeURIComponent(dataIdValue), 'g');
+
+    //         // Menghapus nilai dari URL menggunakan regex
+    //         var newUrl = currentUrl.replace(regex, '');
+
+    //         // Mengganti URL dan reload halaman
+    //         // window.location.href = newUrl;
+
+    //         // Menampilkan URL yang sudah diubah di console (opsional)
+    //         console.log('New URL:', newUrl);
+    //     } else {
+    //         console.error('Atribut data-id tidak ditemukan pada tombol yang ditekan.');
+    //     }
+    // }
+    function removeValue(button) {
+        // Pastikan tombol yang ditekan memiliki atribut data-id
+        var dataIdValue = button.getAttribute('data-id');
+
+        if (dataIdValue !== null) {
+            // console.log('Data-id:', dataIdValue);
+
+            // Mendapatkan URL saat ini
+            var currentUrl = new URL(window.location.href);
+
+            // Mendapatkan parameter 'inv_id' dari URL
+            var invIdParam = currentUrl.searchParams.get('inv_id[]');
+
+            if (invIdParam) {
+                // Pecah nilai parameter menjadi array
+                var invIdArray = invIdParam.split(',');
+
+                // Hapus nilai yang sesuai dengan data-id
+                var filteredInvIdArray = invIdArray.filter(value => value !== dataIdValue);
+
+                // Atur kembali nilai parameter 'inv_id'
+                currentUrl.searchParams.set('inv_id[]', filteredInvIdArray.join(','));
+
+                // Mengganti URL dan reload halaman
+                window.location.href = currentUrl.href;
+
+                // Menampilkan URL yang sudah diubah di console (opsional)
+                // console.log('New URL:', currentUrl.href);
+            } else {
+                console.error('Parameter inv_id tidak ditemukan pada URL.');
+            }
+        } else {
+            console.error('Atribut data-id tidak ditemukan pada tombol yang ditekan.');
+        }
+    }
 </script>
-
 <script type="text/javascript">
   flatpickr("#date", {
     dateFormat: "d/m/Y",

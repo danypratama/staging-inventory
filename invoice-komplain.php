@@ -111,11 +111,11 @@ include 'function/class-komplain.php';
                                 <form action="" method="GET" class="form-group newsletter-group" id="dateForm">
                                     <div class="row p-2">
                                     <div class="col-md-6 mb-3">
-                                        <label for="start_date">From</label>
+                                        <label for="startDate">From</label>
                                         <input type="date" id="startDate" class="form-control form-control-md date-picker" placeholder="dd/mm/yyyy" name="start_date">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="end_date">To</label>
+                                        <label for="endDate">To</label>
                                         <input type="date" id="endDate" class="form-control form-control-md date-picker" placeholder="dd/mm/yyyy" name="end_date">
                                     </div>
                                     <input type="hidden" name="date_range" value="pilihTanggal">

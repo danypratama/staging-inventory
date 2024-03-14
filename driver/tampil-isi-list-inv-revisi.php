@@ -400,7 +400,7 @@ include "../function/class-spk.php";
                             </a>
                             <?php
                             $id_inv = base64_decode($_GET['id']);
-                            $sql_cek = "SELECT
+                            $sql_cek = "SELECT DISTINCT
                                             COALESCE(nonppn.id_inv_nonppn, ppn.id_inv_ppn, bum.id_inv_bum) AS id_inv,
                                             COALESCE(nonppn.no_inv, ppn.no_inv, bum.no_inv) AS no_inv,
                                             STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
@@ -474,7 +474,6 @@ include "../function/class-spk.php";
                             <thead>
                                 <tr class="text-white" style="background-color: #051683;">
                                     <th class="text-center text-nowrap p-3" style="width:20px">No</th>
-                                    <th class="text-center text-nowrap p-3" style="width:100px">No. SPK</th>
                                     <th class="text-center text-nowrap p-3" style="width:200px">Nama Produk</th>
                                     <th class="text-center text-nowrap p-3" style="width:100px">Satuan</th>
                                     <th class="text-center text-nowrap p-3" style="width:100px">Merk</th>
@@ -492,7 +491,7 @@ include "../function/class-spk.php";
                                     $month = date('m');
                                     $id_nonppn_decode = base64_decode($_GET['id']);
                                     $no = 1;
-                                    $sql_trx = "SELECT
+                                    $sql_trx = "SELECT DISTINCT
                                                     tpk.id_tmp,
                                                     tpk.id_produk,
                                                     tpk.nama_produk,
@@ -500,8 +499,6 @@ include "../function/class-spk.php";
                                                     tpk.qty,
                                                     tpk.disc,
                                                     tpk.total_harga,
-                                                    COALESCE(spk_nonppn.id_spk_reg, spk_ppn.id_spk_reg, spk_bum.id_spk_reg) AS id_spk,
-                                                    COALESCE(spk_nonppn.no_spk, spk_ppn.no_spk, spk_bum.no_spk) AS no_spk,
                                                     COALESCE(mr_produk.nama_merk, mr_set.nama_merk) AS merk,
                                                     spr.stock,
                                                     pr.satuan
@@ -511,9 +508,6 @@ include "../function/class-spk.php";
                                                 LEFT JOIN tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                                 LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
                                                 LEFT JOIN stock_produk_reguler spr ON tpk.id_produk = spr.id_produk_reg
-                                                LEFT JOIN spk_reg spk_nonppn ON tpk.id_inv = spk_nonppn.id_inv
-                                                LEFT JOIN spk_reg spk_ppn ON tpk.id_inv = spk_ppn.id_inv
-                                                LEFT JOIN spk_reg spk_bum ON tpk.id_inv = spk_bum.id_inv
                                                 WHERE tpk.id_inv = '$id_inv' AND status_tmp = '1' AND status_br_refund = '0'";
                                         $trx_produk_reg = mysqli_query($connect, $sql_trx);
                                         while ($data_trx = mysqli_fetch_array($trx_produk_reg)) {
@@ -532,7 +526,6 @@ include "../function/class-spk.php";
                                     ?>
                                 <tr>
                                     <td class="text-center text-nowrap"><?php echo $no; ?></td>
-                                    <td class="text-center text-nowrap"><?php echo $data_trx['no_spk']; ?></td>
                                     <td class="text-nowrap"><?php echo $data_trx['nama_produk'] ?></td>
                                     <td class="text-center text-nowrap"><?php echo $satuan_produk ?></td>
                                     <td class="text-center text-nowrap"><?php echo $merk ?></td>

@@ -502,7 +502,7 @@
                                             <?php
                                         } else {
                                             ?>
-                                                 <button class="btn border-dark">
+                                                <button class="btn border-dark">
                                                     <?php  
                                                     $total_harga_revisi = 0;
                                                     while($data_total = mysqli_fetch_array($query_produk_total)){
@@ -541,6 +541,14 @@
                                                     if($status_kmpl == '0') {
                                                         ?> 
                                                             <div class="p-2" id="edit" style="display: block;">
+                                                                <button type="button" class="btn btn-warning" id="edit-button">
+                                                                    <i class="bi bi-pencil"></i> Edit Data Produk
+                                                                </button>            
+                                                            </div>   
+                                                        <?php 
+                                                    } else {
+                                                        ?> 
+                                                            <div class="p-2" id="edit" style="display: none;">
                                                                 <button type="button" class="btn btn-warning" id="edit-button">
                                                                     <i class="bi bi-pencil"></i> Edit Data Produk
                                                                 </button>            
@@ -986,7 +994,18 @@
                                             <label class="form-check-label" for="selesai">Transaksi Selesai</label>
                                         </div>
                                     <?php
-                                } 
+                                } else {
+                                    ?>
+                                        <div class="form-check form-check-inline" style="display: none;">
+                                            <input class="form-check-input" type="radio" name="status_kirim" id="dikirim" value="dikirim">
+                                            <label class="form-check-label" for="dikirim">Dikirim</label>
+                                        </div>
+                                        <div class="form-check form-check-inline" style="display: none;">
+                                            <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai">
+                                            <label class="form-check-label" for="selesai">Transaksi Selesai</label>
+                                        </div>
+                                    <?php
+                                }
                             } else if ($total_data_rev == '0' && $status_kmpl == '0'){
                                 ?>
                                     <div class="form-check form-check-inline">
@@ -998,16 +1017,28 @@
                                         <label class="form-check-label" for="selesai">Transaksi Selesai</label>
                                     </div>
                                 <?php
+                            } else {
+                                ?>
+                                    <div class="form-check form-check-inline" style="display: none;">
+                                        <input class="form-check-input" type="radio" name="status_kirim" id="dikirim" value="dikirim">
+                                        <label class="form-check-label" for="dikirim">Dikirim</label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display: none;">
+                                        <input class="form-check-input" type="radio" name="status_kirim" id="selesai" value="selesai">
+                                        <label class="form-check-label" for="selesai">Transaksi Selesai</label>
+                                    </div>
+                                <?php
                             }
                         ?>
                     </div>
                     <div id="trxKirim" style="display: none;">
                         <div class="mb-3">
                             <label>Jenis Pengiriman</label>
-                            <select class="form-select" name="jenis_pengiriman" id="jenis_pengiriman" required>
+                            <select class="form-select" name="jenis_pengiriman" id="jenis_pengiriman">
                                 <option value="">Pilih</option>
                                 <option value="Driver">Driver</option>
                                 <option value="Ekspedisi">Expedisi</option>
+                                <option value="Diambil Langsung">Diambil Langsung</option>
                             </select>
                         </div>
                     </div>
@@ -1063,6 +1094,10 @@
                             <input type="text" class="form-control" name="pj" id="penanggung_jawab">
                         </div>
                     </div>
+                    <div class="mb-3" id="jenis_diambil" style="display: none;">
+                        <label id="labelDiambil">Diambil Oleh</label>
+                        <input type="text" name="diambil_oleh" id="diambil" class="form-control">          
+                    </div>
                     <div class="mb-3" id="tanggal" style="display: none;">
                         <label id="labelDate">Tanggal</label>
                         <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl" id="date" required>
@@ -1094,11 +1129,13 @@
                     var jenisPengiriman = document.getElementById('jenis_pengiriman');
                     var jenisEkspedisi = document.getElementById('jenis_ekspedisi');
                     var jenisDriver = document.getElementById('jenis_driver');
+                    var jenisDiambil = document.getElementById('jenis_diambil');
                     var ekspedisi = document.getElementById('ekspedisi');
                     var pengirim = document.getElementById('pengirim');
                     var resi = document.getElementById('resi');
                     var jenis_ongkir = document.getElementById('jenis_ongkir');
                     var bukti = document.getElementById('bukti');
+                    var diambil = document.getElementById('diambil');
                     var tanggal = document.getElementById('tanggal');
                     var ongkos_kirim = document.getElementById('ongkos_kirim');
                     var penanggung_jawab = document.getElementById('penanggung_jawab');
@@ -1110,6 +1147,7 @@
                         if (dikirim.checked) {
                             trxKirim.style.display = 'block';
                             jenisPengiriman.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
+                            jenisPengiriman.setAttribute('required', 'true');
                             tanggal.style.display = 'none'; // Tampilkan jenis pengiriman saat dikirim dipilih
                         }
                     });
@@ -1130,12 +1168,15 @@
                         if (this.value === 'Driver') {
                             jenisDriver.style.display = 'block';
                             jenisEkspedisi.style.display = 'none';
+                            jenisDiambil.style.display = 'none';
                             ekspedisi.value = '';
                             ekspedisi.removeAttribute('required');
                             resi.value = '';
                             resi.removeAttribute('required');
                             jenis_ongkir.value = '';
                             jenis_ongkir.removeAttribute('required');
+                            diambil.value = '';
+                            diambil.removeAttribute('required');
                             tanggal.value = '';
                             tanggal.removeAttribute('required');
                             pengirim.style.display = 'block';
@@ -1157,9 +1198,28 @@
                             ongkos_kirim.removeAttribute('required');
                             penanggung_jawab.value = '';
                             penanggung_jawab.removeAttribute('required');
+                            diambil.value = '';
+                            diambil.removeAttribute('required');
                             bukti.style.display = 'block';
                             dikirim_oleh.value = '';
                             dikirim_oleh.removeAttribute('required');
+                            tanggal.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
+                        } else if (this.value === 'Diambil Langsung') {
+                            jenisDriver.style.display = 'none';
+                            jenisDiambil.style.display = 'block';
+                            diambil.setAttribute('required', 'true');
+                            pengirim.value = '';
+                            jenisEkspedisi.style.display = 'none';
+                            ekspedisi.value = '';
+                            ekspedisi.removeAttribute('required');
+                            resi.value = '';
+                            resi.removeAttribute('required');
+                            jenis_ongkir.value = '';
+                            jenis_ongkir.removeAttribute('required');
+                            tanggal.value = '';
+                            tanggal.removeAttribute('required');
+                            pengirim.style.display = 'none';
+                            pengirim.removeAttribute('required');
                             tanggal.style.display = 'block'; // Tampilkan jenis pengiriman saat dikirim dipilih
                         } else {
                             jenisEkspedisi.style.display = 'none';
@@ -1462,23 +1522,23 @@
                         <input type="text" class="form-control bg-light" name="merk" id="merk_edit" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="harga">Harga</label>
+                        <label for="harga_edit">Harga</label>
                         <input type="text" class="form-control" name="harga" id="harga_edit" oninput="formatNumberHarga(this)" required>
                     </div>
                     <div class="mb-3">
-                        <label for="harga">Diskon</label>
+                        <label for="disc_edit">Diskon</label>
                         <input type="text" class="form-control" name="disc" id="disc_edit" oninput="validasiDiskon(this)" required>
                     </div>
                     <div class="mb-3" style="display: none;">
-                        <label for="qty_order">Stock</label>
+                        <label for="stock_edit">Stock</label>
                         <input type="hidden" class="form-control bg-light" name="stock" id="stock_edit" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="qty_order">Qty Sebelumnya</label>
+                        <label for="qty_original">Qty Sebelumnya</label>
                         <input type="text" class="form-control bg-light" name="qty" id="qty_original" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="qty_order">Qty Revisi</label>
+                        <label for="qty_edit">Qty Revisi</label>
                         <input type="text" class="form-control" name="qty_edit" id= "qty_edit" oninput="formatNumberHarga(this)" required>
                     </div>
                     <div class="modal-footer">
@@ -1741,6 +1801,7 @@
             }
         });
     }
+
 </script>
 
 

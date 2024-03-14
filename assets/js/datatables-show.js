@@ -45,7 +45,7 @@ $(function () {
 });
 
 $(document).ready(function () {
-  var table = $("#table2").DataTable({
+  $("#table2").DataTable({
     lengthChange: false,
     ordering: false,
     autoWidth: false,
@@ -53,7 +53,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  var table = $("#table3").DataTable({
+  $("#table3").DataTable({
     lengthChange: false,
     ordering: false,
     autoWidth: false,
@@ -61,7 +61,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  var table = $("#table4").DataTable({
+  $("#table4").DataTable({
     lengthChange: false,
     ordering: false,
     autoWidth: false,
