@@ -1,15 +1,15 @@
 <?php
-$page = 'finance';
-$page2  = 'finance-nonppn';
-include 'akses.php';
-include 'function/class-finance.php';
+  $page = 'finance';
+  $page2  = 'finance-nonppn';
+  include 'akses.php';
+  include 'function/class-finance.php';
 
-// Periksa apakah tanggal telah dipilih atau belum
-$dateRanges = array('today', 'weekly', 'monthly', 'lastMonth', 'year', 'lastyear');
-$selectedDateRange = isset($_GET['date_range']) && in_array($_GET['date_range'], $dateRanges) ? $_GET['date_range'] : 'pilihTanggal';
+  // Periksa apakah tanggal telah dipilih atau belum
+  $dateRanges = array('today', 'weekly', 'monthly', 'lastMonth', 'year', 'lastyear');
+  $selectedDateRange = isset($_GET['date_range']) && in_array($_GET['date_range'], $dateRanges) ? $_GET['date_range'] : 'pilihTanggal';
 
-// Periksa apakah customer service telah dipilih atau belum
-$nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
+  // Periksa apakah customer service telah dipilih atau belum
+  $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -670,13 +670,32 @@ $nama_cs = isset($_GET['cs']) ? $_GET['cs'] : array();
                         ?> 
                         <td class="text-center text-nowrap">
                             <?php
-                            if ($data['jenis_inv'] == 'nonppn') {
-                                echo '<a href="detail-fnc-nonppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
-                            } elseif ($data['jenis_inv'] == 'ppn') {
-                                echo '<a href="detail-fnc-ppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
-                            } elseif ($data['jenis_inv'] == 'bum') {
-                                echo '<a href="detail-fnc-bum.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
-                            }
+                              $cek_komplain = $connect->query("SELECT id_komplain FROM inv_komplain WHERE id_inv = '$id_inv'");
+                              $total_data_komplain = mysqli_num_rows($cek_komplain);
+                              while($data_komplain = mysqli_fetch_array($cek_komplain)){
+                                $id_komplain = $data_komplain['id_komplain'];
+                              ?>
+                              <?php } ?>
+                              <?php
+                              if ($data['jenis_inv'] == 'nonppn') {
+                                if ($total_data_komplain != 0) {
+                                  echo '<a href="detail-fnc-nonppn-revisi.php?id=' . base64_encode($id_komplain) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                                } else {
+                                  echo '<a href="detail-fnc-nonppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                                }
+                              } elseif ($data['jenis_inv'] == 'ppn') {
+                                if ($total_data_komplain != 0) {
+                                  echo '<a href="detail-fnc-ppn-revisi.php?id=' . base64_encode($id_komplain) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                                } else {
+                                  echo '<a href="detail-fnc-bum.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                                }
+                              } elseif ($data['jenis_inv'] == 'bum') {
+                                  if ($total_data_komplain != 0) {
+                                    echo '<a href="detail-fnc-bum-revisi.php?id=' . base64_encode($id_komplain) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                                  } else {
+                                    echo '<a href="detail-fnc-bum.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                                  }
+                              }
                             ?>
                         </td>
                       </tr>

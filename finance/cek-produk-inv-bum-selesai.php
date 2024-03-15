@@ -686,7 +686,7 @@ include "../function/class-spk.php";
                         <div id="tidak_sesuai_form">
                             <div class="mb-3">
                                 <label><b>Tanggal Komplain</b></label>
-                                <input type="text" class="form-control" name="tgl" id="tgl_komplain" maxlength="10" required>
+                                <input type="text" class="form-control" name="tgl" id="tgl_komplain" maxlength="10" autocomplete="off" required>
                             </div>
                             <div class="mb-3" style="display:block;">
                                 <label><b>Pilih Kategori Komplain</b></label>

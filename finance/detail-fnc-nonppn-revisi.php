@@ -1,6 +1,6 @@
 <?php
-    $page  = 'transaksi';
-    $page2  = 'list-cmp';
+    $page = 'finance';
+    $page2  = 'finance-nonppn';
     include "akses.php";
     include 'function/class-komplain.php';
 ?>
@@ -90,7 +90,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- nav header -->
     <?php include "page/nav-header.php" ?>
@@ -125,35 +124,33 @@
             <!-- END SWEET ALERT -->
             <?php  
                 $id = base64_decode($_GET['id']);
-                include "query/detail-komplain-bum.php";
+                include "../query/detail-komplain-nonppn.php";
                 $id_inv = $data_kondisi['id_inv'];
                 $no_inv = $data_detail['no_inv'];
                 $alamat = $data_detail['alamat'];
-                include "query/produk-komplain-tmp.php";
+                include "../query/produk-komplain-tmp.php";
 
                 $id_inv_substr = $id_inv;
                 $inv_id = substr($id_inv_substr, 0, 3);
                 $jenis_inv = "";
                 if ($inv_id == "NON"){
-                    $jenis_inv = "bum";
-                } else if ($inv_id == "PPN"){
+                    $jenis_inv = "nonppn";
+                } else if ($inv_id == "BUM"){
                     $jenis_inv = "ppn";
                 } else if ($inv_id == "BUM"){
-                    $jenis_inv = "bum";
+                    $jenis_inv = "nonppn";
                 }
-
-                echo $jenis_inv;
 
 
 
                 // query untuk cek no invoice
                 $cek_no_inv = mysqli_query($connect,"   SELECT 
-                                                            bum.id_inv_bum AS id_inv,
+                                                            nonppn.id_inv_nonppn AS id_inv,
                                                             max(rev.no_inv_revisi) AS no_inv_revisi
                                                         FROM inv_revisi AS rev
                                                         LEFT JOIN inv_komplain ik ON rev.id_inv = ik.id_inv
-                                                        LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
-                                                        WHERE '$id_inv' IN (bum.id_inv_bum) GROUP BY id_inv
+                                                        LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
+                                                        WHERE '$id_inv' IN (nonppn.id_inv_nonppn) GROUP BY id_inv
                                             ");
                 $total_row_rev = mysqli_num_rows($cek_no_inv);
                 $data_inv_rev = mysqli_fetch_array($cek_no_inv);
@@ -413,7 +410,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="card-body">
-                                <a href="invoice-komplain.php?date_range=year" class="btn btn-warning mb-3">
+                                <a href="finance-inv.php?date_range=monthly" class="btn btn-warning mb-3">
                                     <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                 </a>
                                 <?php  
@@ -427,59 +424,7 @@
                                         <?php
                                     }
                                 ?>
-                                <?php
-                                    if ($total_data_rev != '0' && $status_kmpl == '0') {
-                                        $status_pengiriman = $data_rev['status_pengiriman'];
-                                        $status_trx_komplain = $data_rev['status_trx_komplain'];
-                                        $status_trx_selesai = $data_rev['status_trx_selesai'];
-                                        
-                                        if($status_pengiriman == "1" && $status_trx_komplain == "1" && $status_trx_selesai == "1") {
-                                            
-                                        } else if ($status_pengiriman == '1' && $status_trx_komplain == '0' && $status_trx_selesai == '0') {
-                                            ?>
-                                                <button href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#ubahStatus">
-                                                    <i class="bi bi-arrow-left-right"></i> Ubah Status
-                                                </button>
-                                            <?php
-                                        } else if ($status_pengiriman == "1" && $status_trx_komplain == "1" && $status_trx_selesai == "0") {
-                                            ?>
-                                                <button href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#ubahStatus">
-                                                    <i class="bi bi-arrow-left-right"></i> Ubah Status
-                                                </button>
-                                            <?php
-                                        } else if ($status_pengiriman == "0" && $status_trx_komplain == "0" && $status_trx_selesai == "0") {
-                                            ?>
-                                                
-                                            <?php
-                                        } 
-                                    } else if ($total_data_rev == '0' && $status_kmpl == '0'){
-                                        ?>
-                                            <button href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#ubahStatus">
-                                                <i class="bi bi-arrow-left-right"></i> Ubah Status
-                                            </button>
-                                        <?php
-                                    }
-                                ?>
-                                <?php  
-                                    $cek_jenis_pengiriman = mysqli_query($connect, "SELECT 
-                                                                                        id_komplain, jenis_penerima, status_kirim, created_date
-                                                                                    FROM revisi_status_kirim
-                                                                                    WHERE id_komplain = '$id'
-                                                                                    AND created_date = (SELECT MAX(created_date) FROM revisi_status_kirim WHERE id_komplain = '$id');
-                                                                                    ");
-                                    $data_cek_jenis_pengiriman = mysqli_fetch_array($cek_jenis_pengiriman);
-                                    $total_cek_jenis_pengiriman = mysqli_num_rows($cek_jenis_pengiriman);
-                                    if($total_cek_jenis_pengiriman != 0){
-                                        if( $data_cek_jenis_pengiriman['jenis_penerima'] == 'Ekspedisi' && $data_cek_jenis_pengiriman['status_kirim'] == '0'){
-                                            ?>
-                                                <button class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#DiterimaEx">
-                                                    <i class="bi bi-send"></i>
-                                                    Diterima
-                                                </button>
-                                            <?php
-                                        }
-                                    }
-                                ?>
+                               
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -496,7 +441,7 @@
                                                     $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon   
                                                     $total_harga_revisi += $total_harga;
                                                     } 
-                                                    $grand_total_revisi = $total_harga_revisi * 1.11 + $data_detail['ongkir'];
+                                                    $grand_total_revisi = $total_harga_revisi + $data_detail['ongkir'];
                                                 ?>
                                                 <b>Total Invoice Revisi</b><br>
                                                 Rp. <?php echo number_format($grand_total_revisi); ?>
@@ -525,15 +470,6 @@
                                 ?> 
                             </div>
                         </div>
-                        <!-- Default Tabs -->
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a href="detail-komplain-bum.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Original</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a href="#" class="nav-link active">Revisi</a>
-                            </li>
-                        </ul>
                         <div class="card p-3">
                             <?php  
                                 if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
@@ -593,7 +529,7 @@
                                                 if($total_data != '0'){
                                                     ?>
                                                         <div class="p-2 text-start">
-                                                            <a href="cetak-inv-revisi-bum.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
+                                                            <a href="cetak-inv-revisi-nonppn.php?id=<?php echo base64_encode($id_inv) ?>&&id_komplain= <?php echo base64_encode($id)?>" class="btn btn-primary mb-3">
                                                                 <i></i> Cetak Invoice Revisi BUM
                                                             </a> 
                                                         </div>   
@@ -660,7 +596,7 @@
                                                                     $data_status_refund = mysqli_fetch_array($sql_komplain);
                                                                     if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 0){
                                                                         ?>
-                                                                            <a href="proses/produk-tmp-revisi-bum.php?hapus_tmp=<?php echo base64_encode($id_tmp) ?>&&id_komplain=<?php echo base64_encode($id_komplain) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                                            <a href="proses/produk-tmp-revisi-nonppn.php?hapus_tmp=<?php echo base64_encode($id_tmp) ?>&&id_komplain=<?php echo base64_encode($id_komplain) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                                                         <?php
                                                                     } else if($data_status_refund['status_retur'] == 1 && $data_status_refund['status_refund'] == 1) {
                                                                         ?>
@@ -684,7 +620,7 @@
                             <?php
                                 $no = 1;
                                 $sql = "SELECT DISTINCT
-                                            bum.id_inv_bum AS id_inv,
+                                            nonppn.id_inv_nonppn AS id_inv,
                                             STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                                             ik.id_komplain,
                                             tpk.id_tmp,
@@ -698,14 +634,14 @@
                                             spr.stock,
                                             COALESCE(mr_produk.nama_merk, mr_set.nama_merk) AS merk
                                         FROM inv_komplain AS ik 
-                                        LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
-                                        LEFT JOIN tmp_produk_komplain tpk ON bum.id_inv_bum = tpk.id_inv
+                                        LEFT JOIN inv_nonppn nonppn ON ik.id_inv = nonppn.id_inv_nonppn
+                                        LEFT JOIN tmp_produk_komplain tpk ON nonppn.id_inv_nonppn = tpk.id_inv
                                         LEFT JOIN stock_produk_reguler spr ON tpk.id_produk = spr.id_produk_reg
                                         LEFT JOIN tb_produk_reguler pr ON tpk.id_produk = pr.id_produk_reg
                                         LEFT JOIN tb_produk_set_marwa tpsm ON tpk.id_produk = tpsm.id_set_marwa
                                         LEFT JOIN tb_merk mr_produk ON pr.id_merk = mr_produk.id_merk -- JOIN untuk produk reguler
                                         LEFT JOIN tb_merk mr_set ON tpsm.id_merk = mr_set.id_merk -- JOIN untuk produk set
-                                        WHERE (bum.id_inv_bum = '$id_inv') AND tpk.status_tmp = '0'";
+                                        WHERE (nonppn.id_inv_nonppn = '$id_inv') AND tpk.status_tmp = '0'";
                                 $query = mysqli_query($connect, $sql);
                                 $totalRows = mysqli_num_rows($query);
                                 if ($totalRows != 0) {
@@ -754,7 +690,7 @@
                                     // $uuid = generate_uuid();
                                     $isEmpty = false; // Setel variabel pengecekan menjadi false jika ada data
                                 ?>
-                                <form action="proses/produk-tmp-revisi-bum.php" method="POST" enctype="multipart/form-data">
+                                <form action="proses/produk-tmp-revisi-nonppn.php" method="POST" enctype="multipart/form-data">
                                     <div class="card-body p-2">
                                         <div class="row p-1">
                                             <div class="col-sm-1 mb-2">
@@ -793,7 +729,7 @@
                                                 <input type="text" class="form-control text-end mobile-text" name="disc[]" oninput="validasiDiskon(this)" required>
                                             </div>
                                             <div class="col-sm-1 mb-2 text-center">
-                                                <a href="proses/produk-tmp-revisi-bum.php?hapus_tmp=<?php echo base64_encode($data['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
+                                                <a href="proses/produk-tmp-revisi-nonppn.php?hapus_tmp=<?php echo base64_encode($data['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm delete-data"><i class="bi bi-trash"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -835,15 +771,15 @@
                                         LEFT JOIN inv_penerima_revisi ip ON (ibt.id_komplain = ip.id_komplain)
                                         LEFT JOIN revisi_status_kirim sk ON (ibt.id_komplain = sk.id_komplain)
                                         LEFT JOIN ekspedisi ex ON (ex.id_ekspedisi = sk.dikirim_ekspedisi) 
-                                        WHERE ibt.id_komplain = '$id_komplain' ORDER BY ip.created_date  DESC LIMIT 1";
+                                        WHERE ibt.id_komplain = '$id' ORDER BY ip.created_date  DESC LIMIT 1";
                         $query_bukti = mysqli_query($connect, $sql_bukti);
                         $data_bukti = mysqli_fetch_array($query_bukti);
                         $gambar1 = $data_bukti['bukti_satu'];
-                        $gambar_bukti1 = "gambar-revisi/bukti1/$gambar1";
+                        $gambar_bukti1 = "../gambar-revisi/bukti1/$gambar1";
                         $gambar2 = $data_bukti['bukti_dua'];
-                        $gambar_bukti2 = "gambar-revisi/bukti2/$gambar2";
+                        $gambar_bukti2 = "../gambar-revisi/bukti2/$gambar2";
                         $gambar3 = $data_bukti['bukti_tiga'];
-                        $gambar_bukti3 = "gambar-revisi/bukti3/$gambar3";
+                        $gambar_bukti3 = "../gambar-revisi/bukti3/$gambar3";
                         $jenis_penerima = $data_bukti['jenis_penerima'];
                         $no_resi = $data_bukti['no_resi'];
                         $tgl_terima = $data_bukti['tgl_terima'];
@@ -947,7 +883,7 @@
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status Transaksi Komplain</h1>
             </div>
-            <form action="proses/proses-ubah-status-trx-rev-bum.php" method="POST" enctype="multipart/form-data">
+            <form action="proses/proses-ubah-status-trx-rev-nonppn.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="id_komplain" value="<?php echo $id ?>"> 
                 <input type="hidden" name="id_inv" value="<?php echo $id_inv ?>"> 
                 <input type="hidden" name="no_inv" value="<?php echo $no_inv_fix ?>">
@@ -1353,7 +1289,7 @@
                                             <td class="text-end text-nowrap"><?php echo $data_refund['disc'] ?></td>
                                             <td class="text-end text-nowrap"><?php echo number_format($harga_final) ?></td>
                                             <td class="text-center text-nowrap">
-                                                <a href="proses/produk-tmp-revisi-bum.php?batal_refund=<?php echo base64_encode($data_refund['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm">Batal Refund</a>
+                                                <a href="proses/produk-tmp-revisi-nonppn.php?batal_refund=<?php echo base64_encode($data_refund['id_tmp']) ?>&&id_komplain=<?php echo base64_encode($id) ?>" class="btn btn-danger btn-sm">Batal Refund</a>
                                             </td>
                                         </tr>
                                         <?php $no++ ?>
@@ -1481,7 +1417,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <form action="proses/produk-tmp-revisi-bum.php" method="POST" enctype="multipart/form-data">
+        <form action="proses/produk-tmp-revisi-nonppn.php" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <p>
                     Pilih jenis hapus untuk barang ini: <br>
@@ -1511,7 +1447,7 @@
                 <h5>Edit Produk Revisi</h5>
             </div>
             <div class="modal-body">
-                <form action="proses/produk-tmp-revisi-bum.php" method="POST" enctype="multipart/form-data">
+                <form action="proses/produk-tmp-revisi-nonppn.php" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_tmp" id="id_tmp">
                     <input type="hidden" name="id_produk" id="id_produk">
                     <input type="hidden" name="id_komplain" value="<?php echo $id ?>">

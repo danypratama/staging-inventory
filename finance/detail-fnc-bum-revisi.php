@@ -1,6 +1,6 @@
 <?php
-    $page  = 'transaksi';
-    $page2  = 'list-cmp';
+    $page = 'finance';
+    $page2  = 'finance-nonppn';
     include "akses.php";
     include 'function/class-komplain.php';
 ?>
@@ -90,7 +90,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- nav header -->
     <?php include "page/nav-header.php" ?>
@@ -103,11 +102,11 @@
 
     <main id="main" class="main">
         <!-- Loading -->
-        <!-- <div class="loader loader">
+        <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div> -->
+        </div>
         <!-- ENd Loading -->
         <section>
             <?php  
@@ -125,24 +124,22 @@
             <!-- END SWEET ALERT -->
             <?php  
                 $id = base64_decode($_GET['id']);
-                include "query/detail-komplain-bum.php";
+                include "../query/detail-komplain-bum.php";
                 $id_inv = $data_kondisi['id_inv'];
                 $no_inv = $data_detail['no_inv'];
                 $alamat = $data_detail['alamat'];
-                include "query/produk-komplain-tmp.php";
+                include "../query/produk-komplain-tmp.php";
 
                 $id_inv_substr = $id_inv;
                 $inv_id = substr($id_inv_substr, 0, 3);
                 $jenis_inv = "";
                 if ($inv_id == "NON"){
                     $jenis_inv = "bum";
-                } else if ($inv_id == "PPN"){
+                } else if ($inv_id == "BUM"){
                     $jenis_inv = "ppn";
                 } else if ($inv_id == "BUM"){
                     $jenis_inv = "bum";
                 }
-
-                echo $jenis_inv;
 
 
 
@@ -413,7 +410,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="card-body">
-                                <a href="invoice-komplain.php?date_range=year" class="btn btn-warning mb-3">
+                                <a href="finance-inv.php?date_range=monthly" class="btn btn-warning mb-3">
                                     <i class="bi bi-arrow-left"></i> Halaman Sebelumnya
                                 </a>
                                 <?php  
@@ -427,59 +424,7 @@
                                         <?php
                                     }
                                 ?>
-                                <?php
-                                    if ($total_data_rev != '0' && $status_kmpl == '0') {
-                                        $status_pengiriman = $data_rev['status_pengiriman'];
-                                        $status_trx_komplain = $data_rev['status_trx_komplain'];
-                                        $status_trx_selesai = $data_rev['status_trx_selesai'];
-                                        
-                                        if($status_pengiriman == "1" && $status_trx_komplain == "1" && $status_trx_selesai == "1") {
-                                            
-                                        } else if ($status_pengiriman == '1' && $status_trx_komplain == '0' && $status_trx_selesai == '0') {
-                                            ?>
-                                                <button href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#ubahStatus">
-                                                    <i class="bi bi-arrow-left-right"></i> Ubah Status
-                                                </button>
-                                            <?php
-                                        } else if ($status_pengiriman == "1" && $status_trx_komplain == "1" && $status_trx_selesai == "0") {
-                                            ?>
-                                                <button href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#ubahStatus">
-                                                    <i class="bi bi-arrow-left-right"></i> Ubah Status
-                                                </button>
-                                            <?php
-                                        } else if ($status_pengiriman == "0" && $status_trx_komplain == "0" && $status_trx_selesai == "0") {
-                                            ?>
-                                                
-                                            <?php
-                                        } 
-                                    } else if ($total_data_rev == '0' && $status_kmpl == '0'){
-                                        ?>
-                                            <button href="#" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#ubahStatus">
-                                                <i class="bi bi-arrow-left-right"></i> Ubah Status
-                                            </button>
-                                        <?php
-                                    }
-                                ?>
-                                <?php  
-                                    $cek_jenis_pengiriman = mysqli_query($connect, "SELECT 
-                                                                                        id_komplain, jenis_penerima, status_kirim, created_date
-                                                                                    FROM revisi_status_kirim
-                                                                                    WHERE id_komplain = '$id'
-                                                                                    AND created_date = (SELECT MAX(created_date) FROM revisi_status_kirim WHERE id_komplain = '$id');
-                                                                                    ");
-                                    $data_cek_jenis_pengiriman = mysqli_fetch_array($cek_jenis_pengiriman);
-                                    $total_cek_jenis_pengiriman = mysqli_num_rows($cek_jenis_pengiriman);
-                                    if($total_cek_jenis_pengiriman != 0){
-                                        if( $data_cek_jenis_pengiriman['jenis_penerima'] == 'Ekspedisi' && $data_cek_jenis_pengiriman['status_kirim'] == '0'){
-                                            ?>
-                                                <button class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#DiterimaEx">
-                                                    <i class="bi bi-send"></i>
-                                                    Diterima
-                                                </button>
-                                            <?php
-                                        }
-                                    }
-                                ?>
+                               
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -496,7 +441,7 @@
                                                     $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon   
                                                     $total_harga_revisi += $total_harga;
                                                     } 
-                                                    $grand_total_revisi = $total_harga_revisi * 1.11 + $data_detail['ongkir'];
+                                                    $grand_total_revisi = $total_harga_revisi + $data_detail['ongkir'];
                                                 ?>
                                                 <b>Total Invoice Revisi</b><br>
                                                 Rp. <?php echo number_format($grand_total_revisi); ?>
@@ -525,15 +470,6 @@
                                 ?> 
                             </div>
                         </div>
-                        <!-- Default Tabs -->
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a href="detail-komplain-bum.php?id=<?php echo base64_encode($id) ?>" class="nav-link">Original</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a href="#" class="nav-link active">Revisi</a>
-                            </li>
-                        </ul>
                         <div class="card p-3">
                             <?php  
                                 if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" || $data_role['role'] == "Admin Penjualan") { 
@@ -835,15 +771,15 @@
                                         LEFT JOIN inv_penerima_revisi ip ON (ibt.id_komplain = ip.id_komplain)
                                         LEFT JOIN revisi_status_kirim sk ON (ibt.id_komplain = sk.id_komplain)
                                         LEFT JOIN ekspedisi ex ON (ex.id_ekspedisi = sk.dikirim_ekspedisi) 
-                                        WHERE ibt.id_komplain = '$id_komplain' ORDER BY ip.created_date  DESC LIMIT 1";
+                                        WHERE ibt.id_komplain = '$id' ORDER BY ip.created_date  DESC LIMIT 1";
                         $query_bukti = mysqli_query($connect, $sql_bukti);
                         $data_bukti = mysqli_fetch_array($query_bukti);
                         $gambar1 = $data_bukti['bukti_satu'];
-                        $gambar_bukti1 = "gambar-revisi/bukti1/$gambar1";
+                        $gambar_bukti1 = "../gambar-revisi/bukti1/$gambar1";
                         $gambar2 = $data_bukti['bukti_dua'];
-                        $gambar_bukti2 = "gambar-revisi/bukti2/$gambar2";
+                        $gambar_bukti2 = "../gambar-revisi/bukti2/$gambar2";
                         $gambar3 = $data_bukti['bukti_tiga'];
-                        $gambar_bukti3 = "gambar-revisi/bukti3/$gambar3";
+                        $gambar_bukti3 = "../gambar-revisi/bukti3/$gambar3";
                         $jenis_penerima = $data_bukti['jenis_penerima'];
                         $no_resi = $data_bukti['no_resi'];
                         $tgl_terima = $data_bukti['tgl_terima'];

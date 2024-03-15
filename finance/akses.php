@@ -61,9 +61,9 @@ if (empty($_SESSION['tiket_user'])) {
     $connect->close();
 }
 ?>
+</body>
 
-
-
+</html>
 <script>
     var countdown = <?php echo $session_time; ?>;
     
@@ -90,6 +90,13 @@ if (empty($_SESSION['tiket_user'])) {
         updateCountdown();
     });
 </script>
-</body>
-
-</html>
+<script>
+    $(window).on('beforeunload', function() {
+        $.ajax({
+            type: "POST",
+            url: "logout.php",  // Ganti dengan URL yang benar ke script PHP Anda
+            async: false,  // Mungkin perlu menunggu permintaan selesai
+            data: { logout_time: new Date().toISOString() }  // Mengirim waktu logout
+        });
+    });
+</script>

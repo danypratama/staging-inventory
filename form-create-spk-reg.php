@@ -65,7 +65,18 @@ include "akses.php";
 
           include "koneksi.php";
           $thn  = date('Y');
-          $sql  = mysqli_query($connect, "SELECT max(no_spk) as maxID, STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl FROM spk_reg WHERE YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$years'");
+          $sql  = mysqli_query($connect, "SELECT 
+                                            CONCAT(
+                                                MAX(CAST(SUBSTRING_INDEX(no_spk, '/SPK/', 1) AS UNSIGNED)),
+                                                '/SPK//III/',
+                                                YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y'))
+                                            ) AS maxID,
+                                            STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl 
+                                        FROM 
+                                            spk_reg 
+                                        WHERE 
+                                            YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$year'
+                                ");
           $data = mysqli_fetch_array($sql);
 
           $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
@@ -74,7 +85,7 @@ include "akses.php";
           $bln = $array_bln[date('n')];
           $ket2 = "/";
           $ket3 = date("Y");
-          $urutkan = (int)substr($kode, 0, 3);
+          $urutkan = (int) $data['maxID']; // Mengambil nilai maksimum langsung dari hasil query
           $urutkan++;
           $no_spk = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
           ?>

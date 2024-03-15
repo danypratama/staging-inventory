@@ -36,6 +36,13 @@ include "akses.php";
 
     <main id="main" class="main">
         <!-- SWEET ALERT -->
+        <?php
+            if (isset($_SESSION['info'])) {
+                echo '<div class="info-data" data-infodata="' . $_SESSION['info'] . '"></div>';
+                unset($_SESSION['info']);
+            }
+        ?>
+        <!-- END SWEET ALERT -->
         <section>
             <div class="card shadow p-2">
                 <?php  
@@ -216,7 +223,6 @@ include "akses.php";
                                             FROM finance_tagihan AS bill 
                                             JOIN finance fnc ON (bill.id_tagihan = fnc.id_tagihan)
                                             LEFT JOIN finance_bayar byr ON (fnc.id_finance = byr.id_finance)
-                                        
                                             LEFT JOIN inv_nonppn nonppn ON (fnc.id_inv = nonppn.id_inv_nonppn)
                                             LEFT JOIN inv_ppn ppn ON (fnc.id_inv = ppn.id_inv_ppn)
                                             LEFT JOIN inv_bum bum ON (fnc.id_inv = bum.id_inv_bum)
@@ -309,9 +315,19 @@ include "akses.php";
                                                         <i class="bi bi-cash-coin"> Bayar</i>
                                                     </button>
                                                     <br>
-                                                    <button class="btn btn-primary btn-sm view_data" data-bs-toggle="modal" data-bs-target="#history" data-id="<?php echo $id_finance ?>">
+                                                    <button class="btn btn-primary btn-sm view_data mb-2" data-bs-toggle="modal" data-bs-target="#history" data-id="<?php echo $id_finance ?>">
                                                         <i class="bi bi-info-circle"></i> History Payment
                                                     </button>
+                                                    <br>
+                                                    <?php  
+                                                         if ($total_bayar == 0) {
+                                                            ?>
+                                                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus" data-id="<?php echo $id_finance ?>" data-bill="<?php echo $id_bill ?>" data-noinv="<?php echo $data['no_inv'] ?>" data-totaltagihan="<?php echo $total_tagihan ?>" data-totalinv="<?php echo $total_inv ?>">
+                                                                    <i class="bi bi-x-circle"></i> Hapus
+                                                                </button>
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 <?php
                                             }
                                        
@@ -326,7 +342,7 @@ include "akses.php";
                 </div>
         </section>
     </main><!-- End #main -->
-    <!-- Modal -->
+    <!-- Modal Ubah Jenis Faktur Tagihan -->
     <div class="modal fade" id="ubahJenisFaktur" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -358,6 +374,7 @@ include "akses.php";
             </div>
         </div>
     </div>
+    <!-- End Modal Ubah Jenis Faktur Tagihan -->
 
     <!-- Modal Bayar -->
     <div class="modal fade" id="sudahBayar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -722,6 +739,31 @@ include "akses.php";
         </div>
     </div>
     <!-- End Modal gambar History -->
+    <!-- Modal utama History -->
+    <div class="modal fade" id="hapus" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historyLabel">Hapus List Tagihan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Anda yakin ingin hapus list taghan (<b id="noInv"></b>)?</p>
+                    <form action="proses/hapus-list-tagihan.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="id_finance" id="idFinance">
+                        <input type="hidden" name="id_bill" id="idBill">
+                        <input type="hidden" name="total_tagihan" id="totalTagihan">
+                        <input type="hidden" name="total_inv" id="totalInv">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-danger" name="hapus-list">Ya, hapus list tagihan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal utama History -->
 
     <!-- Footer -->
     <?php include "page/footer.php" ?>
@@ -989,9 +1031,26 @@ include "akses.php";
         });
     });
 </script>
-
-</script>
 <!-- End Untuk Menampilkan Data Bayar -->
+<!-- Script Untuk Hapus List Tagihan -->
+<script>
+    // untuk menampilkan data pada atribut <td>
+    $('#hapus').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var bill = button.data('bill');
+        var noInv = button.data('noinv');
+        var totalTagihan = button.data('totaltagihan');
+        var totalInv = button.data('totalinv');
+        
+        var modal = $(this);
+        modal.find('.modal-body #idFinance').val(id);
+        modal.find('.modal-body #idBill').val(bill);
+        modal.find('.modal-body #noInv').text(noInv);
+        modal.find('.modal-body #totalTagihan').val(totalTagihan);
+        modal.find('.modal-body #totalInv').val(totalInv);
+    })
+</script>
 
 <!-- kode JS Dikirim -->
 <?php include "page/upload-img.php";  ?>
