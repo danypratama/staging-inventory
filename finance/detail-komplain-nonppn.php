@@ -1,8 +1,8 @@
+
 <?php
-    $page  = 'transaksi';
-    $page2  = 'list-cmp';
-    include "akses.php";
-    include 'function/class-komplain.php';
+$page  = 'list-komplain';
+include "akses.php";
+include 'function/class-komplain.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,6 +39,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- nav header -->
     <?php include "page/nav-header.php" ?>
@@ -51,11 +52,11 @@
 
     <main id="main" class="main">
         <!-- Loading -->
-        <div class="loader loader">
+        <!-- <div class="loader loader">
             <div class="loading">
                 <img src="img/loading.gif" width="200px" height="auto">
             </div>
-        </div>
+        </div> -->
         <!-- ENd Loading -->
         <section>
             <?php  
@@ -314,7 +315,7 @@
                             <div class="p-1 text-end">
                                 <button class="btn border-dark">
                                     <b>Total Invoice Original</b><br>
-                                    Rp. <?php echo number_format($data_total['total_inv']); ?>
+                                    Rp. <a id="grandTotal" style="color:black; font-size:15px;"></a>
                                 </button>
                             </div>
                         </div>
@@ -345,7 +346,7 @@
                                             <?php  
                                                 if($data_detail['kategori_inv'] == 'diskon'){
                                                     ?>
-                                                            <th class="text-center text-nowrap p-3">Diskon</th>
+                                                        <th class="text-center text-nowrap p-3">Diskon</th>
                                                     <?php
                                                 }
                                             
@@ -356,12 +357,14 @@
                                     <tbody>
                                         <?php
                                             $no = 1;  
+                                            $sub_total = 0;
                                             include "function/class-spk.php";
                                             while($data = mysqli_fetch_array($query)){
                                                 $satuan = detailSpkFnc::getSatuan($data['id_produk']);
                                                 $total_harga =  $data['harga'] * $data['qty'];
                                                 $discount = $data['disc'] / 100; // 50% diskon
-                                                $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon          
+                                                $harga_final = $total_harga * (1 - $discount); // Harga akhir setelah diskon 
+                                                $sub_total += $harga_final;          
                                         ?>
                                         <tr>
                                             <td class="text-center text-nowrap"><?php echo $no ?></td>
@@ -385,6 +388,11 @@
                                         <?php } ?>
                                     </tbody>
                                 </table>
+                                <!-- Menampilkan Total Invoice -->
+                                <?php  
+                                    $grand_total = $sub_total + $data_detail['ongkir'];
+                                    $grand_total_formated = number_format($grand_total);
+                                ?>
                             </div>
                         </div>
                     </div><!-- End Default Tabs -->
@@ -419,11 +427,11 @@
                         $query_bukti = mysqli_query($connect, $sql_bukti);
                         $data_bukti = mysqli_fetch_array($query_bukti);
                         $gambar1 = $data_bukti['bukti_satu'];
-                        $gambar_bukti1 = "gambar/bukti1/$gambar1";
+                        $gambar_bukti1 = "../gambar/bukti1/$gambar1";
                         $gambar2 = $data_bukti['bukti_dua'];
-                        $gambar_bukti2 = "gambar/bukti2/$gambar2";
+                        $gambar_bukti2 = "../gambar/bukti2/$gambar2";
                         $gambar3 = $data_bukti['bukti_tiga'];
-                        $gambar_bukti3 = "gambar/bukti3/$gambar3";
+                        $gambar_bukti3 = "../gambar/bukti3/$gambar3";
                         $jenis_penerima = $data_bukti['jenis_penerima'];
                         $no_resi = $data_bukti['no_resi'];
                     ?>
@@ -481,6 +489,10 @@
         </div>
     </div>
 </div>
+<script>
+    var grandTotal = '<?php echo $grand_total_formated ?>';
+    document.getElementById('grandTotal').innerHTML = grandTotal;
+</script>
 
 
 
