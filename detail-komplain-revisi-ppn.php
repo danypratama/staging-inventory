@@ -6,7 +6,6 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -90,7 +89,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- nav header -->
     <?php include "page/nav-header.php" ?>
@@ -135,11 +133,11 @@
                 $inv_id = substr($id_inv_substr, 0, 3);
                 $jenis_inv = "";
                 if ($inv_id == "NON"){
-                    $jenis_inv = "ppn";
+                    $jenis_inv = "nonppn";
                 } else if ($inv_id == "PPN"){
                     $jenis_inv = "ppn";
                 } else if ($inv_id == "BUM"){
-                    $jenis_inv = "ppn";
+                    $jenis_inv = "bum";
                 }
 
 

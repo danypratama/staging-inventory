@@ -56,38 +56,32 @@ include "akses.php";
         </div>
         <form action="proses/proses-spk-reg.php" method="POST">
           <?php
-          // UUID
-          $uuid = generate_uuid();
-          $year = date('y');
-          $day = date('d');
-          $month = date('m');
-          $years = date('Y');
+            // UUID
+            $uuid = generate_uuid();
+            $year = date('y');
+            $day = date('d');
+            $month = date('m');
+            $years = date('Y');
 
-          include "koneksi.php";
-          $thn  = date('Y');
-          $sql  = mysqli_query($connect, "SELECT 
-                                            CONCAT(
-                                                MAX(CAST(SUBSTRING_INDEX(no_spk, '/SPK/', 1) AS UNSIGNED)),
-                                                '/SPK//III/',
-                                                YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y'))
-                                            ) AS maxID,
-                                            STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl 
-                                        FROM 
-                                            spk_reg 
-                                        WHERE 
-                                            YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$year'
-                                ");
-          $data = mysqli_fetch_array($sql);
-
-          $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
-          $kode = $data['maxID'];
-          $ket1 = "/SPK/";
-          $bln = $array_bln[date('n')];
-          $ket2 = "/";
-          $ket3 = date("Y");
-          $urutkan = (int) $data['maxID']; // Mengambil nilai maksimum langsung dari hasil query
-          $urutkan++;
-          $no_spk = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
+            include "koneksi.php";
+            $sql  = mysqli_query($connect, "SELECT 
+                                                CAST(MAX(CAST(SUBSTRING_INDEX(no_spk, '/', 1) AS UNSIGNED)) AS CHAR) AS maxID,
+                                                STR_TO_DATE(tgl_spk, '%d/%m/%Y') AS tgl 
+                                            FROM 
+                                                spk_reg 
+                                            WHERE 
+                                                YEAR(STR_TO_DATE(tgl_spk, '%d/%m/%Y')) = '$years'
+                                  ");
+            $data = mysqli_fetch_array($sql);
+            $kode = $data['maxID'];
+            $array_bln = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
+            $ket1 = "/SPK/";
+            $bln = $array_bln[date('n')];
+            $ket2 = "/";
+            $ket3 = date("Y");
+            $urutkan = $kode; // Mengambil nilai maksimum langsung dari hasil query
+            $urutkan++;
+            $no_spk = sprintf("%03s", $urutkan) . $ket1 . $bln . $ket2 . $ket3;
           ?>
 
           <div class="card-body">

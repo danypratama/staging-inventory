@@ -133,6 +133,7 @@
                 tpr.harga AS harga,
                 tpr.qty AS qty,
                 tpr.disc AS disc,
+                tpr.created_date AS created_date,
                 COALESCE(mr_produk.nama_merk, mr_produk_set.nama_merk) AS merk
             FROM
                 inv_komplain AS ik
@@ -150,7 +151,7 @@
                 tb_produk_set_marwa AS tpsm ON tpr.id_produk = tpsm.id_set_marwa
             LEFT JOIN
                 tb_merk AS mr_produk_set ON tpsm.id_merk = mr_produk_set.id_merk
-            WHERE ik.id_komplain = '$id'";
+            WHERE ik.id_komplain = '$id' ORDER BY tpr.created_date ASC";
     $query = mysqli_query($connect, $sql);
    
 ?>

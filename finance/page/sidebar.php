@@ -93,7 +93,7 @@
     <!-- End Finance -->
     <!-- Data Customer -->
     <li class="nav-item">
-      <a class="nav-link <?php if ($page == 'list-komplain') { echo 'active-link'; } ?>" href="invoice-komplain.php?date_range=monthly">
+      <a class="nav-link <?php if ($page == 'list-komplain') { echo 'active-link'; } ?>" href="invoice-komplain.php?date_range=year">
         <i class="bi bi-clipboard-x"></i><span>Invoice Komplain</span>
       </a>
     </li>

@@ -139,7 +139,7 @@
                 } else if ($inv_id == "PPN"){
                     $jenis_inv = "ppn";
                 } else if ($inv_id == "BUM"){
-                    $jenis_inv = "nonppn";
+                    $jenis_inv = "bum";
                 }
 
 
