@@ -281,9 +281,13 @@
                                                                     ?>
                                                                         <?php echo $data_driver_rev['jenis_pengiriman']?> (<?php echo $data_driver_rev['nama_driver'] ?>)
                                                                     <?php
-                                                                } else {
+                                                                } else if($data_driver_rev['jenis_pengiriman'] == 'Ekspedisi'){
                                                                     ?>
                                                                         <?php echo $data_driver_rev['jenis_pengiriman']?> (<?php echo $data_driver_rev['nama_ekspedisi'] ?>)
+                                                                    <?php
+                                                                } else {
+                                                                    ?>
+                                                                        <?php echo $data_driver_rev['jenis_pengiriman']?> (<?php echo $data_driver_rev['diambil_oleh'] ?>)
                                                                     <?php
                                                                 }
                                                         
@@ -344,6 +348,17 @@
                                                 ?>
                                             <?php
                                         }
+                                    ?>
+                                    <?php  
+                                        if ($data_kondisi['catatan'] != ""){
+                                            ?>
+                                                <tr>
+                                                    <td class="col-md-6 text-nowrap">Catatan</td>
+                                                    <td class="text-nowrap">: <?php echo $data_kondisi['catatan'] ?></td>
+                                                </tr>
+                                            <?php
+                                        }
+                                    
                                     ?>
                                 </table>
                             </div>

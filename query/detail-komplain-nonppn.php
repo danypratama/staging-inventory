@@ -61,6 +61,7 @@
                             sk.jenis_penerima,
                             sk.no_resi,
                             sk.dikirim_oleh,
+                            sk.diambil_oleh,
                             sk.penanggung_jawab,
                             user.nama_user AS nama_driver,
                             ekspedisi.nama_ekspedisi,
@@ -111,6 +112,7 @@
                         ik.id_inv,
                         kk.kat_komplain,
                         kk.kondisi_pesanan,
+                        kk.catatan,
                         kk.created_date
                     FROM inv_komplain AS ik
                     LEFT JOIN komplain_kondisi kk ON ik.id_komplain = kk.id_komplain
