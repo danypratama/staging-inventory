@@ -60,6 +60,8 @@
                             sk.jenis_pengiriman,
                             sk.jenis_penerima,
                             sk.no_resi,
+                            sk.ongkir,
+                            sk.free_ongkir,
                             sk.dikirim_oleh,
                             sk.diambil_oleh,
                             sk.penanggung_jawab,

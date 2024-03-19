@@ -6,9 +6,9 @@
 
 <!-- Selectize JS -->
 <script src="assets/selectize-js/dist/js/selectize.min.js"></script>
-
-<script type="text/javascript">
-	$('.selectize-js').selectize();
+<script>
+    // Inisialisasi Selectize.js untuk elemen pertama
+    $('.selectize-js').selectize();
 </script>
 <!-- End Selectize JS -->
 

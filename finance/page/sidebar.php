@@ -7,6 +7,14 @@
     </li>
     <!-- End Dashboard Nav -->
 
+    <!-- Data SPK -->
+    <li class="nav-item">
+      <a class="nav-link <?php if ($page == 'data-sp') { echo 'active-link'; } ?>" href="data-supplier.php">
+        <i class="bi bi-truck"></i><span>Data Supplier</span>
+      </a>
+    </li>
+    <!-- End Data SPK -->
+
     <!-- Data Bank -->
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'bank') { echo 'active-link'; } ?>" data-bs-target="#bank" data-bs-toggle="collapse" href="#">

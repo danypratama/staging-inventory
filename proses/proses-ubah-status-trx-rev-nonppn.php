@@ -1,6 +1,7 @@
 <?php
     session_start();
     include("../koneksi.php");
+    include "../page/resize-image.php";
 
     if(isset($_POST['ubah-status'])){
         $uuid = uuid();
@@ -70,92 +71,141 @@
                     $jenis_pengiriman = $_POST['jenis_pengiriman'];     
                     $resi = $_POST['resi'];
                     $jenis_ongkir = $_POST['jenis_ongkir'];
-                    $ongkir = $_POST['ongkir'];
+                    $ongkir = str_replace('.', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
+                    $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
                     $dikirim = $_POST['dikirim'];
                     $pj = $_POST['pj'];
+                    $uuid = generate_uuid();
+                    $img_uuid = img_uuid();
+                    $year = date('y');
+                    $day = date('d');
+                    $month = date('m');
+                    $id_inv_bukti = "BKTI" . $year . "". $month . "" . $uuid . "" . $day;
+                    // Proses upload file
+                    $file_name = $_FILES['fileku']['name'];
+                    $file_tmp = $_FILES['fileku']['tmp_name'];
+                    $file_destination = "../gambar-revisi/bukti1/" . $file_name;
+
+                    move_uploaded_file($file_tmp, $file_destination);
 
                     mysqli_begin_transaction($connect);
 
                     try{
+                        // Kompres dan ubah ukuran gambar bukti terima 1
+                        $new_file_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+                        $compressed_file_destination = "../gambar-revisi/bukti1/$new_file_name";
+                        compressAndResizeImage($file_destination, $compressed_file_destination, 500, 500, 100);
+                        unlink($file_destination);
+
                         $simpan_status_kirim = mysqli_query($connect,"INSERT INTO revisi_status_kirim (id_status_kirim_revisi, id_komplain, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, jenis_ongkir, dikirim_oleh, penanggung_jawab, tgl_kirim) VALUES ('$id_status_kirim_revisi', '$id_komplain', '$jenis_pengiriman', 'Ekspedisi', '$ekspedisi', '$resi', '$jenis_ongkir', '$dikirim', '$pj', '$tgl')");
 
                         $simpan_inv_revisi = mysqli_query($connect,"INSERT INTO inv_revisi (id_inv_revisi, id_inv, no_inv_revisi, tgl_inv_revisi, pelanggan_revisi, alamat_revisi, total_inv, status_pengiriman, status_trx_komplain, status_trx_selesai) VALUES ('$id_inv_rev', '$id_inv', '$revisi_invoice', '$tgl', '$cs_inv', '$alamat', '$total_inv', '0', '0', '0')");
 
+                        $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_komplain, bukti_satu) VALUES ('$id_inv_bukti', '$id_komplain', '$new_file_name')");
 
-                        if (!$simpan_status_kirim && !$simpan_inv_revisi) {
+
+                        if (!$simpan_status_kirim && !$simpan_inv_revisi && !$bukti_terima) {
                             throw new Exception("Error Insert Data");
+                            unlink($file_destination);
+                        } else {
+                            // // Commit the transaction
+                            mysqli_commit($connect);
+                            // Redirect to the invoice page
+                            $_SESSION['info'] = 'Disimpan';
+                            header("Location:../detail-komplain-revisi-nonppn.php?id=$id_komplain_encode");
+                            exit();
                         }
-                        // // Commit the transaction
-                        mysqli_commit($connect);
-                        // Redirect to the invoice page
-                        $_SESSION['info'] = 'Disimpan';
-                        header("Location:../detail-komplain-revisi-nonppn.php?id=$id_komplain_encode");
-                        exit();
-                        } catch (Exception $e) {
-                            // Rollback the transaction if an error occurs
-                            mysqli_rollback($connect);
-                            // Handle the error (e.g., display an error message)
-                            $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
-                            ?>
-                                <!-- Sweet Alert -->
-                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                                <script>
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        title: "Error!",
-                                        text: "<?php echo $error_message; ?>",
-                                        icon: "error",
-                                    }).then(function() {
-                                        window.location.href = "../detail-komplain-revisi-nonppn.php?id=<?php echo $id_komplain_encode ?>";
-                                    });
-                                    });
-                                </script>
-                            <?php
-                        } 
+                    
+                    } catch (Exception $e) {
+                        // Rollback the transaction if an error occurs
+                        mysqli_rollback($connect);
+                        // Handle the error (e.g., display an error message)
+                        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+                        ?>
+                            <!-- Sweet Alert -->
+                            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: "<?php echo $error_message; ?>",
+                                    icon: "error",
+                                }).then(function() {
+                                    window.location.href = "../detail-komplain-revisi-nonppn.php?id=<?php echo $id_komplain_encode ?>";
+                                });
+                                });
+                            </script>
+                        <?php
+                    } 
                 } else if($jenis_pengiriman == 'Diambil Langsung'){
                     $diambil_oleh = $_POST['diambil_oleh'];
+                    $uuid = generate_uuid();
+                    $img_uuid = img_uuid();
+                    $year = date('y');
+                    $day = date('d');
+                    $month = date('m');
+                    $id_inv_bukti = "BKTI" . $year . "". $month . "" . $uuid . "" . $day;
+                    $id_inv_penerima_revisi = "PNMR" . $year . "". $month . "" . $uuid . "" . $day;
+                    // Proses upload file
+                    $file_name = $_FILES['fileku']['name'];
+                    $file_tmp = $_FILES['fileku']['tmp_name'];
+                    $file_destination = "../gambar-revisi/bukti1/" . $file_name;
+
+                    move_uploaded_file($file_tmp, $file_destination);
                     
                     // Begin transaction
                     mysqli_begin_transaction($connect);
 
                     try{
+                        // Kompres dan ubah ukuran gambar bukti terima 1
+                        $new_file_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
+                        $compressed_file_destination = "../gambar-revisi/bukti1/$new_file_name";
+                        compressAndResizeImage($file_destination, $compressed_file_destination, 500, 500, 100);
+                        unlink($file_destination);
+
                         $simapn_status_kirim = mysqli_query($connect,"INSERT INTO revisi_status_kirim (id_status_kirim_revisi, id_komplain, jenis_pengiriman, diambil_oleh, tgl_kirim) VALUES ('$id_status_kirim_revisi', '$id_komplain', '$jenis_pengiriman', '$diambil_oleh', '$tgl')");
 
                         $simpan_inv_revisi = mysqli_query($connect,"INSERT INTO inv_revisi (id_inv_revisi, id_inv, no_inv_revisi, tgl_inv_revisi, pelanggan_revisi, alamat_revisi, total_inv, status_pengiriman, status_trx_komplain, status_trx_selesai) VALUES ('$id_inv_rev', '$id_inv', '$revisi_invoice', '$tgl', '$cs_inv', '$alamat', '$total_inv', '1', '1', '0')");
 
+                        $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_komplain, bukti_satu) VALUES ('$id_inv_bukti', '$id_komplain', '$new_file_name')");
 
-                        if (!$simapn_status_kirim && !$simpan_inv_revisi) {
+                        $query_diterima = mysqli_query($connect, "INSERT INTO inv_penerima_revisi (id_inv_penerima_revisi, id_komplain, nama_penerima, alamat, tgl_terima) VALUES ('$id_inv_penerima_revisi', '$id_komplain', '$diambil_oleh', 'PT. Karsa Mandiri Alkesindo', '$tgl')");
+
+
+                        if (!$simpan_status_kirim && !$simpan_inv_revisi && !$bukti_terima) {
                             throw new Exception("Error Insert Data");
+                            unlink($file_destination);
+                        } else {
+                            // // Commit the transaction
+                            mysqli_commit($connect);
+                            // Redirect to the invoice page
+                            $_SESSION['info'] = 'Disimpan';
+                            header("Location:../detail-komplain-revisi-nonppn.php?id=$id_komplain_encode");
+                            exit();
                         }
-                        // Commit the transaction
-                        mysqli_commit($connect);
-                        // Redirect to the invoice page
-                        $_SESSION['info'] = 'Disimpan';
-                        header("Location:../detail-komplain-revisi-nonppn.php?id=$id_komplain_encode");
-                        exit();
-                        } catch (Exception $e) {
-                            // Rollback the transaction if an error occurs
-                            mysqli_rollback($connect);
-                            // Handle the error (e.g., display an error message)
-                            $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
-                            ?>
-                                <!-- Sweet Alert -->
-                                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                                <script>
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        title: "Error!",
-                                        text: "<?php echo $error_message; ?>",
-                                        icon: "error",
-                                    }).then(function() {
-                                        window.location.href = "../detail-komplain-revisi-nonppn.php?id=<?php echo $id_komplain_encode ?>";
-                                    });
-                                    });
-                                </script>
-                            <?php
-                        } 
+                    } catch (Exception $e) {
+                        // Rollback the transaction if an error occurs
+                        mysqli_rollback($connect);
+                        // Handle the error (e.g., display an error message)
+                        $error_message = "Terjadi kesalahan saat melakukan transaksi: " . $e->getMessage();
+                        ?>
+                            <!-- Sweet Alert -->
+                            <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                            <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: "<?php echo $error_message; ?>",
+                                    icon: "error",
+                                }).then(function() {
+                                    window.location.href = "../detail-komplain-revisi-nonppn.php?id=<?php echo $id_komplain_encode ?>";
+                                });
+                                });
+                            </script>
+                        <?php
+                    } 
                     
                 }
             } else if($status_kirim == 'selesai'){
@@ -266,4 +316,30 @@
     
     // echo "Nomor Invoice Asli: $no_invoice<br>";
     // echo "Nomor Invoice Revisi: $revised_invoice";
+
+    function img_uuid() {
+        $data = openssl_random_pseudo_bytes(16);
+        assert(strlen($data) == 16);
+
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+        return vsprintf('%s%s', str_split(bin2hex($data), 4));
+    }
+
+    // generate UUID
+    function generate_uuid()
+    {
+        return sprintf(
+            '%04x%04x%04x',
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff)
+        );
+    }
 ?>

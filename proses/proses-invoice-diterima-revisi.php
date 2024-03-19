@@ -40,7 +40,14 @@
             if ($query_diterima && $query_update_inv && $query_update_inv_komplain && $query_update_inv_revisi && $query_update_revisi_status_kirim) {
                 // Commit transaksi
                 $connect->commit();
-                header("Location:../detail-komplain-revisi.php?id=$id_komplain_encode");
+                if($jenis_inv == 'nonppn'){
+                    header("Location:../detail-komplain-revisi-nonppn.php?id=$id_komplain_encode");
+                } else if ($jenis_inv == 'ppn') {
+                    header("Location:../detail-komplain-revisi-ppn.php?id=$id_komplain_encode");
+                } else if($jenis_inv == 'bum'){
+                    header("Location:../detail-komplain-revisi-bum.php?id=$id_komplain_encode");
+                }
+                
             }
     
         } catch (Exception $e) {

@@ -687,7 +687,7 @@
                                 if ($total_data_komplain != 0) {
                                   echo '<a href="detail-fnc-ppn-revisi.php?id=' . base64_encode($id_komplain) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
                                 } else {
-                                  echo '<a href="detail-fnc-bum.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
+                                  echo '<a href="detail-fnc-ppn.php?id=' . base64_encode($id_inv) . '" class="btn btn-primary btn-sm" title="Lihat Data"><i class="bi bi-eye"></i></a>';
                                 }
                               } elseif ($data['jenis_inv'] == 'bum') {
                                   if ($total_data_komplain != 0) {

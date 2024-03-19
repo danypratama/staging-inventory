@@ -137,7 +137,7 @@ include "akses.php";
                         </div>
                         <div class="mt-3 p-3 border-top text-center">
                             <button type="submit" class="btn btn-primary" name="simpan-pembelian">Simpan</button>
-                            <button type="button" class="btn btn-secondary" onclick="redirectToPage()">Batal</button>   
+                            <a href="data-pembelian.php?date_range=year" type="button" class="btn btn-secondary">Batal</a>   
                         </div>
                     </div>
                 </form>

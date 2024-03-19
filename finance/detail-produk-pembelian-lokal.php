@@ -146,9 +146,6 @@ include "akses.php";
                     unset($_SESSION['info']);
                 }
             ?>
-
-
-
             <!-- END SWEET ALERT -->
             <div class="card">
                 <div class="card-header text-center">

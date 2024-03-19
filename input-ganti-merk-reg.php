@@ -349,7 +349,7 @@ include "akses.php";
                           LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
                           LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
                           LEFT JOIN tb_produk_grade gr ON (tpr.id_grade = gr.id_grade)
-                          WHERE SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) = 'BR' AND spr.stock > 0
+                          WHERE SUBSTRING(COALESCE(tpr.id_produk_reg, tpsm.id_set_marwa), 1, 2) = 'BR'
                           ORDER BY nama_produk ASC ";
                   $query = mysqli_query($connect, $sql);
                   while ($data = mysqli_fetch_array($query)) {
@@ -414,7 +414,7 @@ include "akses.php";
                             LEFT JOIN tb_merk AS mr_tpr ON (tpr.id_merk = mr_tpr.id_merk)
                             LEFT JOIN tb_merk AS mr_tpsm ON (tpsm.id_merk = mr_tpsm.id_merk)
                             LEFT JOIN tb_produk_grade gr ON (tpr.id_grade = gr.id_grade)
-                            WHERE SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) = 'BR' AND spr.stock > 0
+                            WHERE SUBSTRING(COALESCE(tpr.id_produk_ecat, tpsm.id_set_ecat), 1, 2) = 'BR'
                             ORDER BY nama_produk ASC ";
                     $query = mysqli_query($connect, $sql);
                     while ($data = mysqli_fetch_array($query)) {
