@@ -59,15 +59,15 @@
         <i class="bi bi-bar-chart"></i><span>Data Pembelian</span>
       </a>
     </li>
-    <!-- End Data SPK -->
+    <!-- End Data Pembelian -->
     
-    <!-- Data Finance -->
+    <!-- Invoice Penjualan -->
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'finance') { echo 'active-link'; } ?>" href="finance-inv.php?date_range=monthly">
         <i class="bi bi-cash-stack"></i><span>Invoice Penjualan</span>
       </a>
     </li>
-    <!-- End Finance -->
+    <!-- End Invoice Penjualan -->
 
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'list-tagihan') { echo 'active-link'; } ?>" data-bs-target="#tagihan" data-bs-toggle="collapse" href="#">
@@ -92,19 +92,32 @@
       </ul>
     </li>
 
-    <!-- Data Customer -->
+    <!-- Transaksi Customer -->
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'list-cs') { echo 'active-link'; } ?>" href="finance-customer.php?date_range=monthly">
         <i class="bi bi-cash-stack"></i><span>Transaksi Customer</span>
       </a>
     </li>
-    <!-- End Finance -->
-    <!-- Data Customer -->
+    <!-- End Transaksi Customer -->
+
+    <!-- Invoice Komplain -->
     <li class="nav-item">
       <a class="nav-link <?php if ($page == 'list-komplain') { echo 'active-link'; } ?>" href="invoice-komplain.php?date_range=year">
         <i class="bi bi-clipboard-x"></i><span>Invoice Komplain</span>
       </a>
     </li>
-    <!-- End Finance -->
+    <!-- End Invoice Komplain -->
+
+    <!-- History user -->
+    <li class="nav-item">
+      <a class="nav-link collapsed <?php if ($page == 'history-user') {
+                            echo 'active-link';
+                          } ?>" href="data-user-history.php">
+        <i class="bi bi-clock-history"></i>
+        <span>History User</span>
+      </a>
+    </li>
+    <!-- End History User Page Nav -->
+    
   </ul>
 </aside><!-- End Sidebar-->

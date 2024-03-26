@@ -287,6 +287,17 @@
           </li>
           <!-- End Order By -->
 
+          <!-- History user -->
+          <li class="nav-item">
+            <a class="nav-link collapsed <?php if ($page == 'history-user') {
+                                  echo 'active-link';
+                                } ?>" href="data-user-history.php">
+              <i class="bi bi-clock-history"></i>
+              <span>History User</span>
+            </a>
+          </li>
+          <!-- End History User Page Nav -->
+
           <?php
             if ($data['role'] == "Super Admin") { ?>
               <li class="nav-heading">Pages</li>
@@ -308,15 +319,6 @@
                   <span>Role User</span>
                 </a>
               </li><!-- End Role User Page Nav -->
-
-              <li class="nav-item">
-                <a class="nav-link collapsed <?php if ($page == 'history-user') {
-                                      echo 'active-link';
-                                    } ?>" href="data-user-history.php">
-                  <i class="bi bi-clock-history"></i>
-                  <span>History User</span>
-                </a>
-              </li><!-- End History User Page Nav -->
           <?php } ?>
         </ul>
       </aside><!-- End Sidebar-->
@@ -526,6 +528,17 @@
           </li>
           <!-- End  -->
 
+          <!-- History user -->
+          <li class="nav-item">
+            <a class="nav-link collapsed <?php if ($page == 'history-user') {
+                                  echo 'active-link';
+                                } ?>" href="data-user-history.php">
+              <i class="bi bi-clock-history"></i>
+              <span>History User</span>
+            </a>
+          </li>
+          <!-- End History User Page Nav -->
+
           <?php
             if ($data['role'] == "Super Admin") { ?>
               <li class="nav-heading">Pages</li>
@@ -547,15 +560,6 @@
                   <span>Role User</span>
                 </a>
               </li><!-- End Role User Page Nav -->
-
-              <li class="nav-item">
-                <a class="nav-link collapsed <?php if ($page == 'history-user') {
-                                      echo 'active-link';
-                                    } ?>" href="data-user-history.php">
-                  <i class="bi bi-clock-history"></i>
-                  <span>History User</span>
-                </a>
-              </li><!-- End History User Page Nav -->
           <?php } ?>
         </ul>
       </aside><!-- End Sidebar-->

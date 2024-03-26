@@ -34,7 +34,7 @@
             <hr class="dropdown-divider">
           </li>
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="../logout.php?logout=<?php echo $_SESSION['encoded_id'] ?>">
+            <a class="dropdown-item d-flex align-items-center" href="logout.php?logout=<?php echo $_SESSION['id_status'] ?>">
               <i class="bi bi-box-arrow-right"></i>
               <span>Sign Out</span>
             </a>

@@ -371,10 +371,10 @@ include "akses.php";
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 me-2 mb-2">
-                        <label>Status Pembelian :</label>
+                    <div class="col-md-2 mb-2">
+                        <label>Status Pembelian :</label><br>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 100px" data-bs-toggle="dropdown" aria-expanded="false">
                             <?php
                                 // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
                                 $statusPembelian = isset($_GET['status_pembelian']) ? $_GET['status_pembelian'] : 'Semua';
@@ -397,7 +397,7 @@ include "akses.php";
                         </div>
                     </div>
                     <div class="col-md-3 me-2 mb-2">
-                        <label>Status Pembayaran :</label>
+                        <label>Status Pembayaran :</label><br>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
                             <?php
