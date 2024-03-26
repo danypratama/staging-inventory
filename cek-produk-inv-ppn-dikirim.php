@@ -71,6 +71,7 @@ include "function/class-spk.php";
                             ppn.tgl_inv,
                             ppn.kategori_inv,
                             ppn.cs_inv,
+                            ppn.alamat_inv,
                             ppn.sp_disc,
                             ppn.tgl_tempo,
                             ppn.ongkir,
@@ -241,7 +242,13 @@ include "function/class-spk.php";
                                     <p style="float: right;">:</p>
                                 </div>
                                 <div class="col-7">
-                                    <?php echo $data['alamat'] ?>
+                                    <?php 
+                                        if($data['alamat_inv'] == ''){
+                                            echo $data['alamat'];
+                                        } else {
+                                            echo $data['alamat_inv']; 
+                                        }
+                                    ?>
                                 </div>
                             </div>
                             <?php
@@ -966,30 +973,39 @@ include "function/class-spk.php";
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h1>
+                <h5 class="modal-title fs-5" id="exampleModalLabel">Ubah Status</h5>
                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
-                <div class="card-body">
-                    <form action="proses/proses-invoice-ppn-diterima.php" method="POST"
-                        enctype="multipart/form-data">
-                        <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv_ppn']; ?>">
-                        <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
-                        <div class="mb-3">
-                            <label>Nama Penerima</label>
-                            <input type="text" class="form-control" name="nama_penerima" autocomplete="off" required>
-                        </div>
-                        <div class="mb-3">
-                            <label id="labelDate">Tanggal</label>
-                            <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
-                                id="date" required="required">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="diterima_ekspedisi"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEkspedisi"><i class="bi bi-x-circle"></i> Cancel</button>
-                        </div>
-                    </form>
-                </div>
+                <?php  
+                    if($no_resi == ''){
+                        echo "Silahkan isi no resi terlebih dahulu agar dapat melakukan proses diterima";
+                    } else {
+                        ?>
+                            <div class="card-body">
+                                <form action="proses/proses-invoice-ppn-diterima.php" method="POST"
+                                    enctype="multipart/form-data">
+                                    <input type="hidden" name="id_inv" value="<?php echo $data_cek['id_inv_ppn']; ?>">
+                                    <input type="hidden" name="alamat" value="<?php echo $data['alamat']; ?>">
+                                    <div class="mb-3">
+                                        <label>Nama Penerima</label>
+                                        <input type="text" class="form-control" name="nama_penerima" autocomplete="off" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label id="labelDate">Tanggal</label>
+                                        <input type="text" style="background-color:white;" class="bg-white form-control" name="tgl"
+                                            id="date" required="required">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary" name="diterima_ekspedisi"><i class="bi bi-arrow-left-right"></i> Ubah Status</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEkspedisi"><i class="bi bi-x-circle"></i> Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        <?php
+                    }
+                
+                ?>
             </div>
         </div>
     </div>

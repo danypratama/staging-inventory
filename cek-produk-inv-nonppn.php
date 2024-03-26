@@ -248,7 +248,13 @@ include "function/class-spk.php";
                                         <p style="float: right;">:</p>
                                     </div>
                                     <div class="col-7">
-                                        <?php echo $data['alamat'] ?>
+                                        <?php 
+                                            if($data['alamat_inv'] == ''){
+                                                echo $data['alamat'];
+                                            } else {
+                                                echo $data['alamat_inv']; 
+                                            }
+                                        ?>
                                     </div>
                                 </div>
                                 <?php
@@ -335,6 +341,10 @@ include "function/class-spk.php";
                                         <div class="mb-3">
                                             <label>Customer Invoice</label>
                                             <input type="text" class="form-control" name="cs_inv" value="<?php echo $data['cs_inv'] ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Alamat</label>
+                                            <textarea class="form-control" name="alamat" cols="30" rows="3"><?php echo $data['alamat'] ?></textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label>No PO</label>

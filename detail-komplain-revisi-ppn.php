@@ -19,6 +19,10 @@
     <?php include "page/style-button-filterdate.php"; ?>
 
     <style>
+        .titik-dua::before {
+            content: ":";
+            margin-left: px; /* Sesuaikan jarak antara teks dan tanda titik dua sesuai kebutuhan */
+        }
         .label-mobile{
             display: none;
         }
@@ -261,7 +265,14 @@
                                     </tr>
                                     <tr>
                                         <td class="col-md-6 text-nowrap">Alamat</td>
-                                        <td class="text-nowrap">: <?php echo $data_detail['alamat'] ?></td>
+                                        <td class="wrap-text">: <?php 
+                                                if($data_detail['alamat_inv'] == ''){
+                                                    echo $data_detail['alamat'];
+                                                } else {
+                                                    echo $data_detail['alamat_']; 
+                                                }
+                                            ?>
+                                        </td>
                                     </tr>
 
                                     <tr>

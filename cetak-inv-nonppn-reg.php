@@ -100,7 +100,13 @@
                 <!-- Kolom kedua -->
                 Kepada : <br>
                 <?php echo $data['cs_inv'] ?> <br>
-                <?php echo $data['alamat'] ?>
+                <?php 
+                    if($data['alamat_inv'] == ''){
+                        echo $data['alamat'];
+                    } else {
+                        echo $data['alamat_inv']; 
+                    }
+                ?>
             </div>
         </div>
         <!-- Kolom kedua -->

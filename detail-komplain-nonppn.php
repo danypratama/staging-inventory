@@ -163,7 +163,14 @@ include 'function/class-komplain.php';
                                     </tr>
                                     <tr>
                                         <td class="col-md-6 text-nowrap">Alamat</td>
-                                        <td class="text-nowrap">: <?php echo $data_detail['alamat'] ?></td>
+                                        <td class="wrap-text">: <?php 
+                                                if($data_detail['alamat_inv'] == ''){
+                                                    echo $data_detail['alamat'];
+                                                } else {
+                                                    echo $data_detail['alamat_inv']; 
+                                                }
+                                            ?>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="col-md-6 text-nowrap">Ongkos Kirim</td>

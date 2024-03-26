@@ -72,6 +72,7 @@ include "function/class-spk.php";
                             ppn.tgl_inv,
                             ppn.kategori_inv,
                             ppn.cs_inv,
+                            ppn.alamat_inv,
                             ppn.sp_disc,
                             ppn.tgl_tempo,
                             ppn.ongkir,
@@ -244,7 +245,13 @@ include "function/class-spk.php";
                                     <p style="float: right;">:</p>
                                 </div>
                                 <div class="col-7">
-                                    <?php echo $data['alamat'] ?>
+                                    <?php 
+                                        if($data['alamat_inv'] == ''){
+                                            echo $data['alamat'];
+                                        } else {
+                                            echo $data['alamat_inv']; 
+                                        }
+                                    ?>
                                 </div>
                             </div>
                             <?php

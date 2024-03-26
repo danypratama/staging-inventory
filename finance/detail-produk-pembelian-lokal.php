@@ -180,6 +180,7 @@ include "akses.php";
                         $data_inv_pembelian = mysqli_fetch_array($sql_pembelian);
                         $jenis_disc = $data_inv_pembelian['jenis_disc'];
                         $sp_disc = $data_inv_pembelian['sp_disc'] / 100;
+                        $jenis_transaksi = $data_inv_pembelian['jenis_trx'];
                     
                     ?>
                     <div class="col mb-2">
@@ -457,9 +458,31 @@ include "akses.php";
                                                     } else {
                                                        $ongkir = $data_status_kirim['nominal_ongkir'];
                                                     }
-                                                    $sub_total_spdisc = $total_pembelian * $sp_disc;
-                                                    $grand_total = $total_pembelian - $sub_total_spdisc + $ongkir;
-                                                    $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total' WHERE id_inv_pembelian = '$id_inv_pembelian'");
+                                                    if($jenis_transaksi == 'PPN'){
+                                                        $sub_total_spdisc = $total_pembelian * $sp_disc;
+                                                        $grand_total_spdisc = $total_pembelian - $sub_total_spdisc;
+                                                        $grand_total_ppn = $grand_total_spdisc * 1.11;
+                                                        $grand_total_fix =  $grand_total_ppn + $ongkir;
+                                                        $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total_fix' WHERE id_inv_pembelian = '$id_inv_pembelian'");
+                                                    } else {
+                                                        $sub_total_spdisc = $total_pembelian * $sp_disc;
+                                                        $grand_total_spdisc = $total_pembelian - $sub_total_spdisc;
+                                                        $grand_total_fix =  $grand_total_spdisc + $ongkir;
+                                                        $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total_fix' WHERE id_inv_pembelian = '$id_inv_pembelian'");
+                                                    }
+                                                } else {
+                                                    if($jenis_transaksi == 'PPN'){
+                                                        $sub_total_spdisc = $total_pembelian * $sp_disc;
+                                                        $grand_total_spdisc = $total_pembelian - $sub_total_spdisc;
+                                                        $grand_total_ppn = $grand_total_spdisc * 1.11;
+                                                        $grand_total_fix =  $grand_total_ppn + $ongkir;
+                                                        $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total_fix' WHERE id_inv_pembelian = '$id_inv_pembelian'");
+                                                    } else {
+                                                        $sub_total_spdisc = $total_pembelian * $sp_disc;
+                                                        $grand_total_spdisc = $total_pembelian - $sub_total_spdisc;
+                                                        $grand_total_fix =  $grand_total_spdisc;
+                                                        $update_total_pembelian = $connect->query("UPDATE inv_pembelian_lokal  SET total_pembelian = '$grand_total_fix' WHERE id_inv_pembelian = '$id_inv_pembelian'");
+                                                    }
                                                 }
                                             ?>
                                         </tbody>

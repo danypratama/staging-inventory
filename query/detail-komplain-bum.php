@@ -8,7 +8,10 @@
                     bum.tgl_inv AS tgl_inv,
                     bum.kategori_inv AS kategori_inv,
                     bum.cs_inv AS cs_inv,
+                    bum.alamat_inv AS alamat_inv,
                     bum.ongkir AS ongkir,
+                    rev.pelanggan_revisi AS cs_revisi,
+                    rev.alamat_revisi AS alamat_revisi,
                     STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                     ik.id_komplain,
                     ik.no_komplain,
@@ -23,6 +26,7 @@
                     sales_bum.nama_sales AS nama_sales
                 FROM inv_komplain AS ik
                 LEFT JOIN inv_bum bum ON ik.id_inv = bum.id_inv_bum
+                LEFT JOIN inv_revisi rev ON rev.id_inv = bum.id_inv_bum
                 LEFT JOIN spk_reg spk_bum ON ik.id_inv = spk_bum.id_inv
                 LEFT JOIN tb_customer cs_bum ON spk_bum.id_customer = cs_bum.id_cs
                 LEFT JOIN tb_orderby order_bum ON spk_bum.id_orderby = order_bum.id_orderby

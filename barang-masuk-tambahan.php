@@ -45,7 +45,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Masuk Tambahan</h5>
-                        <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
                         <a href="input-br-in-tambahan.php" class="btn btn-primary btn-md"><i class="bi bi-plus-circle"></i> Tambah Data</a>
                         <div class="table-responsive pt-3">
                             <table class="table table-striped table-bordered" id="table1">

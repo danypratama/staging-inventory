@@ -29,52 +29,59 @@
             $refund = $_POST['refund'];
             $connect->begin_transaction();
             try{
-                $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Komplain' WHERE id_inv_nonppn = '$id_inv'");
-
-                $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
-
-                $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
-
-                $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
-                                                            SELECT
-                                                                tpr.id_transaksi,
-                                                                spk.id_inv,
-                                                                tpr.id_produk,
-                                                                tpr.nama_produk_spk,
-                                                                tpr.harga,
-                                                                tpr.qty,
-                                                                tpr.disc,
-                                                                tpr.total_harga,
-                                                                1 as status_tmp,
-                                                                tpr.created_date
-                                                            FROM spk_reg AS spk
-                                                            LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
-                                                            WHERE spk.id_inv = '$id_inv'");
-
-                // Hapus data pada bagian finance
+                 // Hapus data pada bagian finance
                 $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                if ( $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref && $del_finance && $del_history_produk) {
-                    // Commit transaksi
-                    $connect->commit();
-                    ?>
-                    <!-- Sweet Alert -->
-                    <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                    <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                        Swal.fire({
-                            title: "Sukses",
-                            text: "Data Berhasil Disimpan",
-                            icon: "success",
-                        }).then(function() {
-                            window.location.href = "../invoice-reguler-selesai.php";
-                        });
-                        });
-                    </script>
-                    <?php
+                if ($del_finance) {
+                    // Hapus data pada tabel history_produk_terjual
+                    $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
+                    if ($del_history_produk) {
+                        // Update status transaksi pada inv_nonppn
+                        $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Komplain' WHERE id_inv_nonppn = '$id_inv'");
+                        if ($query_update_inv) {
+                            // Insert data ke tabel inv_komplain
+                            $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
+                            if ($query_komplain) {
+                                // Insert data ke tabel komplain_kondisi
+                                $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
+                                if ($query_kondisi_komplain) {
+                                    // Insert data ke tabel tmp_produk_komplain
+                                    $query_tmp_ref = mysqli_query($connect, "INSERT IGNORE INTO tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date) SELECT tpr.id_transaksi, spk.id_inv, tpr.id_produk, tpr.nama_produk_spk, tpr.harga, tpr.qty, tpr.disc, tpr.total_harga, 1 as status_tmp, tpr.created_date FROM spk_reg AS spk LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk WHERE spk.id_inv = '$id_inv'");
+                                    if ($query_tmp_ref) {
+                                        // Semua operasi berhasil, commit transaksi
+                                        $connect->commit();
+                                        ?>
+                                        <!-- Sweet Alert -->
+                                        <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                        <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                        <script>
+                                            document.addEventListener("DOMContentLoaded", function() {
+                                                Swal.fire({
+                                                    title: "Sukses",
+                                                    text: "Data Berhasil Disimpan",
+                                                    icon: "success",
+                                                }).then(function() {
+                                                    window.location.href = "../invoice-reguler-selesai.php";
+                                                });
+                                            });
+                                        </script>
+                                        <?php
+                                    } else {
+                                        throw new Exception("Gagal menambahkan data ke tabel tmp_produk_komplain");
+                                    }
+                                } else {
+                                    throw new Exception("Gagal menambahkan data ke tabel komplain_kondisi");
+                                }
+                            } else {
+                                throw new Exception("Gagal menambahkan data ke tabel inv_komplain");
+                            }
+                        } else {
+                            throw new Exception("Gagal mengupdate status transaksi pada inv_nonppn");
+                        }
+                    } else {
+                        throw new Exception("Gagal menghapus data pada tabel history_produk_terjual");
+                    }
+                } else {
+                    throw new Exception("Gagal menghapus data pada bagian finance");
                 }
             } catch (Exception $e) {
             // Rollback transaksi jika terjadi exception
@@ -100,54 +107,60 @@
         } else {
             $connect->begin_transaction();
             try{
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Komplain' WHERE id_inv_nonppn = '$id_inv'");
-
-                $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
-
-                $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
-
-                $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
-                                                            SELECT
-                                                                tpr.id_transaksi,
-                                                                spk.id_inv,
-                                                                tpr.id_produk,
-                                                                tpr.nama_produk_spk,
-                                                                tpr.harga,
-                                                                tpr.qty,
-                                                                tpr.disc,
-                                                                tpr.total_harga,
-                                                                1 as status_tmp,
-                                                                tpr.created_date
-                                                            FROM spk_reg AS spk
-                                                            LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
-                                                            WHERE spk.id_inv = '$id_inv'");
-
-                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
-                    // Commit transaksi
-                    $connect->commit();
-                    ?>
-                    <!-- Sweet Alert -->
-                    <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                    <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                        Swal.fire({
-                            title: "Sukses",
-                            text: "Data Berhasil Disimpan",
-                            icon: "success",
-                        }).then(function() {
-                            window.location.href = "../invoice-reguler-selesai.php";
-                        });
-                        });
-                    </script>
-                    <?php
-                }
+                 // Hapus data pada bagian finance
+                 $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
+                 if ($del_finance) {
+                     // Hapus data pada tabel history_produk_terjual
+                     $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
+                     if ($del_history_produk) {
+                         // Update status transaksi pada inv_nonppn
+                         $query_update_inv = mysqli_query($connect, "UPDATE inv_nonppn SET status_transaksi = 'Komplain' WHERE id_inv_nonppn = '$id_inv'");
+                         if ($query_update_inv) {
+                             // Insert data ke tabel inv_komplain
+                             $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
+                             if ($query_komplain) {
+                                 // Insert data ke tabel komplain_kondisi
+                                 $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
+                                 if ($query_kondisi_komplain) {
+                                     // Insert data ke tabel tmp_produk_komplain
+                                     $query_tmp_ref = mysqli_query($connect, "INSERT IGNORE INTO tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date) SELECT tpr.id_transaksi, spk.id_inv, tpr.id_produk, tpr.nama_produk_spk, tpr.harga, tpr.qty, tpr.disc, tpr.total_harga, 1 as status_tmp, tpr.created_date FROM spk_reg AS spk LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk WHERE spk.id_inv = '$id_inv'");
+                                     if ($query_tmp_ref) {
+                                         // Semua operasi berhasil, commit transaksi
+                                         $connect->commit();
+                                         ?>
+                                         <!-- Sweet Alert -->
+                                         <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                                         <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                                         <script>
+                                             document.addEventListener("DOMContentLoaded", function() {
+                                                 Swal.fire({
+                                                     title: "Sukses",
+                                                     text: "Data Berhasil Disimpan",
+                                                     icon: "success",
+                                                 }).then(function() {
+                                                     window.location.href = "../invoice-reguler-selesai.php";
+                                                 });
+                                             });
+                                         </script>
+                                         <?php
+                                     } else {
+                                         throw new Exception("Gagal menambahkan data ke tabel tmp_produk_komplain");
+                                     }
+                                 } else {
+                                     throw new Exception("Gagal menambahkan data ke tabel komplain_kondisi");
+                                 }
+                             } else {
+                                 throw new Exception("Gagal menambahkan data ke tabel inv_komplain");
+                             }
+                         } else {
+                             throw new Exception("Gagal mengupdate status transaksi pada inv_nonppn");
+                         }
+                     } else {
+                         throw new Exception("Gagal menghapus data pada tabel history_produk_terjual");
+                     }
+                 } else {
+                     throw new Exception("Gagal menghapus data pada bagian finance");
+                 }
             } catch (Exception $e) {
             // Rollback transaksi jika terjadi exception
                 $connect->rollback();
@@ -246,6 +259,10 @@
                         });
                     </script>
                     <?php
+                } else {
+                    // Rollback transaksi jika salah satu operasi gagal
+                    $connect->rollback();
+                    $error_message = "Gagal menyimpan data. Silakan coba lagi.";
                 }
             } catch (Exception $e) {
             // Rollback transaksi jika terjadi exception
@@ -318,6 +335,10 @@
                         });
                     </script>
                     <?php
+                } else {
+                    // Rollback transaksi jika salah satu operasi gagal
+                    $connect->rollback();
+                    $error_message = "Gagal menyimpan data. Silakan coba lagi.";
                 }
             } catch (Exception $e) {
             // Rollback transaksi jika terjadi exception
@@ -370,43 +391,30 @@
             $refund = $_POST['refund'];
             $connect->begin_transaction();
             try{
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                $query_update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Komplain' WHERE id_inv_bum = '$id_inv'");
-
-                $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
-
-                $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')");
-
-                $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
-                                                            SELECT
-                                                                tpr.id_transaksi,
-                                                                spk.id_inv,
-                                                                tpr.id_produk,
-                                                                tpr.nama_produk_spk,
-                                                                tpr.harga,
-                                                                tpr.qty,
-                                                                tpr.disc,
-                                                                tpr.total_harga,
-                                                                1 as status_tmp,
-                                                                tpr.created_date
-                                                            FROM spk_reg AS spk
-                                                            LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
-                                                            WHERE spk.id_inv = '$id_inv'");
-
-                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
-                    // Commit transaksi
-                    $connect->commit();
-                    ?>
-                    <!-- Sweet Alert -->
-                    <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                    <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
+                $operations = [
+                    "DELETE FROM finance WHERE id_inv = '$id_inv'",
+                    "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'",
+                    "UPDATE inv_bum SET status_transaksi = 'Komplain' WHERE id_inv_bum = '$id_inv'",
+                    "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')",
+                    "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, status_refund, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$refund', '$catatan')",
+                    "INSERT IGNORE INTO tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date) SELECT tpr.id_transaksi, spk.id_inv, tpr.id_produk, tpr.nama_produk_spk, tpr.harga, tpr.qty, tpr.disc, tpr.total_harga, 1 as status_tmp, tpr.created_date FROM spk_reg AS spk LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk WHERE spk.id_inv = '$id_inv'"
+                ];
+            
+                foreach ($operations as $operation) {
+                    $result = mysqli_query($connect, $operation);
+                    if (!$result) {
+                        throw new Exception("Gagal menjalankan proses: $operation");
+                    }
+                }
+            
+                // Semua operasi berhasil, commit transaksi
+                $connect->commit();
+                ?>
+                <!-- Sweet Alert -->
+                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
                         Swal.fire({
                             title: "Sukses",
                             text: "Data Berhasil Disimpan",
@@ -414,10 +422,9 @@
                         }).then(function() {
                             window.location.href = "../invoice-reguler-selesai.php";
                         });
-                        });
-                    </script>
-                    <?php
-                }
+                    });
+                </script>
+               <?php
             } catch (Exception $e) {
             // Rollback transaksi jika terjadi exception
                 $connect->rollback();
@@ -442,43 +449,30 @@
         } else {
             $connect->begin_transaction();
             try{
-                // Hapus data pada bagian finance
-                $del_finance = mysqli_query($connect, "DELETE FROM finance WHERE id_inv = '$id_inv'");
-
-                $del_history_produk = mysqli_query($connect, "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'");
-
-                $query_update_inv = mysqli_query($connect, "UPDATE inv_bum SET status_transaksi = 'Komplain' WHERE id_inv_bum = '$id_inv'");
-
-                $query_komplain = mysqli_query($connect, "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')");
-
-                $query_kondisi_komplain = mysqli_query($connect, "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')");
-
-                $query_tmp_ref = mysqli_query($connect, "   INSERT IGNORE INTO 
-                                                                tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date)
-                                                            SELECT
-                                                                tpr.id_transaksi,
-                                                                spk.id_inv,
-                                                                tpr.id_produk,
-                                                                tpr.nama_produk_spk,
-                                                                tpr.harga,
-                                                                tpr.qty,
-                                                                tpr.disc,
-                                                                tpr.total_harga,
-                                                                1 as status_tmp,
-                                                                tpr.created_date
-                                                            FROM spk_reg AS spk
-                                                            LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk 
-                                                            WHERE spk.id_inv = '$id_inv'");
-
-                if ($del_finance && $del_history_produk && $query_update_inv && $query_komplain && $query_kondisi_komplain && $query_tmp_ref) {
-                    // Commit transaksi
-                    $connect->commit();
-                    ?>
-                    <!-- Sweet Alert -->
-                    <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
-                    <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
+                $operations = [
+                    "DELETE FROM finance WHERE id_inv = '$id_inv'",
+                    "DELETE FROM history_produk_terjual WHERE id_inv = '$id_inv'",
+                    "UPDATE inv_bum SET status_transaksi = 'Komplain' WHERE id_inv_bum = '$id_inv'",
+                    "INSERT INTO inv_komplain (id_komplain, id_inv, no_komplain, tgl_komplain) VALUES ('$id_komplain', '$id_inv', '$no_komplain', '$tgl')",
+                    "INSERT INTO komplain_kondisi (id_kondisi, id_komplain, kat_komplain, kondisi_pesanan, status_retur, catatan) VALUES ('$id_kondisi', '$id_komplain', '$kat_komplain', '$kondisi_pesanan', '$retur', '$catatan')",
+                    "INSERT IGNORE INTO tmp_produk_komplain (id_tmp, id_inv, id_produk, nama_produk, harga, qty, disc, total_harga, status_tmp, created_date) SELECT tpr.id_transaksi, spk.id_inv, tpr.id_produk, tpr.nama_produk_spk, tpr.harga, tpr.qty, tpr.disc, tpr.total_harga, 1 as status_tmp, tpr.created_date FROM spk_reg AS spk LEFT JOIN transaksi_produk_reg tpr ON spk.id_spk_reg = tpr.id_spk WHERE spk.id_inv = '$id_inv'"
+                ];
+            
+                foreach ($operations as $operation) {
+                    $result = mysqli_query($connect, $operation);
+                    if (!$result) {
+                        throw new Exception("Gagal menjalankan proses: $operation");
+                    }
+                }
+            
+                // Semua operasi berhasil, commit transaksi
+                $connect->commit();
+                ?>
+                <!-- Sweet Alert -->
+                <link rel="stylesheet" href="../assets/sweet-alert/dist/sweetalert2.min.css">
+                <script src="../assets/sweet-alert/dist/sweetalert2.all.min.js"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
                         Swal.fire({
                             title: "Sukses",
                             text: "Data Berhasil Disimpan",
@@ -486,10 +480,9 @@
                         }).then(function() {
                             window.location.href = "../invoice-reguler-selesai.php";
                         });
-                        });
-                    </script>
-                    <?php
-                }
+                    });
+                </script>
+               <?php
             } catch (Exception $e) {
             // Rollback transaksi jika terjadi exception
                 $connect->rollback();

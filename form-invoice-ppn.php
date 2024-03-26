@@ -199,8 +199,30 @@ include "akses.php";
   dateInput.value = todayFormatted;
   tempoInput.value = '';
 
+  // Kode untuk mengatur batasan tanggal invoice 7 hari kebelakang dan 3 hari kedepan
+  // Mendapatkan tanggal awal dan akhir bulan ini
+  var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  // Mendapatkan tanggal 7 hari sebelumnya dan 7 hari ke depan dari hari ini
+  var sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(today.getDate() - 7);
+
+  var sevenDaysLater = new Date(today);
+  sevenDaysLater.setDate(today.getDate() + 3);
+
+  // Menentukan minDate dan maxDate untuk rentang yang diizinkan
+  var minDate = new Date(
+      Math.max(firstDayOfMonth, sevenDaysAgo) // Mengambil tanggal terbesar dari antara tanggal awal bulan ini dan 7 hari yang lalu
+  );
+  var maxDate = new Date(
+      Math.min(lastDayOfMonth, sevenDaysLater) // Mengambil tanggal terkecil dari antara tanggal akhir bulan ini dan 7 hari ke depan
+  );
+
   flatpickr("#date", {
     dateFormat: "d/m/Y",
+    minDate: minDate,
+    maxDate: maxDate,
     onClose: function(selectedDates, dateStr) {
       if (selectedDates[0]) {
         // Menghapus dan menghancurkan instance datepicker sebelumnya, jika ada

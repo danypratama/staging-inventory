@@ -1,8 +1,12 @@
 <?php
 session_start(); // memulai sebuah sesi
 
-$UUID = 'HIS' . generate_uuid();
-$encoded_id = base64_encode($UUID);
+$id_status = 'STATUS' . generate_uuid();
+$id_token = 'TOKEN' . generate_uuid();
+$id_history = 'HIS' . generate_uuid();
+$encrypt_id_status = base64_encode($id_status);
+$encrypt_id_token = base64_encode($id_token);
+
 // Menampilkan IP, Jenis Perangkat, Lokasi
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $os = $_SERVER['HTTP_USER_AGENT'];
@@ -11,7 +15,6 @@ $device = "Desktop";
 if (preg_match("/(iPhone|iPod|iPad|Android|BlackBerry|Windows Phone)/i", $os)) {
     $device = "Mobile";
 }
-echo "Jenis Perangkat: $device";
 
 // Menampilkan Lokasi
 $url = 'http://ip-api.com/json/' . $ip_address;
@@ -38,7 +41,9 @@ curl_close($ch);
 $location = json_decode($result);
 $locationString = json_encode($location);
 $locationString = '';
-$locationString .= $location->city . ',' . $location->country . PHP_EOL;
+if (isset($location->city) && isset($location->country)) {
+    $locationString .= $location->city . ',' . $location->country . PHP_EOL;
+}
 
 // ============================================================================
 include "koneksi.php";
@@ -61,88 +66,440 @@ if (isset($_POST['login'])) {
         // Verifikasi password
         if (password_verify($password, $password_hash)) {
             if($row['approval'] == 1){
-                 // Password benar, simpan data user ke session dan arahkan ke halaman dashboard
+                // Password benar, simpan data user ke session dan arahkan ke halaman dashboard
                 //ambil data dari nama kolom operator
-                $_SESSION['tiket_id'] = $row['id_user'];
+                $_SESSION['tiket_id'] = base64_encode($row['id_user']);
                 $_SESSION['tiket_user'] = $row['username'];
-                $_SESSION['tiket_pass'] = $row['password'];
                 $_SESSION['tiket_nama'] = $row['nama_user'];
                 $_SESSION['tiket_role'] = $row['id_user_role'];
-                $_SESSION['tiket_jenkel'] = $row['jenkel'];
                 $_SESSION['ip'] = $ip_address;
-                $_SESSION['last_login'] = $row['last_login'];
-                $_SESSION['os'] = $row['perangkat'];
-                $_SESSION['lokasi'] = $row['lokasi'];
-                $_SESSION['encoded_id'] = $encoded_id;
-                $_SESSION['id_history'] = $UUID;
+                $_SESSION['os'] = $os;
+                $_SESSION['jenis_perangkat'] = $device;
+                $_SESSION['lokasi'] = $locationString;
+                $_SESSION['id_status'] = $encrypt_id_status;
+                $_SESSION['id_token'] = $encrypt_id_token;
+                $encrypt_token = $_SESSION['token'];
                 $id_role =  $_SESSION['tiket_role'];
 
-
                 // Update User Login Session
-                $id_history =  $_SESSION['encoded_id'];
-                $id_user = $_SESSION['tiket_id'];
+                $id_status_encrypt =  $_SESSION['id_status'];
+                $id_user = base64_decode($_SESSION['tiket_id']);
+                $ip = $_SESSION['ip'];
+                $device = $_SESSION['jenis_perangkat'];
+                $lokasi = $_SESSION['lokasi'];
                 
                 $online = 'Online';
-                $timezone = time() + (60 * 60 * 7);
-                $today = gmdate('d/m/Y G:i:s', $timezone);
 
-                // Cek History terlebih dahulu
-                // Cek apakah data sudah ada berdasarkan id_user dan ip_login
-                $checkQuery = "SELECT * FROM user_history WHERE id_user = '$id_user' AND ip_login = '$ip_address' AND jenis_perangkat = '$device'";
-                $checkResult = mysqli_query($connect, $checkQuery);
+                date_default_timezone_set('Asia/Jakarta');
+                $today = new DateTime();
+                $todayFormat = $today->format('d/m/Y H:i:s');
+                // Tambahkan interval waktu 8 jam
+                $tokenExpired = clone $today;
+                $tokenExpired->add(new DateInterval('PT9H'));
 
-                if (mysqli_num_rows($checkResult) > 0) {
-                    // Data sudah ada, lakukan UPDATE
-                    $updateQuery = "UPDATE user_history 
-                                    SET 
-                                        id_history = '$UUID',
-                                        login_time = '$today',
-                                        logout_time = '',
-                                        perangkat = '$os',
-                                        jenis_perangkat = '$device',
-                                        lokasi = '$locationString',
-                                        status_perangkat = '$online'
-                                    WHERE id_user = '$id_user' AND ip_login = '$ip_address'";
-                    
-                    $updateResult = mysqli_query($connect, $updateQuery);
-                    $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                // Format waktu kedaluwarsa sesuai kebutuhan Anda
+                $tokenExpiredFormat = $tokenExpired->format('d/m/Y H:i:s');
+
+                // Cek device 
+                $cek_status = $connect->query("SELECT 
+                                                    us.id_user,
+                                                    us.login_time,
+                                                    ut.token
+                                                FROM user_status us
+                                                LEFT JOIN user_token ut ON us.id_token = ut.id_token
+                                                WHERE id_user = '$id_user' AND jenis_perangkat = '$device' AND status_perangkat = 'Online'
+                                            ");
+                $data_status = mysqli_fetch_array($cek_status);
+                $login_time = $data_status['login_time'];
+                
+                if (mysqli_num_rows($cek_status) > 0){
+                    if($encrypt_token == $data_status['token']){
+                        $cek_expired_token = $connect->query("SELECT 
+                                                                us.id_user,
+                                                                us.id_token,
+                                                                STR_TO_DATE(ut.expired_token_time, '%d/%m/%Y %H:%i:%s') AS expired
+                                                            FROM user_status AS us 
+                                                            LEFT JOIN user_token ut ON us.id_token = ut.id_token
+                                                            WHERE us.id_user = '$id_user'
+                                                        "); 
+                        $data_token = mysqli_fetch_array($cek_expired_token);
+                        $expired = $data_token['expired'];
+                        $id_token_old = $data_token['id_token'];
+                        $currentTime = date('Y-m-d H:i:s');
+                        if($currentTime > $expired){
+                            $connect->begin_transaction();
+                            try{
+                                // Data sudah expired, lakukan UPDATE
+                                $update_status = $connect->query("UPDATE user_status 
+                                                                    SET 
+                                                                        id_user_status = '$id_status',
+                                                                        login_time = '$todayFormat',
+                                                                        logout_time = '',
+                                                                        jenis_perangkat = '$device',
+                                                                        status_perangkat = '$online'
+                                                                    WHERE id_user = '$id_user' AND jenis_perangkat = '$device'
+                                                                "); 
+                                $update_token = $connect->query("UPDATE user_token 
+                                                                    SET
+                                                                        token = '$encrypt_token', 
+                                                                        expired_token_time = '$tokenExpiredFormat'
+                                                                    WHERE id_token = '$id_token_old'
+                                                                ");
+                                $simpan_history_baru = $connect->query("INSERT INTO user_history (id_history, id_user_status, id_user, login_time, logout_time, ip_login, os, jenis_perangkat, lokasi) VALUES ('$id_history', '$id_status', '$id_user', '$todayFormat', '', '$ip', '$os', '$device', '$lokasi')");
+                                
+                                $update_history_sebelumnya = $connect->query("UPDATE user_history SET logout_time = '$todayFormat' WHERE id_user = '$id_user' AND login_time = '$login_time'");
+
+                                if ($update_status && $update_token && $simpan_history_baru && $update_history_sebelumnya) {
+                                    // Commit transaksi
+                                    $connect->commit();
+                                    $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                                    JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                                    WHERE u.id_user_role = '$id_role'";
+                                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                    $data_role = mysqli_fetch_array($query_role);
+                                    $role = $data_role['role']; 
+                                
+                                    if($role == 'Finance'){
+                                        $_SESSION = 'berhasil';
+                                        header("Location: finance/dashboard.php");
+                                    } else if ($role == 'Driver'){
+                                        $_SESSION = 'berhasil';
+                                        header("Location: driver/dashboard.php");
+                                    } else if ($role == 'Admin Gudang'){
+                                        $_SESSION = 'berhasil';
+                                        header("Location: dashboard.php");
+                                    } else {
+                                        $_SESSION = 'berhasil';
+                                        header("Location: dashboard.php");
+                                    }
+                                } else {
+                                    // Rollback transaksi jika salah satu operasi gagal
+                                    $connect->rollback();
+                                    $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                    header("Location: login.php");
+                                } 
+                            }catch (Exception $e){
+                                // Rollback transaksi jika salah satu operasi gagal
+                                $connect->rollback();
+                                $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                header("Location: login.php");
+                            }
+                        } else {
+                            $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                            JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                            WHERE u.id_user_role = '$id_role'";
+                            $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                            $data_role = mysqli_fetch_array($query_role);
+                            $role = $data_role['role']; 
+                        
+                            if($role == 'Finance'){
+                                header("Location: finance/dashboard.php");
+                            } else if ($role == 'Driver'){
+                                header("Location: driver/dashboard.php");
+                            } else if ($role == 'Admin Gudang'){
+                                header("Location: dashboard.php");
+                            } else {
+                                header("Location: dashboard.php");
+                            }
+                        }
+                    }else{
+                        $cek_expired_token = $connect->query("SELECT 
+                                                                us.id_user,
+                                                                us.id_token,
+                                                                STR_TO_DATE(ut.expired_token_time, '%d/%m/%Y %H:%i:%s') AS expired
+                                                            FROM user_status AS us 
+                                                            LEFT JOIN user_token ut ON us.id_token = ut.id_token
+                                                            WHERE us.id_user = '$id_user'
+                                                        "); 
+                        $data_token = mysqli_fetch_array($cek_expired_token);
+                        $expired = $data_token['expired'];
+                        $id_token_old = $data_token['id_token'];
+                        $currentTime = date('Y-m-d H:i:s');
+                        if($currentTime > $expired){
+                            $connect->begin_transaction();
+                            try{
+                                // Data sudah expired, lakukan UPDATE
+                                $update_status = $connect->query("UPDATE user_status 
+                                                                    SET 
+                                                                        id_user_status = '$id_status',
+                                                                        login_time = '$todayFormat',
+                                                                        logout_time = '',
+                                                                        jenis_perangkat = '$device',
+                                                                        status_perangkat = '$online'
+                                                                    WHERE id_user = '$id_user' AND jenis_perangkat = '$device'
+                                                                "); 
+                                $update_token = $connect->query("UPDATE user_token 
+                                                                    SET
+                                                                        token = '$encrypt_token', 
+                                                                        expired_token_time = '$tokenExpiredFormat'
+                                                                    WHERE id_token = '$id_token_old'
+                                                                ");
+                                $simpan_history_baru = $connect->query("INSERT INTO user_history (id_history, id_user_status, id_user, login_time, logout_time, ip_login, os, jenis_perangkat, lokasi) VALUES ('$id_history', '$id_status', '$id_user', '$todayFormat', '', '$ip', '$os', '$device', '$lokasi')");
+                                
+                                $update_history_sebelumnya = $connect->query("UPDATE user_history SET logout_time = '$todayFormat' WHERE id_user = '$id_user' AND login_time = '$login_time'");
+
+                                if ($update_status && $update_token && $simpan_history_baru && $update_history_sebelumnya) {
+                                    $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
                                     JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
                                     WHERE u.id_user_role = '$id_role'";
-                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
-                    $data_role = mysqli_fetch_array($query_role);
-                    $role = $data_role['role']; 
-                    echo $role;
-                    if($role == 'Finance'){
-                        header("Location: finance/dashboard.php");
-                    } else if ($role == 'Driver'){
-                        header("Location: driver/dashboard.php");
-                    } else if ($role == 'Admin Gudang'){
-                        header("Location: dashboard.php");
-                    } else {
-                        header("Location: dashboard.php");
+                                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                    $data_role = mysqli_fetch_array($query_role);
+                                    $role = $data_role['role']; 
+                                
+                                    if($role == 'Finance'){
+                                        header("Location: finance/dashboard.php");
+                                    } else if ($role == 'Driver'){
+                                        header("Location: driver/dashboard.php");
+                                    } else if ($role == 'Admin Gudang'){
+                                        header("Location: dashboard.php");
+                                    } else {
+                                        header("Location: dashboard.php");
+                                    }
+
+                                    $connect->commit();
+                                } else {
+                                    // Rollback transaksi jika salah satu operasi gagal
+                                    $connect->rollback();
+                                    $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                    header("Location: login.php");
+                                  
+                                } 
+                            }catch (Exception $e){
+                                // Rollback transaksi jika salah satu operasi gagal
+                                $connect->rollback();
+                                $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                header("Location: login.php");
+                            }
+                        } else {
+                            $_SESSION['alert'] = 'User sedang aktif, jika itu bukan anda silahkan hubungin IT';
+                            header("Location: login.php");
+                        }
                     }
                 } else {
-                    // Data belum ada, lakukan INSERT
-                    // Simpan History
-                    $history = mysqli_query($connect, "INSERT INTO user_history 
-                                            (id_history, id_user, login_time, ip_login, perangkat, jenis_perangkat, lokasi, status_perangkat) 
-                                            VALUES 
-                                            ('$UUID', '$id_user', '$today', '$ip_address', '$os', '$device', '$locationString', '$online')");
+                    // Cek token terlebih dahulu
+                    $cek_data = $connect->query("SELECT id_user, id_token, jenis_perangkat, status_perangkat FROM user_status WHERE id_user = '$id_user' AND jenis_perangkat = '$device'");
 
-                    $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
-                                    JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
-                                    WHERE u.id_user_role = '$id_role'";
-                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
-                    $data_role = mysqli_fetch_array($query_role);
-                    $role = $data_role['role']; 
-                    if($role == 'Finance'){
-                        header("Location: finance/dashboard.php");
-                    } else if ($role == 'Driver'){
-                        header("Location: driver/dashboard.php");
-                    } else if ($role == 'Admin Gudang'){
-                        header("Location: dashboard.php");
+                    if (mysqli_num_rows($cek_data) > 0) {
+                        $cek_token = $connect->query("SELECT id_user, id_token, jenis_perangkat, status_perangkat FROM user_status WHERE id_user = '$id_user' AND id_token != '' AND jenis_perangkat = '$device'");
+                        $total_row = mysqli_num_rows($cek_token);
+                        if ($total_row != 0) {
+                            $cek_expired_token = $connect->query("SELECT 
+                                                                    us.id_user,
+                                                                    us.id_token,
+                                                                    STR_TO_DATE(ut.expired_token_time, '%d/%m/%Y %H:%i:%s') AS expired
+                                                                FROM user_status AS us 
+                                                                LEFT JOIN user_token ut ON us.id_token = ut.id_token
+                                                                WHERE us.id_user = '$id_user'
+                                                            "); 
+                            $data_token = mysqli_fetch_array($cek_expired_token);
+                            $expired = $data_token['expired'];
+                            $id_token_old = $data_token['id_token'];
+                            $currentTime = date('Y-m-d H:i:s');
+                            if($currentTime > $expired){
+                                $connect->begin_transaction();
+                                try{
+                                    // Data sudah ada, lakukan UPDATE
+                                    $update_status = $connect->query("UPDATE user_status 
+                                                                        SET 
+                                                                            id_user_status = '$id_status',
+                                                                            login_time = '$todayFormat',
+                                                                            logout_time = '',
+                                                                            jenis_perangkat = '$device',
+                                                                            status_perangkat = '$online'
+                                                                        WHERE id_user = '$id_user' AND jenis_perangkat = '$device'
+                                                                    "); 
+
+                                    $update_token = $connect->query("UPDATE user_token 
+                                                                        SET
+                                                                            token = '$encrypt_token', 
+                                                                            expired_token_time = '$tokenExpiredFormat'
+                                                                        WHERE id_token = '$id_token_old'
+                                                                    ");
+                                    
+                                    $simpan_history_baru = $connect->query("INSERT INTO user_history (id_history, id_user_status, id_user, login_time, logout_time, ip_login, os, jenis_perangkat, lokasi) VALUES ('$id_history', '$id_status', '$id_user', '$todayFormat', '', '$ip', '$os', '$device', '$lokasi')");
+
+                                    if ($update_status && $update_token && $simpan_history_baru) {
+                                        // Commit transaksi
+                                        $connect->commit();
+                                        $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                                        JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                                        WHERE u.id_user_role = '$id_role'";
+                                        $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                        $data_role = mysqli_fetch_array($query_role);
+                                        $role = $data_role['role']; 
+                                    
+                                        if($role == 'Finance'){
+                                            $_SESSION = 'berhasil';
+                                            header("Location: finance/dashboard.php");
+                                        } else if ($role == 'Driver'){
+                                            $_SESSION = 'berhasil';
+                                            header("Location: driver/dashboard.php");
+                                        } else if ($role == 'Admin Gudang'){
+                                            $_SESSION = 'berhasil';
+                                            header("Location: dashboard.php");
+                                        } else {
+                                            $_SESSION = 'berhasil';
+                                            header("Location: dashboard.php");
+                                        }
+                                    } else {
+                                        // Rollback transaksi jika salah satu operasi gagal
+                                        $connect->rollback();
+                                        $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                        header("Location: login.php");
+                                    } 
+                                }catch (Exception $e){
+                                    // Rollback transaksi jika salah satu operasi gagal
+                                    $connect->rollback();
+                                    $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                    header("Location: login.php");
+                                }
+                            } else {
+                                $connect->begin_transaction();
+                                try{
+                                    // Data sudah ada, lakukan UPDATE
+                                    $update_status = $connect->query("UPDATE user_status 
+                                                                        SET 
+                                                                            id_user_status = '$id_status',
+                                                                            id_token = '$id_token',
+                                                                            login_time = '$todayFormat',
+                                                                            logout_time = '',
+                                                                            jenis_perangkat = '$device',
+                                                                            status_perangkat = '$online'
+                                                                        WHERE id_user = '$id_user' AND jenis_perangkat = '$device'
+                                                                    "); 
+                                    $simpan_token = $connect->query("INSERT INTO user_token (id_token, token, expired_token_time)VALUES('$id_token', '$encrypt_token', '$tokenExpiredFormat')");
+
+                                    $simpan_history_baru = $connect->query("INSERT INTO user_history (id_history, id_user_status, id_user, login_time, logout_time, ip_login, os, jenis_perangkat, lokasi) VALUES ('$id_history', '$id_status', '$id_user', '$todayFormat', '', '$ip', '$os', '$device', '$lokasi')");
+                            
+                                    $update_history_sebelumnya = $connect->query("UPDATE user_history SET logout_time = '$todayFormat' WHERE id_user = '$id_user' AND login_time = '$login_time'");
+
+                                    if ($update_status && $simpan_token) {
+                                        // Commit transaksi
+                                        $connect->commit();
+                                        $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                                        JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                                        WHERE u.id_user_role = '$id_role'";
+                                        $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                        $data_role = mysqli_fetch_array($query_role);
+                                        $role = $data_role['role']; 
+                                    
+                                        if($role == 'Finance'){
+                                            header("Location: finance/dashboard.php");
+                                        } else if ($role == 'Driver'){
+                                            header("Location: driver/dashboard.php");
+                                        } else if ($role == 'Admin Gudang'){
+                                            header("Location: dashboard.php");
+                                        } else {
+                                            header("Location: dashboard.php");
+                                        }
+                                    } else {
+                                        // Rollback transaksi jika salah satu operasi gagal
+                                        $connect->rollback();
+                                        $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                        header("Location: login.php");
+                                    }
+                                    
+                                }catch (Exception $e){
+                                    // Rollback transaksi jika salah satu operasi gagal
+                                    $connect->rollback();
+                                    $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                    header("Location: login.php");
+                                }   
+                            }
+                        } else { 
+                            $connect->begin_transaction();
+                            try{
+                                // Data sudah ada, lakukan UPDATE
+                                $update_status = $connect->query("UPDATE user_status 
+                                                                    SET 
+                                                                        id_user_status = '$id_status',
+                                                                        id_token = '$id_token',
+                                                                        login_time = '$todayFormat',
+                                                                        logout_time = '',
+                                                                        jenis_perangkat = '$device',
+                                                                        status_perangkat = '$online'
+                                                                    WHERE id_user = '$id_user' AND jenis_perangkat = '$device'
+                                                                "); 
+                                $simpan_token = $connect->query("INSERT INTO user_token (id_token, token, expired_token_time)VALUES('$id_token', '$encrypt_token', '$tokenExpiredFormat')");
+
+                                $simpan_history_baru = $connect->query("INSERT INTO user_history (id_history, id_user_status, id_user, login_time, logout_time, ip_login, os, jenis_perangkat, lokasi) VALUES ('$id_history', '$id_status', '$id_user', '$todayFormat', '', '$ip', '$os', '$device', '$lokasi')");
+
+                                if ($update_status && $simpan_token && $simpan_history_baru) {
+                                    // Commit transaksi
+                                    $connect->commit();
+                                    $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                                    JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                                    WHERE u.id_user_role = '$id_role'";
+                                    $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                    $data_role = mysqli_fetch_array($query_role);
+                                    $role = $data_role['role']; 
+                                
+                                    if($role == 'Finance'){
+                                        header("Location: finance/dashboard.php");
+                                    } else if ($role == 'Driver'){
+                                        header("Location: driver/dashboard.php");
+                                    } else if ($role == 'Admin Gudang'){
+                                        header("Location: dashboard.php");
+                                    } else {
+                                        header("Location: dashboard.php");
+                                    }
+                                } else {
+                                    // Rollback transaksi jika salah satu operasi gagal
+                                    $connect->rollback();
+                                    $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                    header("Location: login.php");
+                                }
+                                
+                            }catch (Exception $e){
+                                // Rollback transaksi jika salah satu operasi gagal
+                                $connect->rollback();
+                                $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                header("Location: login.php");
+                            }   
+                        }
                     } else {
-                        header("Location: dashboard.php");
+                        $connect->begin_transaction();
+                        try{
+                            // Data belum ada, lakukan INSERT
+                            // Simpan Status
+                            $simpan_status = mysqli_query($connect, "INSERT INTO user_status (id_user_status, id_user, id_token, login_time, jenis_perangkat, status_perangkat) VALUES ('$id_status', '$id_user', '$id_token', '$todayFormat', '$device', '$online')");
+                            
+                            $simpan_token = $connect->query("INSERT INTO user_token (id_token, token, expired_token_time)VALUES('$id_token', '$encrypt_token', '$tokenExpiredFormat')");
+
+                            $simpan_history_baru = $connect->query("INSERT INTO user_history (id_history, id_user_status, id_user, login_time, logout_time, ip_login, os, jenis_perangkat, lokasi) VALUES ('$id_history', '$id_status', '$id_user', '$todayFormat', '', '$ip', '$os', '$device', '$lokasi')");
+
+                            if ($simpan_status && $simpan_token && $simpan_history_baru) {
+                                // Commit transaksi
+                                $connect->commit();
+                                $sql_role = " SELECT u.id_user_role, d.id_user_role, d.role FROM user AS u 
+                                                JOIN user_role AS d ON (u.id_user_role = d.id_user_role)
+                                                WHERE u.id_user_role = '$id_role'";
+                                $query_role = mysqli_query($connect, $sql_role) or die(mysqli_error($connect));
+                                $data_role = mysqli_fetch_array($query_role);
+                                $role = $data_role['role']; 
+                               
+                                if($role == 'Finance'){
+                                    header("Location: finance/dashboard.php");
+                                } else if ($role == 'Driver'){
+                                    header("Location: driver/dashboard.php");
+                                } else if ($role == 'Admin Gudang'){
+                                    header("Location: dashboard.php");
+                                } else {
+                                    header("Location: dashboard.php");
+                                }
+                            } else {
+                                // Rollback transaksi jika salah satu operasi gagal
+                                $connect->rollback();
+                                $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                                header("Location: login.php");
+                            }
+                            
+                        }catch (Exception $e){
+                            // Rollback transaksi jika salah satu operasi gagal
+                            $connect->rollback();
+                            $_SESSION['alert'] = 'Terjadi kesalahan server, silahkan ulangi kembali';
+                            header("Location: login.php");
+                        }
                     }
                 }
             } else {
@@ -161,11 +518,11 @@ if (isset($_POST['login'])) {
     }
 }
 
-// <!-- Generate UUID -->
+// Generate UUID
 function generate_uuid()
 {
     return sprintf(
-        '%04x%04x%04x',
+        '%04x%04x%04x%04x',
         mt_rand(0, 0xffff),
         mt_rand(0, 0xffff),
         mt_rand(0, 0xffff),
@@ -176,5 +533,5 @@ function generate_uuid()
         mt_rand(0, 0xffff)
     );
 }
-// <!-- End Generate UUID -->
+// End Generate UUID 
 ?>

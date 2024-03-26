@@ -333,11 +333,12 @@ if (isset($_POST['simpan-inv'])) {
     header("Location:../cek-produk-inv-ppn.php?id='$id_inv_encode'");
 } else if (isset($_POST['ubah-cs-inv'])) {
     $id_inv = $_POST['id_inv'];
-    $cs_inv = $_POST['cs_inv'];
-    $no_po = $_POST['no_po'];
+    $cs_inv = htmlspecialchars($_POST['cs_inv']);
+    $alamat = htmlspecialchars($_POST['alamat']);
+    $no_po = htmlspecialchars($_POST['no_po']);
     $id_inv_encode = base64_encode($id_inv);
 
-    $update_data = mysqli_query($connect, "UPDATE inv_ppn SET cs_inv = '$cs_inv' WHERE id_inv_ppn = '$id_inv'");
+    $update_data = mysqli_query($connect, "UPDATE inv_ppn SET cs_inv = '$cs_inv', alamat_inv = '$alamat' WHERE id_inv_ppn = '$id_inv'");
     $update_data_spk = mysqli_query($connect, "UPDATE spk_reg SET no_po = '$no_po' WHERE id_inv = '$id_inv'");
     header("Location:../cek-produk-inv-ppn.php?id=$id_inv_encode");
 }

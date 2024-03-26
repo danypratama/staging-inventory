@@ -1,6 +1,27 @@
 <?php  
-  session_start();
+    if (!isset($_SESSION['token'])) {
+        session_start();
+        // Jika token belum ada, tetapkan token baru
+        $token = uniqid();
+        $encrypt_token = hash('sha256', $token);
+        $_SESSION['token'] = $encrypt_token;
+    }
 ?>
+
+<?php
+// $url = "https://karsa-inventory.mandirialkesindo.com/detail-produk.php?id=BR-REG27e4ddd09585";
+// $url_qr = "https://$_SERVER[HTTP_HOST]";
+
+// // Parse the URL
+// $parsed_url = parse_url($url);
+
+// // Get the domain
+// $domain = $parsed_url['scheme'] . '://' . $parsed_url['host'];
+
+// echo $domain . "<br>";
+// echo $url_qr;
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -43,26 +64,28 @@
                         <h3 class="text-center mb-0">Welcome</h3>
                         <p class="text-center">Please Login</p>
                             <?php
-                                if (isset($_GET["gagal"])) { ?>
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="font-size: 17px;">
-                                    <strong> Username atau password salah. Silakan coba lagi.</strong>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
+                                if (isset($_GET["gagal"])) { 
+                                    ?>
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="font-size: 17px;">
+                                            <strong> Username atau password salah. Silakan coba lagi.</strong>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
                                     <?php unset($_GET["gagal"]);
                                     
                                 } 
                             ?>
 
                             <?php
-                                if (isset($_GET["belum_terdaftar"])) { ?>
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="font-size: 17px;">
-                                    <strong> Akun belum terdaftar.</strong>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
+                                if (isset($_GET["belum_terdaftar"])) { 
+                                    ?>
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="font-size: 17px;">
+                                            <strong> Akun belum terdaftar.</strong>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
                                     <?php unset($_GET["gagal"]);
                                     
                                 } 
@@ -77,7 +100,6 @@
                                 // Check if alert session is set
                                 if (isset($_SESSION['alert'])) {
                                     $alertType = $_SESSION['alert'];
-
                                     // Display alert based on the session value
                                     echo '  <div class="alert alert-warning alert-dismissible fade show" role="alert" style="font-size: 17px;">
                                                 <strong>'.$alertType.'</strong>
@@ -129,36 +151,20 @@
 </body>
 </html>
 <script>
-  var checkbox = document.getElementById('show-password');
-  var password = document.querySelector('.form-password');
+    var checkbox = document.getElementById('show-password');
+    var password = document.querySelector('.form-password');
 
-  checkbox.addEventListener('change', function() {
-    if (password.type === 'password') {
-      password.type = 'text';
-    } else {
-      password.type = 'password';
-    }
-  });
-</script>
-
-<script>
-    // Fungsi untuk membuka pengaturan penghapusan cache
-    function autoClearCache() {
-        var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-        var isFirefox = typeof InstallTrigger !== 'undefined';
-
-        if (isChrome) {
-            // Untuk Google Chrome
-            chrome.browsingData.remove({}, { "appcache": true, "cache": true, "cookies": true });
-        } else if (isFirefox) {
-            // Untuk Mozilla Firefox
-            browser.browsingData.remove({ "since": 0, "originTypes": { "unprotectedWeb": true } });
+    checkbox.addEventListener('change', function() {
+        if (password.type === 'password') {
+            password.type = 'text';
         } else {
-            // Jika browser lain, berikan instruksi manual
-            alert('Mohon hapus cache secara manual melalui pengaturan browser Anda.');
+            password.type = 'password';
         }
-    }
+    });
 
-    // Panggil fungsi secara otomatis (opsional)
-    autoClearCache();
+    // Hapus semua data dari local storage
+    localStorage.clear();
+
+    // Opsional: Tampilkan pesan konfirmasi setelah local storage dihapus
+    console.log("Local storage telah dihapus.");
 </script>

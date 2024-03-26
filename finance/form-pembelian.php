@@ -86,11 +86,11 @@ include "akses.php";
                                 <label class="fw-bold mb-2">Jenis Transaksi</label><br>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="jenis_trx" value="PPN">
-                                    <label class="form-check-label" for="inlineRadio1">PPN</label>
+                                    <label class="form-check-label">PPN</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="jenis_trx" value="Non PPN">
-                                    <label class="form-check-label" for="inlineRadio2">Non PPN</label>
+                                    <label class="form-check-label">Non PPN</label>
                                 </div>
                             </div>
                             <div class="mb-3 mt-2">
@@ -220,7 +220,7 @@ include "akses.php";
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var resetButton = document.getElementById("resetTempo");
-        var inputTanggalTempo = document.getElementsByName("tanggal_tempo")[0];
+        var inputTanggalTempo = document.getElementsByName("tgl_tempo")[0];
 
         // Mendengarkan klik pada tombol resetTempo
         resetButton.addEventListener("click", function () {

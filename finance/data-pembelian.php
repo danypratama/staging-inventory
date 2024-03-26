@@ -372,56 +372,52 @@ include "akses.php";
                         </div>
                     </div>
                     <div class="col-md-3 me-2 mb-2">
-                        <div class="card">
-                            <label>Status Pembelian :</label>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?php
-                                    // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
-                                    $statusPembelian = isset($_GET['status_pembelian']) ? $_GET['status_pembelian'] : 'Semua';
-                                    if ($statusPembelian === "Semua" || $statusPembelian === "") {
-                                    echo "Semua Status Pembelian";
-                                    } elseif ($statusPembelian === "Belum Diterima") {
-                                    echo "Belum Diterima";
-                                    } elseif ($statusPembelian === "Sudah Diterima") {
-                                    echo "Sudah Diterima";
-                                    }
-                                ?>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
-                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=">Semua</a>
-                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === 'Belum Diterima' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=Belum Diterima">Belum Diterima</a>
-                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === 'Sudah Diterima' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=Sudah Diterima">Sudah Diterima</a>
-                                    </form>
-                                </div>
+                        <label>Status Pembelian :</label>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php
+                                // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                                $statusPembelian = isset($_GET['status_pembelian']) ? $_GET['status_pembelian'] : 'Semua';
+                                if ($statusPembelian === "Semua" || $statusPembelian === "") {
+                                echo "Semua Status Pembelian";
+                                } elseif ($statusPembelian === "Belum Diterima") {
+                                echo "Belum Diterima";
+                                } elseif ($statusPembelian === "Sudah Diterima") {
+                                echo "Sudah Diterima";
+                                }
+                            ?>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                                    <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=">Semua</a>
+                                    <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === 'Belum Diterima' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=Belum Diterima">Belum Diterima</a>
+                                    <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembelian']) && $_GET['status_pembelian'] === 'Sudah Diterima' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembelian=Sudah Diterima">Sudah Diterima</a>
+                                </form>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 me-2 mb-2">
-                        <div class="card">
-                            <label>Status Pembayaran :</label>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?php
-                                    // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
-                                    $statusPembayaran = isset($_GET['status_pembayaran']) ? $_GET['status_pembayaran'] : 'Semua';
-                                    if ($statusPembayaran === "Semua" || $statusPembayaran === "") {
-                                    echo "Semua Status Pembayaran";
-                                    } elseif ($statusPembayaran === "Belum Bayar") {
-                                    echo "Belum Bayar";
-                                    } elseif ($statusPembayaran === "Sudah Bayar") {
-                                    echo "Sudah Bayar";
-                                    }
-                                ?>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
-                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=">Semua</a>
-                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === 'Belum Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=Belum Bayar">Belum Bayar</a>
-                                        <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === 'Sudah Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=Sudah Bayar">Sudah Bayar</a>
-                                    </form>
-                                </div>
+                        <label>Status Pembayaran :</label>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" style="min-width: 170px" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php
+                                // Menentukan teks yang ditampilkan berdasarkan nilai dari parameter date_range
+                                $statusPembayaran = isset($_GET['status_pembayaran']) ? $_GET['status_pembayaran'] : 'Semua';
+                                if ($statusPembayaran === "Semua" || $statusPembayaran === "") {
+                                echo "Semua Status Pembayaran";
+                                } elseif ($statusPembayaran === "Belum Bayar") {
+                                echo "Belum Bayar";
+                                } elseif ($statusPembayaran === "Sudah Bayar") {
+                                echo "Sudah Bayar";
+                                }
+                            ?>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <form action="" method="GET" class="form-group newsletter-group" id="resetLink">
+                                    <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === '' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=">Semua</a>
+                                    <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === 'Belum Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=Belum Bayar">Belum Bayar</a>
+                                    <a class="custom-dropdown-item dropdown-item rounded <?php echo isset($_GET['status_pembayaran']) && $_GET['status_pembayaran'] === 'Sudah Bayar' ? 'disabled-select' : ''; ?>" href="?<?php echo $queryString ?>&status_pembayaran=Sudah Bayar">Sudah Bayar</a>
+                                </form>
                             </div>
                         </div>
                     </div>

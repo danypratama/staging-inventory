@@ -8,7 +8,10 @@
                     ppn.tgl_inv AS tgl_inv,
                     ppn.kategori_inv AS kategori_inv,
                     ppn.cs_inv AS cs_inv,
+                    ppn.alamat_inv AS alamat_inv,
                     ppn.ongkir AS ongkir,
+                    rev.pelanggan_revisi AS cs_revisi,
+                    rev.alamat_revisi AS alamat_revisi,
                     STR_TO_DATE(ik.tgl_komplain, '%d/%m/%Y') AS tanggal,
                     ik.id_komplain,
                     ik.no_komplain,
@@ -23,6 +26,7 @@
                     sales_ppn.nama_sales AS nama_sales
                 FROM inv_komplain AS ik
                 LEFT JOIN inv_ppn ppn ON ik.id_inv = ppn.id_inv_ppn
+                LEFT JOIN inv_revisi rev ON rev.id_inv = ppn.id_inv_ppn
                 LEFT JOIN spk_reg spk_ppn ON ik.id_inv = spk_ppn.id_inv
                 LEFT JOIN tb_customer cs_ppn ON spk_ppn.id_customer = cs_ppn.id_cs
                 LEFT JOIN tb_orderby order_ppn ON spk_ppn.id_orderby = order_ppn.id_orderby

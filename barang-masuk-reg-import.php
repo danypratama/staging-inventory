@@ -52,7 +52,6 @@ include "akses.php";
                 <div class="card">
                     <div class="card-body">
                         <h5 class="text-center mt-3">Data Barang Masuk Import</h5>
-                        <a href="barang-masuk-reg.php" class="btn btn-md btn-secondary text-end"><i class="bi bi-arrow-left"></i> Kembali</a>
                         <?php  
                             if ($data_role['role'] == "Super Admin" || $data_role['role'] == "Manager Gudang" ) { 
                                 ?>

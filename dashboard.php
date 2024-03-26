@@ -37,7 +37,6 @@ include "akses.php";
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
-      
     </section>
 
   </main><!-- End #main -->
@@ -46,8 +45,8 @@ include "akses.php";
   <?php include "page/footer.php" ?>
   <!-- End Footer -->
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <?php include "page/script.php" ?>
+  <?php include "page/script.php"; ?>
+ 
 </body>
 
 </html>

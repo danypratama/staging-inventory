@@ -73,6 +73,7 @@
                     $jenis_ongkir = $_POST['jenis_ongkir'];
                     $ongkir = str_replace('.', '', $_POST['ongkir']); // Menghapus tanda ribuan (,)
                     $ongkir = intval($ongkir); // Mengubah string harga menjadi integer
+                    $free_ongkir = $_POST['free_ongkir'];
                     $dikirim = $_POST['dikirim'];
                     $pj = $_POST['pj'];
                     $uuid = generate_uuid();
@@ -95,12 +96,15 @@
                         $new_file_name = "Bukti_Satu". $year . "" . $month . "" . $img_uuid . "" . $day . ".jpg";
                         $compressed_file_destination = "../gambar-revisi/bukti1/$new_file_name";
                         compressAndResizeImage($file_destination, $compressed_file_destination, 500, 500, 100);
-                        unlink($file_destination);
+                        unlink($file_destination);   
 
-                        $simpan_status_kirim = mysqli_query($connect,"INSERT INTO revisi_status_kirim (id_status_kirim_revisi, id_komplain, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, jenis_ongkir, dikirim_oleh, penanggung_jawab, tgl_kirim) VALUES ('$id_status_kirim_revisi', '$id_komplain', '$jenis_pengiriman', 'Ekspedisi', '$ekspedisi', '$resi', '$jenis_ongkir', '$dikirim', '$pj', '$tgl')");
+                        // Proses simpan status kirim revisi
+                        $simpan_status_kirim = mysqli_query($connect,"INSERT INTO revisi_status_kirim (id_status_kirim_revisi, id_komplain, jenis_pengiriman, jenis_penerima, dikirim_ekspedisi, no_resi, jenis_ongkir, ongkir, free_ongkir, dikirim_oleh, penanggung_jawab, tgl_kirim) VALUES ('$id_status_kirim_revisi', '$id_komplain', '$jenis_pengiriman', 'Ekspedisi', '$ekspedisi', '$resi', '$jenis_ongkir', '$ongkir', '$free_ongkir', '$dikirim', '$pj', '$tgl')");
 
+                        // Proses simpan inv revisi
                         $simpan_inv_revisi = mysqli_query($connect,"INSERT INTO inv_revisi (id_inv_revisi, id_inv, no_inv_revisi, tgl_inv_revisi, pelanggan_revisi, alamat_revisi, total_inv, status_pengiriman, status_trx_komplain, status_trx_selesai) VALUES ('$id_inv_rev', '$id_inv', '$revisi_invoice', '$tgl', '$cs_inv', '$alamat', '$total_inv', '0', '0', '0')");
 
+                        // Proses simpan bukti terima
                         $bukti_terima = mysqli_query($connect, "INSERT INTO inv_bukti_terima_revisi (id_bukti_terima, id_komplain, bukti_satu) VALUES ('$id_inv_bukti', '$id_komplain', '$new_file_name')");
 
 

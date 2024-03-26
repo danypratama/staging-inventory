@@ -270,20 +270,33 @@
                                     </tr>
                                     <tr>
                                         <td class="col-md-6 text-nowrap">Alamat</td>
-                                        <td class="text-nowrap">: <?php echo $data_detail['alamat'] ?></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="col-md-6 text-nowrap">Ongkos Kirim</td>
-                                        <td class="text-nowrap">: <?php 
-                                                if($data_driver_rev['free_ongkir'] == 1){
-                                                    echo "0 (Free Ongkir)";
+                                        <td class="wrap-text">: <?php 
+                                                if($data_detail['alamat_inv'] == ''){
+                                                    echo $data_detail['alamat'];
                                                 } else {
-                                                    echo number_format($data_driver_rev['ongkir']);
+                                                    echo $data_detail['alamat_inv']; 
                                                 }
-                                           ?>
+                                            ?>
                                         </td>
                                     </tr>
+                                    <?php  
+                                        if($total_driver_rev != 0){
+                                            ?>
+                                                <tr>
+                                                    <td class="col-md-6 text-nowrap">Ongkos Kirim</td>
+                                                    <td class="text-nowrap">: <?php 
+                                                            if($data_driver_rev['free_ongkir'] == 1){
+                                                                echo "0 (Free Ongkir)";
+                                                            } else {
+                                                                echo number_format($data_driver_rev['ongkir']);
+                                                            }
+                                                    ?>
+                                                    </td>
+                                                </tr>
+                                            <?php
+                                        }
+                                    
+                                    ?>
                                     <?php  
                                         if($total_driver_rev != 0){
                                             ?>
@@ -297,7 +310,7 @@
                                                                     <?php
                                                                 } else if($data_driver_rev['jenis_pengiriman'] == 'Ekspedisi'){
                                                                     ?>
-                                                                        <?php echo $data_driver_rev['jenis_pengiriman']?> (<?php echo $data_driver_rev['nama_ekspedisi'] ?>)
+                                                                        <?php echo $data_driver_rev['jenis_pengiriman']?>
                                                                     <?php
                                                                 } else {
                                                                     ?>
@@ -322,7 +335,7 @@
                                                                                 <?php
                                                                             } else {
                                                                                 ?>
-                                                                                    <?php echo $data_driver_rev['jenis_penerima'] ?> (<?php echo $data_driver_rev['nama_ekspedisi'] ?>)
+                                                                                    <?php echo $data_driver_rev['nama_ekspedisi'] ?>
                                                                                 <?php
                                                                             }
                                                                     
@@ -338,7 +351,7 @@
                                                     if(!empty($data_driver_rev['nama_penerima'])){
                                                         ?>
                                                             <tr>
-                                                                <td class="col-md-6 text-nowrap">Nama Penerima</td>
+                                                                <td class="col-md-6 text-nowrap">Nama Penerima (CS)</td>
                                                                 <td class="text-nowrap">: <?php echo $data_driver_rev['nama_penerima'] ?></td>
                                                             </tr>
                                                         <?php

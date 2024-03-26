@@ -6,7 +6,6 @@ include 'function/class-komplain.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -39,7 +38,6 @@ include 'function/class-komplain.php';
         }
     </style>
 </head>
-
 <body>
     <!-- nav header -->
     <?php include "page/nav-header.php" ?>
@@ -165,7 +163,14 @@ include 'function/class-komplain.php';
                                     </tr>
                                     <tr>
                                         <td class="col-md-6 text-nowrap">Alamat</td>
-                                        <td class="text-nowrap">: <?php echo $data_detail['alamat'] ?></td>
+                                        <td class="wrap-text">: <?php 
+                                                if($data_detail['alamat_inv'] == ''){
+                                                    echo $data_detail['alamat'];
+                                                } else {
+                                                    echo $data_detail['alamat_inv']; 
+                                                }
+                                            ?>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="col-md-6 text-nowrap">Ongkos Kirim</td>

@@ -122,8 +122,8 @@ include "akses.php";
                       <thead>
                         <tr class="text-white" style="background-color: #051683;">
                           <td class="text-center p-3" style="width: 200px;">Nama User</td>
+                          <td class="text-center p-3" style="width: 100px;">Role</td>
                           <td class="text-center p-3" style="width: 100px;">Waktu Login</td>
-                          <td class="text-center p-3" style="width: 100px;">Waktu Logout</td>
                           <td class="text-center p-3" style="width: 150px;">Ip Address</td>
                           <td class="text-center p-3" style="width: 150px;">Jenis Perangkat</td>
                           <td class="text-center p-3" style="width: 150px;">Lokasi</td>
@@ -134,31 +134,35 @@ include "akses.php";
                         <?php
                         date_default_timezone_set('Asia/Jakarta');
                         include "koneksi.php";
-                        $id_history = $_SESSION['id_history'];
+                        $id_status = base64_decode($_SESSION['id_status']);
                         $no = 1;
                         $sql_active = " SELECT 
-                                          his.id_history, his.login_time, his.logout_time, his.ip_login, his.jenis_perangkat, his.lokasi,  
-                                          u.nama_user
-                                        FROM user_history AS his 
-                                        JOIN user u ON (his.id_user = u.id_user)
+                                          us.id_user_status, us.login_time, us.jenis_perangkat, us.status_perangkat,
+                                          uh.ip_login, uh.os, uh.lokasi,  
+                                          u.nama_user,
+                                          ur.role
+                                        FROM user_status AS us 
+                                        LEFT JOIN user u ON (us.id_user = u.id_user)
+                                        LEFT JOIN user_history uh ON (us.id_user_status = uh.id_user_status)
+                                        LEFT JOIN user_role ur ON (u.id_user_role = ur.id_user_role)
                                         WHERE status_perangkat = 'Online'";
                         $query_active = mysqli_query($connect, $sql_active) or die(mysqli_error($connect));
                         while ($data_active = mysqli_fetch_array($query_active)) {
                         ?>
                           <tr>
                             <td class="text-nowrap"><?php echo $data_active['nama_user']; ?></td>
+                            <td class="text-nowrap"><?php echo $data_active['role']; ?></td>
                             <td class="text-nowrap text-center"><?php echo $data_active['login_time']; ?></td>
-                            <td class="text-nowrap text-center"><?php echo $data_active['logout_time']; ?></td>
                             <td class="text-center"><?php echo $data_active['ip_login']; ?></td>
                             <td class="text-nowrap"><?php echo $data_active['jenis_perangkat']; ?></td>
                             <td class="text-nowrap"><?php echo $data_active['lokasi']; ?></td>
                             <td class="text-nowrap text-center">
                               <?php  
-                                if ($id_history === $data_active['id_history']) {
+                                if ($id_status === $data_active['id_user_status']) {
                                   
                                 }else{
                                   ?>
-                                    <a href="logout-paksa.php?id_off=<?php echo $data_active['id_history'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin logout dengan IP <?php echo $data_active['ip_login'] ?> ?')">OFF</a>
+                                    <a href="logout-paksa.php?id_off=<?php echo base64_encode($data_active['id_user_status']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin logout IP <?php echo $data_active['ip_login'] ?> ?')">OFF</a>
                                   <?php
                                 }
                               ?>
