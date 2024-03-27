@@ -1,11 +1,5 @@
 <?php  
-    if (!isset($_SESSION['token'])) {
-        session_start();
-        // Jika token belum ada, tetapkan token baru
-        $token = uniqid();
-        $encrypt_token = hash('sha256', $token);
-        $_SESSION['token'] = $encrypt_token;
-    }
+    session_start();
 ?>
 
 <?php
