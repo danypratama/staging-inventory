@@ -61,6 +61,123 @@ include "akses.php";
         echo "<pre>$device_id</pre>";
       ?>
 
+      <br>
+
+      <?php
+function generateBrowserFingerprint() {
+    $fingerprint = '';
+
+    // Menambahkan user-agent string
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+        $fingerprint .= $_SERVER['HTTP_USER_AGENT'];
+    }
+
+    // Menambahkan IP address pengguna
+    if (isset($_SERVER['REMOTE_ADDR'])) {
+        $fingerprint .= $_SERVER['REMOTE_ADDR'];
+    }
+
+    // Menambahkan HTTP accept header
+    if (isset($_SERVER['HTTP_ACCEPT'])) {
+        $fingerprint .= $_SERVER['HTTP_ACCEPT'];
+    }
+
+    // Menambahkan HTTP accept language header
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $fingerprint .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    }
+
+    // Menambahkan HTTP accept encoding header
+    if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+        $fingerprint .= $_SERVER['HTTP_ACCEPT_ENCODING'];
+    }
+
+    // Menambahkan HTTP connection header
+    if (isset($_SERVER['HTTP_CONNECTION'])) {
+        $fingerprint .= $_SERVER['HTTP_CONNECTION'];
+    }
+
+    // Menambahkan HTTP cache control header
+    if (isset($_SERVER['HTTP_CACHE_CONTROL'])) {
+        $fingerprint .= $_SERVER['HTTP_CACHE_CONTROL'];
+    }
+
+    // Menambahkan HTTP pragma header
+    if (isset($_SERVER['HTTP_PRAGMA'])) {
+        $fingerprint .= $_SERVER['HTTP_PRAGMA'];
+    }
+
+    // Menambahkan HTTP referer header
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        $fingerprint .= $_SERVER['HTTP_REFERER'];
+    }
+
+    // Menambahkan HTTP host header
+    if (isset($_SERVER['HTTP_HOST'])) {
+        $fingerprint .= $_SERVER['HTTP_HOST'];
+    }
+
+    // Melakukan hashing pada fingerprint
+    $fingerprint = md5($fingerprint);
+
+    return $fingerprint;
+}
+
+// Menghasilkan dan menampilkan fingerprint browser
+echo "Browser Fingerprint: " . generateBrowserFingerprint();
+?>
+
+
+
+<h1>ID Perangkat (Browser Fingerprint)</h1>
+    <div id="device_id"></div>
+
+    <script>
+        (async () => {
+            // Membuat fingerprint browser
+            const device_id = await new Promise(resolve => {
+                if (window.requestIdleCallback) {
+                    requestIdleCallback(() => resolve(getDeviceId()));
+                } else {
+                    setTimeout(() => resolve(getDeviceId()), 500);
+                }
+            });
+
+            // Menampilkan ID perangkat di dalam browser
+            document.getElementById('device_id').innerText = device_id;
+
+            // Fungsi untuk membuat fingerprint browser
+            function getDeviceId() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const txt = 'Browser Fingerprint';
+                ctx.textBaseline = "top";
+                ctx.font = "14px 'Arial'";
+                ctx.textBaseline = "alphabetic";
+                ctx.fillStyle = "#f60";
+                ctx.fillRect(125,1,62,20);
+                ctx.fillStyle = "#069";
+                ctx.fillText(txt, 2, 15);
+                ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+                ctx.fillText(txt, 4, 17);
+                const b64 = canvas.toDataURL().replace("data:image/png;base64,","");
+                const bin = atob(b64);
+                return bin2hex(bin.slice(-16,-12));
+            }
+
+            // Fungsi konversi biner ke heksadesimal
+            function bin2hex(s) {
+                let i, l, o = '', n;
+                s += '';
+                for (i = 0, l = s.length; i < l; i++) {
+                    n = s.charCodeAt(i).toString(16);
+                    o += n.length < 2 ? '0' + n : n;
+                }
+                return o;
+            }
+        })();
+    </script>
+
 
     </section>
 
