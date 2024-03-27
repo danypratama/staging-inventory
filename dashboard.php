@@ -37,6 +37,31 @@ include "akses.php";
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
+      <?php  
+        print_r($_SESSION);
+      ?>
+      <br>
+      <?php
+        // Mendapatkan informasi CPU
+        $cpu_info = shell_exec("wmic cpu get Name, NumberOfCores, NumberOfLogicalProcessors /format:list");
+
+        // Mendapatkan informasi Nama PC
+        $pc_name = shell_exec("wmic computersystem get Name /format:value");
+
+        // Mendapatkan informasi ID perangkat
+        $device_id = shell_exec("wmic csproduct get UUID /format:value");
+
+        // Menampilkan informasi CPU, Nama PC, dan ID perangkat
+        echo "<h2>Spesifikasi Perangkat</h2>";
+        echo "<h3>CPU</h3>";
+        echo "<pre>$cpu_info</pre>";
+        echo "<h3>Nama PC</h3>";
+        echo "<pre>$pc_name</pre>";
+        echo "<h3>ID Perangkat</h3>";
+        echo "<pre>$device_id</pre>";
+      ?>
+
+
     </section>
 
   </main><!-- End #main -->
